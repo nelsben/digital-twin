@@ -42,6 +42,17 @@ Source-system audit (Salesforce, HubSpot, M365) ─────────┘
 
 The hook lives in managed settings, so users can't remove it on managed devices. Hosted agents log on the server, so unmanaged devices are covered too ([13](13-devices.md)).
 
+### Where the log lives: settle it with each customer
+
+**Decided (2026-11-14):** we don't prescribe the destination. It is a **discussion point with each customer**, and IT owns the tooling choice. The design above stays fixed: what gets recorded, metadata only for private equity, and one log for all twins. Only the destination changes.
+
+Points to cover in that discussion:
+
+- **What the customer already runs:** a security log system (SIEM), a data warehouse, or an observability tool. Use theirs if possible.
+- **Logging on the Salesforce side.** If the customer already captures API and record activity in Salesforce, that may cover the source-system part of the log. Check this per customer. Examples: Event Monitoring, Field Audit Trail, Setup Audit Trail.
+- **Logging that already exists between Salesforce and Anthropic.** If the customer uses Claude through a Salesforce integration, find out what that path already logs, and where.
+- **Who can read the log,** and how long it is kept, set with the customer's compliance team.
+
 ## Retention, decided
 
 - **Private-equity org:** 30-day custom retention for chat, as a starting point. Claude Code and hosted agents run under ZDR.
@@ -69,6 +80,7 @@ The hook lives in managed settings, so users can't remove it on managed devices.
 | Every model release | Rerun all evals before switching models | Technical owner |
 | Monthly | Twin scorecards; decisions to promote or demote autonomy | **RevOps manager** (business owner), with the Director of IT |
 | Quarterly | Access review: Owners, group membership, connector scopes; retention review | **Director of IT** (technical owner), with compliance for the private-equity org |
+| Ongoing | **Tooling and spend:** choosing the log destination and monitoring tools; budgets, Claude spend controls and per-user limits, usage alerts; cost per task on the scorecard | **IT** (Director of IT) |
 | On offboarding | Revoke access, "Stop sharing" items they shared, purge the laptop, reassign skills they owned | Director of IT |
 
 **Later phase:** build a governance dashboard on top of the log.

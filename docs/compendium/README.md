@@ -26,6 +26,7 @@ In Claude terms, a twin is not one thing. It is a package of parts: a persona, s
 | [12-orgs-and-ownership.md](12-orgs-and-ownership.md) | How many Claude orgs to ask for, who owns each, and questions for Anthropic |
 | [13-devices.md](13-devices.md) | Managed (MDM) and unmanaged devices: what can be enforced, and the policy for each |
 | [14-private-equity.md](14-private-equity.md) | The primary use case: designing for information barriers and for none |
+| [15-governance-and-performance.md](15-governance-and-performance.md) | Audit sources, our own governance log, scorecards, and who reviews what, how often |
 | [sources.md](sources.md) | Every source, with its URL |
 
 ## The ten things to know first

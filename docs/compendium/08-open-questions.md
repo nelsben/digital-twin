@@ -13,6 +13,15 @@
 | D7 | **Who writes skills, who reviews them, who owns evals** | Authors shouldn't review their own work; evals need re-running when models change | Program owner |
 | D8 | **Autonomy ceiling per role** | See [06](06-autonomy.md) | Each role's leader, with security |
 
+### Status after the second round (2026-11-14)
+
+- **D1 (plan):** users span every tier, individual plans included. See [09](09-plans-and-it-controls.md). Recommendation: Team as the minimum for company data, and Enterprise for sensitive roles.
+- **D3 (regulated data):** yes, both HIPAA and highly sensitive private-equity data. See [10](10-sensitive-data.md).
+- **D4 (cloud route):** decided. We use Claude directly from Anthropic, and Anthropic-hosted agents. AWS and Google Cloud are parked for later.
+- **D5 (systems):** CRM, Google Sheets and Drive, SharePoint and shared drives, Slack and Teams. See [11](11-connectors.md).
+- **New, D9:** how many Claude orgs (one per data class), and who owns each.
+- **New, D10:** whether to accept retention exceptions under ZDR (flagged content kept 2 years, feedback kept 5 years), and the 6-year default for Compliance API sessions.
+
 ## Questions most first-time builders miss
 
 **Identity and access**

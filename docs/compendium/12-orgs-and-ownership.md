@@ -30,6 +30,8 @@ Some settings apply to a whole org and conflict with each other:
 
 A sales twin that uses Claude Tag and a private-equity twin that needs ZDR can't share an org. ([10](10-sensitive-data.md))
 
+**Decided (2026-11-14):** the **Director of IT** is the technical owner and the **RevOps manager** is the business owner. Each org still needs a backup with the Owner role, so that no single person can lock everyone out.
+
 ## Recommended starting point
 
 | # | Org | Plan type | For | Key settings | When |
@@ -57,8 +59,8 @@ If either answer is yes, the count may drop.
 | Pilot seats | ___ sales + ___ CS + ___ ops | ___ deal team members | n/a (API usage) | ___ |
 | Contract add-ons | Claude Tag (beta) | ZDR addendum; CMEK (optional) | ZDR addendum; self-hosted Managed Agents access (by request) | BAA |
 | Connectors | Salesforce, HubSpot, Google, M365, Slack | Salesforce, HubSpot, SharePoint/Drive (per-user only) | Built or wrapped MCP servers | Built servers only |
-| Technical owner and backup | ___ / ___ | ___ / ___ | ___ / ___ | ___ / ___ |
-| Business owner | ___ | ___ | ___ | ___ |
+| Technical owner and backup | Director of IT / ___ | Director of IT / ___ | Director of IT / ___ | Director of IT / ___ |
+| Business owner | RevOps manager | RevOps manager (compliance signs off on retention and walls) | RevOps manager | RevOps manager (compliance signs off) |
 | Optional | MCP tunnels (Enterprise, preview) for private-network systems | | | |
 
 (Our recommendation) Pilot with 5 to 10 people per role. That's enough variety to find where skills fail, and few enough to interview everyone.

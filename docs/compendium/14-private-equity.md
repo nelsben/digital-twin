@@ -9,6 +9,8 @@ Private equity is the primary use case. Some firms or teams need **information b
    - **(b)** Offer private-equity twins only through ZDR surfaces.
 
    Raise this with Anthropic too ([12](12-orgs-and-ownership.md), question 3).
+
+   **Decided (2026-11-14):** (a), with 30-day retention as the starting point. Because Anthropic's copy is gone after 30 days, our own governance log is the long-term audit record ([15](15-governance-and-performance.md)).
 2. **The Compliance API doesn't see ZDR sessions.** Private-equity twins need **our own audit log**:
    - Locally: a hook in Claude Code records each tool call to a central log.
    - Hosted: the agent's server logs each tool call.
@@ -49,6 +51,8 @@ Sources: [Salesforce on Desktop](https://claude.com/docs/third-party/claude-desk
 | **A. No walls** | One private-equity org; skills, Projects and hosted agents shared | Only what the source systems enforce | Low | Teams without barrier requirements; firm-wide work that isn't deal-specific |
 | **B. Soft walls** (our recommended starting point) | One private-equity org. The source systems enforce the walls, through per-user identity. Enterprise groups per team decide which plugins each sees. No shared identities. One Project per deal team. One hosted deployment per wall, as separate workspaces in the Platform org. | Relies on source-system permissions plus disciplined configuration | Medium | Most firms, especially where walls already exist in Salesforce and SharePoint |
 | **C. Hard walls** | A separate Claude org (and a separate hosted deployment) per walled team | Strongest: separate admin, retention and audit | High, and it grows with each wall | When a regulator or LP requires provable separation, or for MNPI on public-company deals |
+
+**Decided (2026-11-14):** start with **B, soft walls.** Salesforce, HubSpot and SharePoint already enforce walls through role-based access, in the usual Salesforce governance model. Hard walls (C) remain an upgrade path.
 
 ## Designing for both
 

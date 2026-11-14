@@ -20,6 +20,9 @@ In Claude terms, a twin is not one thing. It is a package of parts: a persona, s
 | [06-autonomy.md](06-autonomy.md) | How much a twin may do on its own: a graded ladder with controls |
 | [07-pilot-roles.md](07-pilot-roles.md) | What this looks like for sales, customer success and operations/finance |
 | [08-open-questions.md](08-open-questions.md) | Decisions we still need to make, and questions you might not know to ask |
+| [09-plans-and-it-controls.md](09-plans-and-it-controls.md) | Features on every plan (individual, Team, Enterprise), and what IT can control on each |
+| [10-sensitive-data.md](10-sensitive-data.md) | What leaves the machine; ZDR and HIPAA; a decision matrix by data class |
+| [11-connectors.md](11-connectors.md) | Connectors for our systems; whether to use, buy, build or host |
 | [sources.md](sources.md) | Every source, with its URL |
 
 ## The ten things to know first
@@ -34,6 +37,13 @@ In Claude terms, a twin is not one thing. It is a package of parts: a persona, s
 8. **A persona is an instruction, not a guarantee.** Put real limits in permissions and approval settings, not in the prompt. ([02](02-persona.md), [06](06-autonomy.md))
 9. **Compliance limits rule out some options.** Skills and Managed Agents aren't eligible for zero data retention (ZDR) or HIPAA coverage. Regulated data pushes you toward running agents on your own infrastructure. ([04](04-distribution-governance.md), [05](05-decision-matrix.md))
 10. **Many controls depend on plan and role.** Group targeting, security scanning and usage analytics are Enterprise-only. Only an Owner (not an Admin) can manage org skills. ([04](04-distribution-governance.md))
+
+### Added after the second round of research
+
+11. **Running locally doesn't keep data local.** The model runs at Anthropic, so anything the agent reads is sent. Data is protected by the contract (ZDR, a BAA) and by minimization, not by where the program runs. ([10](10-sensitive-data.md))
+12. **Individual plans are outside IT's reach,** and their terms allow training on your data by default. Team should be the minimum for company data. ([09](09-plans-and-it-controls.md))
+13. **Each data class gets its own org.** HIPAA is permanent once turned on, and ZDR, CMEK and Claude Tag constrain each other. ([10](10-sensitive-data.md))
+14. **Connectors aren't covered for PHI,** and "Verified" in the directory isn't a security audit. ([11](11-connectors.md))
 
 ## Conventions
 

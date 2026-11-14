@@ -59,4 +59,6 @@ The last step is the key design idea. **Write a skill once and run it anywhere.*
 - **Phase 2:** at most one hosted job per role, chosen where a schedule or event really adds value. Examples are a Monday pipeline digest in a team Slack channel, or a nightly account-health scan. Prove the skill in the client first.
 - **Phase 3:** Managed Agents or the Agent SDK, only for integrations that run in systems with no person in the loop.
 
-⚠ **Unverified:** whether the Skills API, Managed Agents and Claude Tag are available when you use Claude through AWS Bedrock or Google Vertex AI. You have both channels, so this matters if data-residency or procurement rules require the cloud route. See [08](08-open-questions.md).
+**Decided (2026-11-14):** we use Claude directly from Anthropic, and Anthropic-hosted agents. AWS Bedrock and Google Vertex AI are parked for later. Whether the Skills API, Managed Agents and Claude Tag are available through those clouds is unverified.
+
+For sensitive data, the runtime choice is further limited by data class. See [10](10-sensitive-data.md).

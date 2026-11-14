@@ -2,6 +2,8 @@
 
 **Status:** research phase. Nothing is built yet. This is grounded in Anthropic's docs as fetched on 2026-11-14. Every page links its sources; [sources.md](sources.md) has the full list.
 
+**How to use it:** we deliver twins to customers as Anthropic partners. This compendium is our knowledge base. Engagement method (discovery, stakeholders, stories) is in the [partner playbook](../playbook/README.md). Anything marked "Decided" is our **default stance**, to be confirmed with each customer in discovery.
+
 ## What we mean by a digital twin
 
 A digital twin is a companion agent for a role. It knows how that role works, has the access the role needs, and takes on the role's repetitive work. We are building **role templates**: one twin per role (for example, every account executive gets the same sales twin), not one twin per person.

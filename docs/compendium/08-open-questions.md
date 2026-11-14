@@ -35,6 +35,8 @@
 - **Private-equity chat retention:** 30 days to start. Auditability and performance visibility are requirements for every twin. See [15](15-governance-and-performance.md).
 - **Walls:** soft walls, enforced by role-based access in Salesforce, HubSpot and SharePoint ([14](14-private-equity.md)).
 - **Owners:** the Director of IT is the technical owner and the RevOps manager is the business owner ([12](12-orgs-and-ownership.md)). Still open: a backup Owner for each org.
+- **Log destination:** a discussion point with each customer, including any logging that already exists between Salesforce and Anthropic ([15](15-governance-and-performance.md)).
+- **IT owns tooling and spend.**
 - **The brief for Anthropic is on hold.** The questions stay in [12](12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
 
 ## Questions most first-time builders miss

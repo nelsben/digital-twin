@@ -22,6 +22,14 @@
 - **New, D9:** how many Claude orgs (one per data class), and who owns each.
 - **New, D10:** whether to accept retention exceptions under ZDR (flagged content kept 2 years, feedback kept 5 years), and the 6-year default for Compliance API sessions.
 
+### Status after the third round (2026-11-14)
+
+- **D5:** the CRMs are **Salesforce and HubSpot.** Dynamics is out of scope.
+- **Devices:** plan for both managed and unmanaged. See [13](13-devices.md).
+- **D9 (orgs):** we're an Anthropic partner, so we can get separate instances. The starting ask is three orgs, plus HIPAA later, plus one per hard wall. See [12](12-orgs-and-ownership.md).
+- **Private equity** is the primary use case. We design for both walls and no walls. See [14](14-private-equity.md).
+- The open questions for Anthropic are collected in [12](12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
+
 ## Questions most first-time builders miss
 
 **Identity and access**

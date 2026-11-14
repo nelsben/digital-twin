@@ -23,6 +23,9 @@ In Claude terms, a twin is not one thing. It is a package of parts: a persona, s
 | [09-plans-and-it-controls.md](09-plans-and-it-controls.md) | Features on every plan (individual, Team, Enterprise), and what IT can control on each |
 | [10-sensitive-data.md](10-sensitive-data.md) | What leaves the machine; ZDR and HIPAA; a decision matrix by data class |
 | [11-connectors.md](11-connectors.md) | Connectors for our systems; whether to use, buy, build or host |
+| [12-orgs-and-ownership.md](12-orgs-and-ownership.md) | How many Claude orgs to ask for, who owns each, and questions for Anthropic |
+| [13-devices.md](13-devices.md) | Managed (MDM) and unmanaged devices: what can be enforced, and the policy for each |
+| [14-private-equity.md](14-private-equity.md) | The primary use case: designing for information barriers and for none |
 | [sources.md](sources.md) | Every source, with its URL |
 
 ## The ten things to know first

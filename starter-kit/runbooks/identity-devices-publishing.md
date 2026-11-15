@@ -8,7 +8,7 @@ Three things have to be true before a pilot starts:
 2. Managed devices carry the settings baseline for their data class.
 3. The kit's marketplace and plugins reach the groups that should use them.
 
-This runbook takes the Director of IT through all three. It is generic: replace every `<placeholder>` with the customer's value. Where a step depends on a product's own console, and Anthropic's docs do not confirm it, the step is marked **unverified**.
+This runbook takes the Director of IT through all three. It is generic: replace every `<placeholder>` with the customer's value. Where a step depends on a product's own console, and that vendor's docs do not confirm it, the step is marked **⚠ Unverified:** (the compendium's marker) and says what to confirm at setup. Every claim was checked against the vendor's pages on 2026-11-15; the results are in the [verification log](verification-log.md).
 
 Roles use the names in [03-stakeholders](../../docs/playbook/03-stakeholders.md):
 
@@ -22,16 +22,16 @@ Roles use the names in [03-stakeholders](../../docs/playbook/03-stakeholders.md)
 | **Partner integration engineer** | Integration engineer (partner role). Builds and tests the marketplace and the settings files |
 | **RevOps manager** | Business owner. Names the pilot users and approves who is in the pilot group |
 
-Sources are marked [S1] to [S6] and listed at the end. Repo files are cited by path.
+Sources are marked [S1] to [S14] and listed at the end. Repo files are cited by path.
 
 ## Before you start
 
 | # | Step | Who | Source |
 |---|---|---|---|
-| 0.1 | Confirm the Claude org is Enterprise or Console. SCIM is not available on Team plans, which use JIT provisioning instead. | Director of IT | [S1] |
+| 0.1 | Confirm the Claude org is Enterprise or Console. SCIM is not available on Team plans, which use JIT provisioning instead, or on Console organizations joined to a Team plan's parent organization. | Director of IT | [S1] |
 | 0.2 | Confirm SSO is set up first, including domain verification. SCIM assumes SSO is complete. | Director of IT | [S1] |
 | 0.3 | Pick the managed-settings baseline for each data class. Do not choose it from this runbook. | Director of IT, with Compliance | [starter-kit/settings/README.md](../settings/README.md) |
-| 0.4 | Replace the placeholders in the chosen baseline files before any device gets them: `REPLACE-WITH-ORG-UUID` (copy it from the claude.ai admin settings; a wrong value makes Claude Code exit at startup), `REPLACE-WITH-GITHUB-ORG` (the repo that holds this kit's marketplace; it appears twice in each file, under `strictKnownMarketplaces` and `extraKnownMarketplaces`), `REPLACE-WITH-GOVERNANCE-SALT` (confidential, pe-zdr and hipaa: a secret per customer), and in the pe-zdr file the two MCP host placeholders. The README lists every key and placeholder. | Partner integration engineer | [starter-kit/settings/README.md](../settings/README.md) |
+| 0.4 | Replace the placeholders in the chosen baseline files before any device gets them: `REPLACE-WITH-ORG-UUID` (copy it from the claude.ai admin settings; a wrong value makes Claude Code exit at startup [S11]), `REPLACE-WITH-GITHUB-ORG` (the repo that holds this kit's marketplace; it appears twice in each file, under `strictKnownMarketplaces` and `extraKnownMarketplaces`), `REPLACE-WITH-GOVERNANCE-SALT` (confidential, pe-zdr and hipaa: a secret per customer), and in the pe-zdr file the two MCP host placeholders. The README lists every key and placeholder. | Partner integration engineer | [starter-kit/settings/README.md](../settings/README.md) |
 | 0.5 | Make sure at least one Owner is in a group that is mapped to the Owner role (step 3.4). Otherwise the next sync can remove the Owner. Make a Backup Owner, so one person cannot lock everyone out. | Director of IT, Backup Owner | [S1]; [03-stakeholders](../../docs/playbook/03-stakeholders.md) |
 
 ## 1. Create the SCIM groups in the identity provider
@@ -44,24 +44,24 @@ Groups in the identity provider decide two things in Claude: the role each user 
 
 | # | Step | Who | Source |
 |---|---|---|---|
-| 1.1 | In the Okta Admin console, go to **Applications > Applications** and select **Create App Integration**. Name the app `Claude`. Choose **SAML 2.0**; Anthropic recommends SAML over OIDC. | Director of IT (with Source-system admins if they run Okta) | [S3] |
-| 1.2 | Configure SAML as the SSO guide describes. The name ID format is EmailAddress, and an email attribute maps to `user.email`. The guide's exact ACS URL and Entity ID come from the Claude side during SSO setup. | Director of IT (with Source-system admins) | [S3]; values **unverified** here |
-| 1.3 | Add a **groups** Group Attribute Statement to the SAML configuration. The docs say it is needed for group mappings to work with JIT or SCIM. The attribute name the guide uses is not confirmed here. | Director of IT (with Source-system admins) | [S3]; attribute name **unverified** |
-| 1.4 | On the **Provisioning** tab, select **Configure API Integration**. Enable **Create Users**, **Update User Attributes**, and **Deactivate Users**. Paste the SCIM base URL and token from the WorkOS setup guide that Claude's SCIM setup links to. | Director of IT (with Source-system admins) | [S3]; WorkOS values **unverified** (guide not read) |
+| 1.1 | In the Okta Admin Console, go to **Applications and Resources > Applications**, select **Create App Integration**, then **Classic experience**, and choose **SAML 2.0** as the sign-in method. Anthropic recommends SAML over OIDC. Name the app `Claude`. Anthropic's guide shows the older menu name **Applications > Applications**. | Director of IT (with Source-system admins if they run Okta) | [S7]; [S3] |
+| 1.2 | Configure SAML as the SSO guide describes. Set the Name ID format to EmailAddress and Application username to Email, and add an attribute statement named `email` with the value `user.email`. The ACS URL and Audience URI (Entity ID) are per organization: copy them from the WorkOS setup flow in the Claude **Identity and access** settings (`claude.ai/admin-settings/identity`). | Director of IT (with Source-system admins) | [S3] |
+| 1.3 | Add a group attribute statement named `groups`, with a filter that covers every Okta group mapped to a Claude role or seat type. Without it, users cannot receive mapped roles. In Okta it is on the **Sign On** tab, under **Attribute Statements** > **Show legacy configuration**; Okta's newer alternative is custom claims. | Director of IT (with Source-system admins) | [S3]; [S9] |
+| 1.4 | Turn on SCIM for the app. For an app built with **Create App Integration**, Okta's steps are: on the **General** tab, edit **App Settings** and set **Provisioning** to **SCIM**; then on the **Provisioning** tab, under **Settings > Integration**, click **Edit** and enter the SCIM connector base URL and the API token (HTTP Header) from the WorkOS setup flow. Anthropic's guide calls this step **Configure API Integration** > **Enable API integration**, Okta's label for catalog apps. Then under **To App**, click **Edit** and enable **Create Users**, **Update User Attributes**, and **Deactivate Users**. | Director of IT (with Source-system admins) | [S8]; [S10]; [S3] |
 | 1.5 | Make sure the SAML email field and the SCIM email field are the same Okta attribute. A mismatch, for example `user.login` for SCIM and `user.email` for SAML, can block logins. | Director of IT (with Source-system admins) | [S3] |
 | 1.6 | Create one Okta group per role, plus one per seat type where the plan has seat tiers. Use a prefix such as `anthropic-claude-` for easy search. The docs recommend a prefix but do not require one. | Director of IT | [S1] |
-| 1.7 | Create the pilot group as a separate Okta group, for example `anthropic-claude-pilot-<role>`. Add the pilot users, chosen by the RevOps manager. **Choice: see the Choices list. The docs do not describe pilot groups.** Each pilot user still needs a role group. A pilot group alone does not give a role. | Director of IT, RevOps manager | [S1]; pilot design is **unverified** |
-| 1.8 | Assign the Okta groups to the Claude app on the **Assignments** tab. Users not assigned to the app when the provisioning mode is saved are removed from the organization. Check the assignment list before step 2.5. | Source-system admins | [S3]; [S1] step 2 |
+| 1.7 | Create the pilot group as a separate Okta group, for example `anthropic-claude-pilot-<role>`. Add the pilot users, chosen by the RevOps manager. **(Our recommendation): the docs do not describe pilot groups.** Each pilot user still needs a role group. A pilot group alone does not give a role. | Director of IT, RevOps manager | [S1]; **⚠ Unverified:** confirm the pilot design at setup |
+| 1.8 | Assign the Okta groups to the Claude app on the **Assignments** tab. Users not assigned to the app when the provisioning mode is saved are removed from the organization. Check the assignment list before step 2.4, which saves it. | Source-system admins | [S3]; [S1] step 2 |
 
 ## 2. Connect SCIM in Claude
 
-**Who: Director of IT** (Owner in Claude). Only an Admin or Owner can do this.
+**Who: Director of IT** (Owner in Claude). The docs require the Owner role in a Claude organization, or Admin in a Console organization.
 
 | # | Step | Who | Source |
 |---|---|---|---|
-| 2.1 | In Claude, open the **User provisioning** section and click **Setup SCIM** (or **Manage SCIM**) next to SCIM directory sync. Follow the WorkOS guide and copy its values into the Okta app from step 1.4. | Director of IT | [S1] |
+| 2.1 | In Claude, open **Organization settings > Organization and access**, go to the **User provisioning** section and click **Setup SCIM** (or **Manage SCIM**) next to SCIM directory sync. Follow the WorkOS guide and copy its values into the Okta app from step 1.4. | Director of IT | [S1] |
 | 2.2 | Choose the provisioning mode: **Invite only**, **Just-in-time (JIT)**, or **SCIM directory sync**. For groups to drive roles, use SCIM directory sync. | Director of IT | [S1]; [S2] |
-| 2.3 | Before saving, confirm every user who should keep access is assigned to the Claude app in Okta (step 1.8). Review the change preview, including the removal count, if it is shown. | Director of IT | [S1] |
+| 2.3 | Before saving, confirm every user who should keep access is assigned to the Claude app in Okta (step 1.8). Review the change preview, including the removal count, if it is shown, and cancel if more users would be removed than you expect. | Director of IT | [S1] |
 | 2.4 | Click **Save changes** to trigger the first provisioning. | Director of IT | [S1] |
 | 2.5 | Wait for the first sync to finish. Groups appear in Claude only after this sync. | Director of IT | [S1] |
 
@@ -75,8 +75,8 @@ Groups in the identity provider decide two things in Claude: the role each user 
 | 3.2 | Click **Add** next to each role and select the matching Okta group. Every user needs a role-based group, or they are removed from the organization. | Director of IT | [S1]; [S2] |
 | 3.3 | Optional: assign seat tiers under **Assign seat tiers to IdP groups**. Existing users keep their seat type. New users get the highest seat type with an unassigned seat. | Director of IT | [S1] |
 | 3.4 | Make sure at least one Owner or Admin is in a mapped group. Owner and Admin accounts are not exempt from reconciliation. The Primary Owner is exempt, but the role cannot be set through group mappings. Set the Primary Owner under **Organization settings > Members** before enabling SCIM. | Director of IT | [S1] |
-| 3.5 | Click **Save changes**. Changing a mapping does not update existing members on its own. After you change a mapping, run **Sync now** under **Directory sync (SCIM)**. | Director of IT | [S1]; [S2] |
-| 3.6 | Custom roles (Enterprise only): save first with group mappings off, let the sync finish, attach the synced groups to custom roles under **Organization settings > Roles**, then turn group mappings back on. Users in a custom-mapped group have no permissions until their group is attached to a role. | Director of IT | [S1] |
+| 3.5 | Click **Save changes**. After you change a seat-tier or role mapping, existing members are not resynced on their own [S2]. Run a manual sync. ⚠ Conflict: [S1] names a **Sync** button under **User provisioning** and a **Sync now** button next to **Directory sync (SCIM)** on the Organization and access page; [S2] names **Sync** under **User provisioning** and **Check for updates** under **SCIM sync** in **Organization settings > Groups**. Use whichever your console shows. | Director of IT | [S1]; [S2] |
+| 3.6 | Custom roles (Enterprise only): save first with group mappings off, let the sync finish, attach the synced groups to custom roles under **Organization settings > Roles**, then turn group mappings back on. If the synced groups are not listed, click **Check for updates** in **Organization settings > Groups**. Users in a custom-mapped group have no permissions until their group is attached to a role. | Director of IT | [S1]; [S2] |
 
 Removal behavior: [S1] says users are removed automatically when their group access is revoked. [S2] does not describe removal from a group in detail, so confirm it on a test user. Sync is eventually consistent. It usually finishes within minutes, but it can take several hours [S2]. Expect a delay before a test user sees a change.
 
@@ -100,23 +100,23 @@ Claude Code reads the first managed source that delivers a policy key, in this o
 
 ### Intune (Windows)
 
-Deploy the JSON file to `C:\Program Files\ClaudeCode\managed-settings.json`, or write the `Settings` registry value under `HKLM\SOFTWARE\Policies\ClaudeCode`, from a device configuration profile or a script that Intune assigns to the device group. The exact Intune blade names and the OMA-URI or script setup are **unverified** here. Anthropic's docs point to a starter template for Intune in the MDM examples repository [S5], which we did not open. Use that template, and confirm it against Intune's own current docs.
+Deploy the JSON file to `C:\Program Files\ClaudeCode\managed-settings.json`, or write the `Settings` registry value under `HKLM\SOFTWARE\Policies\ClaudeCode`, from a device configuration profile or a script that Intune assigns to the device group. **⚠ Unverified:** confirm the exact Intune blade names and the OMA-URI or script setup at setup. Anthropic's docs point to a starter template for Intune in the MDM examples repository [S5], which we did not open. Use that template, and confirm it against Intune's own current docs.
 
-Intune delivers to devices, not to users. For how to split devices into plugin sets, see step 6.
+Intune can assign scripts and apps to user groups or device groups [S14]. The file and the HKLM value are machine-wide, so assign them to device groups **(Our recommendation)**. For how to split devices into plugin sets, see step 6.
 
 ### Jamf (macOS)
 
-Build a configuration profile that sets the keys in the `com.anthropic.claudecode` domain, or deploy the file to `/Library/Application Support/ClaudeCode/managed-settings.json` with a policy script. The Jamf UI steps are **unverified** here. The MDM examples repository has a Jamf template [S5]; confirm it against Jamf's current docs.
+Build a configuration profile that sets the keys in the `com.anthropic.claudecode` domain, or deploy the file to `/Library/Application Support/ClaudeCode/managed-settings.json` with a policy script. **⚠ Unverified:** confirm the Jamf UI steps at setup. The MDM examples repository has a Jamf template [S5]; confirm it against Jamf's current docs.
 
 ### Kandji (macOS)
 
-Anthropic's docs name Jamf, Iru and Intune as the MDM examples [S5]. They do not name Kandji. The repo's settings README mentions Kandji as a macOS profile tool [starter-kit/settings/README.md](../settings/README.md). The product name, and whether the Kandji and Iru profile steps are the same, are **unverified**. Use the same profile content as Jamf: a configuration profile in the `com.anthropic.claudecode` domain, with the file path as the fallback.
+Anthropic's docs name Jamf, Iru, Intune and Group Policy as the MDM starter templates [S5]. They do not name Kandji. The repo's settings README mentions Kandji as a macOS profile tool [starter-kit/settings/README.md](../settings/README.md). **⚠ Unverified:** confirm at setup the product name, and whether the Kandji and Iru profile steps are the same. Use the same profile content as Jamf: a configuration profile in the `com.anthropic.claudecode` domain, with the file path as the fallback.
 
 ### Check the file before you deploy
 
 - Each file must be valid JSON. A malformed file or plist makes Claude Code refuse to start, and the error names the source [S5].
-- The placeholders from step 0.4 must be replaced. A wrong org UUID also makes Claude Code exit at startup [starter-kit/settings/README.md](../settings/README.md).
-- A missing or unreadable file is not a failure. Claude Code runs without that source. So a pilot can appear to work while the baseline is missing. Verify step 5 on every pilot device.
+- The placeholders from step 0.4 must be replaced. A wrong org UUID also makes Claude Code exit at startup [starter-kit/settings/README.md](../settings/README.md); [S11].
+- A missing file is not a failure: Claude Code runs without that source. A file the operating system will not let Claude Code read (for example a root-only file) is the same: sessions start without its policies, and `/status` and `claude doctor` record the failure. So a pilot can appear to work while the baseline is missing. Verify step 5 on every pilot device. Other read errors, such as an I/O error, make Claude Code exit at startup [S5].
 
 ## 5. Verify on a device that the settings took effect
 
@@ -124,11 +124,11 @@ Anthropic's docs name Jamf, Iru and Intune as the MDM examples [S5]. They do not
 
 | # | Check | Expected | Source |
 |---|---|---|---|
-| 5.1 | Start Claude Code on the device, run `/status`, and read the **Setting sources** line. | The line lists `Enterprise managed settings`, with the source in parentheses: `(plist)` or `(HKLM)` for MDM, `(file)` for the file path. | [S5] |
-| 5.2 | Run `claude doctor` and read the **Organization policy** line. | It names where the policy loaded from. If it did not load, it says why. Needs Claude Code v2.1.261 or later. | [S5] |
-| 5.3 | Check one key from the baseline. For example, in the pe-zdr file, check that WebFetch and WebSearch are denied. Run a read that the policy blocks. | The read is refused. | [starter-kit/settings/README.md](../settings/README.md); the key-level behavior is from the README and **not re-tested here** |
+| 5.1 | Start Claude Code on the device, run `/status`, and read the **Setting sources** line. | The line lists `Enterprise managed settings`, with the source in parentheses: `(plist)` or `(HKLM)` for MDM, `(file)` for the file path, `(remote)` for server-managed settings. | [S5] |
+| 5.2 | Run `claude doctor`. | It lists each managed-settings entry Claude Code dropped, with its source and field. Its **Organization policy** line says where the claude.ai organization policy (Remote Control and cloud sessions) loaded from, or why it did not; that line needs Claude Code v2.1.261 or later. | [S5] |
+| 5.3 | Check one key from the baseline. For example, in the pe-zdr file, `WebFetch` and `WebSearch` are denied by bare tool name, so ask Claude to fetch a web page. Then ask Claude to read a `.env` file inside the project folder. | Claude has no web fetch or web search tool: a bare tool name in `deny` removes the tool from Claude's context. The `.env` read is refused. `Read(**/.env)` matches files at or under the current directory only. | [starter-kit/settings/README.md](../settings/README.md); [S13]; **not re-tested here** |
 | 5.4 | Run `/plugin` on the device. | The marketplace `digital-twin-kit` and the plugins for the device's group are listed (step 6). | [S4] |
-| 5.5 | If a device shows no policy, check that the file or profile is at the path in step 4, and that the source is not blocked by a higher-ranked source. Read `/status` again. | The `Setting sources` line names the source Claude Code used. | [S5] |
+| 5.5 | If a device shows no policy, check that the file or profile is at the path in step 4, and that the source is not blocked by a higher-ranked source. Read `/status` again. | The `Setting sources` line names the source Claude Code used. On v2.1.242 or later, a `Skipped sources` line names any source it found and did not use. | [S5] |
 
 Do not roll out to the fleet until 5.1 and 5.4 pass on the pilot devices.
 
@@ -148,16 +148,16 @@ Do not roll out to the fleet until 5.1 and 5.4 pass on the pilot devices.
 The managed settings do not target users. Anthropic's docs say every plugin key applies to every user who receives the settings. There is no per-user or per-group key [S4]. So "publish to a group" means one of two things:
 
 - **Device groups.** Assign each plugin set's managed settings to a device group in Intune or Jamf. A device in the group gets its plugin set. Use this path for MDM-managed devices.
-- **Server-managed settings.** On an Enterprise plan, give each group its own configuration in the claude.ai admin console, under **Organization settings > Claude Code > Managed settings**. Requires the Owner role [S4]. This path covers devices that are not under MDM, and cloud sessions, which only read server-managed settings [S4].
+- **Server-managed settings.** On an Enterprise plan, give each group its own configuration in the claude.ai admin console, under **Organization settings > Claude Code > Managed settings**, with **Add configuration**. Requires the Owner or Primary Owner role [S4]; [S12]. Each group must already exist in Claude, synced through SCIM or created as a custom group. Group configurations do not merge with each other or with the organization-wide one, so each must hold the whole baseline. They are not yet available to organizations with HIPAA enabled [S12]. This path covers devices that are not under MDM, and cloud sessions, which only read server-managed settings [S4].
 
-SCIM groups (step 1) decide the role and seat in Claude. They do not decide which plugins a device gets. Keep the two sets of groups separate, and name them so they are not confused.
+On the device-group path, SCIM groups (step 1) decide the role and seat in Claude, not which plugins a device gets: keep the device groups separate from the SCIM groups, and name them so they are not confused. On the server-managed path, the configuration is chosen by Claude group, so a SCIM-synced group can carry a plugin set [S12]. Use a group your identity provider syncs, so no one can add themselves to it in the admin console [S12].
 
 ### Steps
 
 | # | Step | Who | Source |
 |---|---|---|---|
 | 6.1 | Confirm the placeholder repo in both marketplace keys (`strictKnownMarketplaces` and `extraKnownMarketplaces`) is replaced with the customer's repo that holds the kit (step 0.4). Confirm the kit's repo is readable by every user who will install from it. A private repo needs each user to have read access. Users without a git-host account need a seed instead. | Partner integration engineer | [S4]; [repo files] |
-| 6.2 | Decide the plugin set for each group. Suggested: `twin-shared` for every role, the role plugin for its role group, and `twin-governance` for devices in the confidential, pe-zdr and hipaa baselines. | Director of IT, Skill owners, RevOps manager | [starter-kit/README.md](../../starter-kit/README.md); the mapping itself is a **choice** (see Choices) |
+| 6.2 | Decide the plugin set for each group. Suggested: `twin-shared` for every role, the role plugin for its role group, and `twin-governance` for devices in the confidential, pe-zdr and hipaa baselines. | Director of IT, Skill owners, RevOps manager | [starter-kit/README.md](../../starter-kit/README.md); the mapping itself is **(Our recommendation)** |
 | 6.3 | For each group, start from the baseline for its data class (it already enables `twin-shared`, and `twin-governance` for three classes) and add the group's role plugin to `enabledPlugins`: `"<role-plugin>@digital-twin-kit": true`, for example `twin-pe-deal-team`. In the same file set `TWIN_GOVERNANCE_TWIN_ID` (and `TWIN_GOVERNANCE_LOG` if the log path is not the default) in `env`. Do not edit the other keys. Example shape from [S4]: `"enabledPlugins": {"twin-pe-deal-team@digital-twin-kit": true}`. | Partner integration engineer | [S4]; [starter-kit/settings/README.md](../settings/README.md) |
 | 6.4 | Deploy each plugin set's settings to its device group (or give the group its own server-managed configuration), as described above. | Director of IT | [S4]; [S5] |
 | 6.5 | Keep `twin-governance` as a managed plugin, not a user install: the confidential, pe-zdr and hipaa baselines enable it in `enabledPlugins`, and those baselines also set `allowManagedHooksOnly`, under which only hooks from plugins that managed settings force-enable still run [S6]. Confirm the hook runs on one pilot device before rollout. | Partner integration engineer | [starter-kit/plugins/twin-governance/README.md](../../starter-kit/plugins/twin-governance/README.md); the hook is shipped in [hooks/](../../starter-kit/plugins/twin-governance/hooks/) (`governance_log.py`, `hooks.json`) |
@@ -177,3 +177,11 @@ SCIM groups (step 1) decide the role and seat in Claude. They do not decide whic
 - [S4] Manage Claude Code plugins for your organization. https://code.claude.com/docs/en/plugins/org
 - [S5] Deploy managed settings. https://code.claude.com/docs/en/managed-settings (its MDM examples repository is linked from this page: https://github.com/anthropics/claude-code/tree/main/examples/mdm, not opened)
 - [S6] Settings reference, what runs under `allowManagedHooksOnly`. https://code.claude.com/docs/en/settings-reference#what-runs-under-allowmanagedhooksonly
+- [S7] Okta, Create SAML app integrations. https://help.okta.com/en-us/content/topics/apps/apps_app_integration_wizard_saml.htm
+- [S8] Okta, Add SCIM provisioning to app integrations. https://help.okta.com/en-us/content/topics/apps/apps_app_integration_wizard_scim.htm
+- [S9] Okta, Define group attribute statements. https://help.okta.com/en-us/content/topics/apps/define-group-attribute-statements.htm
+- [S10] Okta, Configure provisioning for an app integration. https://help.okta.com/en-us/content/topics/provisioning/lcm/lcm-provision-application.htm
+- [S11] Claude Code authentication, restrict login to your organization. https://code.claude.com/docs/en/authentication#restrict-login-to-your-organization
+- [S12] Configure server-managed settings, give groups different settings. https://code.claude.com/docs/en/server-managed-settings#give-groups-different-settings
+- [S13] Claude Code permissions, deny rules and Read path patterns. https://code.claude.com/docs/en/permissions
+- [S14] Microsoft Intune Management Extension (scripts and Win32 apps assigned to a user or device). https://learn.microsoft.com/en-us/intune/device-management/tools/management-extension-windows

@@ -272,7 +272,7 @@ T3 (the Monday pipeline summary), T4 (CIM screening), T5 (call preparation) and 
 
 ### Layering on Anthropic's plugins (OD-1)
 
-Our recommendation is to layer `twin-pe-deal-team` on Anthropic's `financial-analysis` and `private-equity` plugins from `anthropics/financial-services`, adapting them and not shipping them unchanged ([compendium 16](../../docs/compendium/16-oob-skills-and-references.md)). T1 and T2 are firm-specific (Salesforce fields, the firm's brief format), so we write them either way; layering shapes T4, T6 and the plugin's structure. It is pending partner sign-off and a review spike. See OD-1.
+Our recommendation is to layer `twin-pe-deal-team` on Anthropic's `financial-analysis` and `private-equity` plugins from `anthropics/financial-services`, adapting them and not shipping them unchanged ([compendium 16](../../docs/compendium/16-oob-skills-and-references.md)). T1 and T2 are firm-specific (Salesforce fields, the firm's brief format), so we write them either way; layering shapes T4, T6 and the plugin's structure. It is pending partner sign-off. The review spike is done ([compendium 17](../../docs/compendium/17-anthropic-pe-plugins-review.md)). See OD-1.
 
 ## 9. Governance log and audit
 
@@ -389,6 +389,8 @@ Discovery A1 left the numeric targets for design. We set them with Samir Castell
 | Owner | Date |
 |---|---|
 | Sign-off: Eleanor Osei-Whitcombe (engagement lead). Spike: Yuki Sandoval (skill engineer), reviewed by Rashida Kovalenko | 2026-12-04, before Build starts |
+
+**Outcome (2026-11-14): still open, pending sign-off.** The review spike is written up in [compendium 17](../../docs/compendium/17-anthropic-pe-plugins-review.md), at upstream commit `3e32c22`. It passes all four checks above and supports layering as a vendored copy in `digital-twin-kit`, with the connectors file and the web, EDGAR and mail steps removed. It keeps 19 of the 23 skills (8 as shipped, 11 changed) and skips `deal-sourcing`, `ai-readiness`, `dcf-model` and `skill-creator`. T1 and T2 take only small pieces from it. It stays open because Rashida Kovalenko has not yet reviewed the spike and Eleanor Osei-Whitcombe has not signed off.
 
 ### Open discovery items that block design
 

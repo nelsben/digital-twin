@@ -2,7 +2,7 @@
 
 ## What this is
 
-Every deal-team skill reads the CRM through Salesforce's hosted MCP server. This runbook takes the CRM admin, the Claude org Owner and our integration engineer through adding it once, correctly, for a pilot at autonomy level 1 (read only). It is generic: replace every `<placeholder>` with the customer's value.
+Every deal-team skill reads the CRM through Salesforce's hosted MCP server. This runbook takes the CRM admin, the Claude org Owner and our integration engineer through adding it once, correctly, for a pilot at autonomy level 1 (Draft: write tools blocked). It is generic: replace every `<placeholder>` with the customer's value.
 
 Roles use the names in [03-stakeholders](../../docs/playbook/03-stakeholders.md):
 
@@ -110,7 +110,7 @@ Source: [B]. The exact dialog layout varies by organization ([B]).
 
 ## 7. Set tool permissions, then connect
 
-1. **Claude org Owner:** open the connector, list its tools, and set each tool per step 5. The partner integration engineer records the tool list and each setting, with the date, in the engagement's connector plan. Tool lists can change after you approve them, so the Owner reviews this list again at each quarterly access review ([E] review checklist).
+1. **Claude org Owner:** open the connector, list its tools, and set each tool per step 5. The partner integration engineer records the tool list and each setting, with the date, in the engagement's connector plan. Tool lists can change after you approve them ([E] review checklist), so the Owner reviews this list again at each quarterly access review ([15](../../docs/compendium/15-governance-and-performance.md)).
 2. **Each pilot user:** open **Customize > Connectors**, find the connector with the **Custom** label, click **Connect** and sign in to Salesforce with their own account. ([B])
 3. **Partner integration engineer:** confirm the sign-in completes with each user's own identity. If it fails with a callback or "client" error, re-check the callback URL and Consumer Key in step 3 and the 30-minute propagation note. If the connector cannot be reached, go to step 8 and the [connector troubleshooting page](https://claude.com/docs/connectors/building/troubleshooting.md) (not read by us).
 

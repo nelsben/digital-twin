@@ -1,0 +1,29 @@
+{
+  "description": "Appends one metadata-only JSON line per tool call to the local governance log.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}\"/hooks/governance_log.py",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}\"/hooks/governance_log.py",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

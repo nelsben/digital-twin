@@ -33,7 +33,7 @@ Pages used:
 
 - **Per user, delegated.** Claude acts as the signed-in user and can reach only what that user's Microsoft 365 account can already reach. Service-principal (application-only) authentication is not supported. ([A], [C])
 - **SharePoint sharing is not bypassed.** The connector does not bypass SharePoint sharing settings or folder permissions. ([C])
-- **Read by default.** Write scopes are requested in the consent set but are used only when write tools are enabled. ([B], [C]) At autonomy level 1 (read only, [06](../../docs/compendium/06-autonomy.md)), keep write tools off; see step 6.
+- **Read by default.** Write scopes are requested in the consent set but are used only when write tools are enabled. ([B], [C]) At autonomy level 1 (Draft: write tools blocked, [06](../../docs/compendium/06-autonomy.md)), keep write tools off; see step 6.
 - **Scopes for documents:** `Files.Read`, `Files.Read.All` and `Sites.Read.All` (read); `Files.ReadWrite.All` (write). `Sites.Read.All` is needed for SharePoint search. Other scopes cover Outlook mail and calendar, Teams chat and channels, and meetings (see [B] for the full list). ([B], [C])
 - **No site-level narrowing.** SharePoint search is tenant-wide, and site-specific `*.Selected` permissions are not supported. Limiting the connector to chosen sites in Entra is not an option. ([C]; [B] says "Site-specific search restriction isn't supported.") So the wall rests entirely on SharePoint permissions, which is why step 8 exists.
 - **Audit.** Every Graph call the connector makes appears in the organization's Microsoft 365 audit log (timestamp, user, operation, resource). ([C])

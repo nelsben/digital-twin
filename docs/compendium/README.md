@@ -1,6 +1,6 @@
 # Digital twin compendium
 
-**Status:** research phase. Nothing is built yet. This is grounded in Anthropic's docs as fetched on 2026-11-14. Every page links its sources; [sources.md](sources.md) has the full list.
+**Status:** the facts here are grounded in Anthropic's docs as fetched on 2026-11-14. The [starter kit](../../starter-kit/README.md) and the [sample engagement](../../engagements/sample-pe/README.md) are built on top of this compendium. Every page links its sources; [sources.md](sources.md) has the full list.
 
 **How to use it:** we deliver twins to customers as Anthropic partners. This compendium is our knowledge base. Engagement method (discovery, stakeholders, stories) is in the [partner playbook](../playbook/README.md). Anything marked "Decided" is our **default stance**, to be confirmed with each customer in discovery.
 

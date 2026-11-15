@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Twin Marker Read</label>
+    <description>Read-only access to Opportunity.Last_Updated_By_Twin__c. Assign to everyone who should see which opportunity changes a Claude twin made, including the RevOps managers who report on them.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.Last_Updated_By_Twin__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+</PermissionSet>

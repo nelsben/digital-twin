@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Twin Marker Edit</label>
+    <description>Edit access to Opportunity.Last_Updated_By_Twin__c, for the identity the twin writes as. Assign to the Salesforce integration user when the twin connects through one. With per-user OAuth the twin acts as each user, so assign to the users whose twin writes to opportunities; see the README for why this cannot be limited to the twin alone.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.Last_Updated_By_Twin__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+</PermissionSet>

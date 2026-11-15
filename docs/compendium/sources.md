@@ -168,3 +168,23 @@ All fetched on 2026-11-14. Anthropic's documentation now lives on three sites:
 - Prompt engineering: https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview ; https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices
 - System prompts release notes: https://platform.claude.com/docs/en/release-notes/system-prompts/overview
 - Building effective agents: https://www.anthropic.com/engineering/building-effective-agents
+
+## Anthropic's private-equity and financial-analysis plugins (page 17)
+
+Reviewed at commit `3e32c2287dcb637c184c01cc0ad82d6af7e9bb0f` (2026-11-12), read on 2026-11-14.
+
+- Repository: https://github.com/anthropics/financial-services
+- Reviewed commit: https://github.com/anthropics/financial-services/commit/3e32c2287dcb637c184c01cc0ad82d6af7e9bb0f
+- Licence (Apache-2.0): https://github.com/anthropics/financial-services/blob/3e32c2287dcb637c184c01cc0ad82d6af7e9bb0f/LICENSE
+- Marketplace file: https://github.com/anthropics/financial-services/blob/3e32c2287dcb637c184c01cc0ad82d6af7e9bb0f/.claude-plugin/marketplace.json
+- Repo rules on version bumps: https://github.com/anthropics/financial-services/blob/3e32c2287dcb637c184c01cc0ad82d6af7e9bb0f/CLAUDE.md ; https://github.com/anthropics/financial-services/blob/3e32c2287dcb637c184c01cc0ad82d6af7e9bb0f/.github/workflows/version-bump.yml
+- `private-equity` plugin: https://github.com/anthropics/financial-services/tree/3e32c2287dcb637c184c01cc0ad82d6af7e9bb0f/plugins/vertical-plugins/private-equity
+- `financial-analysis` plugin: https://github.com/anthropics/financial-services/tree/3e32c2287dcb637c184c01cc0ad82d6af7e9bb0f/plugins/vertical-plugins/financial-analysis
+- `financial-analysis` connectors: https://github.com/anthropics/financial-services/blob/3e32c2287dcb637c184c01cc0ad82d6af7e9bb0f/plugins/vertical-plugins/financial-analysis/.mcp.json
+- Last commit touching either plugin: https://github.com/anthropics/financial-services/commit/60565064557ca77b12f62aa7877f365d111c129d
+- Box connector added (#187): https://github.com/anthropics/financial-services/commit/120a31dcede4affa1d771cbf286a63ee331f92a4
+- Current skill-creator, for comparison: https://github.com/anthropics/skills/tree/main/skills/skill-creator
+- Plugins for your organization (`strictKnownMarketplaces`, `enabledPlugins`): https://code.claude.com/docs/en/plugins/org
+- Marketplace reference (sources, `ref` and `sha`, reserved names): https://code.claude.com/docs/en/plugins/marketplace-reference
+- Managed MCP (`allowedMcpServers`, `allowManagedMcpServersOnly`): https://code.claude.com/docs/en/managed-mcp
+- Apache License 2.0, section 4: https://www.apache.org/licenses/LICENSE-2.0

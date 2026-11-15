@@ -30,6 +30,7 @@ In Claude terms, a twin is not one thing. It is a package of parts: a persona, s
 | [14-private-equity.md](14-private-equity.md) | The primary use case: designing for information barriers and for none |
 | [15-governance-and-performance.md](15-governance-and-performance.md) | Audit sources, our own governance log, scorecards, and who reviews what, how often |
 | [16-oob-skills-and-references.md](16-oob-skills-and-references.md) | Anthropic's ready-made skills and plugins, adopt/adapt/skip for each, and an index of best-practice docs |
+| [17-anthropic-pe-plugins-review.md](17-anthropic-pe-plugins-review.md) | Every skill and connector in Anthropic's `private-equity` and `financial-analysis` plugins: where the data goes, adopt/adapt/skip for each, and how to pin a reviewed copy (OD-1) |
 | [sources.md](sources.md) | Every source, with its URL |
 
 ## The ten things to know first

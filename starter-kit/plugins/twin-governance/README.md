@@ -52,7 +52,7 @@ The only thing taken from `tool_input` is a list of record ids: the values of ke
 
 | System | Accepted form |
 |---|---|
-| Salesforce | 15 or 18 alphanumeric characters (letters and digits, no other characters) |
+| Salesforce | 15 alphanumeric characters with at least one digit, or 18 alphanumeric characters whose last 3 are the checksum of the first 15 (the documented case-bitmask algorithm). An all-letter code name such as `FalconAcquisitions` is dropped |
 | HubSpot | Digits only, 1 to 20 of them |
 | Microsoft Graph | GUID: 8-4-4-4-12 hex digits with dashes, either case |
 

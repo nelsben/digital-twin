@@ -37,9 +37,13 @@ MAX_RECORD_IDS = 20
 MAX_FIELD_CHARS = 200
 # Allowlist of real system id formats. Anything else (a code name such as
 # Falcon_target, free text) is dropped. Matched with fullmatch, ASCII only.
+# The Salesforce 15- and 18-character shapes get an extra check in
+# is_record_id: a 15-character id must contain a digit, and an 18-character id
+# must end in the checksum of its first 15 characters.
+SALESFORCE_ID_15 = re.compile(r"[A-Za-z0-9]{15}")
+SALESFORCE_ID_18 = re.compile(r"[A-Za-z0-9]{18}")
+CHECKSUM_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ012345"
 RECORD_ID_PATTERNS = (
-    re.compile(r"[A-Za-z0-9]{15}"),                 # Salesforce 15-character id
-    re.compile(r"[A-Za-z0-9]{18}"),                 # Salesforce 18-character id
     re.compile(r"[0-9]{1,20}"),                     # HubSpot numeric id
     re.compile(r"[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}"),  # GUID (Microsoft Graph)
 )
@@ -105,7 +109,34 @@ def is_record_id_key(key):
     return isinstance(key, str) and (key in RECORD_ID_KEYS or key.endswith("_id"))
 
 
+def salesforce_checksum(id15):
+    """The 3-character suffix that turns a 15-character Salesforce id into 18.
+
+    For each 5-character chunk, a bitmask of which characters are uppercase
+    A-Z (first character = lowest bit), mapped through CHECKSUM_ALPHABET.
+    """
+    suffix = ""
+    for start in range(0, 15, 5):
+        mask = 0
+        for bit, char in enumerate(id15[start:start + 5]):
+            if "A" <= char <= "Z":
+                mask |= 1 << bit
+        suffix += CHECKSUM_ALPHABET[mask]
+    return suffix
+
+
+def is_salesforce_id(value):
+    if SALESFORCE_ID_15.fullmatch(value):
+        # Real ids carry digits; an all-letter value is a code name.
+        return any(char in "0123456789" for char in value)
+    if SALESFORCE_ID_18.fullmatch(value):
+        return value[15:] == salesforce_checksum(value[:15])
+    return False
+
+
 def is_record_id(value):
+    if is_salesforce_id(value):
+        return True
     return any(pattern.fullmatch(value) for pattern in RECORD_ID_PATTERNS)
 
 
@@ -113,8 +144,8 @@ def extract_record_ids(tool_input):
     """Values of id-like keys in tool_input that are real system ids; at most 20.
 
     Keys: id, Id, recordId, record_id, or any key ending in _id. Values must be
-    strings (or ints) that fully match a known id format: Salesforce 15- or
-    18-character alphanumeric ids, HubSpot numeric ids, or GUIDs. Any other
+    strings (or ints) that fully match a known id format: Salesforce 15-character
+    ids that contain a digit, 18-character ids with a valid checksum, HubSpot numeric ids, or GUIDs. Any other
     value is dropped, never truncated or hashed. Nested dicts and lists are
     searched, bounded in depth and size. Nothing else is read from tool_input.
     """

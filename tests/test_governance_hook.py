@@ -33,8 +33,10 @@ FAKE_RESPONSE = "RESPONSE-CONTENT-should-never-be-logged"
 FULL_PATH = "/Users/someone/deals/project-falcon"
 FILE_PATH = FULL_PATH + "/term-sheet.docx"
 
-SF_ID_18 = "0065e00000AbCdEfGH"
 SF_ID_15 = "0065e00000AbCdE"
+# 18-character id: the 15-character id plus its 3-character case checksum.
+SF_ID_18 = "0065e00000AbCdEAAV"
+SF_ID_18_BAD_CHECKSUM = "0065e00000AbCdEAAW"
 HUBSPOT_ID = "51234567890"
 GUID = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
 SALT = "test-salt-do-not-log"
@@ -227,6 +229,23 @@ class TestGovernanceHook(HookTestCase):
         entry = json.loads(self.lines()[0])
         self.assertEqual(entry["record_ids"], [])
         self.assertNotIn("Falcon", self.log.read_text(encoding="utf-8"))
+
+    def test_letter_only_ids_dropped(self):
+        # No digit (15-character) or no valid checksum (18-character): code names.
+        for value in ("FalconAcquisitions", "ProjectFalconXYZ", "projectfalconxyz",
+                      SF_ID_18_BAD_CHECKSUM):
+            with self.subTest(value=value):
+                self.log.unlink(missing_ok=True)
+                data = sample_input(tool_input={"record_id": value, "deal_id": value})
+                self.assertEqual(self.run_hook(data).returncode, 0)
+                entry = json.loads(self.lines()[0])
+                self.assertEqual(entry["record_ids"], [])
+                self.assertNotIn(value, self.log.read_text(encoding="utf-8"))
+
+    def test_valid_salesforce_ids_kept(self):
+        self.run_hook(sample_input(tool_input={"record_id": SF_ID_18, "id": SF_ID_15}))
+        self.assertEqual(sorted(json.loads(self.lines()[0])["record_ids"]),
+                         sorted([SF_ID_18, SF_ID_15]))
 
     def test_record_ids_other_shapes_dropped(self):
         rejected = [

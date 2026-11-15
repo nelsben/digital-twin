@@ -2,13 +2,26 @@
 
 The role twin for a private equity deal team: its skills and its persona (output style).
 
-Status: in progress (version 0.1.0). One skill is written (`preparing-company-briefs`); the other skills, hooks and the output style are placeholders kept with `.gitkeep`.
+Status: in progress (version 0.3.0). Two skills and the persona are written.
 
 ## Skills
 
 | Skill | Story | What it does |
 |---|---|---|
 | [preparing-company-briefs](skills/preparing-company-briefs/SKILL.md) | T1 (#32) | A one-page company brief from the Salesforce deal record and the SharePoint deal folder, with a source link on every fact, a list of what is missing, and no web tools. Draft only. |
+| [drafting-crm-updates](skills/drafting-crm-updates/SKILL.md) | T2 (#34) | Draft activity-log and next-step text for the Salesforce opportunity from meeting notes or a Teams transcript. Draft only at level 1; at level 2 it writes after approval, with the twin marker ([references/level-2-writes.md](skills/drafting-crm-updates/references/level-2-writes.md)). |
+
+## Persona
+
+The deal-team persona is kept once and shipped in two forms, as the [persona template](../../templates/persona/README.md) describes (it also says which form goes on which surface):
+
+| File | What it is | Surface |
+|---|---|---|
+| [persona/persona.md](persona/persona.md) | The single source. Change it first. | None: it is not loaded |
+| [output-styles/pe-deal-team-twin.md](output-styles/pe-deal-team-twin.md) | Output style, with `force-for-plugin: true`, so it applies whenever the plugin is enabled | Claude Code |
+| [persona/system-prompt.md](persona/system-prompt.md) | System prompt, in the template's tags | claude.ai Project instructions; hosted agents |
+
+A persona change updates all three files in the same PR; `tests/test_persona.py` fails if the forms drift from `persona.md`. The persona is an instruction, not a guarantee: hard limits (no web tools, no writes at level 1, per-user access) are enforced by settings and connector permissions, not by the persona. The persona has not been evaluated with users or with behavioural evals yet.
 
 ## Upstream plugins
 

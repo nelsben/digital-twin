@@ -129,3 +129,42 @@ All fetched on 2026-11-14. Anthropic's documentation now lives on three sites:
 - MCP authorization spec: https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization
 - MCP security best practices: https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices
 - MCP Registry: https://modelcontextprotocol.io/registry/about
+
+## Out-of-the-box skills, plugins and reference docs (page 16)
+- Anthropic skills repo: https://github.com/anthropics/skills
+- Skills repo README: https://github.com/anthropics/skills/blob/main/README.md
+- Skills repo marketplace.json: https://github.com/anthropics/skills/blob/main/.claude-plugin/marketplace.json
+- Skill template: https://github.com/anthropics/skills/tree/main/template
+- skill-creator skill: https://github.com/anthropics/skills/tree/main/skills/skill-creator
+- mcp-builder skill: https://github.com/anthropics/skills/tree/main/skills/mcp-builder
+- Official plugins repo: https://github.com/anthropics/claude-plugins-official
+- Community plugins repo: https://github.com/anthropics/claude-plugins-community
+- Knowledge-work plugins repo: https://github.com/anthropics/knowledge-work-plugins
+- Financial services repo: https://github.com/anthropics/financial-services
+- Private equity plugin: https://github.com/anthropics/financial-services/tree/main/plugins/vertical-plugins/private-equity
+- Claude for Financial Advisors: https://github.com/anthropics/claude-for-financial-advisors
+- Claude for Legal: https://github.com/anthropics/claude-for-legal
+- Anthropic's marketplaces: https://code.claude.com/docs/en/plugins/anthropic-marketplaces
+- Install plugins: https://code.claude.com/docs/en/discover-plugins ; https://code.claude.com/docs/en/plugins/install
+- Plugins overview, create, publish, loading: https://code.claude.com/docs/en/plugins/overview ; https://code.claude.com/docs/en/plugins/create ; https://code.claude.com/docs/en/plugins/publish ; https://code.claude.com/docs/en/plugins/loading
+- Plugin references: https://code.claude.com/docs/en/plugins-reference ; https://code.claude.com/docs/en/plugins/manifest-reference ; https://code.claude.com/docs/en/plugins/marketplace-reference ; https://code.claude.com/docs/en/plugins/cli-reference
+- Create a marketplace: https://code.claude.com/docs/en/plugin-marketplaces
+- Plugins on claude.ai and Cowork: https://claude.com/docs/plugins/overview
+- Claude Marketplace: https://claude.com/plugins
+- Skills quickstart (API): https://platform.claude.com/docs/en/agents-and-tools/agent-skills/quickstart
+- Claude API skill: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/claude-api-skill
+- What are skills (support): https://support.claude.com/en/articles/12512176-what-are-skills
+- Using skills in Claude (support): https://support.claude.com/en/articles/12512180-using-skills-in-claude
+- Create and edit files (support): https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude
+- Evals: https://platform.claude.com/docs/en/test-and-evaluate/develop-tests ; https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents ; https://claude.com/blog/improving-skill-creator-test-measure-and-refine-agent-skills
+- Agent Skills open standard (not a primary Anthropic domain): https://agentskills.io ; https://agentskills.io/skill-creation/evaluating-skills
+- Hooks: https://code.claude.com/docs/en/hooks ; https://code.claude.com/docs/en/hooks-guide
+- Output styles: https://code.claude.com/docs/en/output-styles
+- Settings and permissions: https://code.claude.com/docs/en/managed-settings ; https://code.claude.com/docs/en/server-managed-settings ; https://code.claude.com/docs/en/settings ; https://code.claude.com/docs/en/permissions
+- Claude Code MCP and managed MCP: https://code.claude.com/docs/en/mcp ; https://code.claude.com/docs/en/managed-mcp
+- API MCP connector: https://platform.claude.com/docs/en/agents-and-tools/mcp-connector
+- Connector directory: https://claude.com/docs/connectors/directory
+- Claude Code security: https://code.claude.com/docs/en/security ; https://code.claude.com/docs/en/sandboxing ; https://code.claude.com/docs/en/plugins/security
+- Prompt engineering: https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview ; https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices
+- System prompts release notes: https://platform.claude.com/docs/en/release-notes/system-prompts/overview
+- Building effective agents: https://www.anthropic.com/engineering/building-effective-agents

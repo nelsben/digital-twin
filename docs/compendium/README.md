@@ -29,6 +29,7 @@ In Claude terms, a twin is not one thing. It is a package of parts: a persona, s
 | [13-devices.md](13-devices.md) | Managed (MDM) and unmanaged devices: what can be enforced, and the policy for each |
 | [14-private-equity.md](14-private-equity.md) | The primary use case: designing for information barriers and for none |
 | [15-governance-and-performance.md](15-governance-and-performance.md) | Audit sources, our own governance log, scorecards, and who reviews what, how often |
+| [16-oob-skills-and-references.md](16-oob-skills-and-references.md) | Anthropic's ready-made skills and plugins, adopt/adapt/skip for each, and an index of best-practice docs |
 | [sources.md](sources.md) | Every source, with its URL |
 
 ## The ten things to know first

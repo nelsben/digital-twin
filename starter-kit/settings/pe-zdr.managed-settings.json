@@ -5,7 +5,24 @@
       "repo": "REPLACE-WITH-GITHUB-ORG/digital-twin-kit"
     }
   ],
+  "extraKnownMarketplaces": {
+    "digital-twin-kit": {
+      "source": {
+        "source": "github",
+        "repo": "REPLACE-WITH-GITHUB-ORG/digital-twin-kit"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "twin-shared@digital-twin-kit": true,
+    "twin-governance@digital-twin-kit": true
+  },
+  "env": {
+    "TWIN_GOVERNANCE_ORG_LABEL": "pe-zdr",
+    "TWIN_GOVERNANCE_SALT": "REPLACE-WITH-GOVERNANCE-SALT"
+  },
   "forceLoginOrgUUID": "REPLACE-WITH-ORG-UUID",
+  "forceLoginMethod": "claudeai",
   "allowManagedHooksOnly": true,
   "allowManagedMcpServersOnly": true,
   "allowedMcpServers": [

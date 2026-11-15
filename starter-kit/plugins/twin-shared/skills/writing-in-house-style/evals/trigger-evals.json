@@ -1,0 +1,90 @@
+[
+  {
+    "query": "Tidy this up and make it ready to send to the team: [pasted draft email about the Larch management meeting]",
+    "should_trigger": true
+  },
+  {
+    "query": "rewrite this so it sounds less rambling, it goes to the deal team: [pasted paragraph]",
+    "should_trigger": true
+  },
+  {
+    "query": "draft a note to Lena and Marcus from my call notes, short please",
+    "should_trigger": true
+  },
+  {
+    "query": "Can you clean up this Slack message before I post it? It's a bit chatty",
+    "should_trigger": true
+  },
+  {
+    "query": "write up a quick summary of these meeting notes for the team, five lines max",
+    "should_trigger": true
+  },
+  {
+    "query": "Turn this into a short internal memo for the partners: we want to ask for exclusivity on Birch and need their view by Friday",
+    "should_trigger": true
+  },
+  {
+    "query": "edit my handover note, it's too long and a bit apologetic",
+    "should_trigger": true
+  },
+  {
+    "query": "draft an email to the team asking who can cover the Cedar data room next week",
+    "should_trigger": true
+  },
+  {
+    "query": "tidy this up pls",
+    "should_trigger": true
+  },
+  {
+    "query": "Shorten this update for the weekly partner email and keep the numbers straight: [pasted text]",
+    "should_trigger": true
+  },
+  {
+    "query": "Company brief for Project Larch before my meeting on Thursday",
+    "should_trigger": false
+  },
+  {
+    "query": "one-pager on Birch Sample Logistics, I meet their CEO tomorrow",
+    "should_trigger": false
+  },
+  {
+    "query": "brief me on Elm Sample Components Co",
+    "should_trigger": false
+  },
+  {
+    "query": "Update the CRM for my meeting with Larch yesterday and log the next steps",
+    "should_trigger": false
+  },
+  {
+    "query": "log my meeting with Cedar from this Teams transcript",
+    "should_trigger": false
+  },
+  {
+    "query": "What does EBITDA stand for?",
+    "should_trigger": false
+  },
+  {
+    "query": "Is Project Dune open or closed in Salesforce? Just tell me, no write-up",
+    "should_trigger": false
+  },
+  {
+    "query": "What day of the week is 2026-12-03?",
+    "should_trigger": false
+  },
+  {
+    "query": "Write a Python function that parses ISO 8601 dates from a text file",
+    "should_trigger": false
+  },
+  {
+    "query": "Build the Monday pipeline summary for the partners from the Salesforce report",
+    "should_trigger": false
+  },
+  {
+    "query": "What's the difference between a term loan and a revolving credit facility?",
+    "should_trigger": false
+  },
+  {
+    "query": "Which files are in the Project Birch SharePoint folder?",
+    "should_trigger": false
+  }
+]

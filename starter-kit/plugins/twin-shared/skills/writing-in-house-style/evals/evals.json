@@ -1,0 +1,138 @@
+{
+  "skill_name": "writing-in-house-style",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tidy this up and make it ready to send to the Project Larch deal team. I'm Pat Sample. My draft and the context on the figures are in the attached file. Today is Sunday 2026-11-15.",
+      "expected_output": "A short email that leads with the ask (confirm the 2026-12-03 investment committee slot by 2026-11-27), has plain wording with no hype, no emoji, ISO dates, the revenue figure with currency, unit, period and its source, labelled management-provided and unaudited, full names on first mention, and a short note of what was changed.",
+      "files": [
+        "evals/files/larch-update-draft.md"
+      ],
+      "expectations": [
+        "The first sentence or first two lines of the rewritten email state the ask: whether the investment committee slot on 2026-12-03 works, with the reply date 2026-11-27",
+        "Every date in the rewrite is in ISO 8601 form (2026-11-10, 2026-11-27, 2026-12-03); none is written like '10th', 'Fri 27th', '3 Dec' or '12/3'",
+        "The revenue figure is written with currency, unit and period, for example USD 41.2 million for the financial year ended 2025-12-31",
+        "The revenue figure is labelled as management-provided and unaudited, and names its source (the management accounts in the data room)",
+        "The rewrite contains no emoji and none of the words 'amazing', 'exciting', 'game-changer', 'leverage' or 'touch base'",
+        "Sam Example and Jo Sample appear by full name on first mention",
+        "The EBITDA remark is not stated as a fact: it is dropped, or labelled as Pat's impression, and no EBITDA figure is added",
+        "The words 'Project Larch' or 'Larch' are used as given; the code name is not expanded into a company name",
+        "The response says in a few lines what was changed (for example: moved the ask to the top, replaced the relative dates, labelled the revenue figure, cut the hype)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Draft a note to the deal team (Lena Placeholder, Marcus Example, Ana Sample) from my call notes in the attached file. I'm Pat Sample. Today is Sunday 2026-11-15.",
+      "expected_output": "A short note that leads with the decision needed (whether to ask Birch for exclusivity, and Lena Placeholder's view), reports the facts from the call, flags what the notes do not say (Sam's surname, the currency and year of the figures, the dates), and invents none of them.",
+      "files": [
+        "evals/files/birch-call-notes.md"
+      ],
+      "expectations": [
+        "The note leads with the decision or ask: whether to ask for exclusivity, and that Pat wants Lena Placeholder's view first",
+        "The call date is written as 2026-11-12",
+        "The deal is called 'Project Birch' or 'Birch' as given; the code name is not expanded into a company name",
+        "Sam is not given a surname the notes do not contain, and the response or note says the surname is not in the notes",
+        "The revenue and EBITDA figures (about 18 and about 3 million) are not given a currency or a year that the notes do not state; the note or the response says currency and year were not given",
+        "The debt schedule due date 'by next fri' is resolved to 2026-11-20 or left as stated with a flag; it is not turned into any other date",
+        "Jo Sample and Robin are not described with titles or facts that are not in the notes",
+        "The note is short (about 150 words or fewer) and has no headings or table",
+        "The note contains no emoji and no hype words"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Summarise the attached extract in five lines or fewer for the partners. I'm Ana Sample. The extract is from the Project Cedar management presentation.",
+      "expected_output": "A summary of five lines or fewer that leads with the headline, gives each figure with currency, unit and period, labels 2025E as a management estimate and unaudited, labels any growth rate the writer calculated as calculated, and names the source.",
+      "files": [
+        "evals/files/cedar-management-extract.md"
+      ],
+      "expectations": [
+        "The summary is five lines or fewer and uses no headings or table",
+        "The first line gives the headline (revenue and EBITDA direction or level), not background or a greeting",
+        "Revenue and EBITDA figures carry currency, unit and period, for example EUR 66.0 million for 2025",
+        "The 2025 figures are labelled as a management estimate and unaudited, and the 2023 and 2024 figures are not labelled that way",
+        "Any growth rate or margin that the summary gives is labelled as calculated from the extract; none is stated as if the management presentation said it",
+        "The summary names its source (the management presentation, slide 6 or 7, or its file name)",
+        "The customer concentration claim ('around a third') is attributed to management and not made more precise",
+        "Net revenue retention 'above 100%' is not restated as a specific number, and no cash flow, debt or headcount is mentioned as known",
+        "The code name is used as 'Project Cedar' or 'Cedar'; no company name is added, and there is no emoji"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Tidy this up for the team and put it in our house style.",
+      "expected_output": "The response says no text came with the request and asks for it. It writes no draft and invents no content.",
+      "files": [],
+      "expectations": [
+        "The response says that no text was received or attached",
+        "The response asks the user to paste or attach the text",
+        "The response does not contain a rewritten or invented draft message",
+        "The response is short (about 60 words or fewer)"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Write the Project Birch brief for the deal team. The attached brief-template.md is the deal team's required layout, and birch-facts.md has the facts. I'm Pat Sample. Use the layout exactly.",
+      "expected_output": "A brief that keeps the required layout (the four headings in order, the contacts table, the numbered open items, the Not found list), with the facts from the record only, and ISO dates and full names.",
+      "files": [
+        "evals/files/brief-template.md",
+        "evals/files/birch-facts.md"
+      ],
+      "expectations": [
+        "The brief has the headings Status, Key contacts, Open items and Not found, in that order",
+        "Key contacts is a table with the columns Name, Role and Last contact",
+        "Open items is a numbered list",
+        "Not found lists headcount and the plant opening date",
+        "Stage and dates are in ISO 8601 form (Diligence, 2026-11-05)",
+        "The brief contains no fact that is absent from birch-facts.md, and the code name is not expanded into a company name",
+        "The brief has no emoji"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Quick one: does EBITDA come before or after depreciation? Just tell me.",
+      "expected_output": "A direct one or two sentence answer (before depreciation, and amortisation). No email, memo, headings or change note.",
+      "files": [],
+      "expectations": [
+        "The response answers correctly that EBITDA is earnings before depreciation (and before interest, tax and amortisation)",
+        "The response is two sentences or fewer",
+        "The response has no headings, no table and no list",
+        "The response does not mention house style and has no note about what was changed"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Rewrite this handover note for the deal team. I'm Marcus Example. Today is Sunday 2026-11-15.",
+      "expected_output": "A short note that leads with the handover (who takes what), does not guess the ambiguous date 03/11/2026 or the vague 'mid year', keeps 'Cedar' as given, names people in full, and says what was changed.",
+      "files": [
+        "evals/files/cedar-handover-note.md"
+      ],
+      "expectations": [
+        "The date 03/11/2026 is not silently converted to a single ISO date: the response flags it as ambiguous (3 November or 11 March) or asks which, or keeps it with a flag",
+        "'Mid year' is not turned into a specific date or month the note does not contain",
+        "The first lines of the rewrite state the handover: Lena Placeholder takes the adviser calls and Ana Sample keeps the data room tidy",
+        "The adviser contact is named as Dale Placeholder, and the email address is kept exactly as written",
+        "The price guide change ('about 10%') is kept as the note gives it and is attributed to the sell-side, and is not made more precise",
+        "The apologies and filler ('quite a mess', 'apologies in advance', exclamation marks) are removed",
+        "The response says what was changed in a few lines",
+        "The rewrite uses 'Cedar' or 'Project Cedar' as given and has no emoji"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Rewrite this Slack message properly, it's going to the Project Birch deal team channel. I'm Ana Sample. Today is Sunday 2026-11-15.",
+      "expected_output": "A two or three line message that leads with the ask (can everyone confirm 3pm on Thursday 2026-11-19), with no emoji, no headings or table, and a short note of what was changed.",
+      "files": [
+        "evals/files/chatty-slack-message.md"
+      ],
+      "expectations": [
+        "The message leads with the ask: whether 3pm on Thursday works for everyone",
+        "Thursday is resolved to 2026-11-19, or the response asks which Thursday; the date is in ISO 8601 form",
+        "The message has no emoji and no repeated exclamation or question marks",
+        "The message is three sentences or fewer and has no headings, no table and no list",
+        "The message does not add facts that the original lacks, such as a meeting link, a reply deadline or who is on the call",
+        "The response says in a line or two what was changed"
+      ]
+    }
+  ]
+}

@@ -8,6 +8,6 @@ Example Capital Partners is a mid-market private-equity firm with about $4B in a
 |---|---|---|
 | [discovery.md](discovery.md) | The completed discovery questionnaire, with candidate tasks and a discovery summary | Done |
 | [stakeholders.md](stakeholders.md) | Named people for each customer role, and the RACI | Done |
-| design.md | Org plan, data and device policy, connector plan, wall design, governance-log design | Coming (#27) |
+| [design.md](design.md) | Org plan, data and device policy, connector plan, wall design, governance-log design | Done |
 | wall-test-protocol.md | How we test that the soft walls hold | Coming (#30) |
 | backlog.md | The prioritized story backlog | Coming (#28) |

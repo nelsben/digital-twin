@@ -2,12 +2,76 @@
 
 The guardrails plugin: hooks that enforce governance and performance rules across role twins.
 
-Status: skeleton (version 0.1.0). Folders are placeholders kept with `.gitkeep`; no skills, hooks or output styles are written yet.
+Status: version 0.2.0. It ships one hook, the governance log hook. Other folders are still placeholders; no skills or output styles are written yet.
 
 ## Compendium pages
 
 - [04-distribution-governance.md](../../../docs/compendium/04-distribution-governance.md)
 - [15-governance-and-performance.md](../../../docs/compendium/15-governance-and-performance.md)
+
+## The governance log hook
+
+`hooks/hooks.json` registers `hooks/governance_log.py` on `PostToolUse` and `PostToolUseFailure` for all tools (matcher `*`), with a 5 second timeout. After every tool call the script appends exactly one JSON line to a local log file. This is the local source for the long-term audit record described in compendium 15: private-equity chat retention is 30 days and ZDR sessions are not in the Compliance API, so we keep our own log, and for private-equity data it holds metadata only.
+
+The script is Python 3 standard library only (the hook runs `python3`, so IT needs Python 3 on the PATH of managed devices). It never blocks or changes a tool call: it always exits 0, prints nothing to stdout, and reports problems (bad input, an unwritable log) on stderr only.
+
+### What is logged
+
+One line per call, with these fields:
+
+| Field | Value |
+|---|---|
+| `schema_version` | `1` |
+| `ts` | UTC timestamp, ISO 8601, ending in `Z` |
+| `session_id` | Claude Code session id |
+| `event` | `PostToolUse` or `PostToolUseFailure` |
+| `tool` | Tool name, such as `Bash` or `mcp__salesforce__query` |
+| `outcome` | `success` for `PostToolUse`, `failure` for `PostToolUseFailure` |
+| `cwd_basename` | Last folder name of the working directory, not the full path |
+| `os_user` | OS user name |
+| `twin_id`, `org_label` | From `TWIN_GOVERNANCE_TWIN_ID` and `TWIN_GOVERNANCE_ORG_LABEL`; `null` if unset |
+| `mcp_server`, `mcp_tool` | For MCP tools, parsed from `mcp__<server>__<tool>`; `null` otherwise |
+| `record_ids` | Record ids from `tool_input` (see below); `[]` if none |
+
+Example:
+
+```json
+{"schema_version":1,"ts":"2026-11-14T09:30:12.345Z","session_id":"abc123","event":"PostToolUse","tool":"mcp__salesforce__update_record","outcome":"success","cwd_basename":"deal-room","os_user":"jsmith","twin_id":"twin-pe-deal-team","org_label":"pe-org","mcp_server":"salesforce","mcp_tool":"update_record","record_ids":["006ABC123"]}
+```
+
+### What is never logged
+
+Metadata-only is the only mode. These are dropped and never written:
+
+- `tool_input` values, except record ids
+- `tool_response` and the `error` text of a failed call
+- prompts, file contents, and transcript paths
+- full paths (only the working directory's last folder name is kept)
+
+The only thing taken from `tool_input` is a list of record ids: the values of keys named `id`, `Id`, `recordId`, `record_id`, or ending in `_id`, found at any depth, that match `^[A-Za-z0-9_-]{1,64}$`, at most 20 per line. Anything else under those keys (free text, long strings) is dropped. `tests/test_governance_hook.py` proves this: it feeds a fake secret, a prompt and a file body through `tool_input`, `tool_response` and `error`, and checks that none of them appear in the log line.
+
+### Configuration
+
+Set these environment variables for the Claude Code process (for example through managed settings `env`, or the device's login environment):
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `TWIN_GOVERNANCE_LOG` | `~/.claude/twin-governance/log.jsonl` | Log file path. Missing directories are created. The file is created with mode 0600 and new directories with 0700. |
+| `TWIN_GOVERNANCE_TWIN_ID` | unset | Twin id written to every line, such as `twin-pe-deal-team` |
+| `TWIN_GOVERNANCE_ORG_LABEL` | unset | Org label written to every line, such as `pe-org` |
+| `TWIN_GOVERNANCE_MODE` | `metadata` | The only mode. There is no content mode; any other value logs metadata only and prints a warning on stderr. |
+
+### Getting the log to your SIEM
+
+The log destination is a decision for each customer, and IT owns the tooling choice (compendium 15, "Where the log lives"). The plugin only writes a local file. IT picks the way it reaches the customer's SIEM, data warehouse or observability tool, for example a log forwarder or agent that tails `TWIN_GOVERNANCE_LOG` (one JSON object per line, UTF-8), or a scheduled job that ships and rotates the file. Points to settle with the customer:
+
+- Where the forwarder reads: set `TWIN_GOVERNANCE_LOG` to a path the forwarder already watches.
+- Who can read the log and how long it is kept. For private-equity data, restrict access as tightly as the deal data, and keep a reviewed record of who reads it.
+- Rotation of the local file. The hook only appends; it never truncates or rotates.
+
+### Deploying it: managed hooks
+
+The `pe-zdr` and `hipaa` settings baselines (and `confidential`) set `allowManagedHooksOnly`, so only hooks that IT deploys run. A plugin installed by a user does not run its hooks under that setting. For the governance hook to run there, deploy `twin-governance` through the managed marketplace (see [settings README](../../settings/README.md)), not as a user install. If the hook is not running on a managed device, check this first.
 
 ## Filled in by
 

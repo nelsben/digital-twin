@@ -1,0 +1,8 @@
+{
+  "name": "twin-governance",
+  "version": "0.1.0",
+  "description": "Governance guardrails, delivered as hooks, for the digital twin starter kit.",
+  "author": {
+    "name": "digital-twin-kit maintainers"
+  }
+}

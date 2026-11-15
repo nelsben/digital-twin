@@ -1,0 +1,8 @@
+{
+  "name": "twin-shared",
+  "version": "0.1.0",
+  "description": "Shared skills, such as house style and account research, that every role twin installs.",
+  "author": {
+    "name": "digital-twin-kit maintainers"
+  }
+}

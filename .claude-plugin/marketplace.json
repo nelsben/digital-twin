@@ -1,0 +1,24 @@
+{
+  "name": "digital-twin-kit",
+  "description": "Starter kit of Claude plugins for role-based digital twins.",
+  "owner": {
+    "name": "digital-twin-kit maintainers"
+  },
+  "plugins": [
+    {
+      "name": "twin-shared",
+      "source": "./starter-kit/plugins/twin-shared",
+      "description": "Shared skills, such as house style and account research, that every role twin installs."
+    },
+    {
+      "name": "twin-pe-deal-team",
+      "source": "./starter-kit/plugins/twin-pe-deal-team",
+      "description": "Role twin for private equity deal teams: skills and an output style for sourcing, diligence and portfolio work."
+    },
+    {
+      "name": "twin-governance",
+      "source": "./starter-kit/plugins/twin-governance",
+      "description": "Governance guardrails, delivered as hooks, for the digital twin starter kit."
+    }
+  ]
+}

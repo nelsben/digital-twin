@@ -1,0 +1,35 @@
+> FICTIONAL SYNTHETIC FIXTURE. Every company, person, ID and figure here is invented. Replace with a redacted real example (see ../README.md).
+
+# Salesforce export: Opportunity 006EX0000004DDD
+
+| Field | Value |
+|---|---|
+| Opportunity name | Project Dune |
+| Account | Dune Fictional Foods Ltd (001EX0000004DDD) |
+| Status | Closed |
+| Stage | Closed Lost |
+| Stage changed on | 2026-10-09 |
+| Closed reason | Price |
+| Owner | Pat Sample (Associate) |
+
+## Contacts
+
+| Name | Title | Record ID |
+|---|---|---|
+| Lee Placeholder | Chief Executive Officer | 003EX0000004DDA |
+
+## Activity history
+
+| Date | Type | Subject | Record ID |
+|---|---|---|---|
+| 2026-10-09 | Email | Pass notice sent to Lee Placeholder | 00TEX0000004DD1 |
+| 2026-09-29 | Call | Price discussion with Lee Placeholder | 00TEX0000004DD2 |
+| 2026-09-14 | Meeting | Management meeting | 00TEX0000004DD3 |
+
+## Open tasks (type: Diligence)
+
+None.
+
+# SharePoint: /sites/DealTeam/Project Dune/ (1 item)
+
+/sites/DealTeam/Project Dune/Memos/2026-09-12 Initial screening memo.md, which says "Stage: Screening. Proceed."

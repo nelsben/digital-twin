@@ -1,0 +1,20 @@
+[
+  {"query": "Update the CRM for my meeting with Larch Fictional Widgets this morning, notes are in my OneDrive", "should_trigger": true},
+  {"query": "log my meeting with Birch Sample Logistics, here are my notes", "should_trigger": true},
+  {"query": "post-meeting update for Project Fir please", "should_trigger": true},
+  {"query": "next steps for Elm Sample Components, from the Teams transcript of the call", "should_trigger": true},
+  {"query": "can u update crm for the larch call, notes attached", "should_trigger": true},
+  {"query": "Draft the activity log and next-step fields on the Dune opportunity from my meeting notes", "should_trigger": true},
+  {"query": "I just came out of the management meeting. Turn my notes into the Salesforce activity entry and next step for the opportunity", "should_trigger": true},
+  {"query": "Log the call with Sam at Larch in Salesforce and set the next step to sending the data request list by the 17th", "should_trigger": true},
+  {"query": "Draft a follow-up email to Robin at Larch Fictional Widgets thanking him for the meeting", "should_trigger": false},
+  {"query": "Write an email to the Birch founder summarising what we agreed on the call", "should_trigger": false},
+  {"query": "Prepare a company brief for Project Fir before my meeting tomorrow", "should_trigger": false},
+  {"query": "Summarize this Teams transcript into minutes for the team, no CRM needed", "should_trigger": false},
+  {"query": "What is the next step on the Elm opportunity right now? Just read it out", "should_trigger": false},
+  {"query": "Build the Monday pipeline summary for the partners", "should_trigger": false},
+  {"query": "Schedule a follow-up meeting with the Larch CFO next Tuesday afternoon", "should_trigger": false},
+  {"query": "Write the investment committee memo section on management quality for Project Larch", "should_trigger": false},
+  {"query": "Reply to Sam's email about the data request list and say we will send it on Monday", "should_trigger": false},
+  {"query": "Prepare me for tomorrow's call with the Birch founder: a list of questions to ask", "should_trigger": false}
+]

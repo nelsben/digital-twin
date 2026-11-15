@@ -1,0 +1,20 @@
+[
+  {"query": "Prepare a company brief for Project Larch before my management meeting on Thursday", "should_trigger": true},
+  {"query": "can you do a one-pager on Birch Sample Logistics, I meet their CEO tomorrow", "should_trigger": true},
+  {"query": "prep a brief on Fir Fictional Pumps for the deal team", "should_trigger": true},
+  {"query": "brief me on Elm Sample Components Co", "should_trigger": true},
+  {"query": "company brief for project dune pls, the one in salesforce", "should_trigger": true},
+  {"query": "I have a management meeting with Larch Fictional Widgets next week. Pull the deal record and the memos in SharePoint into a one page summary of where we are", "should_trigger": true},
+  {"query": "need a quick brief on Cedar before the 3pm call: stage, who we know there, open diligence items, last few touchpoints", "should_trigger": true},
+  {"query": "one-pager on the target we looked at in September, the widget maker", "should_trigger": true},
+  {"query": "Draft a pitch book for Larch Fictional Widgets with market overview, valuation slides and a management section", "should_trigger": false},
+  {"query": "Write the executive summary slide for the sell-side pitch deck on Birch Sample Logistics", "should_trigger": false},
+  {"query": "Write the business-description section of the investment committee memo for Project Fir", "should_trigger": false},
+  {"query": "Screen this CIM and tell me whether we should pursue or pass", "should_trigger": false},
+  {"query": "Update the CRM for my meeting with Larch yesterday and log the next steps", "should_trigger": false},
+  {"query": "Prepare me for tomorrow's expert call on industrial widgets: a list of questions to ask", "should_trigger": false},
+  {"query": "What stage is Project Elm in? Just tell me, no write-up", "should_trigger": false},
+  {"query": "Summarize the latest 10-K for a public widget maker and list the main risk factors", "should_trigger": false},
+  {"query": "Draft an email to the CEO of Dune Fictional Foods thanking them for their time", "should_trigger": false},
+  {"query": "Build the Monday pipeline summary for the partners", "should_trigger": false}
+]

@@ -10,4 +10,4 @@ Example Capital Partners is a mid-market private-equity firm with about $4B in a
 | [stakeholders.md](stakeholders.md) | Named people for each customer role, and the RACI | Done |
 | [design.md](design.md) | Org plan, data and device policy, connector plan, wall design, governance-log design | Done |
 | wall-test-protocol.md | How we test that the soft walls hold | Coming (#30) |
-| backlog.md | The prioritized story backlog | Coming (#28) |
+| [backlog.md](backlog.md) | The prioritized story backlog | Done |

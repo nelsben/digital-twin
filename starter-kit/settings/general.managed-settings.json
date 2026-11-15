@@ -5,6 +5,17 @@
       "repo": "REPLACE-WITH-GITHUB-ORG/digital-twin-kit"
     }
   ],
+  "extraKnownMarketplaces": {
+    "digital-twin-kit": {
+      "source": {
+        "source": "github",
+        "repo": "REPLACE-WITH-GITHUB-ORG/digital-twin-kit"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "twin-shared@digital-twin-kit": true
+  },
   "forceLoginOrgUUID": "REPLACE-WITH-ORG-UUID",
   "permissions": {
     "disableBypassPermissionsMode": "disable"

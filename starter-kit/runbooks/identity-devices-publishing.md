@@ -22,7 +22,7 @@ Roles use the names in [03-stakeholders](../../docs/playbook/03-stakeholders.md)
 | **Partner integration engineer** | Integration engineer (partner role). Builds and tests the marketplace and the settings files |
 | **RevOps manager** | Business owner. Names the pilot users and approves who is in the pilot group |
 
-Sources are marked [S1] to [S5] and listed at the end. Repo files are cited by path.
+Sources are marked [S1] to [S6] and listed at the end. Repo files are cited by path.
 
 ## Before you start
 
@@ -31,7 +31,7 @@ Sources are marked [S1] to [S5] and listed at the end. Repo files are cited by p
 | 0.1 | Confirm the Claude org is Enterprise or Console. SCIM is not available on Team plans, which use JIT provisioning instead. | Director of IT | [S1] |
 | 0.2 | Confirm SSO is set up first, including domain verification. SCIM assumes SSO is complete. | Director of IT | [S1] |
 | 0.3 | Pick the managed-settings baseline for each data class. Do not choose it from this runbook. | Director of IT, with Compliance | [starter-kit/settings/README.md](../settings/README.md) |
-| 0.4 | Replace the placeholders in the chosen baseline files before any device gets them: `REPLACE-WITH-ORG-UUID` (copy it from the claude.ai admin settings; a wrong value makes Claude Code exit at startup), `REPLACE-WITH-GITHUB-ORG` (the repo that holds this kit's marketplace), and in the pe-zdr file the two MCP host placeholders. The README lists every key and placeholder. | Partner integration engineer | [starter-kit/settings/README.md](../settings/README.md) |
+| 0.4 | Replace the placeholders in the chosen baseline files before any device gets them: `REPLACE-WITH-ORG-UUID` (copy it from the claude.ai admin settings; a wrong value makes Claude Code exit at startup), `REPLACE-WITH-GITHUB-ORG` (the repo that holds this kit's marketplace; it appears twice in each file, under `strictKnownMarketplaces` and `extraKnownMarketplaces`), `REPLACE-WITH-GOVERNANCE-SALT` (confidential, pe-zdr and hipaa: a secret per customer), and in the pe-zdr file the two MCP host placeholders. The README lists every key and placeholder. | Partner integration engineer | [starter-kit/settings/README.md](../settings/README.md) |
 | 0.5 | Make sure at least one Owner is in a group that is mapped to the Owner role (step 3.4). Otherwise the next sync can remove the Owner. Make a Backup Owner, so one person cannot lock everyone out. | Director of IT, Backup Owner | [S1]; [03-stakeholders](../../docs/playbook/03-stakeholders.md) |
 
 ## 1. Create the SCIM groups in the identity provider
@@ -141,7 +141,7 @@ Do not roll out to the fleet until 5.1 and 5.4 pass on the pilot devices.
 - The marketplace is `digital-twin-kit`, defined in `.claude-plugin/marketplace.json` at the repo root [repo file].
 - It lists three plugins: `twin-shared`, the role plugin for each role (in this kit, `twin-pe-deal-team`), and `twin-governance` [repo file].
 - Every settings baseline in `starter-kit/settings/` has a `strictKnownMarketplaces` allowlist that admits only the kit's repo, and an `extraKnownMarketplaces` entry that registers it [repo files]. The repo field is the placeholder `REPLACE-WITH-GITHUB-ORG/digital-twin-kit` until step 0.4 is done.
-- **The shipped baselines do not contain `enabledPlugins`.** So registering the marketplace does not turn on any plugin. Plugin enablement is an extra step per plugin set (step 6.3).
+- Every baseline also has `enabledPlugins` with `twin-shared@digital-twin-kit` set to `true`, and the confidential, pe-zdr and hipaa baselines also enable `twin-governance@digital-twin-kit` [repo files]. **No baseline enables a role plugin**, so the role plugin is an extra step per group (step 6.3).
 
 ### How to publish to groups
 
@@ -156,11 +156,11 @@ SCIM groups (step 1) decide the role and seat in Claude. They do not decide whic
 
 | # | Step | Who | Source |
 |---|---|---|---|
-| 6.1 | Replace the placeholder repo in the marketplace registration with the customer's repo that holds the kit. Confirm the kit's repo is readable by every user who will install from it. A private repo needs each user to have read access. Users without a git-host account need a seed instead. | Partner integration engineer | [S4]; [repo files] |
+| 6.1 | Confirm the placeholder repo in both marketplace keys (`strictKnownMarketplaces` and `extraKnownMarketplaces`) is replaced with the customer's repo that holds the kit (step 0.4). Confirm the kit's repo is readable by every user who will install from it. A private repo needs each user to have read access. Users without a git-host account need a seed instead. | Partner integration engineer | [S4]; [repo files] |
 | 6.2 | Decide the plugin set for each group. Suggested: `twin-shared` for every role, the role plugin for its role group, and `twin-governance` for devices in the confidential, pe-zdr and hipaa baselines. | Director of IT, Skill owners, RevOps manager | [starter-kit/README.md](../../starter-kit/README.md); the mapping itself is a **choice** (see Choices) |
-| 6.3 | For each plugin set, add the plugin keys to that group's managed settings: `enabledPlugins` with `"<plugin>@digital-twin-kit": true` for each plugin in the set. Example shape from [S4]: `"enabledPlugins": {"twin-shared@digital-twin-kit": true}`. | Partner integration engineer | [S4] |
+| 6.3 | For each group, start from the baseline for its data class (it already enables `twin-shared`, and `twin-governance` for three classes) and add the group's role plugin to `enabledPlugins`: `"<role-plugin>@digital-twin-kit": true`, for example `twin-pe-deal-team`. In the same file set `TWIN_GOVERNANCE_TWIN_ID` (and `TWIN_GOVERNANCE_LOG` if the log path is not the default) in `env`. Do not edit the other keys. Example shape from [S4]: `"enabledPlugins": {"twin-pe-deal-team@digital-twin-kit": true}`. | Partner integration engineer | [S4]; [starter-kit/settings/README.md](../settings/README.md) |
 | 6.4 | Deploy each plugin set's settings to its device group (or give the group its own server-managed configuration), as described above. | Director of IT | [S4]; [S5] |
-| 6.5 | Install `twin-governance` as a managed plugin, not as a user install. It runs its hook only when the baseline sets `allowManagedHooksOnly`, which the confidential, pe-zdr and hipaa baselines do. | Partner integration engineer | [starter-kit/plugins/twin-governance/README.md](../../starter-kit/plugins/twin-governance/README.md); the hook is shipped in [hooks/](../../starter-kit/plugins/twin-governance/hooks/) (`governance_log.py`, `hooks.json`) |
+| 6.5 | Keep `twin-governance` as a managed plugin, not a user install: the confidential, pe-zdr and hipaa baselines enable it in `enabledPlugins`, and those baselines also set `allowManagedHooksOnly`, under which only hooks from plugins that managed settings force-enable still run [S6]. Confirm the hook runs on one pilot device before rollout. | Partner integration engineer | [starter-kit/plugins/twin-governance/README.md](../../starter-kit/plugins/twin-governance/README.md); the hook is shipped in [hooks/](../../starter-kit/plugins/twin-governance/hooks/) (`governance_log.py`, `hooks.json`) |
 | 6.6 | Confirm the rollout on one pilot device. Start Claude Code, run `/plugin`, and check that the marketplace and the plugins for that device's group are listed. For CI, run `claude -p` with `--output-format stream-json --verbose` and read the `plugins` list in the `init` event. | Backup Owner | [S4] |
 | 6.7 | Do not allow other marketplaces. The allowlist in each baseline already does this. Check that a source outside the allowlist fails with `blocked by enterprise policy`. Add `disableSideloadFlags` if users must not load plugins from a local folder or URL. | Security | [S4] |
 | 6.8 | Set the claude.ai plugin toggles separately under **Organization settings > Plugins & skills**. They do not set the Claude Code keys above, and they reach Claude Code as synced plugins [S4]. | Director of IT | [S4] |
@@ -176,3 +176,4 @@ SCIM groups (step 1) decide the role and seat in Claude. They do not decide whic
 - [S3] SSO setup: Okta. https://support.claude.com/en/articles/13917894-sso-setup-okta
 - [S4] Manage Claude Code plugins for your organization. https://code.claude.com/docs/en/plugins/org
 - [S5] Deploy managed settings. https://code.claude.com/docs/en/managed-settings (its MDM examples repository is linked from this page: https://github.com/anthropics/claude-code/tree/main/examples/mdm, not opened)
+- [S6] Settings reference, what runs under `allowManagedHooksOnly`. https://code.claude.com/docs/en/settings-reference#what-runs-under-allowmanagedhooksonly

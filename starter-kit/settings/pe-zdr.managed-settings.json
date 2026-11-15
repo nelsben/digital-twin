@@ -7,6 +7,11 @@
   ],
   "forceLoginOrgUUID": "REPLACE-WITH-ORG-UUID",
   "allowManagedHooksOnly": true,
+  "allowManagedMcpServersOnly": true,
+  "allowedMcpServers": [
+    { "serverUrl": "https://REPLACE-WITH-SALESFORCE-HOSTED-MCP-HOST/*" },
+    { "serverUrl": "https://REPLACE-WITH-MICROSOFT-365-MCP-HOST/*" }
+  ],
   "permissions": {
     "disableBypassPermissionsMode": "disable",
     "deny": [

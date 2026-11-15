@@ -1,0 +1,12 @@
+{
+  "strictKnownMarketplaces": [
+    {
+      "source": "github",
+      "repo": "REPLACE-WITH-GITHUB-ORG/digital-twin-kit"
+    }
+  ],
+  "forceLoginOrgUUID": "REPLACE-WITH-ORG-UUID",
+  "permissions": {
+    "disableBypassPermissionsMode": "disable"
+  }
+}

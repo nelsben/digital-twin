@@ -1,0 +1,23 @@
+{
+  "strictKnownMarketplaces": [
+    {
+      "source": "github",
+      "repo": "REPLACE-WITH-GITHUB-ORG/digital-twin-kit"
+    }
+  ],
+  "forceLoginOrgUUID": "REPLACE-WITH-ORG-UUID",
+  "allowManagedHooksOnly": true,
+  "permissions": {
+    "disableBypassPermissionsMode": "disable",
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/credentials*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.config/gcloud/**)"
+    ]
+  }
+}

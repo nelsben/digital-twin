@@ -14,8 +14,8 @@ Phase 2 deliverable for the deal-team twin, signed off together with the [design
 
 | Rank | Task | Type | Value (minutes per week today) | Risk (F4) | Autonomy start level | Surface (design) | Blocked by | Pilot |
 |---|---|---|---|---|---|---|---|---|
-| 1 | **T1** Company brief (one page) | Story | 1,080 = 4 per week x 90 min x 3 associates. About 360 per associate. Deal-team size at Scale: associate count not given in discovery. | Medium: a wrong fact can reach a partner discussion; a reviewer checks every brief | 1 (drafts) | Claude Code on a ZDR sign-in, Intune-managed laptop, private-equity org (sections 1, 3, 4) | Spike #30; F3 (due 2026-12-04); E6 (2026-11-27); G1 (2026-12-04); OD-9; OD-11; Salesforce and M365 setup tasks (to file) | Yes |
-| 2 | **T2** Post-meeting CRM update | Story | 900 = 10 per week x 15 min x 6 pilot users. About 150 per person; 2,700 for all 18 deal-team members at Scale. | Low to medium: stale or wrong pipeline data. Writes start as drafts a person approves. | 1 (drafts; a person enters them). Level 2 on scorecard evidence only. | Claude Code on a ZDR sign-in, Intune-managed laptop (sections 1, 8) | Spike #30; F3; E6; G1; OD-9; OD-11; Salesforce and M365 setup tasks (to file). Level 2 also needs the "Last updated by twin" marker field (to file). | Yes |
+| 1 | **T1** Company brief (one page) | Story | 1,080 = 4 per week x 90 min x 3 associates. About 360 per associate. Deal-team size at Scale: associate count not given in discovery. | Medium: a wrong fact can reach a partner discussion; a reviewer checks every brief | 1 (drafts) | Claude Code on a ZDR sign-in, Intune-managed laptop, private-equity org (sections 1, 3, 4) | Spike #30; F3 (due 2026-12-04); E6 (2026-11-27); G1 (2026-12-04); OD-9; OD-11; Salesforce and M365 setup tasks (#52, #53) | Yes |
+| 2 | **T2** Post-meeting CRM update | Story | 900 = 10 per week x 15 min x 6 pilot users. About 150 per person; 2,700 for all 18 deal-team members at Scale. | Low to medium: stale or wrong pipeline data. Writes start as drafts a person approves. | 1 (drafts; a person enters them). Level 2 on scorecard evidence only. | Claude Code on a ZDR sign-in, Intune-managed laptop (sections 1, 8) | Spike #30; F3; E6; G1; OD-9; OD-11; Salesforce and M365 setup tasks (#52, #53). Level 2 also needs the "Last updated by twin" marker field (#54). | Yes |
 | 3 | **T4** Screen an inbound CIM or teaser | Story | 200 = 5 per week x 40 min | Medium to high: a missed red flag, or a good deal passed over | 1 (drafts for a principal) | Claude Code, started by a person, on a ZDR sign-in (section 3: a live target is MNPI). Event-driven needs a hosted job, later. | OD-1 (layer or build); no F3 examples yet for this task; email as an input is not in the connector plan (section 6) | Later |
 | 4 | **T5** Prepare for a management or expert call | Story | About 83 = 8 per month x 45 min, over 4.33 weeks | Low: the caller reads it before the call | 1 (drafts) | Claude Code on a ZDR sign-in (section 8) | No F3 examples yet for this task; the T1 connectors (Salesforce, SharePoint) must exist first | Later |
 | 5 | **T6** Draft an investment committee memo section | Story | About 111 per live deal = 2 per month x 240 min, over 4.33 weeks. Number of live deals not given in discovery. | High: the memo informs a decision. Always a draft, always reviewed. | 1 (drafts) | Claude Code on a ZDR sign-in (diligence notes are MNPI) | OD-1 (layering shapes T6); no F3 examples yet for this task | Later |
@@ -38,7 +38,12 @@ Every row is also gated by the Phase 2 sign-off, which needs C2 and C3 closed fi
 
 ## 2. Supporting items
 
-Issue numbers are those in this repo. Items marked "to file" have no issue yet. Owners are as in design section 6 and section 8.
+Issue numbers are those in this repo. Every item below now has one. Owners are as in design section 6 and section 8.
+
+**Kind** says what sort of work the item is:
+
+- **Kit work** is real work done in this repo.
+- **Customer action, illustrative** is something only the invented customer could do. It shows what a real engagement tracks and is never completed here.
 
 ### Already filed
 
@@ -51,24 +56,24 @@ Issue numbers are those in this repo. Items marked "to file" have no issue yet. 
 | #37 | Task | Persona, as an output style in `twin-pe-deal-team` | All rows | Yuki Sandoval |
 | #21 | Task | Governance hook in `twin-governance`: a metadata-only record after each tool call | All rows; part of the definition of done for every story | Kwame Haldorsen builds; Tomasz Hadjiev owns the pipeline |
 
-### To file
+### Filed after the first backlog
 
-| Proposed type | Item | Serves | Owner | Blocked by |
-|---|---|---|---|---|
-| Spike | OD-1 review of Anthropic's `private-equity` and `financial-analysis` plugins: read every skill and connector, check data flows against compendium [10](../../docs/compendium/10-sensitive-data.md) and [11](../../docs/compendium/11-connectors.md), confirm a reviewed copy can be pinned in `digital-twin-kit`. See design OD-1. | T4, T6, plugin structure | Yuki Sandoval; reviewed by Rashida Kovalenko; sign-off Eleanor Osei-Whitcombe | Due 2026-12-04 |
-| Task | Salesforce External Client App and per-user OAuth for Salesforce Hosted MCP, then Tomasz Hadjiev adds the connector in Claude. Auth type cannot change after the connector is added, so it is per-user OAuth from the start. | T1, T2 | Joaquin Lindahl, with Kwame Haldorsen | E6 |
-| Task | Microsoft 365 tenant consent (a Global Admin must consent), then check that the deal-team SharePoint libraries are not open to investor relations | T1, T2 | Hiroshi Delacroix, with Kwame Haldorsen | None |
-| Task | "Last updated by twin" marker field on the Salesforce opportunity, so twin writes can be told apart in the source-system audit | T2 at level 2 | Joaquin Lindahl | None |
-| Task | Collect and redact the F3 examples, then write the T1 and T2 evals from them, before the skills are built | T1, T2 | Callum Nwosu (T1), Beatriz Halloran (T2); evals written by Yuki Sandoval | F3, due 2026-12-04 |
-| Task | Name the 6 pilot users (3 associates, 2 principals, 1 partner) | Pilot | Samir Castellanos | None |
-| Task | Okta SCIM groups (deal team of 18, pilot of 6), the Intune managed-settings file, and publishing `digital-twin-kit` with its three plugins | All rows | Tomasz Hadjiev; Keiko Lindqvist covers publishing | OD-9 |
-| Task | Anthropic contract checks: ZDR addendum on the existing org, which models qualify, whether the 8 Pro users are among the 40 seats (OD-9) | All rows | Tomasz Hadjiev | 2026-12-04 |
-| Story, Scale | Hosted twin front end for operating partners and contractors on unmanaged devices (design section 4) | After the pilot | Kwame Haldorsen | The hosted org |
-| Task, Scale | Add the HubSpot connector when investor relations joins, after spike #30 has passed (design section 6, OD-10) | After the pilot | Imani Petrov; Tomasz Hadjiev adds it | OD-10 |
+| Issue | Kind | Proposed type | Item | Serves | Owner | Blocked by |
+|---|---|---|---|---|---|---|
+| #51 | Kit work | Spike | OD-1 review of Anthropic's `private-equity` and `financial-analysis` plugins: read every skill and connector, check data flows against compendium [10](../../docs/compendium/10-sensitive-data.md) and [11](../../docs/compendium/11-connectors.md), confirm a reviewed copy can be pinned in `digital-twin-kit`. See design OD-1. | T4, T6, plugin structure | Yuki Sandoval; reviewed by Rashida Kovalenko; sign-off Eleanor Osei-Whitcombe | Due 2026-12-04 |
+| #52 | Kit work (runbook) | Task | Salesforce External Client App and per-user OAuth for Salesforce Hosted MCP, then Tomasz Hadjiev adds the connector in Claude. Auth type cannot change after the connector is added, so it is per-user OAuth from the start. | T1, T2 | Joaquin Lindahl, with Kwame Haldorsen | E6 |
+| #53 | Kit work (runbook) | Task | Microsoft 365 tenant consent (a Global Admin must consent), then check that the deal-team SharePoint libraries are not open to investor relations | T1, T2 | Hiroshi Delacroix, with Kwame Haldorsen | None |
+| #54 | Kit work | Task | "Last updated by twin" marker field on the Salesforce opportunity, so twin writes can be told apart in the source-system audit | T2 at level 2 | Joaquin Lindahl | None |
+| #55 | Kit work (evals written from synthetic fixtures); collecting real examples is a customer action, illustrative | Task | Collect and redact the F3 examples, then write the T1 and T2 evals from them, before the skills are built | T1, T2 | Callum Nwosu (T1), Beatriz Halloran (T2); evals written by Yuki Sandoval | F3, due 2026-12-04 |
+| #57 | Customer action, illustrative | Task | Name the 6 pilot users (3 associates, 2 principals, 1 partner) | Pilot | Samir Castellanos | None |
+| #56 | Kit work (runbook) | Task | Okta SCIM groups (deal team of 18, pilot of 6), the Intune managed-settings file, and publishing `digital-twin-kit` with its three plugins | All rows | Tomasz Hadjiev; Keiko Lindqvist covers publishing | OD-9 |
+| #58 | Customer action, illustrative | Task | Anthropic contract checks: ZDR addendum on the existing org, which models qualify, whether the 8 Pro users are among the 40 seats (OD-9) | All rows | Tomasz Hadjiev | 2026-12-04 |
+| #59 | Kit work for the Scale phase, not started | Story, Scale | Hosted twin front end for operating partners and contractors on unmanaged devices (design section 4) | After the pilot | Kwame Haldorsen | The hosted org |
+| #60 | Kit work for the Scale phase, not started | Task, Scale | Add the HubSpot connector when investor relations joins, after spike #30 has passed (design section 6, OD-10) | After the pilot | Imani Petrov; Tomasz Hadjiev adds it | OD-10 |
 
 ## 3. Pilot users
 
-Stakeholders.md says the pilot users are named in the backlog. They are chosen by the business owner at the start of the pilot, so the names are not yet filled in. All are deal team, all on Intune-managed laptops; operating partners and contractors are not in the pilot.
+Stakeholders.md says the pilot users are named in the backlog. They are chosen by the business owner at the start of the pilot, so the names are not yet filled in. The seats are left unnamed on purpose: naming them is a customer action, illustrative in this sample (#57). All are deal team, all on Intune-managed laptops; operating partners and contractors are not in the pilot.
 
 | Seat | Role | Name | Status |
 |---|---|---|---|
@@ -113,7 +118,7 @@ Plus: the skill triggers on "company brief for", "one-pager on", "prep a brief o
 |---|---|
 | Data class, surface, autonomy level and identity filled in | Met, above |
 | At least 3 real examples from the skill owner | Not met. F3 is open, due 2026-12-04, and as agreed it gives two briefs (one good, one weak): ask Callum Nwosu for a third. |
-| The connectors exist, or a spike or task provides them | Not met. They do not exist yet. The tasks are identified and to file (Salesforce External Client App, Microsoft 365 consent), and E6 must close first (2026-11-27). Spike #30 covers the wall. |
+| The connectors exist, or a spike or task provides them | Not met. They do not exist yet. The tasks are filed (#52 Salesforce External Client App, #53 Microsoft 365 consent), and E6 must close first (2026-11-27). Spike #30 covers the wall. |
 | Compliance has signed off on any story above "confidential" | Not met. This story is highly sensitive. Ngozi Brandvold signs retention and walls after C2 (2026-11-27) and C3 (2026-12-04) close and spike #30 is reviewed. |
 
 **Tracked as:** skill #32, with #36 (house style), #37 (persona), #21 (governance hook) and #30 (wall test).
@@ -153,7 +158,7 @@ Plus: the skill triggers on "update the CRM", "log my meeting", "post-meeting up
 |---|---|
 | Data class, surface, autonomy level and identity filled in | Met, above |
 | At least 3 real examples from the skill owner | Not met. F3 is open, due 2026-12-04, and as agreed it gives one sample CRM update: ask Beatriz Halloran for two more, one from a transcript and one with no next step. |
-| The connectors exist, or a spike or task provides them | Not met. They do not exist yet. The tasks are identified and to file (Salesforce External Client App, Microsoft 365 consent, and the marker field for level 2), and E6 must close first (2026-11-27). Spike #30 covers the wall. |
+| The connectors exist, or a spike or task provides them | Not met. They do not exist yet. The tasks are filed (#52 Salesforce External Client App, #53 Microsoft 365 consent, and #54 the marker field for level 2), and E6 must close first (2026-11-27). Spike #30 covers the wall. |
 | Compliance has signed off on any story above "confidential" | Not met. This story is highly sensitive. Same sign-off as T1: C2 and C3 closed, spike #30 reviewed. |
 
 **Tracked as:** skill #34, with #36 (house style), #37 (persona), #21 (governance hook) and #30 (wall test).

@@ -2,7 +2,13 @@
 
 The common plugin every role twin installs, holding skills that are not role-specific.
 
-Status: skeleton (version 0.1.0). Folders are placeholders kept with `.gitkeep`; no skills, hooks or output styles are written yet.
+Status: in progress (version 0.2.0). One skill is written (`writing-in-house-style`). The account-research skill, hooks and output styles are not written yet.
+
+## Skills
+
+| Skill | Issue | What it does |
+|---|---|---|
+| [writing-in-house-style](skills/writing-in-house-style/SKILL.md) | #36 | Writes or edits internal prose (emails, notes, summaries, memos, rewrites) to one set of rules: answer first, plain words, figures with unit, currency and period, ISO dates, sources named. It does not replace a role skill's own output format. The rules are in one file, `references/house-style.md`, which a customer replaces with its own. |
 
 ## Compendium pages
 

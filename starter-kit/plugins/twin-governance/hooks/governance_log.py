@@ -11,28 +11,39 @@ Contract:
   * Always exits 0 and prints nothing to stdout, so it never blocks or changes
     a tool call, even on bad input or an unwritable log. Problems go to stderr.
   * Logs metadata only. tool_input, tool_response, error text, prompts, file
-    contents and full paths are never written. The only thing read from
-    tool_input is a capped list of record ids (see extract_record_ids).
+    contents, full paths and folder names are never written. The only thing
+    read from tool_input is a capped list of record ids that match a known
+    system id format (see extract_record_ids).
 
 Configuration (environment variables; see the plugin README):
   TWIN_GOVERNANCE_LOG        log path (default ~/.claude/twin-governance/log.jsonl)
   TWIN_GOVERNANCE_TWIN_ID    twin id written to every line
   TWIN_GOVERNANCE_ORG_LABEL  org label written to every line
+  TWIN_GOVERNANCE_SALT       salt for cwd_hash; with no salt, cwd_hash is omitted
   TWIN_GOVERNANCE_MODE       "metadata" (default). There is no content mode.
 """
 
 import datetime
 import getpass
+import hashlib
 import json
 import os
 import re
 import sys
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 DEFAULT_LOG = os.path.join("~", ".claude", "twin-governance", "log.jsonl")
 MAX_RECORD_IDS = 20
 MAX_FIELD_CHARS = 200
-RECORD_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
+# Allowlist of real system id formats. Anything else (a code name such as
+# Falcon_target, free text) is dropped. Matched with fullmatch, ASCII only.
+RECORD_ID_PATTERNS = (
+    re.compile(r"[A-Za-z0-9]{15}"),                 # Salesforce 15-character id
+    re.compile(r"[A-Za-z0-9]{18}"),                 # Salesforce 18-character id
+    re.compile(r"[0-9]{1,20}"),                     # HubSpot numeric id
+    re.compile(r"[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}"),  # GUID (Microsoft Graph)
+)
+CWD_HASH_CHARS = 12
 RECORD_ID_KEYS = frozenset({"id", "Id", "recordId", "record_id"})
 MAX_WALK_DEPTH = 20
 MAX_WALK_NODES = 10000
@@ -58,12 +69,18 @@ def env_text(name):
     return short_text(value) if value else None
 
 
-def cwd_basename(cwd):
-    """Last path component only (never the full path). Handles / and \\ separators."""
-    if not isinstance(cwd, str):
+def cwd_hash(cwd):
+    """First 12 hex chars of sha256(salt + full cwd), or None.
+
+    The salt comes from TWIN_GOVERNANCE_SALT. With no salt (or a cwd that is not
+    a string) there is no hash, so a bare unsalted hash of a guessable folder
+    path is never written. The folder name itself is never logged.
+    """
+    salt = os.environ.get("TWIN_GOVERNANCE_SALT")
+    if not salt or not isinstance(cwd, str):
         return None
-    parts = [p for p in re.split(r"[\\/]+", cwd) if p]
-    return parts[-1][:MAX_FIELD_CHARS] if parts else None
+    digest = hashlib.sha256((salt + cwd).encode("utf-8", errors="replace"))
+    return digest.hexdigest()[:CWD_HASH_CHARS]
 
 
 def os_user():
@@ -88,11 +105,17 @@ def is_record_id_key(key):
     return isinstance(key, str) and (key in RECORD_ID_KEYS or key.endswith("_id"))
 
 
+def is_record_id(value):
+    return any(pattern.fullmatch(value) for pattern in RECORD_ID_PATTERNS)
+
+
 def extract_record_ids(tool_input):
-    """Values of id-like keys in tool_input that look like ids; at most 20.
+    """Values of id-like keys in tool_input that are real system ids; at most 20.
 
     Keys: id, Id, recordId, record_id, or any key ending in _id. Values must be
-    strings (or ints) matching ^[A-Za-z0-9_-]{1,64}$. Nested dicts and lists are
+    strings (or ints) that fully match a known id format: Salesforce 15- or
+    18-character alphanumeric ids, HubSpot numeric ids, or GUIDs. Any other
+    value is dropped, never truncated or hashed. Nested dicts and lists are
     searched, bounded in depth and size. Nothing else is read from tool_input.
     """
     found = []
@@ -109,7 +132,7 @@ def extract_record_ids(tool_input):
                 if is_record_id_key(key):
                     if isinstance(value, int) and not isinstance(value, bool):
                         value = str(value)
-                    if isinstance(value, str) and RECORD_ID_PATTERN.match(value):
+                    if isinstance(value, str) and is_record_id(value):
                         found.append(value)
                         if len(found) >= MAX_RECORD_IDS:
                             break
@@ -136,14 +159,13 @@ def build_entry(data):
     tool = short_text(data.get("tool_name"))
     mcp_server, mcp_tool = parse_mcp(tool)
     now = datetime.datetime.now(datetime.timezone.utc)
-    return {
+    entry = {
         "schema_version": SCHEMA_VERSION,
         "ts": now.strftime("%Y-%m-%dT%H:%M:%S.") + "%03dZ" % (now.microsecond // 1000),
         "session_id": short_text(data.get("session_id")),
         "event": event,
         "tool": tool,
         "outcome": outcome_for(event),
-        "cwd_basename": cwd_basename(data.get("cwd")),
         "os_user": os_user(),
         "twin_id": env_text("TWIN_GOVERNANCE_TWIN_ID"),
         "org_label": env_text("TWIN_GOVERNANCE_ORG_LABEL"),
@@ -151,6 +173,10 @@ def build_entry(data):
         "mcp_tool": mcp_tool,
         "record_ids": extract_record_ids(data.get("tool_input")),
     }
+    hashed = cwd_hash(data.get("cwd"))
+    if hashed:
+        entry["cwd_hash"] = hashed
+    return entry
 
 
 def log_path():

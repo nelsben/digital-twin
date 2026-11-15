@@ -49,3 +49,48 @@ Case 3 checks only that the skill reports no access and invents nothing.
 `trigger-evals.json` has 8 should-trigger and 10 should-not-trigger queries.
 The should-not-trigger set includes the near miss named in the story
 (pitch-book drafting) and the other deal-team tasks (T3 to T6) and the CRM update (T2).
+
+## Results
+
+Run on 2026-11-14 with Sonnet (all subagents). Plugin version 0.2.0. Raw
+responses, grader prompts and run inputs are kept outside the repo.
+
+| Arm | Expectations passed | Cases fully passed |
+|---|---|---|
+| With skill | 47 of 47 (100%) | 9 of 9 |
+| Baseline (no skill) | 39 of 47 (83%) | 5 of 9 (cases 2, 3, 4, 7, 8) |
+
+Trigger evals (name and description only, two skills shown, one answer per
+query): hit rate on should-trigger 8 of 8 (100%); false-trigger rate on
+should-not-trigger 0 of 10 (0%). The near miss "Update the CRM for my meeting
+with Larch yesterday" went to the CRM skill, which is the right routing, not a
+false trigger.
+
+With-skill failures: none.
+
+Baseline failures, which show what the skill adds:
+
+- Case 1: about 712 words against a limit of about 450; no list of the last
+  three interactions; partial source citations; derived claims not in the
+  record (20.5% margin, 6.6x multiple, "QoE not started", "high concentration").
+- Case 5: interactions carry no activity record IDs.
+- Case 6: memo facts cited by title only, with no SharePoint path.
+- Case 9: does not state the rule against web sources, gives no source links,
+  and suggests pasting website text.
+
+How it was run and its limits:
+
+- Each case ran twice, once per arm, each in its own subagent that was given
+  only the case prompt and fixture files. The with-skill arm was given the
+  skill folder to read. Run folders had opaque names so the baseline could not
+  see the skill name.
+- Each run was graded by its own blind grader subagent, per expectation, with a
+  one-line reason. Skill names in with-skill responses were redacted in the
+  copies the graders saw. Blinding is imperfect: phrases like "level 1 (draft
+  only)" still hint at the skill.
+- Read-only access was set by instruction, not enforced by the tool set,
+  because the Agent tool cannot restrict tools. Subagents also inherited
+  session context.
+- Graders saw only the response text, not tool calls, so expectations about
+  tool use were graded as passed by construction.
+- One run per case and arm, so the pass rates carry no variance estimate.

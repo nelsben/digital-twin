@@ -51,3 +51,48 @@ only that the skill reports no access and invents nothing.
 `trigger-evals.json` has 8 should-trigger and 10 should-not-trigger queries.
 The should-not-trigger set includes the near miss named in the story (email
 drafting), and the other deal-team tasks.
+
+## Results
+
+Run on 2026-11-14 with Sonnet (all subagents). Plugin version 0.2.0. Raw
+responses, grader prompts and run inputs are kept outside the repo.
+
+| Arm | Expectations passed | Cases fully passed |
+|---|---|---|
+| With skill | 44 of 44 (100%) | 8 of 8 |
+| Baseline (no skill) | 42 of 44 (95%) | 6 of 8 (cases 1 to 5 and 7) |
+
+Trigger evals (name and description only, two skills shown, one answer per
+query): hit rate on should-trigger 8 of 8 (100%); false-trigger rate on
+should-not-trigger 0 of 10 (0%). The near miss "Prepare a company brief for
+Project Fir before my meeting tomorrow" went to the brief skill, which is the
+right routing, not a false trigger.
+
+With-skill failures: none.
+
+Baseline failures, which show what the skill adds:
+
+- Case 6: does not say it cannot save at this autonomy level. It blames a
+  read-only session and an unauthorised connector instead.
+- Case 8: says it had no web access rather than saying web sources are not used
+  for deal work. It did not look the bidder up and invented nothing.
+
+How it was run and its limits:
+
+- Each case ran twice, once per arm, each in its own subagent that was given
+  only the case prompt and fixture files. The with-skill arm was given the
+  skill folder to read. Run folders had opaque names so the baseline could not
+  see the skill name.
+- Each run was graded by its own blind grader subagent, per expectation, with a
+  one-line reason. Skill names in with-skill responses were redacted in the
+  copies the graders saw. Blinding is imperfect: phrases like "Draft only. A
+  reviewer checks every brief" still hint at the skill.
+- Read-only access was set by instruction, not enforced by the tool set,
+  because the Agent tool cannot restrict tools. Subagents also inherited
+  session context, and two baseline runs mentioned the Salesforce connector
+  from it.
+- Graders saw only the response text, not tool calls, so expectations about
+  tool use (for example "no write call") were graded as passed by construction.
+- One run per case and arm, so the pass rates carry no variance estimate.
+- The query "Build the Monday pipeline summary for the partners" is in both
+  trigger sets; it was asked once and counted in both.

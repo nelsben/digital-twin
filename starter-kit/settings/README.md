@@ -9,7 +9,7 @@ Claude Code settings that IT deploys to every device, one file per data class ([
 | `pe-zdr.managed-settings.json` | 2 Private equity (ZDR) | Highly sensitive: deal data, MNPI |
 | `hipaa.managed-settings.json` | 4 HIPAA, when a PHI role is in scope | PHI |
 
-Before deploying, replace `REPLACE-WITH-ORG-UUID` (copy the org ID from claude.ai admin settings; a wrong value makes Claude Code exit at startup) and `REPLACE-WITH-GITHUB-ORG` (the repo holding this kit's marketplace).
+Before deploying, replace `REPLACE-WITH-ORG-UUID` (copy the org ID from claude.ai admin settings; a wrong value makes Claude Code exit at startup), `REPLACE-WITH-GITHUB-ORG` (the repo holding this kit's marketplace), and in pe-zdr the `REPLACE-WITH-SALESFORCE-HOSTED-MCP-HOST` and `REPLACE-WITH-MICROSOFT-365-MCP-HOST` URL placeholders.
 
 ## Keys
 
@@ -20,7 +20,10 @@ Before deploying, replace `REPLACE-WITH-ORG-UUID` (copy the org ID from claude.a
 | `permissions.disableBypassPermissionsMode` | `"disable"` stops bypassPermissions mode | [managed-settings](https://code.claude.com/docs/en/server-managed-settings) |
 | `allowManagedHooksOnly` | Only hooks IT deploys run (not in general) | [settings-reference](https://code.claude.com/docs/en/settings-reference) |
 | `permissions.deny` | Blocks reads of `.env`, credential, key and cloud-config files; WebFetch and WebSearch off in pe-zdr and hipaa | [permissions](https://code.claude.com/docs/en/permissions) |
+| `allowManagedMcpServersOnly` + `allowedMcpServers` | pe-zdr only: Claude Code loads just the listed MCP servers (matched by `serverUrl`, with `*` wildcards); plugin-provided servers are checked too, so the 12 financial-analysis connectors stay blocked. Entries are the Salesforce Hosted MCP and Microsoft 365 placeholders until replaced | [managed-mcp](https://code.claude.com/docs/en/managed-mcp) |
 | `forceLoginMethod`, `allowedProviders`, `cleanupPeriodDays` | hipaa only: claude.ai sign-in, Anthropic API only, transcripts kept 30 days | [hipaa-setup](https://code.claude.com/docs/en/hipaa-setup) |
+
+The MCP allowlist covers servers Claude Code loads itself, including claude.ai connectors it fetches. Connectors that Claude Desktop delivers to its local and SSH sessions are not covered; control them in the claude.ai organization settings (Connectors).
 
 Key reference: [settings-reference](https://code.claude.com/docs/en/settings-reference), [settings](https://code.claude.com/docs/en/settings).
 

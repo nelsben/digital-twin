@@ -32,7 +32,18 @@ ALLOWED_TOP_LEVEL_KEYS = frozenset({
     "cleanupPeriodDays",
     "allowManagedHooksOnly",
     "permissions",
+    # MCP allowlist, documented at https://code.claude.com/docs/en/managed-mcp
+    "allowManagedMcpServersOnly",
+    "allowedMcpServers",
 })
+
+# The 12 third-party connectors registered by Anthropic's financial-analysis
+# plugin (compendium 17). None may appear anywhere in the pe-zdr baseline.
+UPSTREAM_FINANCIAL_VENDORS = (
+    "daloopa", "morningstar", "kensho", "factset", "moodys", "blueskyapi",
+    "aiera", "lseg", "pitchbook", "chronograph", "egnyte", "box",
+)
+MCP_ENTRY_KEYS = frozenset({"serverUrl", "serverCommand", "serverName"})
 
 UUID_PATTERN = re.compile(
     r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
@@ -101,6 +112,36 @@ class ManagedSettingsTests(unittest.TestCase):
                 text = path.read_text(encoding="utf-8")
                 self.assertIsNone(UUID_PATTERN.search(text))
                 self.assertIn(PLACEHOLDER, text)
+
+    def test_pe_zdr_mcp_allowlist_is_managed_only(self):
+        data = load("pe-zdr.managed-settings.json")
+        self.assertIs(data.get("allowManagedMcpServersOnly"), True)
+        allowed = data.get("allowedMcpServers")
+        self.assertIsInstance(allowed, list)
+        self.assertTrue(allowed, "allowlist must not be empty")
+        for entry in allowed:
+            with self.subTest(entry=entry):
+                self.assertIsInstance(entry, dict)
+                self.assertEqual(len(entry), 1, "one identifying key per entry")
+                self.assertTrue(set(entry) <= MCP_ENTRY_KEYS)
+
+    def test_pe_zdr_mcp_allowlist_has_placeholders_for_reviewed_connectors(self):
+        allowed = load("pe-zdr.managed-settings.json")["allowedMcpServers"]
+        urls = [e["serverUrl"] for e in allowed if "serverUrl" in e]
+        for label in ("SALESFORCE", "MICROSOFT-365"):
+            with self.subTest(connector=label):
+                self.assertTrue(
+                    any(f"REPLACE-WITH-{label}" in u for u in urls),
+                    f"no REPLACE-WITH-{label} serverUrl placeholder",
+                )
+
+    def test_pe_zdr_names_no_upstream_financial_vendor(self):
+        text = (SETTINGS_DIR / "pe-zdr.managed-settings.json").read_text(
+            encoding="utf-8"
+        ).lower()
+        for vendor in UPSTREAM_FINANCIAL_VENDORS:
+            with self.subTest(vendor=vendor):
+                self.assertIsNone(re.search(rf"\b{vendor}\b", text))
 
     def test_readme_under_80_lines(self):
         readme = SETTINGS_DIR / "README.md"

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Last_Updated_By_Twin__c</fullName>
+    <label>Last updated by twin</label>
+    <description>Date and time of the most recent write to this opportunity made by a Claude digital twin. Set only by the twin's CRM-update skill, in the same update as the change itself. Field History tracking is on, so each twin write leaves its own history row beside the changes it made.</description>
+    <inlineHelpText>Set by the Claude twin when it updates this opportunity. If the time is recent, the twin made the change shown in the field history.</inlineHelpText>
+    <type>DateTime</type>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <externalId>false</externalId>
+</CustomField>

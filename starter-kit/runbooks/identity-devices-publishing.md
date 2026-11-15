@@ -160,14 +160,14 @@ SCIM groups (step 1) decide the role and seat in Claude. They do not decide whic
 | 6.2 | Decide the plugin set for each group. Suggested: `twin-shared` for every role, the role plugin for its role group, and `twin-governance` for devices in the confidential, pe-zdr and hipaa baselines. | Director of IT, Skill owners, RevOps manager | [starter-kit/README.md](../../starter-kit/README.md); the mapping itself is a **choice** (see Choices) |
 | 6.3 | For each plugin set, add the plugin keys to that group's managed settings: `enabledPlugins` with `"<plugin>@digital-twin-kit": true` for each plugin in the set. Example shape from [S4]: `"enabledPlugins": {"twin-shared@digital-twin-kit": true}`. | Partner integration engineer | [S4] |
 | 6.4 | Deploy each plugin set's settings to its device group (or give the group its own server-managed configuration), as described above. | Director of IT | [S4]; [S5] |
-| 6.5 | Install `twin-governance` as a managed plugin, not as a user install. It runs its hook only when the baseline sets `allowManagedHooksOnly`, which the confidential, pe-zdr and hipaa baselines do. | Partner integration engineer | [starter-kit/plugins/twin-governance/README.md](../../starter-kit/plugins/twin-governance/README.md); the hook is **not wired yet**, see the warning below |
+| 6.5 | Install `twin-governance` as a managed plugin, not as a user install. It runs its hook only when the baseline sets `allowManagedHooksOnly`, which the confidential, pe-zdr and hipaa baselines do. | Partner integration engineer | [starter-kit/plugins/twin-governance/README.md](../../starter-kit/plugins/twin-governance/README.md); the hook is shipped in [hooks/](../../starter-kit/plugins/twin-governance/hooks/) (`governance_log.py`, `hooks.json`) |
 | 6.6 | Confirm the rollout on one pilot device. Start Claude Code, run `/plugin`, and check that the marketplace and the plugins for that device's group are listed. For CI, run `claude -p` with `--output-format stream-json --verbose` and read the `plugins` list in the `init` event. | Backup Owner | [S4] |
 | 6.7 | Do not allow other marketplaces. The allowlist in each baseline already does this. Check that a source outside the allowlist fails with `blocked by enterprise policy`. Add `disableSideloadFlags` if users must not load plugins from a local folder or URL. | Security | [S4] |
 | 6.8 | Set the claude.ai plugin toggles separately under **Organization settings > Plugins & skills**. They do not set the Claude Code keys above, and they reach Claude Code as synced plugins [S4]. | Director of IT | [S4] |
 
-### Warning: the governance hook is not wired
+### What the governance hook does
 
-The governance hook for confidential, pe-zdr and hipaa is a placeholder. Issue #21 owns it. Until it is wired, `twin-governance` does not enforce anything on those devices, even when step 6.5 is done. Do not tell the Compliance role that the hook is running.
+`twin-governance` ships a working `PostToolUse` and `PostToolUseFailure` hook. It writes one metadata-only line per tool call and never blocks a call. It records; it does not enforce. Tell the Compliance role that it is a log. Walls rest on the Salesforce, HubSpot and SharePoint permissions, not on this hook. The fields, the redaction rules and the record-id allowlist are in the [twin-governance README](../../starter-kit/plugins/twin-governance/README.md).
 
 ## Sources
 

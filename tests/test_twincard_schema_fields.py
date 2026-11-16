@@ -30,7 +30,7 @@ DATE = "2026-11-15"
 BLOCKER = "highly-sensitive-needs-zdr-org"
 WARNING = "zdr-org-not-confirmed"
 STORY_FIELD_KEYS = ["data_class", "surface", "autonomy", "connectors_and_identity", "wall_impact", "inputs",
-                    "output_and_audience", "skill_owner", "baseline"]
+                    "output_and_audience", "delivery", "skill_owner", "baseline"]
 
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))

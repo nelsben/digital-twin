@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Let's start building the CSM twin. The backlog is at engagements/sample-team-cs/personas/customer-success-manager. What's the next story?",
-      "expected_output": "Claude runs the backlog command (the backlog is current), picks S-C1 (in the pilot, priority 1, no gates), shows its statement, fields, acceptance criteria and its 15 tasks, names its first task S-C1.collect-examples with its owner, says the story is built at the start level 1, and asks the consultant to confirm the pick or name another story. It changes no status yet.",
+      "expected_output": "Claude runs the backlog command (the backlog is current), picks S-C1 (in the pilot, priority 1, no gates), shows its statement, fields (including its delivery: the output stays in the conversation or a local file), acceptance criteria and its 15 tasks, names its first task S-C1.collect-examples with its owner, Marisol Quenby, says the story is built at the start level 1, and asks the consultant to confirm the pick or name another story. It changes no status yet.",
       "files": [
         "evals/files/engagements/sample-team-cs/customer-profile.json",
         "evals/files/engagements/sample-team-cs/personas/customer-success-manager/card.json",
@@ -18,9 +18,9 @@
       "expectations": [
         "The backlog command was run on the persona folder before the pick, and it did not report levelled.json as out of date",
         "The story picked is S-C1, and the reply says why: it is in the pilot with priority 1 and has no gates; S-C4 (in the pilot, priority 2) is named as the one after it",
-        "The reply shows S-C1's statement, its fields (including autonomy 1 to 3 and skill owner Marisol Quenby) and its three acceptance lines",
+        "The reply shows S-C1's statement, its fields (including autonomy 1 to 3, skill owner Marisol Quenby and the delivery field: the output stays in the conversation or a local file) and its three acceptance lines",
         "The reply lists S-C1's 15 tasks by id, from S-C1.collect-examples to S-C1.warning-confidential-standard-retention",
-        "The reply names S-C1.collect-examples as the first task, with owner role skill-owner, and says it needs three real examples from the skill owner, which it will not invent",
+        "The reply names S-C1.collect-examples as the first task, with owner role skill-owner and its owner_name, Marisol Quenby, and says it needs three real examples from the skill owner, which it will not invent",
         "The reply says the story is built at level 1, the start level in levelled.json, not at the ceiling of 3",
         "The reply asks the consultant to confirm S-C1 or name another story before any work starts",
         "Every status in backlog.json is still todo"
@@ -71,7 +71,7 @@
         "In backlog.json the status of S-C1.tool-always-allow.hubspot-read is in-progress, and no other task's status changed",
         "The backlog command and then the dashboard command were run after the change, and backlog.md shows the task as [~]",
         "backlog.md and dashboard.html were written by the commands, not edited by hand",
-        "The reply says the task waits on the technical owner (Teodor Amsel in the profile) and stays in-progress until the consultant says the admin has done it",
+        "The reply says the task waits on the technical owner (Teodor Amsel, the task's owner_name in backlog.json) and stays in-progress until the consultant says the admin has done it",
         "The reply ends with what was done, what is in-progress and who it waits on, and the next story"
       ]
     },

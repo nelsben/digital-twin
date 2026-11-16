@@ -125,10 +125,18 @@ def pack_runbooks():
     return out
 
 
-def expand(link):
-    """A library link, with the connector-runbook placeholder filled in from every pack runbook."""
+def expand(link, when=None):
+    """A library link, with the connector-runbook placeholder filled in from every pack runbook the
+    template's 'when' admits."""
     if link and link.startswith(RUNBOOK_PLACEHOLDER):
-        return [runbook + link[len(RUNBOOK_PLACEHOLDER):] for runbook in sorted(pack_runbooks())]
+        known = set(BT.B.allowed_facts("task-story", "connector"))
+        out = []
+        for runbook, kind in sorted(pack_runbooks().items()):
+            facts = dict((name, None) for name in known)
+            facts.update({"connector.runbook": runbook, "connector.kind": kind})
+            if when is None or BT.L.matches(when, facts, known):
+                out.append(runbook + link[len(RUNBOOK_PLACEHOLDER):])
+        return out
     return [link]
 
 
@@ -340,7 +348,7 @@ class LinkTests(unittest.TestCase):
         targets = set()
         for template in self.library["templates"]:
             for step in template["how"]:
-                targets.update(expand(step["link"]))
+                targets.update(expand(step["link"], template["when"]))
         for name, _, _, _, backlog, _ in Runs.get():
             for item in BT.tasks_of(backlog):
                 targets.update(step["link"] for step in item["how"] if step["link"])
@@ -419,6 +427,8 @@ class LinkTests(unittest.TestCase):
 
         def salesforce_private(profile, card):
             profile["network"]["can_allowlist_anthropic_ips"] = True
+            profile["provenance"]["network.can_allowlist_anthropic_ips"] = {
+                "status": "answered", "source": "discovery.md#E6"}
             next(s for s in profile["systems"] if s["id"] == "salesforce")["private_network"] = True
         with BT.Scenario(BT.PE, salesforce_private) as persona:
             backlog = BT.B.build(str(persona))["backlog"]

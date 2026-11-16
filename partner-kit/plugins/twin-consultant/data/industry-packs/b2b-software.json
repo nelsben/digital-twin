@@ -63,7 +63,7 @@
       "product": "HubSpot",
       "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
       "identity": "Per user, via OAuth, within the user's HubSpot permissions.",
-      "runbook": null,
+      "runbook": "starter-kit/runbooks/hubspot-connector.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": false
     },
@@ -72,7 +72,7 @@
       "product": "Google Drive",
       "how": "The Google Drive directory connector, built and run by Google. An Owner adds it on Team and Enterprise. It reads and creates files.",
       "identity": "Per user, via OAuth; each member connects their own Google account.",
-      "runbook": null,
+      "runbook": "starter-kit/runbooks/google-workspace-connectors.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": true
     },
@@ -81,7 +81,7 @@
       "product": "Gmail",
       "how": "The Gmail directory connector. An Owner or Primary Owner enables it on Team and Enterprise. Read and search only: it can't draft, send or change mail.",
       "identity": "Per user, via OAuth with the user's own Google account.",
-      "runbook": null,
+      "runbook": "starter-kit/runbooks/google-workspace-connectors.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": false
     },
@@ -90,7 +90,7 @@
       "product": "Google Calendar",
       "how": "The Google Calendar directory connector. An Owner or Primary Owner enables it on Team and Enterprise. Read only: it can't create or change events.",
       "identity": "Per user, via OAuth with the user's own Google account.",
-      "runbook": null,
+      "runbook": "starter-kit/runbooks/google-workspace-connectors.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": false
     },
@@ -99,7 +99,7 @@
       "product": "Slack",
       "how": "The Slack directory connector (Team and Enterprise; the Claude in Slack app installed first). An Owner enables it. Whether it can post is unconfirmed; the Slack MCP server can.",
       "identity": "Per user: each member connects their own account.",
-      "runbook": null,
+      "runbook": "starter-kit/runbooks/slack-connector.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": true
     },
@@ -108,7 +108,7 @@
       "product": "Zendesk",
       "how": "Zendesk's External AI connection (early access), https://<subdomain>.zendesk.com/mcp, added by an Owner as a custom connector. A Zendesk admin creates the connection and limits it to agent groups.",
       "identity": "Per user, via OAuth: each user authorizes their own Zendesk account.",
-      "runbook": null,
+      "runbook": "starter-kit/runbooks/zendesk-connector.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": true
     },

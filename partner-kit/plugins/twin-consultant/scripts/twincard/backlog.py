@@ -86,7 +86,8 @@ PERSONA_FACTS = ("plan.tier", "role.device", "distribution", "settings_baseline"
                  "compliance.walls", "memory.personal_memory_wanted", "systems.kinds", "systems.products",
                  "writes.kinds", "writes.products", "codes")
 TASK_FACTS = ("task.trigger", "task.data_class", "task.output.audience", "task.reversible", "task.touches_money",
-              "task.cost_of_mistake.level", "task.reads_untrusted_input", "task.in_pilot", "task.write_actions")
+              "task.cost_of_mistake.level", "task.reads_untrusted_input", "task.in_pilot", "task.write_actions",
+              "delivery.form", "writes.crm_opens", "tools.write_permissions", "tools.send_permissions")
 DECISION_FACTS = ("runtime", "identity", "autonomy.start", "autonomy.ceiling", "data_controls.settings_baseline",
                   "data_controls.web_tools", "data_controls.surfaces", "data_controls.retention", "memory",
                   "plan_fit")
@@ -102,6 +103,39 @@ GOVERNANCE_CAPABILITY = "governance-action-log"
 WRITE_SKILL = "write-skill"
 CONSTRAINTS_STEP = "Make the skill keep these rules from the interviews, in the interviewee's words: %s."
 WANTED_CHANGE_LABEL = "Asked for, not planned: "
+
+# --- Delivery, owners and parts (design section 8) ---------------------------------------------------
+
+# The level at which a Blocked write tool becomes Needs approval (rules.json: a write at level 2 needs approval).
+OPEN_LEVEL = 2
+PERMISSION_NAMES = {"always-allow": "Always allow", "needs-approval": "Needs approval", "blocked": "Blocked"}
+STAYS_LOCAL = "The output stays in the conversation or a local file."
+ROUTINE_POSTS = ("The Claude Tag routine posts it in its own Slack channel itself, and the connector's send tool %s "
+                 "is not used.")
+AUTONOMY_PAGE = "docs/compendium/06-autonomy.md"
+MOVING_UP = AUTONOMY_PAGE + "#rules-for-moving-up-a-level"
+CONNECTORS_PAGE = "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+DELIVER_DRAFT = "deliver-draft"
+DELIVER_STEP = ("Name who puts the draft in its destination (%s) and write down how, from the connector's "
+                "runbook.")
+MARKER_STEP = "The CRM write %s Blocked at the starting level and %s at level %d; set the marker up before it opens."
+ACCEPT_MARKER = "Plus: every write carries the twin marker."
+ACCEPT_NO_CRM_WRITE = "Plus: the twin writes nothing to the CRM at the starting level; a person files the result."
+SALESFORCE_RUNBOOK = "starter-kit/runbooks/salesforce-hosted-mcp.md"
+SALESFORCE_E6 = SALESFORCE_RUNBOOK + "#8-ip-allowlist-discovery-e6"
+SALESFORCE_E6_STEP = "For Salesforce, run the runbook's IP allowlist discovery (E6) before the connection test."
+PRIVATE_NETWORK_TEMPLATE = "warning-private-network-allowlist"
+RUNBOOK_PLACEHOLDER = "{connector.runbook}"
+# The anatomy part of each decision a confirm-unverified-decision task confirms: (name or prefix, part).
+CONFIRM_TEMPLATE = "confirm-unverified-decision"
+DECISION_PARTS = (("runtime", "A4"), ("identity", "A5"), ("autonomy.", "A7"), ("data_controls.", "A7"),
+                  ("memory", "A6"), ("plan_fit", "A9"), ("connectors.", "A3"))
+# Library owner roles the profile names, by its owners key; the partner's roles are never listed as unnamed.
+PROFILE_OWNERS = {"executive-sponsor": "sponsor", "technical-owner": "technical_owner",
+                  "business-owner": "business_owner", "backup-owner": "backup_owner", "compliance": "compliance"}
+SKILL_OWNER = "skill-owner"
+PARTNER_ROLES = ("engagement-lead", "solution-architect", "skill-engineer", "integration-engineer",
+                 "change-and-enablement-lead", "consultant")
 
 
 class BacklogError(ValueError):
@@ -175,6 +209,13 @@ def _check_template(template, owner_roles, seen):
         link = step["link"]
         if link is not None and (not isinstance(link, str) or not link or link.startswith("/") or "://" in link):
             fail("how[%d] link must be null or a repo-relative path" % index)
+        if isinstance(link, str) and "{" in link:
+            rest = link[len(RUNBOOK_PLACEHOLDER):] if link.startswith(RUNBOOK_PLACEHOLDER) else None
+            if rest is None or "{" in rest or (rest and not rest.startswith("#")):
+                fail("how[%d] link may hold %s only at its start, before an optional #anchor"
+                     % (index, RUNBOOK_PLACEHOLDER))
+            if per != "connector":
+                fail("how[%d] link uses %s, which needs per connector" % (index, RUNBOOK_PLACEHOLDER))
     if not isinstance(template["done_when"], str) or not template["done_when"].strip():
         fail("done_when must be at least one sentence")
     if template["owner_role"] not in owner_roles:
@@ -402,7 +443,95 @@ def task_facts(base, task, decisions, levelled, systems):
         "memory": _value(decisions.get("memory")),
         "plan_fit": _value(decisions.get("plan_fit")),
     })
+    writes = _write_tools(levelled, task.get("id"))
+    facts.update({
+        "delivery.form": _delivery(task, decisions, writes)[0],
+        "writes.crm_opens": _crm_opens(writes, systems),
+        "tools.write_permissions": [_value(t.get("permission")) for t in writes],
+        "tools.send_permissions": [_value(t.get("permission")) for t in writes if t.get("use") == "send"],
+    })
     return facts
+
+
+def _tool_id(tool):
+    return "%s-%s" % (tool["system"], tool["use"])
+
+
+def _write_tools(levelled, tid):
+    """The levelled tools other than reads that list the task, in levelled order."""
+    return [t for t in levelled.get("tools") or [] if tid in (t.get("tasks") or []) and t.get("use") != "read"]
+
+
+def _blocked(tool):
+    return _value(tool.get("permission")) == "blocked"
+
+
+def _opens(tool):
+    """True when the tool is not Blocked once every task that uses it is at its ceiling."""
+    wanted = tool.get("wanted") or {}
+    return bool(wanted) and all(value != "blocked" for value in wanted.values())
+
+
+def _join(items):
+    items = list(items)
+    if len(items) < 2:
+        return "".join(items)
+    return "%s and %s" % (", ".join(items[:-1]), items[-1])
+
+
+def _crm_opens(writes, systems):
+    """now, later or never for the task's CRM write tools; None when it has none."""
+    crm = [t for t in writes if (systems.get(t["system"]) or {}).get("kind") == "crm"]
+    if not crm:
+        return None
+    if any(not _blocked(t) for t in crm):
+        return "now"
+    return "later" if any(_opens(t) for t in crm) else "never"
+
+
+def _opening(tools, tid):
+    """When Blocked tools open: 'it opens at level 2', with the other tasks a shared tool waits for."""
+    shared = []
+    for tool in tools:
+        for other in sorted(tool.get("wanted") or {}):
+            if other != tid and other not in shared:
+                shared.append(other)
+    text = "%s at level %d" % ("it opens" if len(tools) == 1 else "they open", OPEN_LEVEL)
+    if shared:
+        text += ", once every task that uses %s (%s) is there" % (
+            "it" if len(tools) == 1 else "them", _join([tid] + shared))
+    return text
+
+
+def _delivery(task, decisions, writes):
+    """(form, sentence): how the task's output reaches its destination (design section 8)."""
+    tid = task.get("id")
+    if not writes:
+        return "stays-local", STAYS_LOCAL
+    if _value(decisions.get("runtime")) == "claude-tag-routine" and all(
+            t["system"] == "slack" and t["use"] == "send" for t in writes):
+        return "runtime-posts", ROUTINE_POSTS % _join(_tool_id(t) for t in writes)
+    blocked = [t for t in writes if _blocked(t)]
+    if blocked:
+        opening = [t for t in blocked if _opens(t)]
+        closed = [t for t in blocked if not _opens(t)]
+        names = _join(_tool_id(t) for t in blocked)
+        verb = "is" if len(blocked) == 1 else "are"
+        lead = "A person sends or files it: the twin produces a draft, %s %s Blocked at the starting level" % (
+            names, verb)
+        if not closed:
+            return "person-sends", "%s, and %s." % (lead, _opening(opening, tid))
+        if not opening:
+            return "person-sends", "%s, and %s not planned at any level." % (
+                lead, "it is" if len(blocked) == 1 else "they are")
+        return "person-sends", "%s; %s at level %d and %s not planned at any level." % (
+            lead, _join(_tool_id(t) for t in opening), "opens" if len(opening) == 1 else "open", OPEN_LEVEL,
+            "%s is" % _join(_tool_id(t) for t in closed) if len(closed) == 1 else
+            "%s are" % _join(_tool_id(t) for t in closed))
+    return "twin-writes", "The twin writes it with %s %s." % (
+        "tool" if len(writes) == 1 else "tools",
+        _join("%s (%s)" % (_tool_id(t), PERMISSION_NAMES.get(_value(t.get("permission")), "undecided"))
+              for t in writes))
 
 
 def _decision(decisions, name):
@@ -466,7 +595,7 @@ def _lower_first(text):
     return text[:1].lower() + text[1:] if text else text
 
 
-def _story_fields(task, decisions, profile):
+def _story_fields(task, decisions, profile, delivery):
     autonomy = decisions.get("autonomy") or {}
     controls = decisions.get("data_controls") or {}
     output = task.get("output") or {}
@@ -484,6 +613,7 @@ def _story_fields(task, decisions, profile):
         "inputs": inputs,
         "output_and_audience": "%s, %s; to %s" % (output.get("what"), output.get("audience"),
                                                   output.get("destination")),
+        "delivery": delivery,
         "skill_owner": task.get("skill_owner") or "not named yet",
         "baseline": "%s per week x %s minutes each x %s users" % (
             _num(task.get("frequency_per_week")), _num(task.get("minutes_each")), _num(task.get("users"))),
@@ -523,8 +653,10 @@ def _acceptance(task, facts):
     lines += ["Keeps: %s" % item for item in _constraints(task)]
     if facts["data_controls.web_tools"] == "off":
         lines.append("Plus: no web tools are used.")
-    if "crm" in facts["writes.kinds"]:
-        lines.append("Plus: every write carries the twin marker.")
+    if facts["writes.crm_opens"] == "now":
+        lines.append(ACCEPT_MARKER)
+    elif facts["writes.crm_opens"] in ("later", "never"):
+        lines.append(ACCEPT_NO_CRM_WRITE)
     if facts["governance.log"]:
         lines.append("Plus: each tool call reaches the governance log.")
     return lines
@@ -536,14 +668,33 @@ def _gates(blockers, questions):
     return out
 
 
-def _task(story_id, template, key):
+def _link(link, item):
+    """A library link with the connector-runbook placeholder filled in from the item's facts."""
+    if link and link.startswith(RUNBOOK_PLACEHOLDER):
+        return (item or {}).get("connector.runbook") + link[len(RUNBOOK_PLACEHOLDER):]
+    return link
+
+
+def _confirm_part(name):
+    for prefix, part in DECISION_PARTS:
+        if name == prefix or (prefix.endswith(".") and name.startswith(prefix)):
+            return part
+    return None
+
+
+def _task(story_id, template, key, item=None):
+    part = template["part"]
+    if template["id"] == CONFIRM_TEMPLATE and key:
+        part = _confirm_part(key) or part
     return {"id": "%s.%s" % (story_id, template["id"]) + (".%s" % key if key else ""),
             "template": template["id"],
             "title": template["title"] + (" (%s)" % key if key else ""),
-            "part": template["part"],
-            "how": [{"text": step["text"], "link": step["link"]} for step in template["how"]],
+            "part": part,
+            "how": [{"text": step["text"], "link": _link(step["link"], item)} for step in template["how"]],
             "done_when": template["done_when"],
             "owner_role": template["owner_role"],
+            "owner_name": None,
+            "acting_owner": None,
             "status": "todo"}
 
 
@@ -573,7 +724,7 @@ def _tasks_for(story_id, facts, library, foundation, tid=None, decisions=None, l
             merged = dict(facts)
             merged.update(item)
             if _level.matches(template["when"], merged, known):
-                out.append(_task(story_id, template, key))
+                out.append(_task(story_id, template, key, item))
     return out
 
 
@@ -598,6 +749,7 @@ def _task_story(task, role, base, profile, levelled, systems, questions, persona
     decisions = (levelled.get("tasks") or {}).get(tid) or {}
     facts = task_facts(base, task, decisions, levelled, systems)
     story_id = "S-" + tid
+    writes = _write_tools(levelled, tid)
     blockers = persona_blockers + [b for b in levelled.get("blockers", []) if b["about"] == tid]
     return {
         "id": story_id,
@@ -609,12 +761,38 @@ def _task_story(task, role, base, profile, levelled, systems, questions, persona
         "in_pilot": bool(task.get("in_pilot")),
         "priority": task.get("priority"),
         "status": "todo",
-        "fields": _story_fields(task, decisions, profile),
+        "fields": _story_fields(task, decisions, profile, _delivery(task, decisions, writes)[1]),
         "acceptance": _acceptance(task, facts),
         "gated_by": _gates(blockers, [q for q in questions if tid in (q.get("blocks") or [])]),
-        "tasks": _with_constraints(_tasks_for(story_id, facts, library, False, tid, decisions, levelled, systems),
-                                   _constraints(task)),
+        "tasks": _with_engine_steps(
+            _with_constraints(_tasks_for(story_id, facts, library, False, tid, decisions, levelled, systems),
+                              _constraints(task)),
+            task, facts, decisions, writes, systems),
     }
+
+
+def _with_engine_steps(tasks, task, facts, decisions, writes, systems):
+    """Steps the engine adds from the card and the plan (design section 8): the twin marker before a CRM
+    write opens, who files a draft and how, and Salesforce's allowlist discovery for a private Salesforce."""
+    runbooks = dict((c.get("system"), c.get("runbook")) for c in decisions.get("connectors") or [])
+    for item in tasks:
+        if item["template"].startswith("twin-marker-") and facts["writes.crm_opens"] == "later":
+            crm = [t for t in writes if (systems.get(t["system"]) or {}).get("kind") == "crm" and _opens(t)]
+            names = _join(_tool_id(t) for t in crm)
+            item["how"].insert(0, {"text": MARKER_STEP % (
+                ("tool %s is" if len(crm) == 1 else "tools %s are") % names,
+                "opens" if len(crm) == 1 else "open", OPEN_LEVEL), "link": MOVING_UP})
+        elif item["template"] == DELIVER_DRAFT:
+            blocked = [t for t in writes if _blocked(t)]
+            link = next((runbooks[t["system"]] for t in blocked if runbooks.get(t["system"])), None)
+            item["how"].append({"text": DELIVER_STEP % ((task.get("output") or {}).get("destination") or
+                                                        "the card's destination"),
+                                "link": link or CONNECTORS_PAGE})
+        elif item["template"] == PRIVATE_NETWORK_TEMPLATE:
+            if any(runbooks.get(sid) == SALESFORCE_RUNBOOK and (systems.get(sid) or {}).get("private_network")
+                   for sid in runbooks):
+                item["how"].append({"text": SALESFORCE_E6_STEP, "link": SALESFORCE_E6})
+    return tasks
 
 
 def _with_constraints(tasks, constraints):
@@ -714,6 +892,7 @@ def assemble(persona_dir, validation, card, profile, levelled, library=None):
                      "status": "todo", "stories": _foundation_stories(role, base, levelled, persona_blockers,
                                                                       library)})
     retired, retired_now = _apply_statuses(features, old_tasks, old_retired)
+    unnamed = _name_owners(features, card, profile, library)
 
     display = profile.get("display_name") or card.get("customer")
     backlog = {
@@ -722,11 +901,41 @@ def assemble(persona_dir, validation, card, profile, levelled, library=None):
         "persona": card.get("id"),
         "source": {"card_sha256": levelled["source"]["card_sha256"], "levelled_sha256": _sha(_level.render(levelled).encode("utf-8")),
                    "library_version": library["library_version"]},
+        "unnamed_roles": unnamed,
         "epic": {"id": "E", "title": "%s twin for %s" % (role, display),
                  "status": derive_status(f["status"] for f in features), "features": features},
         "retired": retired,
     }
     return _result(True, validation, None, backlog, retired_now)
+
+
+def _name_owners(features, card, profile, library):
+    """Set each task's owner_name and acting_owner; return the customer roles with no named person.
+
+    A role the profile names (or, for skill-owner, the card task's skill_owner) gets that name. A customer
+    role with no name gets the technical owner as its acting owner; the partner's roles get neither.
+    """
+    owners = profile.get("owners") or {}
+    technical = _text(owners.get("technical_owner")) or None
+    skill_owners = dict((t.get("id"), _text(t.get("skill_owner"))) for t in card.get("tasks") or [])
+    counts_by_role = {}
+    for feature in features:
+        for story in feature["stories"]:
+            tid = story["id"][2:]
+            for item in story["tasks"]:
+                role = item["owner_role"]
+                if role in PROFILE_OWNERS:
+                    name = _text(owners.get(PROFILE_OWNERS[role])) or None
+                elif role == SKILL_OWNER:
+                    name = skill_owners.get(tid) or None
+                else:
+                    name = None
+                item["owner_name"] = name
+                item["acting_owner"] = technical if name is None and role not in PARTNER_ROLES else None
+                if name is None and role not in PARTNER_ROLES:
+                    counts_by_role[role] = counts_by_role.get(role, 0) + 1
+    return [{"role": role, "tasks": counts_by_role[role], "acting_owner": technical}
+            for role in library["owner_roles"] if role in counts_by_role]
 
 
 def has_blocker(persona_dir):
@@ -787,6 +996,25 @@ def _cell(text):
     return _md(text).replace("|", "/")
 
 
+def _owner(item):
+    """The task's owner as backlog.md and the plan tree print it: the role, then the name or the acting owner."""
+    if item.get("owner_name"):
+        return "%s, %s" % (item["owner_role"], item["owner_name"])
+    if item.get("acting_owner"):
+        return "%s, acting: %s" % (item["owner_role"], item["acting_owner"])
+    return item["owner_role"]
+
+
+def _unnamed_line(backlog):
+    roles = backlog.get("unnamed_roles") or []
+    if not roles:
+        return "Roles with no named person: none."
+    return "Roles with no named person: %s." % "; ".join(
+        "%s, %d task%s, %s" % (r["role"], r["tasks"], "" if r["tasks"] == 1 else "s",
+                              "acting owner %s" % r["acting_owner"] if r["acting_owner"] else "no acting owner")
+        for r in roles)
+
+
 def _md_story(story):
     lines = ["", "### %s: %s" % (_md(story["id"]), _md(story["title"])), "", _md(story["statement"], lead=True), "",
              "Part %s. In pilot: %s. Priority: %s. Status: %s." % (
@@ -804,7 +1032,7 @@ def _md_story(story):
     lines += ["", "**Tasks:**", ""]
     for item in story["tasks"]:
         lines.append("- %s **%s** %s (owner: %s, part %s)" % (
-            MARKS[item["status"]], _md(item["id"]), _md(item["title"]), _md(item["owner_role"]), _md(item["part"])))
+            MARKS[item["status"]], _md(item["id"]), _md(item["title"]), _md(_owner(item)), _md(item["part"])))
         for i, step in enumerate(item["how"], 1):
             text = _md(step["text"], lead=True)
             if step["link"]:
@@ -827,6 +1055,8 @@ def render_md(backlog, persona_dir=None):
         "",
         "Status: %s. %d features, %d stories, %d tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done."
         % (_md(epic["status"]), n_features, n_stories, n_tasks),
+        "",
+        _md(_unnamed_line(backlog), lead=True),
     ]
     for feature in epic["features"]:
         lines += ["", "## %s: %s" % (_md(feature["id"]), _md(feature["title"])), "",
@@ -853,7 +1083,7 @@ def plan_tree(backlog):
         steps = ["%d. %s%s" % (i, s["text"], " (%s)" % s["link"] if s["link"] else "")
                  for i, s in enumerate(item["how"], 1)]
         return "\n".join([item["id"], "Owner: %s. Part %s. Status: %s." % (
-            item["owner_role"], item["part"], item["status"])] + steps + ["Done when: " + item["done_when"]])
+            _owner(item), item["part"], item["status"])] + steps + ["Done when: " + item["done_when"]])
 
     epic = backlog["epic"]
     features = []

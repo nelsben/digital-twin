@@ -165,7 +165,7 @@
           "access": "read",
           "identity": "user",
           "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
-          "runbook": null,
+          "runbook": "starter-kit/runbooks/hubspot-connector.md",
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
           "unverified": false
@@ -175,7 +175,7 @@
           "access": "read",
           "identity": "user",
           "how": "The Google Drive directory connector, built and run by Google. An Owner adds it on Team and Enterprise. It reads and creates files.",
-          "runbook": null,
+          "runbook": "starter-kit/runbooks/google-workspace-connectors.md",
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
           "unverified": true
@@ -285,7 +285,7 @@
           "access": "read",
           "identity": "service-account",
           "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
-          "runbook": null,
+          "runbook": "starter-kit/runbooks/hubspot-connector.md",
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
           "unverified": false
@@ -305,7 +305,7 @@
           "access": "write",
           "identity": "service-account",
           "how": "The Slack directory connector (Team and Enterprise; the Claude in Slack app installed first). An Owner enables it. Whether it can post is unconfirmed; the Slack MCP server can.",
-          "runbook": null,
+          "runbook": "starter-kit/runbooks/slack-connector.md",
           "permission": "blocked",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
           "unverified": true
@@ -415,7 +415,7 @@
           "access": "read",
           "identity": "user",
           "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
-          "runbook": null,
+          "runbook": "starter-kit/runbooks/hubspot-connector.md",
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
           "unverified": false
@@ -525,7 +525,7 @@
           "access": "read",
           "identity": "user",
           "how": "The Google Drive directory connector, built and run by Google. An Owner adds it on Team and Enterprise. It reads and creates files.",
-          "runbook": null,
+          "runbook": "starter-kit/runbooks/google-workspace-connectors.md",
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
           "unverified": true
@@ -535,7 +535,7 @@
           "access": "write",
           "identity": "user",
           "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
-          "runbook": null,
+          "runbook": "starter-kit/runbooks/hubspot-connector.md",
           "permission": "blocked",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
           "unverified": false
@@ -645,7 +645,7 @@
           "access": "read",
           "identity": "user",
           "how": "Zendesk's External AI connection (early access), https://<subdomain>.zendesk.com/mcp, added by an Owner as a custom connector. A Zendesk admin creates the connection and limits it to agent groups.",
-          "runbook": null,
+          "runbook": "starter-kit/runbooks/zendesk-connector.md",
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
           "unverified": true

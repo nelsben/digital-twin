@@ -1,0 +1,776 @@
+"""Build a persona's backlog: turn card.json and levelled.json into backlog.json and backlog.md.
+
+build(persona_dir) validates the card, checks levelled.json is present and was made from the
+current card and profile, then builds the backlog from data/task-library.json; it never writes.
+write_backlog(persona_dir) does the same and writes <persona_dir>/backlog.json and backlog.md.
+
+    {"ok": bool,                  # False on validation errors or a missing or stale levelled.json
+     "validation": {...},         # the validate() result
+     "error": str or None,        # why nothing was built
+     "backlog": {...} or None,    # the backlog.json content
+     "retired_now": [...]}        # items this run retired: [{"id", "title", "status"}]
+
+The epic is the role twin; one feature per card feature, then F-twin-foundation; one story per
+card task, then the seven foundation stories; tasks come from the library's templates, whose
+'when' conditions use the levelling engine's condition language (level.matches). Statuses are
+kept across runs. Design of record: partner-kit/docs/design.md, section 8.
+"""
+
+import hashlib
+import json
+import re
+from pathlib import Path
+
+from . import fields as _fields
+from . import level as _level
+from . import validate as _validate
+
+PLUGIN_DIR = _level.PLUGIN_DIR
+REPO_ROOT = PLUGIN_DIR.parent.parent.parent
+LIBRARY_PATH = _level.DATA_DIR / "task-library.json"
+BACKLOG_JSON = "backlog.json"
+BACKLOG_MD = "backlog.md"
+CLI_PATH = "partner-kit/plugins/twin-consultant/scripts/twincard/cli.py"
+# backlog.md sits in engagements/<engagement>/personas/<persona>/, four folders below the repository root.
+MD_LINK_PREFIX = "../../../../"
+
+BACKLOG_VERSION = 1
+LIBRARY_VERSION = 1
+STALE = "levelled.json is missing or out of date. Next: run the level command."
+STATUSES = ("todo", "in-progress", "done")
+MARKS = {"todo": "[ ]", "in-progress": "[~]", "done": "[x]"}
+PARTS = tuple("A%d" % n for n in range(1, 10))
+TASK_STORY = "task-story"
+TEMPLATE_KEYS = ("id", "title", "part", "applies_to", "per", "when", "how", "done_when", "owner_role")
+STEP_KEYS = ("text", "link")
+ID_PATTERN = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
+
+FOUNDATION_FEATURE = ("F-twin-foundation", "Twin foundation")
+# (story id, title, part): the work every twin needs whatever its tasks are.
+FOUNDATION = (
+    ("S-persona-voice", "Persona voice", "A1"),
+    ("S-connectors-and-identity", "Connectors and identity", "A3"),
+    ("S-guardrails-and-settings", "Guardrails and settings", "A7"),
+    ("S-distribution", "Distribution", "A9"),
+    ("S-governance-log", "Governance log", "A9"),
+    ("S-memory-policy", "Memory policy", "A6"),
+    ("S-pilot-rollout-and-scorecard", "Pilot rollout and scorecard", "A8"),
+)
+FOUNDATION_IDS = tuple(sid for sid, _, _ in FOUNDATION)
+# A persona-level code whose template serves task stories lands in this foundation story.
+PERSONA_CODE_STORY = "S-guardrails-and-settings"
+
+FOUNDATION_ACCEPTANCE = {
+    "S-persona-voice": ["persona.md is filled in from the card's voice section, with a reason for every rule.",
+                        "The output style and the system prompt match persona.md.",
+                        "The business owner has approved the voice."],
+    "S-connectors-and-identity": ["Every connector the role uses is listed with its identity and approver.",
+                                  "The role's users are in the organisation with the right role."],
+    "S-guardrails-and-settings": ["The settings, or what replaces them, are in force for the role.",
+                                  "Compliance has signed off the data policy for each data class."],
+    "S-distribution": ["The role plugin reaches the role's users at the current version, and no one else it must "
+                       "not reach."],
+    "S-governance-log": ["What is logged for the twin, and where, is agreed and checked."],
+    "S-memory-policy": ["The memory policy is written down and in force."],
+    "S-pilot-rollout-and-scorecard": ["The pilot users are trained, the baseline is recorded, and the first "
+                                      "scorecard is reviewed."],
+}
+
+# --- Facts a template's 'when' may read -----------------------------------------------------------
+
+PERSONA_FACTS = ("plan.tier", "role.device", "distribution", "settings_baseline", "governance.log",
+                 "compliance.walls", "memory.personal_memory_wanted", "systems.kinds", "systems.products",
+                 "writes.kinds", "writes.products", "codes")
+TASK_FACTS = ("task.trigger", "task.data_class", "task.output.audience", "task.reversible", "task.touches_money",
+              "task.cost_of_mistake.level", "task.reads_untrusted_input", "task.in_pilot", "task.write_actions")
+DECISION_FACTS = ("runtime", "identity", "autonomy.start", "autonomy.ceiling", "data_controls.settings_baseline",
+                  "data_controls.web_tools", "data_controls.surfaces", "data_controls.retention", "memory",
+                  "plan_fit")
+ITEM_FACTS = {
+    "connector": ("connector.system", "connector.kind", "connector.product", "connector.access",
+                  "connector.permission", "connector.runbook", "connector.unverified"),
+    "tool": ("tool.system", "tool.use", "tool.permission"),
+    "unverified-decision": ("decision.name",),
+}
+ALL_ITEM_FACTS = tuple(name for names in ITEM_FACTS.values() for name in names)
+GOVERNANCE_CAPABILITY = "governance-action-log"
+
+
+class BacklogError(ValueError):
+    """A fault in task-library.json."""
+
+
+class UsageError(ValueError):
+    """A fault the person running the command can fix, such as an unknown status in backlog.json."""
+
+
+# --- The task library ------------------------------------------------------------------------------
+
+def allowed_facts(applies_to, per):
+    """The fact names a template's 'when' may read."""
+    names = set(PERSONA_FACTS)
+    if applies_to == TASK_STORY:
+        names |= set(TASK_FACTS) | set(DECISION_FACTS)
+        if per:
+            names |= set(ITEM_FACTS[per])
+    return names
+
+
+def _check_template(template, owner_roles, seen):
+    tid = template.get("id") if isinstance(template, dict) else None
+    where = "task-library.json template %r" % (tid,)
+
+    def fail(message):
+        raise BacklogError("%s: %s" % (where, message))
+
+    if not isinstance(template, dict) or sorted(template) != sorted(TEMPLATE_KEYS):
+        fail("must have exactly the keys %s" % ", ".join(TEMPLATE_KEYS))
+    if not isinstance(tid, str) or not ID_PATTERN.match(tid):
+        fail("the id must be kebab-case")
+    if tid in seen:
+        fail("duplicate id")
+    seen.add(tid)
+    if not isinstance(template["title"], str) or not template["title"].strip():
+        fail("title must be a sentence")
+    if template["part"] not in PARTS:
+        fail("part %r is not one of A1 to A9" % (template["part"],))
+    applies_to = template["applies_to"]
+    if applies_to != TASK_STORY and applies_to not in FOUNDATION_IDS:
+        fail("applies_to %r is not %s or a foundation story (%s)"
+             % (applies_to, TASK_STORY, ", ".join(FOUNDATION_IDS)))
+    per = template["per"]
+    if per is not None and per not in ITEM_FACTS:
+        fail("per %r is not null or one of %s" % (per, ", ".join(sorted(ITEM_FACTS))))
+    if per is not None and applies_to != TASK_STORY:
+        fail("per needs applies_to %s" % TASK_STORY)
+    try:
+        names = _level.fact_names(template["when"])
+    except _level.LevelError as exc:
+        fail("when: %s" % exc)
+    allowed = allowed_facts(applies_to, per)
+    for name in names:
+        if name in allowed:
+            continue
+        if name in ALL_ITEM_FACTS:
+            fail("when reads %s, an item fact, without the matching per" % name)
+        if applies_to != TASK_STORY and (name in TASK_FACTS or name in DECISION_FACTS):
+            fail("when reads %s, a task fact, but a foundation story has no task" % name)
+        fail("when reads unknown fact %s" % name)
+    how = template["how"]
+    if not isinstance(how, list) or len(how) < 2:
+        fail("how must list at least 2 steps")
+    for index, step in enumerate(how):
+        if not isinstance(step, dict) or sorted(step) != sorted(STEP_KEYS):
+            fail("how[%d] must have exactly the keys text and link" % index)
+        if not isinstance(step["text"], str) or not step["text"].strip().endswith("."):
+            fail("how[%d] text must be one sentence ending in a full stop" % index)
+        link = step["link"]
+        if link is not None and (not isinstance(link, str) or not link or link.startswith("/") or "://" in link):
+            fail("how[%d] link must be null or a repo-relative path" % index)
+    if not isinstance(template["done_when"], str) or not template["done_when"].strip():
+        fail("done_when must be at least one sentence")
+    if template["owner_role"] not in owner_roles:
+        fail("owner_role %r is not in owner_roles" % (template["owner_role"],))
+
+
+def load_library(path=None):
+    """Return task-library.json, checked; raise BacklogError naming the template at fault."""
+    target = Path(path) if path is not None else LIBRARY_PATH
+    try:
+        data = json.loads(target.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise BacklogError("task-library.json (%s) cannot be read as JSON: %s" % (target, exc))
+    if not isinstance(data, dict) or sorted(data) != ["library_version", "owner_roles", "templates"]:
+        raise BacklogError("task-library.json holds library_version, owner_roles and templates, nothing else")
+    if data["library_version"] != LIBRARY_VERSION:
+        raise BacklogError("task-library.json must have library_version %d" % LIBRARY_VERSION)
+    roles = data["owner_roles"]
+    if not isinstance(roles, list) or not all(isinstance(r, str) and ID_PATTERN.match(r) for r in roles):
+        raise BacklogError("task-library.json owner_roles must be a list of kebab-case role ids")
+    if not isinstance(data["templates"], list) or not data["templates"]:
+        raise BacklogError("task-library.json templates must be a non-empty list")
+    seen = set()
+    for template in data["templates"]:
+        _check_template(template, set(roles), seen)
+    return data
+
+
+# --- Reading the persona -----------------------------------------------------------------------------
+
+def _sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def _paths(persona_dir):
+    persona = Path(persona_dir)
+    return (persona / _validate.CARD_FILE, (persona / ".." / ".." / _validate.PROFILE_FILE).resolve(),
+            persona / _level.LEVELLED_FILE)
+
+
+def _read_levelled(persona_dir):
+    """(card, profile, levelled, levelled bytes), or None when levelled.json is missing or stale."""
+    card_path, profile_path, levelled_path = _paths(persona_dir)
+    if not levelled_path.is_file():
+        return None
+    card_bytes, profile_bytes = card_path.read_bytes(), profile_path.read_bytes()
+    levelled_bytes = levelled_path.read_bytes()
+    try:
+        levelled = json.loads(levelled_bytes.decode("utf-8"))
+        source = levelled["source"]
+    except (ValueError, KeyError, TypeError):
+        return None
+    if source.get("card_sha256") != _sha(card_bytes) or source.get("profile_sha256") != _sha(profile_bytes):
+        return None
+    return (json.loads(card_bytes.decode("utf-8")), json.loads(profile_bytes.decode("utf-8")), levelled,
+            levelled_bytes)
+
+
+def _old_statuses(persona_dir):
+    """({task id: (title, status)}, [retired entries]) from an existing backlog.json; UsageError if unusable."""
+    path = Path(persona_dir) / BACKLOG_JSON
+    if not path.is_file():
+        return {}, []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        features = data["epic"]["features"]
+        retired = data.get("retired") or []
+    except (ValueError, KeyError, TypeError) as exc:
+        raise UsageError("backlog.json cannot be read (%s); fix it or delete it, then run backlog again" % exc)
+    tasks = {}
+    for feature in features:
+        for story in feature.get("stories") or []:
+            for item in story.get("tasks") or []:
+                tid, status = item.get("id"), item.get("status")
+                if status not in STATUSES:
+                    raise UsageError("backlog.json: task %s has status %r; use one of %s"
+                                     % (tid, status, ", ".join(STATUSES)))
+                tasks[tid] = (item.get("title"), status)
+    out = []
+    for entry in retired:
+        if not isinstance(entry, dict) or entry.get("status") not in STATUSES:
+            rid = entry.get("id") if isinstance(entry, dict) else entry
+            raise UsageError("backlog.json: retired item %s has an unknown status; use one of %s"
+                             % (rid, ", ".join(STATUSES)))
+        out.append({"id": entry.get("id"), "title": entry.get("title"), "status": entry["status"]})
+    return tasks, out
+
+
+# --- Facts --------------------------------------------------------------------------------------------
+
+def _value(decision):
+    return decision.get("value") if isinstance(decision, dict) else None
+
+
+def _systems(profile):
+    return dict((s.get("id"), s) for s in profile.get("systems") or [] if isinstance(s, dict))
+
+
+def _kinds_and_products(system_ids, systems):
+    kinds, products = [], []
+    for sid in system_ids:
+        system = systems.get(sid) or {}
+        for out, value in ((kinds, system.get("kind")), (products, system.get("product"))):
+            if value is not None and value not in out:
+                out.append(value)
+    return kinds, products
+
+
+def _system_ids(items):
+    out = []
+    for item in items:
+        if item.get("system") and item["system"] not in out:
+            out.append(item["system"])
+    return out
+
+
+def governance_log(profile, persona_codes):
+    """True when the plan has a governance log and levelling raised no team-no-governance-log."""
+    tier = (profile.get("plan") or {}).get("tier")
+    value = "no"
+    for cap in _level.load_plan_fit()["capabilities"]:
+        if cap["id"] == GOVERNANCE_CAPABILITY:
+            value = cap.get(tier, "no")
+    return value != "no" and "team-no-governance-log" not in persona_codes
+
+
+def _codes(levelled, about):
+    out = []
+    for item in levelled.get("blockers", []) + levelled.get("warnings", []):
+        if item["about"] == about and item["code"] not in out:
+            out.append(item["code"])
+    return out
+
+
+def persona_facts(card, profile, levelled, systems):
+    plan = levelled.get("persona_plan") or {}
+    codes = _codes(levelled, "persona")
+    tasks = card.get("tasks") or []
+    used = _system_ids([i for t in tasks for i in (t.get("inputs") or []) + (t.get("writes") or [])])
+    written = _system_ids([w for t in tasks for w in t.get("writes") or []])
+    kinds, products = _kinds_and_products(used, systems)
+    wkinds, wproducts = _kinds_and_products(written, systems)
+    facts = {
+        "plan.tier": (profile.get("plan") or {}).get("tier"),
+        "role.device": (card.get("role") or {}).get("device"),
+        "distribution": _value(plan.get("distribution")),
+        "settings_baseline": _value(plan.get("settings_baseline")),
+        "governance.log": governance_log(profile, codes),
+        "compliance.walls": (profile.get("compliance") or {}).get("walls"),
+        "memory.personal_memory_wanted": (card.get("memory") or {}).get("personal_memory_wanted"),
+        "systems.kinds": kinds, "systems.products": products,
+        "writes.kinds": wkinds, "writes.products": wproducts,
+        "codes": codes,
+    }
+    for name in TASK_FACTS + DECISION_FACTS + ALL_ITEM_FACTS:
+        facts[name] = None
+    return facts
+
+
+def task_facts(base, task, decisions, levelled, systems):
+    facts = dict(base)
+    kinds, products = _kinds_and_products(_system_ids((task.get("inputs") or []) + (task.get("writes") or [])),
+                                          systems)
+    wkinds, wproducts = _kinds_and_products(_system_ids(task.get("writes") or []), systems)
+    autonomy = decisions.get("autonomy") or {}
+    controls = decisions.get("data_controls") or {}
+    facts.update({
+        "systems.kinds": kinds, "systems.products": products,
+        "writes.kinds": wkinds, "writes.products": wproducts,
+        "codes": _codes(levelled, task.get("id")),
+        "task.trigger": task.get("trigger"),
+        "task.data_class": task.get("data_class"),
+        "task.output.audience": (task.get("output") or {}).get("audience"),
+        "task.reversible": task.get("reversible"),
+        "task.touches_money": task.get("touches_money"),
+        "task.cost_of_mistake.level": (task.get("cost_of_mistake") or {}).get("level"),
+        "task.reads_untrusted_input": task.get("reads_untrusted_input"),
+        "task.in_pilot": task.get("in_pilot"),
+        "task.write_actions": [w.get("action") for w in task.get("writes") or []],
+        "runtime": _value(decisions.get("runtime")),
+        "identity": _value(decisions.get("identity")),
+        "autonomy.start": _value(autonomy.get("start")),
+        "autonomy.ceiling": _value(autonomy.get("ceiling")),
+        "data_controls.settings_baseline": _value(controls.get("settings_baseline")),
+        "data_controls.web_tools": _value(controls.get("web_tools")),
+        "data_controls.surfaces": _value(controls.get("surfaces")),
+        "data_controls.retention": _value(controls.get("retention")),
+        "memory": _value(decisions.get("memory")),
+        "plan_fit": _value(decisions.get("plan_fit")),
+    })
+    return facts
+
+
+def _decision(decisions, name):
+    if name.startswith("autonomy."):
+        return (decisions.get("autonomy") or {}).get(name.split(".", 1)[1])
+    if name.startswith("data_controls."):
+        return (decisions.get("data_controls") or {}).get(name.split(".", 1)[1])
+    return decisions.get(name)
+
+
+def _items(per, tid, decisions, levelled, systems):
+    """[(item key, item facts)] for a per-item template on one task."""
+    out = []
+    if per == "connector":
+        for entry in decisions.get("connectors") or []:
+            system = systems.get(entry.get("system")) or {}
+            out.append((entry.get("system"), {
+                "connector.system": entry.get("system"), "connector.kind": system.get("kind"),
+                "connector.product": system.get("product"), "connector.access": entry.get("access"),
+                "connector.permission": entry.get("permission"), "connector.runbook": entry.get("runbook"),
+                "connector.unverified": bool(entry.get("unverified"))}))
+    elif per == "tool":
+        for tool in levelled.get("tools") or []:
+            if tid in (tool.get("tasks") or []):
+                out.append(("%s-%s" % (tool["system"], tool["use"]), {
+                    "tool.system": tool["system"], "tool.use": tool["use"],
+                    "tool.permission": _value(tool.get("permission"))}))
+    elif per == "unverified-decision":
+        for name in _level.DECISION_FACTS:
+            decision = _decision(decisions, name)
+            if isinstance(decision, dict) and decision.get("unverified"):
+                out.append((name, {"decision.name": name}))
+        for entry in decisions.get("connectors") or []:
+            if entry.get("unverified"):
+                name = "connectors.%s" % entry.get("system")
+                out.append((name, {"decision.name": name}))
+    return out
+
+
+# --- Stories -------------------------------------------------------------------------------------------
+
+def _num(value):
+    if value is None:
+        return "unknown"
+    if isinstance(value, float) and value.is_integer():
+        return str(int(value))
+    return str(value)
+
+
+def _show(value):
+    if value is None:
+        return "undecided"
+    if isinstance(value, bool):
+        return "yes" if value else "no"
+    if isinstance(value, list):
+        return ", ".join(_show(v) for v in value) or "none"
+    return str(value)
+
+
+def _lower_first(text):
+    return text[:1].lower() + text[1:] if text else text
+
+
+def _story_fields(task, decisions, profile):
+    autonomy = decisions.get("autonomy") or {}
+    controls = decisions.get("data_controls") or {}
+    output = task.get("output") or {}
+    connectors = "; ".join("%s: %s identity, %s, %s" % (c.get("system"), _show(c.get("identity")), c.get("access"),
+                                                        _show(c.get("permission")))
+                           for c in decisions.get("connectors") or []) or "none"
+    inputs = "; ".join("%s (%s)" % (i.get("system"), i.get("objects")) for i in task.get("inputs") or []) or "none"
+    return {
+        "data_class": task.get("data_class"),
+        "surface": "%s; surfaces: %s" % (_show(_value(decisions.get("runtime"))),
+                                         _show(_value(controls.get("surfaces")))),
+        "autonomy": "%s to %s" % (_show(_value(autonomy.get("start"))), _show(_value(autonomy.get("ceiling")))),
+        "connectors_and_identity": connectors,
+        "wall_impact": _show((profile.get("compliance") or {}).get("walls")),
+        "inputs": inputs,
+        "output_and_audience": "%s, %s; to %s" % (output.get("what"), output.get("audience"),
+                                                  output.get("destination")),
+        "skill_owner": task.get("skill_owner") or "not named yet",
+        "baseline": "%s per week x %s minutes each x %s users" % (
+            _num(task.get("frequency_per_week")), _num(task.get("minutes_each")), _num(task.get("users"))),
+    }
+
+
+def _acceptance(task, facts):
+    examples = task.get("examples") or {}
+    good, bad = examples.get("good"), examples.get("bad")
+    where = " (%s)" % examples["where"] if examples.get("where") else ""
+    lines = []
+    for count, kind, result in ((good, "good", "the twin's output matches what a person accepted"),
+                                (bad, "bad", "the twin does not repeat the mistake")):
+        if isinstance(count, int) and not isinstance(count, bool) and count > 0:
+            lines += ["Eval from %s example %d of %d%s: %s." % (kind, i, count, where, result)
+                      for i in range(1, count + 1)]
+    if not lines:
+        lines = ["Eval %d of 3: written from a real example once the skill owner has collected it, with the "
+                 "expected result." % i for i in range(1, 4)]
+    if facts["data_controls.web_tools"] == "off":
+        lines.append("Plus: no web tools are used.")
+    if "crm" in facts["writes.kinds"]:
+        lines.append("Plus: every write carries the twin marker.")
+    if facts["governance.log"]:
+        lines.append("Plus: each tool call reaches the governance log.")
+    return lines
+
+
+def _gates(blockers, questions):
+    out = [{"kind": "blocker", "id": b["code"], "text": b["message"]} for b in blockers]
+    out += [{"kind": "open-question", "id": q.get("id"), "text": q.get("question")} for q in questions]
+    return out
+
+
+def _task(story_id, template, key):
+    return {"id": "%s.%s" % (story_id, template["id"]) + (".%s" % key if key else ""),
+            "template": template["id"],
+            "title": template["title"] + (" (%s)" % key if key else ""),
+            "part": template["part"],
+            "how": [{"text": step["text"], "link": step["link"]} for step in template["how"]],
+            "done_when": template["done_when"],
+            "owner_role": template["owner_role"],
+            "status": "todo"}
+
+
+def _applies(template, story_id):
+    applies = template["applies_to"]
+    if story_id is None:
+        return applies == TASK_STORY
+    if applies == story_id:
+        return True
+    # A persona-level code whose template serves task stories lands in one foundation story.
+    return (story_id == PERSONA_CODE_STORY and applies == TASK_STORY and template["per"] is None
+            and _level.fact_names(template["when"]) == ["codes"])
+
+
+def _tasks_for(story_id, facts, library, foundation, tid=None, decisions=None, levelled=None, systems=None):
+    """The tasks the library's templates give one story, in library order."""
+    known = set(facts)
+    out = []
+    for template in library["templates"]:
+        if not _applies(template, story_id if foundation else None):
+            continue
+        if template["per"] is None:
+            if _level.matches(template["when"], facts, known):
+                out.append(_task(story_id, template, None))
+            continue
+        for key, item in _items(template["per"], tid, decisions, levelled, systems):
+            merged = dict(facts)
+            merged.update(item)
+            if _level.matches(template["when"], merged, known):
+                out.append(_task(story_id, template, key))
+    return out
+
+
+def derive_status(statuses):
+    """done when every status is done, todo when every one is todo, otherwise in-progress."""
+    statuses = list(statuses)
+    if statuses and all(s == "done" for s in statuses):
+        return "done"
+    if all(s == "todo" for s in statuses):
+        return "todo"
+    return "in-progress"
+
+
+# --- Building ------------------------------------------------------------------------------------------
+
+def _result(ok, validation, error=None, backlog=None, retired_now=None):
+    return {"ok": ok, "validation": validation, "error": error, "backlog": backlog, "retired_now": retired_now or []}
+
+
+def _task_story(task, role, base, profile, levelled, systems, questions, persona_blockers, library):
+    tid = task.get("id")
+    decisions = (levelled.get("tasks") or {}).get(tid) or {}
+    facts = task_facts(base, task, decisions, levelled, systems)
+    story_id = "S-" + tid
+    blockers = persona_blockers + [b for b in levelled.get("blockers", []) if b["about"] == tid]
+    return {
+        "id": story_id,
+        "title": task.get("name"),
+        "statement": "As a %s, I want my twin to %s so that I get the %s." % (
+            role, _lower_first(task.get("name") or ""), _lower_first((task.get("output") or {}).get("what") or
+                                                                      "result")),
+        "part": "A2" if facts["runtime"] == "client-skill" else "A4",
+        "in_pilot": bool(task.get("in_pilot")),
+        "priority": task.get("priority"),
+        "status": "todo",
+        "fields": _story_fields(task, decisions, profile),
+        "acceptance": _acceptance(task, facts),
+        "gated_by": _gates(blockers, [q for q in questions if tid in (q.get("blocks") or [])]),
+        "tasks": _tasks_for(story_id, facts, library, False, tid, decisions, levelled, systems),
+    }
+
+
+def _foundation_stories(role, base, levelled, persona_blockers, library):
+    plan = levelled.get("persona_plan") or {}
+    fields = {
+        "plan": _show(base["plan.tier"]),
+        "device": _show(base["role.device"]),
+        "plugin_name": _show(_value(plan.get("plugin_name"))),
+        "distribution": _show(base["distribution"]),
+        "settings_baseline": _show(base["settings_baseline"]),
+        "governance_log": _show(base["governance.log"]),
+    }
+    out = []
+    for story_id, title, part in FOUNDATION:
+        out.append({
+            "id": story_id, "title": title,
+            "statement": "As a %s, I want my twin's %s in place so that every task story runs safely." % (
+                role, title.lower()),
+            "part": part, "in_pilot": True, "priority": None, "status": "todo",
+            "fields": dict(fields),
+            "acceptance": list(FOUNDATION_ACCEPTANCE[story_id]),
+            "gated_by": _gates(persona_blockers, []),
+            "tasks": _tasks_for(story_id, base, library, True),
+        })
+    return out
+
+
+def _apply_statuses(features, old_tasks, old_retired):
+    """Keep each task's status from the last run, derive the parents', and retire started items no longer made."""
+    retired_by_id = dict((r["id"], r) for r in old_retired)
+    generated = set()
+    for feature in features:
+        for story in feature["stories"]:
+            for item in story["tasks"]:
+                generated.add(item["id"])
+                if item["id"] in old_tasks:
+                    item["status"] = old_tasks[item["id"]][1]
+                elif item["id"] in retired_by_id:
+                    item["status"] = retired_by_id[item["id"]]["status"]
+            story["status"] = derive_status(t["status"] for t in story["tasks"])
+        feature["status"] = derive_status(s["status"] for s in feature["stories"])
+    retired = [r for r in old_retired if r["id"] not in generated]
+    kept = set(r["id"] for r in retired)
+    retired_now = []
+    for tid, (title, status) in old_tasks.items():
+        if tid not in generated and tid not in kept and status != "todo":
+            entry = {"id": tid, "title": title, "status": status}
+            retired.append(entry)
+            retired_now.append(entry)
+    return retired, retired_now
+
+
+def build(persona_dir, library=None):
+    """Build the backlog for the persona in persona_dir. Never writes. See the module docstring."""
+    validation = _validate.validate(str(persona_dir), _fields.load_catalogue())
+    if not validation["ok"]:
+        return _result(False, validation, "card.json or customer-profile.json has validation errors. "
+                                          "Next: fix them, then run level and backlog again.")
+    read = _read_levelled(persona_dir)
+    if read is None:
+        return _result(False, validation, STALE)
+    card, profile, levelled, levelled_bytes = read
+    library = library if library is not None else load_library()
+    old_tasks, old_retired = _old_statuses(persona_dir)
+    systems = _systems(profile)
+    base = persona_facts(card, profile, levelled, systems)
+    persona_blockers = [b for b in levelled.get("blockers", []) if b["about"] == "persona"]
+    questions = card.get("open_questions") or []
+    tasks = card.get("tasks") or []
+    order = dict((t.get("id"), i) for i, t in enumerate(tasks))
+    role = (card.get("role") or {}).get("name") or card.get("id")
+
+    features = []
+    for feature in card.get("features") or []:
+        stories = [_task_story(task, role, base, profile, levelled, systems, questions, persona_blockers, library)
+                   for task in tasks if task.get("feature") == feature.get("id")]
+        stories.sort(key=lambda s: (not s["in_pilot"],
+                                    s["priority"] if isinstance(s["priority"], (int, float)) else float("inf"),
+                                    order.get(s["id"][2:], 0)))
+        features.append({"id": "F-" + feature.get("id"), "title": feature.get("name"), "kind": "capability",
+                         "status": "todo", "stories": stories})
+    features.append({"id": FOUNDATION_FEATURE[0], "title": FOUNDATION_FEATURE[1], "kind": "foundation",
+                     "status": "todo", "stories": _foundation_stories(role, base, levelled, persona_blockers,
+                                                                      library)})
+    retired, retired_now = _apply_statuses(features, old_tasks, old_retired)
+
+    display = profile.get("display_name") or card.get("customer")
+    backlog = {
+        "backlog_version": BACKLOG_VERSION,
+        "customer": card.get("customer"),
+        "persona": card.get("id"),
+        "source": {"card_sha256": levelled["source"]["card_sha256"], "levelled_sha256": _sha(levelled_bytes),
+                   "library_version": library["library_version"]},
+        "epic": {"id": "E", "title": "%s twin for %s" % (role, display),
+                 "status": derive_status(f["status"] for f in features), "features": features},
+        "retired": retired,
+    }
+    return _result(True, validation, None, backlog, retired_now)
+
+
+def has_blocker(persona_dir):
+    """True when levelled.json reports a blocker."""
+    path = Path(persona_dir) / _level.LEVELLED_FILE
+    return bool(json.loads(path.read_text(encoding="utf-8")).get("blockers"))
+
+
+# --- Rendering -----------------------------------------------------------------------------------------
+
+def render_json(backlog):
+    """backlog.json's text: keys in a fixed order, two-space indent, UTF-8, a trailing newline."""
+    return json.dumps(backlog, indent=2, ensure_ascii=False) + "\n"
+
+
+def command_path(backlog, persona_dir=None):
+    """The persona folder as the command takes it: engagements/<engagement>/personas/<persona>."""
+    if persona_dir is not None:
+        persona = Path(persona_dir).resolve()
+        return "engagements/%s/personas/%s" % (persona.parent.parent.name, persona.name)
+    for profile in sorted((REPO_ROOT / "engagements").glob("*/customer-profile.json")):
+        try:
+            customer = json.loads(profile.read_text(encoding="utf-8")).get("customer")
+        except ValueError:
+            continue
+        if customer == backlog["customer"] and (profile.parent / "personas" / backlog["persona"]).is_dir():
+            return "engagements/%s/personas/%s" % (profile.parent.name, backlog["persona"])
+    return "engagements/%s/personas/%s" % (backlog["customer"], backlog["persona"])
+
+
+def counts(backlog):
+    """(features, stories, tasks) in the backlog."""
+    stories = [s for f in backlog["epic"]["features"] for s in f["stories"]]
+    return len(backlog["epic"]["features"]), len(stories), sum(len(s["tasks"]) for s in stories)
+
+
+def _cell(text):
+    return str(text).replace("|", "/").replace("\n", " ")
+
+
+def _md_story(story):
+    lines = ["", "### %s: %s" % (story["id"], story["title"]), "", story["statement"], "",
+             "Part %s. In pilot: %s. Priority: %s. Status: %s." % (
+                 story["part"], "yes" if story["in_pilot"] else "no",
+                 story["priority"] if story["priority"] is not None else "none", story["status"]),
+             "", "| Field | Value |", "|---|---|"]
+    for key, value in story["fields"].items():
+        lines.append("| %s | %s |" % (key.replace("_", " ").capitalize(), _cell(value)))
+    lines += ["", "**Acceptance criteria:**", ""]
+    lines += ["%d. %s" % (i, text) for i, text in enumerate(story["acceptance"], 1)]
+    lines += ["", "**Gated by:**", ""]
+    lines += ["- %s %s: %s" % (g["kind"], g["id"], g["text"]) for g in story["gated_by"]] or ["- Nothing."]
+    lines += ["", "**Tasks:**", ""]
+    for item in story["tasks"]:
+        lines.append("- %s **%s** %s (owner: %s, part %s)" % (
+            MARKS[item["status"]], item["id"], item["title"], item["owner_role"], item["part"]))
+        for i, step in enumerate(item["how"], 1):
+            text = step["text"]
+            if step["link"]:
+                text += " See [%s](%s%s)." % (step["link"], MD_LINK_PREFIX, step["link"])
+            lines.append("  %d. %s" % (i, text))
+        lines.append("  - Done when: %s" % item["done_when"])
+    return lines
+
+
+def render_md(backlog, persona_dir=None):
+    """backlog.md's text, generated from the backlog; links are relative to the persona folder."""
+    epic = backlog["epic"]
+    n_features, n_stories, n_tasks = counts(backlog)
+    lines = [
+        "# " + epic["title"],
+        "",
+        "Generated from card.json and levelled.json by `python3 %s backlog %s`; never edit it by hand. To mark a "
+        "task, change only its status in backlog.json, then run the command again." % (
+            CLI_PATH, command_path(backlog, persona_dir)),
+        "",
+        "Status: %s. %d features, %d stories, %d tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done."
+        % (epic["status"], n_features, n_stories, n_tasks),
+    ]
+    for feature in epic["features"]:
+        lines += ["", "## %s: %s" % (feature["id"], feature["title"]), "",
+                  "Kind: %s. Status: %s. %d stories." % (feature["kind"], feature["status"], len(feature["stories"]))]
+        for story in feature["stories"]:
+            lines += _md_story(story)
+    lines += ["", "## Retired", ""]
+    if backlog["retired"]:
+        lines += ["Items no longer generated from the card that had been started or finished:", ""]
+        lines += ["- %s **%s** %s (%s)" % (MARKS[r["status"]], r["id"], r["title"], r["status"])
+                  for r in backlog["retired"]]
+    else:
+        lines.append("Nothing retired.")
+    return "\n".join(lines) + "\n"
+
+
+def plan_tree(backlog):
+    """The tree_import shape {"version": 1, "items": [epic]}; notes hold the ids, and for a task its steps."""
+    def node(kind, title, note, children):
+        return {"type": kind, "title": title, "note": note, "children": children}
+
+    def task_note(item):
+        steps = ["%d. %s%s" % (i, s["text"], " (%s)" % s["link"] if s["link"] else "")
+                 for i, s in enumerate(item["how"], 1)]
+        return "\n".join([item["id"], "Owner: %s. Part %s. Status: %s." % (
+            item["owner_role"], item["part"], item["status"])] + steps + ["Done when: " + item["done_when"]])
+
+    epic = backlog["epic"]
+    features = []
+    for feature in epic["features"]:
+        stories = []
+        for story in feature["stories"]:
+            gates = ["Gated by %s %s." % (g["kind"], g["id"]) for g in story["gated_by"]]
+            stories.append(node("story", story["title"], "\n".join([story["id"], story["statement"]] + gates),
+                                [node("task", item["title"], task_note(item), []) for item in story["tasks"]]))
+        features.append(node("feature", feature["title"], feature["id"], stories))
+    return {"version": 1, "items": [node("epic", epic["title"], "E\nStatus: %s." % epic["status"], features)]}
+
+
+def write_backlog(persona_dir, library=None):
+    """Build and write backlog.json and backlog.md; nothing is written when the build fails."""
+    result = build(persona_dir, library)
+    if result["ok"]:
+        persona = Path(persona_dir)
+        (persona / BACKLOG_JSON).write_bytes(render_json(result["backlog"]).encode("utf-8"))
+        (persona / BACKLOG_MD).write_bytes(render_md(result["backlog"], persona_dir).encode("utf-8"))
+    return result

@@ -28,6 +28,8 @@ BOLD_WARNING = re.compile(r"\*\*⚠[^*]*\*\*|⚠ \*\*[^*]*\*\*")
 PLAIN_WARNING = re.compile(r"(?<!\*\*)⚠ (?:Unverified|Conflict):")
 # A bracketed "Our ..." label, and lowercase spellings of the same labels.
 OUR_LABEL = re.compile(r"\((?:\*\*)?(Our [^)*]*?)(?:\*\*)?\)|\((our (?:recommendation|reading|conclusion)[^)]*)\)")
+# A bracketed lowercase spelling of a defined label, in any form.
+LOWER_OUR = re.compile(r"\(our (?:recommend\w*|reading|conclusion)[^)]*\)?")
 ANCHOR_LINK = re.compile(r"docs/compendium/([0-9A-Za-z_-]+\.md)#([A-Za-z0-9_-]+)")
 
 PINNED_HEADINGS = {
@@ -268,6 +270,13 @@ class MarkerConventionsTest(unittest.TestCase):
                         bad.append("%s: %s" % (page.name, form))
                 for form in PLAIN_WARNING.findall(line):
                     bad.append("%s: plain %s" % (page.name, form))
+                rest = line
+                for form in DEFINED_WARNINGS:
+                    rest = rest.replace(form, "")
+                if "⚠" in rest:
+                    bad.append("%s: stray ⚠ in %r" % (page.name, line[:80]))
+                for form in LOWER_OUR.findall(line):
+                    bad.append("%s: lowercase %s" % (page.name, form[:40]))
                 for cap, low in OUR_LABEL.findall(line):
                     label = cap or low
                     if label not in DEFINED_OURS:

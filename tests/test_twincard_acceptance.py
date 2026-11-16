@@ -748,7 +748,9 @@ class DashboardAcceptanceTests(unittest.TestCase):
 
     def test_sections_are_the_expected_ones_in_order(self):
         for fid, fixture in self.exp["fixtures"].items():
-            self.assertEqual(self.marks(fid).sections, fixture["dashboard"]["sections"], fid)
+            # The Build section follows the Backlog when the persona has a build.json (OPS-77); it is not one of the nine.
+            shown = [name for name in self.marks(fid).sections if name != "Build"]
+            self.assertEqual(shown, fixture["dashboard"]["sections"], fid)
 
     def test_every_must_show_code_is_an_entry(self):
         for fid, fixture in self.exp["fixtures"].items():

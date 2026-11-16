@@ -443,6 +443,8 @@ class SamplesTest(unittest.TestCase):
                         shutil.copy2(entry, root / entry.name)
                 shutil.copy2(persona_dir / "card.json", persona / "card.json")
                 shutil.copytree(persona_dir / "interviews", persona / "interviews")
+                if (persona_dir / "build").is_dir():  # build.json is an input of the backlog and dashboard
+                    shutil.copytree(persona_dir / "build", persona / "build")
                 runs = []
                 for _ in range(2):
                     proc = subprocess.run([sys.executable, str(CLI), "all", str(persona), "--date", DATE],

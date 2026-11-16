@@ -57,6 +57,8 @@ def copy_customer(fixture, dest_root):
             shutil.copy2(item, customer_dst / item.name)
     shutil.copy2(persona_src / "card.json", persona_dst / "card.json")
     shutil.copytree(persona_src / "interviews", persona_dst / "interviews")
+    if (persona_src / "build").is_dir():  # build.json is an input of the backlog and the dashboard (OPS-77)
+        shutil.copytree(persona_src / "build", persona_dst / "build")
     return persona_dst
 
 

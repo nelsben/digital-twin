@@ -422,7 +422,8 @@ class FreshnessTests(Base):
         persona = self.sample(CS)
 
         def change(backlog):
-            backlog["epic"]["features"][0]["stories"][0]["tasks"][0]["status"] = "done"
+            # A task whose story the build has not started, so the derived parents change with it.
+            backlog["epic"]["features"][-1]["stories"][0]["tasks"][0]["status"] = "done"
         self.edit(persona / "backlog.json", change)
         proc = self.cli("dashboard", persona, "--date", DATE)
         self.assertEqual(proc.returncode, 1, proc.stdout + proc.stderr)

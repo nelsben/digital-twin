@@ -76,6 +76,7 @@ Ready to build: no
   2. Put the eval cases in the files the kit expects, next to the skill. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
+  - Artifact: T1, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/preparing-company-briefs
 - [ ] **S-T1.write-skill** Write the skill from the kit template until the evals pass (owner: skill-engineer, part A2)
   1. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Rename the copy to the skill's name. See [starter-kit/templates/skill/README.md#rename-it](../../../../starter-kit/templates/skill/README.md#rename-it).
@@ -88,11 +89,13 @@ Ready to build: no
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
   10. Make the skill keep these rules from the interviews, in the interviewee's words: A reviewer checks every brief before it goes further.. See [partner-kit/docs/design.md#42-persona-card-cardjson](../../../../partner-kit/docs/design.md#42-persona-card-cardjson).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
+  - Artifact: T1, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/preparing-company-briefs
 - [ ] **S-T1.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the trigger evals and tighten the description until they pass. See [docs/compendium/03-skills-authoring.md#writing-a-good-description](../../../../docs/compendium/03-skills-authoring.md#writing-a-good-description).
   - Done when: The skill starts on every should-trigger prompt and on none of the should-not prompts.
+  - Artifact: T1, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/preparing-company-briefs
 - [ ] **S-T1.second-review** Have a second person review the skill and its evals (owner: skill-owner, Callum Nwosu, part A8)
   1. Open a pull request with the skill and its evals. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   2. Have someone other than the author review it against the definition of done. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
@@ -101,6 +104,7 @@ Ready to build: no
   1. Add the skill to the role plugin and bump the plugin's version. See [starter-kit/templates/role-plugin/README.md#steps](../../../../starter-kit/templates/role-plugin/README.md#steps).
   2. Publish the marketplace so the role's users get the new version. See [starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups](../../../../starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups).
   - Done when: A pilot user in the role sees the skill after the plugin updates.
+  - Artifact: T1, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/preparing-company-briefs
 - [ ] **S-T1.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
   1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
@@ -212,6 +216,7 @@ Ready to build: no
   2. Put the eval cases in the files the kit expects, next to the skill. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
+  - Artifact: T5, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/prepare-for-a-management-or-expert-call
 - [ ] **S-T5.write-skill** Write the skill from dd-meeting-prep until the evals pass (owner: skill-engineer, part A2)
   1. Start from dd-meeting-prep (claude-for-financial-services: private-equity): Adapt, for T5. See [docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity](../../../../docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity).
   2. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
@@ -224,11 +229,13 @@ Ready to build: no
   9. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   10. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
+  - Artifact: T5, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/prepare-for-a-management-or-expert-call
 - [ ] **S-T5.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the trigger evals and tighten the description until they pass. See [docs/compendium/03-skills-authoring.md#writing-a-good-description](../../../../docs/compendium/03-skills-authoring.md#writing-a-good-description).
   - Done when: The skill starts on every should-trigger prompt and on none of the should-not prompts.
+  - Artifact: T5, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/prepare-for-a-management-or-expert-call
 - [ ] **S-T5.second-review** Have a second person review the skill and its evals (owner: skill-owner, Callum Nwosu, part A8)
   1. Open a pull request with the skill and its evals. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   2. Have someone other than the author review it against the definition of done. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
@@ -237,6 +244,7 @@ Ready to build: no
   1. Add the skill to the role plugin and bump the plugin's version. See [starter-kit/templates/role-plugin/README.md#steps](../../../../starter-kit/templates/role-plugin/README.md#steps).
   2. Publish the marketplace so the role's users get the new version. See [starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups](../../../../starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups).
   - Done when: A pilot user in the role sees the skill after the plugin updates.
+  - Artifact: T5, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/prepare-for-a-management-or-expert-call
 - [ ] **S-T5.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
   1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
@@ -362,6 +370,7 @@ Ready to build: no
   2. Put the eval cases in the files the kit expects, next to the skill. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
+  - Artifact: T2, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/drafting-crm-updates
 - [ ] **S-T2.write-skill** Write the skill from the kit template until the evals pass (owner: skill-engineer, part A2)
   1. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Rename the copy to the skill's name. See [starter-kit/templates/skill/README.md#rename-it](../../../../starter-kit/templates/skill/README.md#rename-it).
@@ -374,11 +383,13 @@ Ready to build: no
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
   10. Make the skill keep these rules from the interviews, in the interviewee's words: I want to approve each change before it's written.. See [partner-kit/docs/design.md#42-persona-card-cardjson](../../../../partner-kit/docs/design.md#42-persona-card-cardjson).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
+  - Artifact: T2, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/drafting-crm-updates
 - [ ] **S-T2.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the trigger evals and tighten the description until they pass. See [docs/compendium/03-skills-authoring.md#writing-a-good-description](../../../../docs/compendium/03-skills-authoring.md#writing-a-good-description).
   - Done when: The skill starts on every should-trigger prompt and on none of the should-not prompts.
+  - Artifact: T2, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/drafting-crm-updates
 - [ ] **S-T2.second-review** Have a second person review the skill and its evals (owner: skill-owner, Beatriz Halloran, part A8)
   1. Open a pull request with the skill and its evals. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   2. Have someone other than the author review it against the definition of done. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
@@ -387,6 +398,7 @@ Ready to build: no
   1. Add the skill to the role plugin and bump the plugin's version. See [starter-kit/templates/role-plugin/README.md#steps](../../../../starter-kit/templates/role-plugin/README.md#steps).
   2. Publish the marketplace so the role's users get the new version. See [starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups](../../../../starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups).
   - Done when: A pilot user in the role sees the skill after the plugin updates.
+  - Artifact: T2, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/drafting-crm-updates
 - [ ] **S-T2.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
   1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
@@ -524,6 +536,7 @@ Ready to build: no
   2. Put the eval cases in the files the kit expects, next to the skill. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
+  - Artifact: T3, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/skills/weekly-pipeline-summary-for-the-monday-deal-meeting
 - [ ] **S-T3.write-skill** Write the skill from the kit template until the evals pass (owner: skill-engineer, part A2)
   1. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Rename the copy to the skill's name. See [starter-kit/templates/skill/README.md#rename-it](../../../../starter-kit/templates/skill/README.md#rename-it).
@@ -535,11 +548,13 @@ Ready to build: no
   8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
+  - Artifact: T3, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/skills/weekly-pipeline-summary-for-the-monday-deal-meeting
 - [ ] **S-T3.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the trigger evals and tighten the description until they pass. See [docs/compendium/03-skills-authoring.md#writing-a-good-description](../../../../docs/compendium/03-skills-authoring.md#writing-a-good-description).
   - Done when: The skill starts on every should-trigger prompt and on none of the should-not prompts.
+  - Artifact: T3, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/skills/weekly-pipeline-summary-for-the-monday-deal-meeting
 - [ ] **S-T3.second-review** Have a second person review the skill and its evals (owner: skill-owner, acting: Director of IT, part A8)
   1. Open a pull request with the skill and its evals. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   2. Have someone other than the author review it against the definition of done. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
@@ -558,11 +573,13 @@ Ready to build: no
   5. Confirm the route keeps the retention the task needs. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
   6. Run it once inside the customer's environment, check it, and hand it over. See [starter-kit/runbooks/managed-agents.md#check-it-worked](../../../../starter-kit/runbooks/managed-agents.md#check-it-worked).
   - Done when: The self-hosted agent has run once from its schedule or trigger inside the customer's environment.
+  - Artifact: T3, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/agents/T3
 - [ ] **S-T3.start-wiring** Build what starts each session from the task's event or schedule (owner: integration-engineer, part A4)
   1. For an event, build what receives it from the input system and calls the API to start one session for it (Unverified: page 05 says a session starts from an API call, not what turns the input system's event into that call). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
   2. For a schedule, set up what runs it: a Managed Agents scheduled deployment, or for the Agent SDK a scheduler we host (Unverified: page 05 does not say whether a self-hosted deployment has scheduled deployments). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
   3. Key each start by the event's id or the scheduled time, so a repeat of the same event starts no second session (our recommendation; no compendium page covers repeats). See [docs/compendium/05-decision-matrix.md](../../../../docs/compendium/05-decision-matrix.md).
   - Done when: One test event, or one scheduled time, starts exactly one session, and a repeat of the same event does not start a second.
+  - Artifact: T3, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/agents/T3
 - [ ] **S-T3.credentials-api-key-vault** Store the runtime's credentials in the customer's vault, read-only to the runtime (owner: technical-owner, Director of IT, part A5)
   1. Create a credential for each system the task uses, limited to the task's objects and actions. See [docs/compendium/11-connectors.md#what-exists-for-our-systems](../../../../docs/compendium/11-connectors.md#what-exists-for-our-systems).
   2. Store the credentials in the customer's vault and give the runtime read access only. See [docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation](../../../../docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation).
@@ -700,6 +717,7 @@ Ready to build: no
   2. Put the eval cases in the files the kit expects, next to the skill. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
+  - Artifact: T4, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/screen-an-inbound-cim-or-teaser
 - [ ] **S-T4.write-skill** Write the skill from deal-screening until the evals pass (owner: skill-engineer, part A2)
   1. Start from deal-screening (claude-for-financial-services: private-equity): Adapt, for T4. See [docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity](../../../../docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity).
   2. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
@@ -712,11 +730,13 @@ Ready to build: no
   9. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   10. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
+  - Artifact: T4, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/screen-an-inbound-cim-or-teaser
 - [ ] **S-T4.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the trigger evals and tighten the description until they pass. See [docs/compendium/03-skills-authoring.md#writing-a-good-description](../../../../docs/compendium/03-skills-authoring.md#writing-a-good-description).
   - Done when: The skill starts on every should-trigger prompt and on none of the should-not prompts.
+  - Artifact: T4, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/screen-an-inbound-cim-or-teaser
 - [ ] **S-T4.second-review** Have a second person review the skill and its evals (owner: skill-owner, Beatriz Halloran, part A8)
   1. Open a pull request with the skill and its evals. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   2. Have someone other than the author review it against the definition of done. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
@@ -725,6 +745,7 @@ Ready to build: no
   1. Add the skill to the role plugin and bump the plugin's version. See [starter-kit/templates/role-plugin/README.md#steps](../../../../starter-kit/templates/role-plugin/README.md#steps).
   2. Publish the marketplace so the role's users get the new version. See [starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups](../../../../starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups).
   - Done when: A pilot user in the role sees the skill after the plugin updates.
+  - Artifact: T4, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/screen-an-inbound-cim-or-teaser
 - [ ] **S-T4.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
   1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
@@ -849,6 +870,7 @@ Ready to build: no
   2. Put the eval cases in the files the kit expects, next to the skill. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
+  - Artifact: T6, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/draft-a-section-of-an-investment-committee-memo-from-diligence-n
 - [ ] **S-T6.write-skill** Write the skill from ic-memo until the evals pass (owner: skill-engineer, part A2)
   1. Start from ic-memo (claude-for-financial-services: private-equity): Adapt, for T6. See [docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity](../../../../docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity).
   2. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
@@ -862,11 +884,13 @@ Ready to build: no
   10. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
   11. Make the skill keep these rules from the interviews, in the interviewee's words: It's always a draft and always reviewed.. See [partner-kit/docs/design.md#42-persona-card-cardjson](../../../../partner-kit/docs/design.md#42-persona-card-cardjson).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
+  - Artifact: T6, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/draft-a-section-of-an-investment-committee-memo-from-diligence-n
 - [ ] **S-T6.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the trigger evals and tighten the description until they pass. See [docs/compendium/03-skills-authoring.md#writing-a-good-description](../../../../docs/compendium/03-skills-authoring.md#writing-a-good-description).
   - Done when: The skill starts on every should-trigger prompt and on none of the should-not prompts.
+  - Artifact: T6, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/draft-a-section-of-an-investment-committee-memo-from-diligence-n
 - [ ] **S-T6.second-review** Have a second person review the skill and its evals (owner: skill-owner, Ravindra Sorensen, part A8)
   1. Open a pull request with the skill and its evals. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   2. Have someone other than the author review it against the definition of done. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
@@ -875,6 +899,7 @@ Ready to build: no
   1. Add the skill to the role plugin and bump the plugin's version. See [starter-kit/templates/role-plugin/README.md#steps](../../../../starter-kit/templates/role-plugin/README.md#steps).
   2. Publish the marketplace so the role's users get the new version. See [starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups](../../../../starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups).
   - Done when: A pilot user in the role sees the skill after the plugin updates.
+  - Artifact: T6, scaffolded, engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/draft-a-section-of-an-investment-committee-memo-from-diligence-n
 - [ ] **S-T6.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
   1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).

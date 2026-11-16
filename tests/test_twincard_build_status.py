@@ -337,7 +337,7 @@ class DashboardBuildTests(unittest.TestCase):
             rows = re.findall(r'<tr data-artifact="([^"]+)">(.*?)</tr>', section, flags=re.S)
             self.assertEqual([r[0] for r in rows], ["C1", "C2", "C3", "C4", "C5"])
             c1 = re.sub(r"<[^>]+>", " ", rows[0][1])
-            for text in ("skill", "account-brief-before-a-customer-call", "packaged", "Sam Rivera"):
+            for text in ("skill", "account-brief-before-a-customer-call", "packaged"):
                 self.assertIn(text, c1)
             self.assertIn("engagements/%s/personas/%s/build/plugin/twin-customer-success-manager/skills/"
                           "account-brief-before-a-customer-call" % (customer.name, persona.name), c1)

@@ -239,8 +239,10 @@ class FixturePageTests(unittest.TestCase):
 
     def test_seven_sections_in_order_with_kebab_ids_and_contents_links(self):
         for fid, (_, page) in self.pages.items():
-            self.assertEqual([name for name, _ in page.sections], SECTIONS, fid)
-            self.assertEqual([sid for _, sid in page.sections], [kebab(n) for n in SECTIONS], fid)
+            # The Build section follows the Backlog when the persona has a build.json (OPS-77); it is not one of the nine.
+            shown = [(name, sid) for name, sid in page.sections if name != "Build"]
+            self.assertEqual([name for name, _ in shown], SECTIONS, fid)
+            self.assertEqual([sid for _, sid in shown], [kebab(n) for n in SECTIONS], fid)
             hrefs = [attrs.get("href") for tag, attrs in page.attrs if tag == "a"]
             for name in SECTIONS:
                 self.assertIn("#" + kebab(name), hrefs, fid)

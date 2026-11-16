@@ -5,7 +5,8 @@
   "source": {
     "card_sha256": "bc45a8a407819b6522572843113e504c6904289dca7840b86b0ddf543e1b4a8b",
     "levelled_sha256": "51517672180d82eb3337c6c8f7a0011c70b3062da2931cf9f551aaa9bfdd9df3",
-    "library_version": 1
+    "library_version": 1,
+    "build_sha256": "977d5811d8cfc9643b1f32f22236c2c38d509f67fa5dbe9a5c8065132357a6c4"
   },
   "unnamed_roles": [
     {
@@ -22,13 +23,13 @@
   "epic": {
     "id": "E",
     "title": "Customer success manager twin for Example Software Co",
-    "status": "todo",
+    "status": "in-progress",
     "features": [
       {
         "id": "F-call-preparation-and-follow-up",
         "title": "Call preparation and follow-up",
         "kind": "capability",
-        "status": "todo",
+        "status": "in-progress",
         "stories": [
           {
             "id": "S-C1",
@@ -38,7 +39,7 @@
             "part": "A2",
             "in_pilot": true,
             "priority": 1,
-            "status": "todo",
+            "status": "in-progress",
             "fields": {
               "data_class": "confidential",
               "surface": "client-skill; surfaces: claude-ai",
@@ -128,7 +129,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C1",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/account-brief-before-a-customer-call",
+                  "status": "drafted"
+                }
               },
               {
                 "id": "S-C1.write-skill",
@@ -177,7 +183,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "in-progress",
+                "artifact": {
+                  "id": "C1",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/account-brief-before-a-customer-call",
+                  "status": "drafted"
+                }
               },
               {
                 "id": "S-C1.trigger-evals",
@@ -202,7 +213,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C1",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/account-brief-before-a-customer-call",
+                  "status": "drafted"
+                }
               },
               {
                 "id": "S-C1.second-review",
@@ -248,7 +264,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C1",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/account-brief-before-a-customer-call",
+                  "status": "drafted"
+                }
               },
               {
                 "id": "S-C1.owner-handover",
@@ -601,7 +622,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C4",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/follow-up-email-after-a-customer-call-and-a-call-note-in-hubspot",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C4.write-skill",
@@ -658,7 +684,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C4",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/follow-up-email-after-a-customer-call-and-a-call-note-in-hubspot",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C4.trigger-evals",
@@ -683,7 +714,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C4",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/follow-up-email-after-a-customer-call-and-a-call-note-in-hubspot",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C4.second-review",
@@ -729,7 +765,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C4",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/follow-up-email-after-a-customer-call-and-a-call-note-in-hubspot",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C4.owner-handover",
@@ -1184,7 +1225,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C2",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/weekly-renewal-risk-digest",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C2.write-skill",
@@ -1233,7 +1279,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C2",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/weekly-renewal-risk-digest",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C2.trigger-evals",
@@ -1258,7 +1309,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C2",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/weekly-renewal-risk-digest",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C2.second-review",
@@ -1341,7 +1397,12 @@
                 "owner_role": "integration-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C2",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/routines/C2",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C2.credentials-service-account",
@@ -1844,7 +1905,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C3",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/renewal-quote-email-to-the-customer",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C3.write-skill",
@@ -1901,7 +1967,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C3",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/renewal-quote-email-to-the-customer",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C3.trigger-evals",
@@ -1926,7 +1997,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C3",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/renewal-quote-email-to-the-customer",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C3.second-review",
@@ -1972,7 +2048,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C3",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/renewal-quote-email-to-the-customer",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C3.owner-handover",
@@ -2204,7 +2285,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C5",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/open-ticket-summary-when-a-ticket-is-escalated",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C5.write-skill",
@@ -2257,7 +2343,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C5",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/open-ticket-summary-when-a-ticket-is-escalated",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C5.trigger-evals",
@@ -2282,7 +2373,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C5",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/open-ticket-summary-when-a-ticket-is-escalated",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C5.second-review",
@@ -2328,7 +2424,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "C5",
+                  "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/open-ticket-summary-when-a-ticket-is-escalated",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-C5.owner-handover",

@@ -385,7 +385,8 @@ class AtAGlanceTests(ScenarioBase):
             self.assertIsNotNone(header, name)
             self.assertEqual(header.find("details"), [], name)
             sections = [s.attrs["data-section"] for s in page["root"].find("section")]
-            self.assertEqual(sections, SECTION_ORDER, name)
+            # The Build section follows the Backlog when the persona has a build.json (OPS-77).
+            self.assertEqual([s for s in sections if s != "Build"], SECTION_ORDER, name)
 
     def test_customer_role_plan_goal_and_targets(self):
         for name, page in self.all_pages().items():

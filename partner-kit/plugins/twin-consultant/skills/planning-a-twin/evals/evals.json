@@ -1,0 +1,124 @@
+{
+  "skill_name": "planning-a-twin",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "The CSM card at engagements/sample-team-cs/personas/customer-success-manager is filled. Level it and tell me what we're up against before we start building.",
+      "expected_output": "Claude runs the all command on the persona folder, reads levelled.json and reports in the skill's order: no blockers; the decisions, connectors and codes that rest on an unverified fact, each with what to confirm and with whom; no undecided decisions; the 17 warnings grouped by their 15 codes; the one open question with its owner and due date. It ends with the dashboard path, the counts, that the plan is complete, and building-twin-stories as the next step, with the --plan-out export mentioned.",
+      "files": [
+        "evals/files/engagements/sample-team-cs/customer-profile.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/card.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/levelled.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/backlog.json"
+      ],
+      "expectations": [
+        "The all command was run on engagements/sample-team-cs/personas/customer-success-manager and exited 0",
+        "The reply says there are no blockers",
+        "The reply's sections come in this order: blockers, decisions resting on an unverified fact, undecided decisions, warnings, open questions",
+        "Under unverified, the reply names C5's runtime and plan fit, the google-drive connector of C1 and C4, the slack connector of C2 and the zendesk connector of C5, and the warning codes slack-directory-send-unverified, event-source-unverified and connector-early-access, each with what must be confirmed and with whom (Anthropic or the vendor)",
+        "The reply says no decision is undecided: there is no warning decision-undecided",
+        "Warnings are grouped by code: memory-poisoning-risk appears once as a group naming C2 and C5, and mail-read-only appears once as a group naming C3 and C4",
+        "The reply names all 15 warning codes, including team-no-group-targeting, team-no-governance-log, confidential-on-team and hubspot-super-admin-approval about the persona, and unmanaged-connectors-read-only about C4",
+        "Open questions: OQ-1, about what starts C5, owner Teodor Amsel, due 2026-12-11",
+        "The reply ends with the path engagements/sample-team-cs/personas/customer-success-manager/dashboard.html, 0 blockers, 17 warnings and 1 open question, says the plan is complete, and names building-twin-stories as the next step without starting it",
+        "The reply says the backlog can be exported for a tracker with the backlog command's --plan-out option, and nothing is imported anywhere",
+        "card.json and customer-profile.json are unchanged; levelled.json and backlog.json are byte-identical to the files given, because the card did not change",
+        "No override was proposed or written"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Run the plan for the deal-team associate (engagements/sample-pe/personas/deal-team-associate). What's undecided, and what do we still have to confirm with someone before we build?",
+      "expected_output": "Claude runs all (no blocker), reports that the salesforce connector of T1 to T5 and the warning agent-sdk-cover-unverified on T3 rest on unverified facts with what to confirm and with whom, that T4's and T6's autonomy ceilings are undecided and need a person's decision recorded as an override with a named approver, then the three warnings by code and the nine open questions. It fills nothing in and says the plan is not complete, and why.",
+      "files": [
+        "evals/files/engagements/sample-pe/customer-profile.json",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/card.json",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/levelled.json",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/backlog.json"
+      ],
+      "expectations": [
+        "The all command was run on the persona folder and exited 0; the reply says there are no blockers",
+        "The reply says the salesforce connector of T1, T2, T3, T4 and T5 rests on an unverified fact, citing 14-private-equity.md#salesforce-and-hubspot-behind-a-wall, and says it must be confirmed in writing with Anthropic or Salesforce",
+        "The reply names the warning agent-sdk-cover-unverified on T3 and says Anthropic must confirm the Agent SDK's ZDR cover in writing before the Agent SDK is used for T3",
+        "The reply names T4 and T6, each with an undecided autonomy ceiling (code decision-undecided), and says a person must decide each one and record it as an override with a reason and a named approver at the customer",
+        "The reply proposes no value for the ceiling of T4 or T6",
+        "card.json is unchanged: its overrides list is still empty",
+        "Warnings are grouped by code: decision-undecided once, naming T4 and T6, and agent-sdk-cover-unverified once, naming T3",
+        "The reply lists the nine open questions on the card (E4, E6, F3, G1, OD-1, OD-8, OD-9, OD-11, OD-13), each with its owner and due date, and says OD-8 and OD-13 have no due date",
+        "The reply says the plan is not complete: completeness is 94% (101 of 107 required fields) and open questions block the in-pilot tasks T1 and T2",
+        "The reply ends with the path to dashboard.html, 0 blockers, 3 warnings and 9 open questions, and names building-twin-stories as the next step",
+        "No web search or web fetch was used"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I changed the CSM card in engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager: C4 now also sends the follow-up email from Gmail itself (tasks.C4.writes[1] is a gmail send, from the CSM's answer to F7). Re-plan it and tell me what that does.",
+      "expected_output": "Claude runs all; levelling reports the blocker connector-cannot-write about C4 and all four files are still written. Claude explains the blocker in one plain sentence with its cite, and gives the ways out the design allows: correct the card if the answer was wrong, or change the task so it ends in a draft a person sends and remove the write. It says an override cannot clear it, because the connectors decision cannot be overridden, and changes nothing itself.",
+      "files": [
+        "evals/files/engagements/sample-team-cs-c4-gmail-send/customer-profile.json",
+        "evals/files/engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager/card.json"
+      ],
+      "expectations": [
+        "The all command was run and exited 1 because of a blocker, and the reply says levelled.json, backlog.json, backlog.md and dashboard.html were still written (it does not treat the exit as a validation failure)",
+        "The reply names the blocker connector-cannot-write about C4 and says in one plain sentence that the Gmail connector only reads, so it cannot send mail",
+        "The reply cites docs/compendium/11-connectors.md#what-exists-for-our-systems for the blocker",
+        "As ways out, the reply offers correcting the card if the answer was wrong (the card's own tasks.C4.output.what says the manager sends the email) and changing the task so it ends in a draft a person sends, with tasks.C4.writes[1] removed",
+        "The reply says an override cannot clear this blocker, because the connectors decision cannot be overridden (code override-not-allowed), and no override is written",
+        "card.json is byte-identical to the file given: Claude changed nothing without the consultant's choice",
+        "In the backlog.json the run wrote, S-C4 is gated by the blocker connector-cannot-write",
+        "The reply ends with 1 blocker, 17 warnings and 1 open question, says the plan is not complete, and does not send the consultant on to building while the blocker stands"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "On the deal-team associate card (engagements/sample-pe/personas/deal-team-associate), set T4's autonomy ceiling to 2: screening summaries stay internal and a principal reads every one. Record the override and re-run.",
+      "expected_output": "The consultant gives the value and the reason but no approver at the customer. Claude asks who at the customer approved it, writes nothing and does not rerun. It may state the rule's own result (undecided, null) for T4's ceiling.",
+      "files": [
+        "evals/files/engagements/sample-pe/customer-profile.json",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/card.json",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/levelled.json",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/backlog.json"
+      ],
+      "expectations": [
+        "The reply asks for the name of the person at the customer who approved the override",
+        "card.json is byte-identical to the file given: no overrides entry was added",
+        "levelled.json and backlog.json are byte-identical to the files given",
+        "The reply does not fill in an approver from the card, the profile or anywhere else",
+        "The reply says the rule's own result for T4's ceiling is undecided (null, code decision-undecided)"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Write the persona voice file for the CSM twin from its card at engagements/sample-team-cs/personas/customer-success-manager: who it serves, its tone, what it must never do and who it escalates to.",
+      "expected_output": "This is the persona voice file (starter-kit/templates/persona/persona.md), not levelling. The planning-a-twin skill does not run; Claude does not run the all command or report blockers and warnings.",
+      "files": [
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/card.json"
+      ],
+      "expectations": [
+        "The planning-a-twin skill was not invoked",
+        "The all command and the level command were not run",
+        "The reply does not use this skill's report: no blocker, warning and open-question sections, and no plan-complete line"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Record an override on the deal-team associate card (engagements/sample-pe/personas/deal-team-associate): T4's autonomy ceiling is 2. Reason: screening summaries stay internal and a principal reads every one before anything is done with it. Approved by Eleanor Osei-Whitcombe, the partner who signs off OD-1. Then re-run and tell me what changed.",
+      "expected_output": "With value, reason and approver all given, Claude adds one entry to the card's overrides list in the design's shape, reruns all, states the rule's own result (undecided) next to the override, says the dashboard shows the decision as overridden, and reports what changed between the two runs.",
+      "files": [
+        "evals/files/engagements/sample-pe/customer-profile.json",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/card.json",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/levelled.json",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/backlog.json"
+      ],
+      "expectations": [
+        "The card's overrides list holds exactly one entry: task T4, decision autonomy.ceiling, value 2, the consultant's reason, approved_by Eleanor Osei-Whitcombe",
+        "Nothing else in card.json changed, and customer-profile.json is unchanged",
+        "The all command was run again after the change, and in the new levelled.json T4's ceiling is 2 with overridden.rule_result null",
+        "The reply states the rule's own result (undecided) next to the override and says the dashboard will show the decision as overridden",
+        "The reply reports what changed between the two runs: T4's ceiling from undecided to 2; the warning decision-undecided about T4 gone and the warning override-applied about T4 added; on the backlog, S-T4.warning-decision-undecided gone and two tasks added to S-T4 (the level-2 evidence task and the task for the override-applied warning)",
+        "The decision-undecided warning about T6 is still reported: only T4 was decided",
+        "levelled.json, backlog.json, backlog.md and dashboard.html were written by the command, not edited by hand"
+      ]
+    }
+  ]
+}

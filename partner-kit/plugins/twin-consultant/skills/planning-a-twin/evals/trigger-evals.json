@@ -1,0 +1,12 @@
+[
+  {"query": "The CSM card at engagements/sample-team-cs/personas/customer-success-manager is done. Level it and walk me through the blockers and warnings before we build", "should_trigger": true},
+  {"query": "whats blocking the deal team twin plan? run it and tell me the ways out for each blocker", "should_trigger": true},
+  {"query": "Record an override on T4 of the deal-team associate card: autonomy ceiling 2, reason internal only, approved by Eleanor Osei-Whitcombe. Then regenerate and tell me what moved", "should_trigger": true},
+  {"query": "I changed C4's writes on the CSM persona card. Rerun levelling, backlog and dashboard and tell me what changed between the runs", "should_trigger": true},
+  {"query": "Is the PE associate twin plan complete yet? Give me the blocker, warning and open question counts and where the dashboard is", "should_trigger": true},
+  {"query": "Fill card.json for the store manager persona from the interview notes in its interviews folder", "should_trigger": false},
+  {"query": "Write the persona voice file persona.md for the CSM twin: tone, never-do list and who it escalates to", "should_trigger": false},
+  {"query": "Add a task card to agents/tasks for the next twincard change and pick it up", "should_trigger": false},
+  {"query": "Start building S-C1 for the CSM twin: open its first task and work through the how steps with me", "should_trigger": false},
+  {"query": "Mark S-C1.write-evals done in the CSM backlog and refresh the dashboard", "should_trigger": false}
+]

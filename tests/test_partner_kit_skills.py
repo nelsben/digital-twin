@@ -56,6 +56,26 @@ PATH_RE = re.compile(
 PLUGIN_ROOT_RE = re.compile(r"\$\{CLAUDE_PLUGIN_ROOT\}/([^\s`)'\"\]]+)")
 LINK_RE = re.compile(r"\]\(([^)\s]+)\)")
 
+# OPS-37: the two skills after the card (levelling and building), with the minimum
+# number of cases in evals.json. Kept apart from NAMED_SKILLS, whose extra checks
+# (question ids, field paths) fit the interview skills only.
+PLAN_BUILD_SKILLS = {"planning-a-twin": 5, "building-twin-stories": 5}
+DESIGN = ROOT / "partner-kit" / "docs" / "design.md"
+FIXTURE_PERSONAS = (
+    ENGAGEMENTS / "sample-team-cs" / "personas" / "customer-success-manager",
+    ENGAGEMENTS / "sample-pe" / "personas" / "deal-team-associate",
+)
+# A blocker or warning code is recognised only in a fixed form: right after the word
+# code, blocker or warning (singular or plural), optionally in backticks, as in
+# 'code decision-undecided' or 'blocker `connector-cannot-write`', and each further
+# code in a list that follows ('warning codes a-b, c-d and e-f').
+_KEBAB = r"`?[a-z0-9]+(?:-[a-z0-9]+)+`?"
+CODE_RE = re.compile(r"\b(?:codes?|blockers?|warnings?):? (%s(?:(?:,? and |,? or |, )%s)*)" % (_KEBAB, _KEBAB))
+KEBAB_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)+")
+# A backlog story id (S-C1, S-persona-voice) or task id (S-C1.collect-examples,
+# S-T2.confirm-unverified-decision.connectors.salesforce).
+BACKLOG_ID_RE = re.compile(r"(?<![A-Za-z0-9_\-./])(S-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*(?:\.[A-Za-z0-9_\-]+)*)")
+
 
 def skill_folders():
     if not SKILLS_DIR.is_dir():
@@ -184,6 +204,50 @@ def load_evals(skill_dir):
     cases = json.loads((skill_dir / "evals" / "evals.json").read_text(encoding="utf-8"))
     trigger = json.loads((skill_dir / "evals" / "trigger-evals.json").read_text(encoding="utf-8"))
     return cases, trigger
+
+
+def known_codes():
+    """Blocker and warning codes: the lists in design section 7.2, plus every code
+    the fixtures' levelled.json raises."""
+    text = DESIGN.read_text(encoding="utf-8")
+    section = text.split("### 7.2", 1)[1].split("### 7.3", 1)[0]
+    codes = set(re.findall(r"(?m)^- `([a-z0-9-]+)`:", section))
+    for persona in FIXTURE_PERSONAS:
+        levelled = json.loads((persona / "levelled.json").read_text(encoding="utf-8"))
+        for item in levelled["blockers"] + levelled["warnings"]:
+            codes.add(item["code"])
+    return codes
+
+
+def known_backlog_ids():
+    """Every story id and task id in the fixtures' backlog.json, retired items included."""
+    ids = set()
+    for persona in FIXTURE_PERSONAS:
+        backlog = json.loads((persona / "backlog.json").read_text(encoding="utf-8"))
+        for feature in backlog["epic"]["features"]:
+            for story in feature["stories"]:
+                ids.add(story["id"])
+                ids.update(task["id"] for task in story["tasks"])
+        ids.update(item["id"] for item in backlog["retired"])
+    return ids
+
+
+def code_mentions(text):
+    return [code for group in CODE_RE.findall(text) for code in KEBAB_RE.findall(group)]
+
+
+def backlog_id_mentions(text):
+    return BACKLOG_ID_RE.findall(text)
+
+
+def skill_texts(folder):
+    """SKILL.md and every expectation of the skill, as (label, text)."""
+    out = [("SKILL.md", (folder / "SKILL.md").read_text(encoding="utf-8"))]
+    data, _ = load_evals(folder)
+    for case in data.get("evals", []):
+        for i, exp in enumerate(case.get("expectations", [])):
+            out.append((f"case {case.get('id')} expectation {i + 1}", exp))
+    return out
 
 
 class NamedSkillsTest(unittest.TestCase):
@@ -319,6 +383,56 @@ class SkillRulesTest(unittest.TestCase):
                                 f"{folder.name}: names no plugin path")
 
 
+class PlanBuildSkillsTest(unittest.TestCase):
+    """OPS-37: planning-a-twin and building-twin-stories."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.codes = known_codes()
+        cls.ids = known_backlog_ids()
+
+    def test_skills_exist(self):
+        for name in PLAN_BUILD_SKILLS:
+            with self.subTest(skill=name):
+                folder = SKILLS_DIR / name
+                self.assertTrue((folder / "SKILL.md").is_file(), f"{name}/SKILL.md is missing")
+                for rel in ("evals/evals.json", "evals/trigger-evals.json"):
+                    self.assertTrue((folder / rel).is_file(), f"{name}/{rel} is missing")
+
+    def test_case_and_trigger_counts(self):
+        for name, minimum in PLAN_BUILD_SKILLS.items():
+            with self.subTest(skill=name):
+                data, trigger = load_evals(SKILLS_DIR / name)
+                self.assertGreaterEqual(len(data.get("evals", [])), minimum)
+                self.assertGreaterEqual(len(trigger), MIN_TRIGGER_NAMED)
+                false = sum(1 for q in trigger if q["should_trigger"] is False)
+                self.assertGreaterEqual(false * 2, len(trigger), "at least half must be false")
+
+    def test_codes_exist(self):
+        for folder in skill_folders():
+            hits = 0
+            for label, text in skill_texts(folder):
+                for code in code_mentions(text):
+                    hits += 1
+                    with self.subTest(skill=folder.name, where=label, code=code):
+                        self.assertIn(code, self.codes,
+                                      f"{code} is not a code in design section 7.2 or the fixtures")
+            if folder.name in PLAN_BUILD_SKILLS:
+                self.assertGreater(hits, 0, f"{folder.name}: no blocker or warning codes found")
+
+    def test_backlog_ids_exist(self):
+        for folder in skill_folders():
+            hits = 0
+            for label, text in skill_texts(folder):
+                for item in backlog_id_mentions(text):
+                    hits += 1
+                    with self.subTest(skill=folder.name, where=label, id=item):
+                        self.assertIn(item, self.ids,
+                                      f"{item} is not a story or task id in the fixtures' backlog.json")
+            if folder.name in PLAN_BUILD_SKILLS:
+                self.assertGreater(hits, 0, f"{folder.name}: no story or task ids found")
+
+
 class CheckerSelfTest(unittest.TestCase):
     """The extractors, on synthetic input, so a vacuous pass cannot hide."""
 
@@ -361,6 +475,30 @@ class CheckerSelfTest(unittest.TestCase):
         refs = plugin_path_refs(text, SKILLS_DIR / "x")
         self.assertEqual(refs[0][1], PLUGIN / "scripts" / "twincard" / "cli.py")
         self.assertEqual(len(refs), 2)
+
+    def test_code_forms(self):
+        text = ("the blocker connector-cannot-write; code `decision-undecided`; warnings: "
+                "mail-read-only; warning codes, grouped; S-C4.warning-mail-read-only; "
+                "warning codes team-no-audit-log, `confidential-on-team` and tag-private-channel-only.")
+        self.assertEqual(code_mentions(text),
+                         ["connector-cannot-write", "decision-undecided", "mail-read-only",
+                          "team-no-audit-log", "confidential-on-team", "tag-private-channel-only"])
+        codes = known_codes()
+        self.assertIn("plugin-name-invalid", codes)
+        self.assertIn("hubspot-super-admin-approval", codes)
+        self.assertNotIn("connector-cannot-read", codes)
+
+    def test_backlog_id_forms(self):
+        text = ("Pick S-C1. Its first task is S-C1.collect-examples, then "
+                "S-T2.confirm-unverified-decision.connectors.salesforce; not S-<task id>.")
+        self.assertEqual(backlog_id_mentions(text),
+                         ["S-C1", "S-C1.collect-examples",
+                          "S-T2.confirm-unverified-decision.connectors.salesforce"])
+        ids = known_backlog_ids()
+        self.assertIn("S-persona-voice", ids)
+        self.assertIn("S-C1.tool-always-allow.hubspot-read", ids)
+        self.assertNotIn("S-C9", ids)
+        self.assertNotIn("S-C4.blocker-connector-cannot-write", ids)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,187 @@
+{
+  "pack_version": 1,
+  "id": "general",
+  "name": "General",
+  "summary": "Starting points from Anthropic that apply to any role, for a customer whose industry has no pack.",
+  "sources": [
+    "docs/compendium/16-oob-skills-and-references.md"
+  ],
+  "settings_baseline": null,
+  "anthropic_starting_points": [
+    {
+      "kind": "skill",
+      "name": "skill-creator",
+      "where": "https://github.com/anthropics/skills/tree/main/skills/skill-creator",
+      "use": "reuse",
+      "note": "Adopt. Anthropic's eval loop for creating, testing and tuning a skill; author and evaluate every twin skill with it.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#1-skills-in-githubcomanthropicsskills",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "template-skill",
+      "where": "https://github.com/anthropics/skills/tree/main/template",
+      "use": "start-from",
+      "note": "Adopt. A bare SKILL.md with name and description; the seed of our own skill template. It is in no plugin, so copy it by hand. Its licence is not stated.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#1-skills-in-githubcomanthropicsskills",
+      "unverified": true
+    },
+    {
+      "kind": "skill",
+      "name": "docx",
+      "where": "https://github.com/anthropics/skills/tree/main/skills/docx",
+      "use": "reuse",
+      "note": "Adopt in Claude Code and the API; the Claude apps have their own. Test first, as the README disclaimer says.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#1-skills-in-githubcomanthropicsskills",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "xlsx",
+      "where": "https://github.com/anthropics/skills/tree/main/skills/xlsx",
+      "use": "reuse",
+      "note": "Adopt, with the same caveat as docx.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#1-skills-in-githubcomanthropicsskills",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "pdf",
+      "where": "https://github.com/anthropics/skills/tree/main/skills/pdf",
+      "use": "reuse",
+      "note": "Adopt, with the same caveat as docx.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#1-skills-in-githubcomanthropicsskills",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "pptx",
+      "where": "https://github.com/anthropics/skills/tree/main/skills/pptx",
+      "use": "start-from",
+      "note": "Adapt. Decks need the customer's template and brand; layer a brand skill on top.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#1-skills-in-githubcomanthropicsskills",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "mcp-builder",
+      "where": "https://github.com/anthropics/skills/tree/main/skills/mcp-builder",
+      "use": "reuse",
+      "note": "Adopt for building a custom connector where the directory has none. It is a kit step, not something a twin user runs.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#1-skills-in-githubcomanthropicsskills",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "claude-api",
+      "where": "https://github.com/anthropics/skills/tree/main/skills/claude-api",
+      "use": "reuse",
+      "note": "Adopt for hosted-agent builds. It already ships bundled in Claude Code.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#1-skills-in-githubcomanthropicsskills",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "academy-guide",
+      "where": "https://github.com/anthropics/skills/tree/main/skills/academy-guide",
+      "use": "start-from",
+      "note": "Adapt, for rollout and enablement. Its description is broad and fires on many how-do-I questions; test it for noise before rollout.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#1-skills-in-githubcomanthropicsskills",
+      "unverified": false
+    },
+    {
+      "kind": "plugin",
+      "name": "sales",
+      "where": "knowledge-work-plugins",
+      "use": "start-from",
+      "note": "Adapt. A role template from the knowledge-work-plugins marketplace; its README calls these generic starting points. Review its skills and connectors before use and never ship it unchanged.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#what-the-starter-kit-takes-from-this",
+      "unverified": false
+    },
+    {
+      "kind": "plugin",
+      "name": "customer-support",
+      "where": "knowledge-work-plugins",
+      "use": "start-from",
+      "note": "Adapt. A role template from the knowledge-work-plugins marketplace; its README calls these generic starting points. Review its skills and connectors before use and never ship it unchanged.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#what-the-starter-kit-takes-from-this",
+      "unverified": false
+    },
+    {
+      "kind": "plugin",
+      "name": "operations",
+      "where": "knowledge-work-plugins",
+      "use": "start-from",
+      "note": "Adapt. A role template from the knowledge-work-plugins marketplace; its README calls these generic starting points. Review its skills and connectors before use and never ship it unchanged.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#what-the-starter-kit-takes-from-this",
+      "unverified": false
+    },
+    {
+      "kind": "plugin",
+      "name": "finance",
+      "where": "knowledge-work-plugins",
+      "use": "start-from",
+      "note": "Adapt. A role template from the knowledge-work-plugins marketplace; its README calls these generic starting points. Review its skills and connectors before use and never ship it unchanged.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#what-the-starter-kit-takes-from-this",
+      "unverified": false
+    },
+    {
+      "kind": "plugin",
+      "name": "skill-creator",
+      "where": "claude-plugins-official",
+      "use": "reuse",
+      "note": "Adopt, selectively, for the authoring team. We did not read each plugin's contents, so review it before pinning.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#2-anthropic-plugin-marketplaces-and-plugins",
+      "unverified": true
+    },
+    {
+      "kind": "plugin",
+      "name": "plugin-dev",
+      "where": "claude-plugins-official",
+      "use": "reuse",
+      "note": "Adopt, selectively, for the authoring team. We did not read each plugin's contents, so review it before pinning.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#2-anthropic-plugin-marketplaces-and-plugins",
+      "unverified": true
+    },
+    {
+      "kind": "reference",
+      "name": "Agent Skills overview",
+      "where": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview",
+      "use": "reference",
+      "note": "How skills load, where they work, field limits, security and ZDR status.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#agent-skills-overview-and-best-practices",
+      "unverified": false
+    },
+    {
+      "kind": "reference",
+      "name": "Agent Skills best practices",
+      "where": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+      "use": "reference",
+      "note": "Anthropic's authoring guidance; it applies across surfaces.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#agent-skills-overview-and-best-practices",
+      "unverified": false
+    },
+    {
+      "kind": "reference",
+      "name": "Plugin evals",
+      "where": "https://code.claude.com/docs/en/plugin-evals",
+      "use": "reference",
+      "note": "claude plugin eval: write cases and graders, compare with no plugin, gate CI.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#evals",
+      "unverified": false
+    },
+    {
+      "kind": "reference",
+      "name": "Plugins for your organization",
+      "where": "https://code.claude.com/docs/en/plugins/org",
+      "use": "reference",
+      "note": "Pre-installing and restricting plugins for an organisation.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#managed-settings-and-permissions",
+      "unverified": false
+    }
+  ],
+  "data_providers": [],
+  "connector_defaults": [],
+  "compliance_defaults": [],
+  "typical_tasks": []
+}

@@ -25,7 +25,8 @@ The consultant plugin for the persona-card workflow. Design of record: [partner-
 | [templates/interview-guide.md](templates/interview-guide.md) | Plain-language role interview: questions P1 to P6 and F1 to F9, each with the card fields it fills |
 | [templates/interview-notes.md](templates/interview-notes.md) | Notes template with one slot per question, saved under the persona's `interviews/` folder |
 | [data/fields.json](data/fields.json) | The field catalogue: type, values, required flag, the questions that ask for each field, and what reads it |
-| [scripts/twincard/](scripts/twincard/) | Standard-library Python 3.9+: `fields.py` loads the catalogue, `validate.py` checks both records, `cli.py` is the command line |
+| [scripts/twincard/](scripts/twincard/) | Standard-library Python 3.9+: `fields.py` loads the catalogue, `validate.py` checks both records, `packs.py` loads and checks industry packs, `cli.py` is the command line |
+| [data/industry-packs/](data/industry-packs/) | One JSON file per industry; the format is in [design section 7.1](../../docs/design.md) |
 
 ## Validate
 
@@ -36,6 +37,24 @@ python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py validate --j
 
 Each error prints as `<record>:<path>: <message>. Next: <fix>`, then a completeness line: the share of required fields whose provenance status is `answered` or `default`. Exit code 0 means no errors, 1 means validation failed, 2 means a usage error or a missing folder.
 
+## Industry packs
+
+A customer profile's `industry` is `general` or the id of a pack; `validate` reports anything else. Every entry in a pack cites a compendium page, and carries `unverified: true` where that page marks the fact Unverified or Not confirmed.
+
+| Pack | For |
+|---|---|
+| [general](data/industry-packs/general.json) | A customer with no pack: Anthropic skills, plugins and references that apply to any role, from [compendium 16](../../../docs/compendium/16-oob-skills-and-references.md) |
+| [private-equity](data/industry-packs/private-equity.json) | A private-equity deal team: Anthropic's financial-services plugins and skills, the data vendors they bring, Salesforce and Microsoft 365 connector defaults with their runbooks, compliance defaults, settings baseline `pe-zdr`, and the typical deal-team tasks, from compendium [11](../../../docs/compendium/11-connectors.md), [14](../../../docs/compendium/14-private-equity.md), [16](../../../docs/compendium/16-oob-skills-and-references.md) and [17](../../../docs/compendium/17-anthropic-pe-plugins-review.md) |
+
+The loader is `scripts/twincard/packs.py`:
+
+```python
+from twincard import packs
+packs.list_packs()          # ["general", "private-equity"]
+packs.load_pack("general")  # the pack; an unknown id raises PackError naming the ids that exist
+packs.pack_problems(pack)   # [{"path", "message", "fix"}], empty when the pack is well formed
+```
+
 ## Not built yet
 
-Skills (interview to card), `level.py`, `backlog.py`, `dashboard.py`, and the `level`, `backlog`, `dashboard` and `all` commands, `rules.json`, `plan-fit.json`, `task-library.json` and the industry packs.
+Skills (interview to card), `level.py`, `backlog.py`, `dashboard.py`, and the `level`, `backlog`, `dashboard` and `all` commands, `rules.json`, `plan-fit.json` and `task-library.json`.

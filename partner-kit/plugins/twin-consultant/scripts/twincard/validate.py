@@ -22,6 +22,7 @@ import re
 from pathlib import Path
 
 from . import fields as _fields
+from . import packs as _packs
 
 CARD_FILE = "card.json"
 PROFILE_FILE = "customer-profile.json"
@@ -332,6 +333,18 @@ def _check_cross_record(card, profile, profile_path, report):
                            "Plan the move to Team or Enterprise before the twin is built")
 
 
+def _check_industry(profile, report):
+    """The profile's industry must be general or the id of an industry pack."""
+    industry = profile.get("industry") if isinstance(profile, dict) else None
+    if not isinstance(industry, str) or industry == "":
+        return  # a missing or empty value is the required-field check's to report
+    known = ["general"] + [pack_id for pack_id in _packs.list_packs() if pack_id != "general"]
+    if industry not in known:
+        report.error("profile", "industry", "%r is neither general nor the id of an industry pack" % industry,
+                     "Set industry to one of: %s. If this customer's industry has no pack, use general"
+                     % ", ".join(known))
+
+
 def qualified(record, path):
     """The record-qualified path used in reports: card:voice.tone, profile:plan.tier."""
     return "%s:%s" % (record, path)
@@ -364,6 +377,7 @@ def validate(persona_dir, catalogue=None):
     if card is not None:
         _check_references(catalogue, values_by_record, report)
     _check_cross_record(card, profile, profile_path, report)
+    _check_industry(profile, report)
 
     satisfied = sum(1 for _, _, done in required if done)
     total = len(required)

@@ -248,6 +248,35 @@ Per persona: the plugin name (`twin-<persona-id>`), how it is distributed on thi
 
 Overrides on the card replace a rule's result and are shown as overridden, with the reason, everywhere.
 
+### 7.1 Industry packs (`data/industry-packs/<id>.json`, `packs.py`)
+
+A pack is the machine-readable form of what the compendium says about one industry. Levelling and the backlog read it; it links to compendium pages for its facts and never states an unconfirmed fact as settled. The profile's `industry` is `general` or the id of a pack, and the validator reports anything else. `general.json` is for a customer with no pack: starting points that apply to any role, and empty lists where nothing general applies.
+
+Top level, `pack_version` 1:
+
+```json
+{
+  "pack_version": 1,
+  "id": "private-equity",
+  "name": "Private equity",
+  "summary": "One sentence.",
+  "sources": ["docs/compendium/14-private-equity.md"],
+  "settings_baseline": "pe-zdr",
+  "anthropic_starting_points": [], "data_providers": [], "connector_defaults": [],
+  "compliance_defaults": [], "typical_tasks": []
+}
+```
+
+- `id` equals the file name without `.json`. `sources` lists repo-relative compendium pages. `settings_baseline` is the name of a baseline in `starter-kit/settings/` without `.managed-settings.json`, or `null`.
+- `anthropic_starting_points[]`: `{kind, name, where, use, note}`. `kind` is `plugin`, `skill`, `agent-template` or `reference`; `where` is a URL or a marketplace name; `use` is `start-from`, `reuse` or `reference`.
+- `data_providers[]`: `{name, kind, access, note}`. `access` is `connector`, `mcp`, `api` or `none`. A provider listed here is not thereby allowed; the note says whether it is.
+- `connector_defaults[]`: `{system_kind, product, how, identity, runbook}`. `system_kind` is a value of `systems[].kind` in the catalogue; `runbook` is a path under `starter-kit/runbooks/`, or `null`.
+- `compliance_defaults[]`: `{field, value, reason}`. `field` is a customer-profile path in `data/fields.json` and `value` has that field's catalogue type. A default is a starting answer: the profile's provenance for it is `default` until the customer confirms or overrides it.
+- `typical_tasks[]`: `{id, name, feature, trigger, data_class, inputs}`. `trigger` and `data_class` use the catalogue's values for `tasks[].trigger` and `tasks[].data_class`; `inputs` is a list of system kinds.
+- Every entry in every list also carries `cite` and `unverified`. `cite` is a repo-relative path to a page under `docs/compendium/`, with an optional `#anchor` that matches a heading on that page, and the page is listed in `sources`. `unverified` is `true` when the cited page marks the fact Unverified or Not confirmed. A pack states nothing the cited page does not say; a value a task needs that the page does not give (for example its trigger) is the pack author's choice, listed in the pull request, not the page's.
+
+`packs.py` has `list_packs()`, `load_pack(id)` (an unknown id raises an error that names the ids that exist) and `pack_problems(pack)`, which returns `{path, message, fix}` for each fault and reads enumerations and profile field types from the catalogue. `tests/test_twincard_packs.py` checks each shipped pack against the repo: cites, anchors, runbooks, the settings baseline and the unverified rule.
+
 ## 8. Backlog (`backlog.py`, `data/task-library.json`)
 
 The hierarchy is the one in `docs/playbook/04-stories.md`. The anatomy parts do not add a second hierarchy; they label the tasks.

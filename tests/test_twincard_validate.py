@@ -564,6 +564,43 @@ class CompletenessTests(unittest.TestCase):
         self.assertLess(result["completeness"]["percent"], 100)
 
 
+class IndustryTests(unittest.TestCase):
+    """The profile's industry is general or the id of an industry pack (design section 7.1)."""
+
+    def industry_errors(self, industry):
+        profile = valid_profile()
+        profile["industry"] = industry
+        result = run_validate(profile=profile)
+        return result, [e for e in result["errors"] if e["path"] == "industry"]
+
+    def test_general_and_every_pack_id_pass(self):
+        from twincard import packs
+        for industry in ["general"] + packs.list_packs():
+            with self.subTest(industry=industry):
+                result, errors = self.industry_errors(industry)
+                self.assertEqual(errors, [])
+                self.assertTrue(result["ok"], result["errors"])
+
+    def test_unknown_industry_is_an_error_with_a_fix(self):
+        from twincard import packs
+        result, errors = self.industry_errors("shipbuilding")
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]["record"], "profile")
+        self.assertIn("shipbuilding", errors[0]["message"])
+        self.assertTrue(errors[0]["fix"])
+        for known in ["general"] + packs.list_packs():
+            self.assertIn(known, errors[0]["fix"])
+        self.assertFalse(result["ok"])
+
+    def test_empty_industry_is_left_to_the_required_field_check(self):
+        result, errors = self.industry_errors("")
+        self.assertEqual(len(errors), 1)
+        self.assertIn("required", errors[0]["message"])
+
+    def test_nothing_else_changes(self):
+        self.assertEqual(run_validate()["errors"], [])
+
+
 # --- The CLI --------------------------------------------------------------------
 
 class CliTests(unittest.TestCase):

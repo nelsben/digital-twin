@@ -670,7 +670,35 @@ It then records `packaged` for each artifact it packaged that was `evals-passing
 | 6. Governance hook | `governance-log-destination`, `governance-hook-deploy`, `governance-without-hook` |
 | 7. Check it worked and hand over | `settings-verify`, `governance-log-check`, `source-audit`, `wall-test`; then every `how` line of a task above whose link ends `#check-it-worked` or `#hand-over`, in that line's words; then each story's `owner-handover` |
 
-Planning, authoring, evidence and warning tasks are not deployment steps and are left out. Within a section, steps follow the template order, then backlog story order. Tasks with the same template, item and package path, such as one tool's permission across several stories, are one step listing every task id. Each step is a checkbox (ticked when every task in it is `done` in `backlog.json`) with the backlog task ids, the owner role and name (or the acting owner), the runbook link with its anchor (the first `how` link under `starter-kit/runbooks/`, else the first kit link, else the first link), and the package path it uses: `build/marketplace/` for publishing, `build/marketplace/plugins/<plugin>/skills/<skill>/` for a skill, `build/bundles/<persona-id>/<task-id>/` for a runtime and its credentials, or none for a setting, record or account. A step whose story is gated says `Gated` and names each blocker, open question (with its spike) and sign-off. Credentials appear only as environment-variable names, and a test scans every file under both samples' `build/` folders, customer and persona, for keys, tokens, passwords, org and tenant ids and instance URLs.
+Every other template is left out on purpose, because it is work before, around or after the deployment, not a step the admin takes in the customer's org. `package.py` names them in one constant, `EXCLUDED`, and a test checks that every task-library template is placed or excluded, never both, and that every task in both samples' `backlog.json` is in `deploy.md` or excluded. A new template therefore has to be placed or excluded on purpose. A trailing `*` names a family:
+
+| Template | Why it is left out |
+|---|---|
+| `collect-examples` | Authoring: examples from real work, gathered before the skill is written |
+| `write-skill` | Authoring: the skill itself, which build and the evals cover |
+| `write-evals` | Authoring: the evals, whose result `record` takes as `evals-passing` evidence |
+| `trigger-evals` | Authoring: the trigger evals, part of reaching `evals-passing` |
+| `second-review` | Authoring: a second person's review, before `evals-passing` |
+| `success-check` | Authoring: a success check written into the skill or runner |
+| `role-plugin-build` | Authoring: the role plugin, built before package copies it |
+| `twin-marker-skill` | Authoring: the skill sets the marker; the CRM field is a `twin-marker-<crm>` step in section 3 |
+| `persona-*` | Authoring: the persona voice, written into the role plugin before packaging |
+| `evidence-level-*` | Evidence for a higher autonomy level, gathered after deployment |
+| `compliance-sign-off` | A sign-off before the story is built; `deploy.md` shows it as a gate on the story |
+| `confirm-unverified-decision` | A fact confirmed with Anthropic or the vendor before build, not a step in the org |
+| `blocker-*` | A blocker stops the build, so it is resolved before anything is packaged |
+| `warning-*` | A warning is resolved or accepted in planning; any setting it leads to is its own task |
+| `connector-inventory` | Planning: the list the connector steps in section 3 come from |
+| `data-providers-decide` | A decision, recorded on the card |
+| `deliver-draft` | A decision on where the draft lands, agreed with the owner |
+| `missed-run-plan` | A plan for missed runs, agreed with the owner |
+| `runtime-none` | Nothing is built for the task, so there is nothing to deploy |
+| `memory-policy` | A written policy, not a setting in the org |
+| `memory-on` | Telling pilot users what memory keeps: training, not a setting |
+| `pilot-*` | The pilot's users, baseline, training and scorecard, run with the business |
+| `twin-marker-report` | A report on the marker in the CRM, after go-live |
+
+Within a section, steps follow the template order, then backlog story order. Tasks with the same template, item and package path, such as one tool's permission across several stories, are one step listing every task id. Each step is a checkbox (ticked when every task in it is `done` in `backlog.json`) with the backlog task ids, the owner role and name (or the acting owner), the runbook link with its anchor (the first `how` link under `starter-kit/runbooks/`, else the first kit link, else the first link), and the package path it uses: `build/marketplace/` for publishing, `build/marketplace/plugins/<plugin>/skills/<skill>/` for a skill, `build/bundles/<persona-id>/<task-id>/` for a runtime and its credentials, or none for a setting, record or account. A step whose story is gated says `Gated` and names each blocker, open question (with its spike) and sign-off. Credentials appear only as environment-variable names, and a test scans every file under both samples' `build/` folders, customer and persona, for keys, tokens, passwords, org and tenant ids and instance URLs.
 
 The customer's admin runs `deploy.md` in the customer's org. The consultant records `deployed` and `verified` with `record`, on notes kept in the customer's copy. Credentials live in the customer's secret store, never in the engagement folder. Neither sample has an artifact at `evals-passing`, so `package` packages nothing for them and says why; `--include-drafts` writes the Team sample's draft marketplace with C1, its only drafted artifact. Both samples' `deploy.md` is committed.
 

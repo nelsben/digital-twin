@@ -31,6 +31,9 @@ from test_twincard_build import SECRET_PATTERNS as BUILD_SECRET_PATTERNS, secret
 
 ROOT = TESTS_DIR.parent
 PLUGIN_DIR = ROOT / "partner-kit" / "plugins" / "twin-consultant"
+if str(PLUGIN_DIR / "scripts") not in sys.path:
+    sys.path.insert(0, str(PLUGIN_DIR / "scripts"))
+from twincard import package as package_mod  # noqa: E402
 CLI = PLUGIN_DIR / "scripts" / "twincard" / "cli.py"
 DESIGN = ROOT / "partner-kit" / "docs" / "design.md"
 SKILL = PLUGIN_DIR / "skills" / "building-twin-artifacts" / "SKILL.md"
@@ -408,6 +411,38 @@ class RecordTests(unittest.TestCase):
 
 # --- deploy.md -----------------------------------------------------------------------------------------------
 
+    def test_never_backwards_on_the_new_statuses(self):
+        customer = self.packaged_copy()
+        deployed = note(customer, CS_PERSONA, "C1", DEPLOYED_NOTE)
+        self.assertEqual(record(customer, CS_PERSONA, "C1", "deployed", deployed).returncode, 0)
+        self.refused(customer, "C1", "packaged", deployed, r"(?i)never moves a status backwards")
+        verified = note(customer, CS_PERSONA, "C1", VERIFIED_NOTE, "verified.md")
+        self.assertEqual(record(customer, CS_PERSONA, "C1", "verified", verified).returncode, 0)
+        self.refused(customer, "C1", "deployed", deployed, r"(?i)never moves a status backwards")
+        self.refused(customer, "C1", "packaged", deployed, r"(?i)never moves a status backwards")
+
+    def no_by(self, customer, status, evidence):
+        """A missing --by is argparse's exit 2; an empty or blank one is record's usage refusal, also exit 2."""
+        before = manifest_path(customer, CS_PERSONA).read_bytes()
+        persona = Path(customer) / "personas" / CS_PERSONA
+        out = run_cli("record", persona, "C1", "--status", status, "--evidence", evidence)
+        self.assertEqual(out.returncode, 2, out.stdout + out.stderr)
+        self.assertIn("--by", out.stderr)
+        for by in ("", "   "):
+            out = record(customer, CS_PERSONA, "C1", status, evidence, by=by)
+            self.assertEqual(out.returncode, 2, out.stdout + out.stderr)
+            self.assertIn("--by is empty", out.stderr)
+            self.assertIn("Next:", out.stderr)
+        self.assertEqual(manifest_path(customer, CS_PERSONA).read_bytes(), before)
+
+    def test_by_is_required_for_deployed_and_verified(self):
+        customer = self.packaged_copy()
+        deployed = note(customer, CS_PERSONA, "C1", DEPLOYED_NOTE)
+        self.no_by(customer, "deployed", deployed)
+        self.assertEqual(record(customer, CS_PERSONA, "C1", "deployed", deployed).returncode, 0)
+        self.no_by(customer, "verified", note(customer, CS_PERSONA, "C1", VERIFIED_NOTE, "verified.md"))
+
+
 class DeployChecklistTests(unittest.TestCase):
     def test_sections_in_order(self):
         for sample in CUSTOMERS:
@@ -477,6 +512,51 @@ class DeployChecklistTests(unittest.TestCase):
 
 
 # --- No secrets, and the committed samples ------------------------------------------------------------------
+
+class ExclusionTests(unittest.TestCase):
+    """deploy.md places a template (package.SECTIONS, HANDOVER) or leaves it out by name (package.EXCLUDED)."""
+
+    def test_every_library_template_is_placed_or_excluded_never_both(self):
+        placed = set(t for _, templates in package_mod.SECTIONS for t in templates) | {package_mod.HANDOVER}
+        library = load(PLUGIN_DIR / "data" / "task-library.json")["templates"]
+        ids = [t["id"] for t in library] if isinstance(library, list) else list(library)
+        self.assertEqual(sorted(placed - set(ids)), [], "placed templates the library lacks")
+        for template in ids:
+            reason = package_mod.excluded(template)
+            with self.subTest(template=template):
+                self.assertTrue((template in placed) != bool(reason),
+                                "placed and excluded" if reason else "neither placed nor excluded")
+        for name, reason in package_mod.EXCLUDED:
+            with self.subTest(entry=name):
+                self.assertTrue(reason.strip())
+                self.assertTrue(any(t == name or (name.endswith("*") and t.startswith(name[:-1])) for t in ids),
+                                "an exclusion that matches no template")
+
+    def test_design_names_every_exclusion(self):
+        text = DESIGN.read_text(encoding="utf-8")
+        section = text[text.index("### Package and deploy"):text.index("## 9. Dashboard")]
+        for name, _ in package_mod.EXCLUDED:
+            self.assertIn("| `%s` |" % name, section)
+
+    def test_every_sample_task_is_in_deploy_md_or_excluded(self):
+        for customer in CUSTOMERS:
+            placed, persona = {}, None
+            for line in (customer / "build" / "deploy.md").read_text(encoding="utf-8").split("\n"):
+                if line.startswith("### "):
+                    persona = line[4:].strip()
+                elif STEP.match(line):
+                    ids = re.findall(r"`([^`]+)`", line.split("`: ", 1)[0] + "`")
+                    placed.setdefault(persona, set()).update(ids)
+            for backlog in sorted((customer / "personas").glob("*/backlog.json")):
+                pid = backlog.parent.name
+                for tid, (story, task) in sorted(backlog_tasks(customer, pid).items()):
+                    reason = package_mod.excluded(task["template"])
+                    with self.subTest(customer=customer.name, task=tid):
+                        if reason:
+                            self.assertNotIn(tid, placed.get(pid, set()), "an excluded task in deploy.md")
+                        else:
+                            self.assertIn(tid, placed.get(pid, set()), "neither in deploy.md nor excluded")
+
 
 class SampleTests(unittest.TestCase):
     def test_no_secrets_in_any_build_folder(self):

@@ -38,8 +38,8 @@ RUNTIMES = {"client-skill", "claude-code-scheduled-task", "claude-tag-routine", 
 IDENTITIES = {"user", "service-account", "api-key-vault"}
 PLAN_FITS = {"ok", "ok-with-limits", "needs-enterprise", "not-supported"}
 DISTRIBUTIONS = {"group-targeted", "everyone"}
-DASHBOARD_SECTIONS = ["Header", "Anatomy grid", "Feature list", "Blockers and warnings", "Backlog",
-                      "Open questions", "Where each answer came from"]
+DASHBOARD_SECTIONS = ["Header", "What is blocked", "Anatomy grid", "Feature list", "Blockers and warnings", "Overrides",
+                      "Backlog", "Open questions", "Where each answer came from"]
 FOUNDATION_STORIES = {"S-persona-voice", "S-connectors-and-identity", "S-guardrails-and-settings", "S-distribution",
                       "S-governance-log", "S-memory-policy", "S-pilot-rollout-and-scorecard"}
 UNVERIFIED_MARKER = re.compile(r"unverified|not confirmed", re.IGNORECASE)

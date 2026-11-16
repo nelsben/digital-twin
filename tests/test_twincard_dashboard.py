@@ -27,8 +27,8 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 DATE = "2026-11-15"
-SECTIONS = ["Header", "Anatomy grid", "Feature list", "Blockers and warnings", "Backlog",
-            "Open questions", "Where each answer came from"]
+SECTIONS = ["Header", "What is blocked", "Anatomy grid", "Feature list", "Blockers and warnings", "Overrides",
+            "Backlog", "Open questions", "Where each answer came from"]
 TASK_DECISIONS = ("runtime", "identity", "autonomy.start", "autonomy.ceiling", "data_controls", "memory",
                   "plan_fit", "connectors")
 PARTS = [("A1", "Persona"), ("A2", "Skills"), ("A3", "Connectors"), ("A4", "Runtime"), ("A5", "Identity"),
@@ -312,7 +312,7 @@ class FixturePageTests(unittest.TestCase):
         for fid, (_, page) in self.pages.items():
             self.assertEqual(page.headings[0], 1, fid)
             self.assertEqual(page.headings.count(1), 1, fid)
-            self.assertLessEqual(max(page.headings), 3, fid)
+            self.assertLessEqual(max(page.headings), 4, fid)
             for before, after in zip(page.headings, page.headings[1:]):
                 self.assertLessEqual(after, before + 1, fid)
 

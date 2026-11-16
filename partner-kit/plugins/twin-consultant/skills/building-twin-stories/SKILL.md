@@ -29,7 +29,9 @@ not this repo's GitHub issues or task cards.
 Commands, from `${CLAUDE_PLUGIN_ROOT}/scripts/twincard/cli.py`: `backlog
 <persona-dir>` checks the plan is current and rewrites `backlog.json` and
 `backlog.md`, keeping every status; `dashboard <persona-dir>` rewrites
-`dashboard.html`. The task templates behind the backlog are in
+`dashboard.html`, whose top shows the goal, targets, owners and what is
+blocked, and whose backlog shows every pilot story that is not done open,
+with its tasks, owners and steps. The task templates behind the backlog are in
 `${CLAUDE_PLUGIN_ROOT}/data/task-library.json`.
 
 ## Steps
@@ -130,7 +132,7 @@ At the end of each session:
 Done: <task ids marked done>
 In progress: <task id>: waits on <owner role or person> for <what>
 Next story: <id> <title>
-Dashboard: <persona-dir>/dashboard.html
+Dashboard: <persona-dir>/dashboard.html (the next story is open in its Backlog section)
 ```
 
 ## Guardrails

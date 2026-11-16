@@ -212,7 +212,10 @@ class EndToEndTest(unittest.TestCase):
         self.assertEqual(statuses[task_id], "done")
         self.assertIn("- [x] **%s**" % task_id, (persona / "backlog.md").read_text(encoding="utf-8"))
         page = (persona / "dashboard.html").read_text(encoding="utf-8")
-        self.assertIn('[x] done</span> <code>%s</code>' % task_id, page)
+        row = page[page.index('<tbody data-task="%s">' % task_id):]
+        row = row[:row.index("</tbody>")]
+        self.assertIn("<code>%s</code>" % task_id, row)
+        self.assertIn('<span class="status">[x] done</span>', row)
 
     def test_usage_errors_exit_2(self):
         result = subprocess.run([sys.executable, str(CLI), "all"], capture_output=True, text=True)

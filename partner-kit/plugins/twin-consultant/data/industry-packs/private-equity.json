@@ -1,0 +1,467 @@
+{
+  "pack_version": 1,
+  "id": "private-equity",
+  "name": "Private equity",
+  "summary": "Anthropic's financial-services plugins, the data vendors they bring, connector and compliance defaults, and the deal-team tasks for a private-equity firm.",
+  "sources": [
+    "docs/compendium/11-connectors.md",
+    "docs/compendium/14-private-equity.md",
+    "docs/compendium/16-oob-skills-and-references.md",
+    "docs/compendium/17-anthropic-pe-plugins-review.md"
+  ],
+  "settings_baseline": "pe-zdr",
+  "anthropic_starting_points": [
+    {
+      "kind": "plugin",
+      "name": "financial-analysis",
+      "where": "claude-for-financial-services",
+      "use": "start-from",
+      "note": "Adapt. Install it first: it holds all 12 of the repo's connectors, every one third-party and none acceptable by default in the private-equity ZDR org. Vendor a reviewed copy with the .mcp.json deleted (reviewed at commit 3e32c22).",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+      "unverified": false
+    },
+    {
+      "kind": "plugin",
+      "name": "private-equity",
+      "where": "claude-for-financial-services",
+      "use": "start-from",
+      "note": "Adapt. 10 skills, no agents, hooks or connectors. Vendor a reviewed copy. deal-sourcing and ai-readiness are skipped.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "deal-screening",
+      "where": "claude-for-financial-services: private-equity",
+      "use": "start-from",
+      "note": "Adapt, for T4. Put the fund's criteria in a reference file the firm owns, not in memory. MNPI: runs only in Claude Code on a ZDR sign-in.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "dd-meeting-prep",
+      "where": "claude-for-financial-services: private-equity",
+      "use": "start-from",
+      "note": "Adapt, for T5. Add the firm's question bank and its expert-network compliance rules.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "ic-memo",
+      "where": "claude-for-financial-services: private-equity",
+      "use": "start-from",
+      "note": "Adapt, for T6. Replace the generic outline with the firm's IC template. The .docx output needs Anthropic's docx skill, which the plugin does not include.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "dd-checklist",
+      "where": "claude-for-financial-services: private-equity",
+      "use": "start-from",
+      "note": "Adapt. Swap in the firm's workstreams and request-list wording.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "returns-analysis",
+      "where": "claude-for-financial-services: private-equity",
+      "use": "reuse",
+      "note": "Adopt. Feeds the returns section of T6. It works only on numbers the user gives it.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "unit-economics",
+      "where": "claude-for-financial-services: private-equity",
+      "use": "reuse",
+      "note": "Adopt. ARR cohorts, LTV/CAC, retention and a revenue-quality score.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "portfolio-monitoring",
+      "where": "claude-for-financial-services: private-equity",
+      "use": "start-from",
+      "note": "Adapt, later. It belongs to the portfolio team, not the deal-team pilot. Use the firm's KPI set and thresholds.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "value-creation-plan",
+      "where": "claude-for-financial-services: private-equity",
+      "use": "start-from",
+      "note": "Adapt, later. It is post-close work for operating partners.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "lbo-model",
+      "where": "claude-for-financial-services: financial-analysis",
+      "use": "start-from",
+      "note": "Adapt. Ship Anthropic's xlsx skill and fix the recalc.py path, which is a claude.ai sandbox path. Use the firm's LBO template.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "competitive-analysis",
+      "where": "claude-for-financial-services: financial-analysis",
+      "use": "start-from",
+      "note": "Adapt, to feed T1. Keep the source ranking and the rule that every number has a citation. Limit it to files and connected firm systems.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "audit-xls",
+      "where": "claude-for-financial-services: financial-analysis",
+      "use": "reuse",
+      "note": "Adopt. Checks a spreadsheet's formulas and a model's integrity.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "clean-data-xls",
+      "where": "claude-for-financial-services: financial-analysis",
+      "use": "reuse",
+      "note": "Adopt. Tidies messy spreadsheet data.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "deck-refresh",
+      "where": "claude-for-financial-services: financial-analysis",
+      "use": "reuse",
+      "note": "Adopt. Swaps new numbers into an existing deck.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "xlsx-author",
+      "where": "claude-for-financial-services: financial-analysis",
+      "use": "reuse",
+      "note": "Adopt. In Claude Code this is the file-output path for .xlsx. It needs openpyxl on the laptop.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "pptx-author",
+      "where": "claude-for-financial-services: financial-analysis",
+      "use": "reuse",
+      "note": "Adopt. In Claude Code this is the file-output path for .pptx. It needs python-pptx on the laptop.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "docx",
+      "where": "https://github.com/anthropics/skills/tree/main/skills/docx",
+      "use": "reuse",
+      "note": "Add it for the IC memo's .docx output (T6).",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "xlsx",
+      "where": "https://github.com/anthropics/skills/tree/main/skills/xlsx",
+      "use": "reuse",
+      "note": "Ship it with lbo-model and fix that skill's recalc.py path.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "discernment-nudge",
+      "where": "https://github.com/anthropics/skills/tree/main/skills/discernment-nudge",
+      "use": "start-from",
+      "note": "Adapt. Try it in the private-equity pilot, where the reader should check the twin's work. It adds length to every answer, so measure it.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#1-skills-in-githubcomanthropicsskills",
+      "unverified": false
+    },
+    {
+      "kind": "agent-template",
+      "name": "gl-reconciler",
+      "where": "managed-agent-cookbooks/ in anthropics/financial-services",
+      "use": "reference",
+      "note": "A named agent in the repo, also a Managed Agent template. Page 17 left the agent plugins out of its review, so review it before use.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#2-anthropic-plugin-marketplaces-and-plugins",
+      "unverified": false
+    },
+    {
+      "kind": "agent-template",
+      "name": "month-end-closer",
+      "where": "managed-agent-cookbooks/ in anthropics/financial-services",
+      "use": "reference",
+      "note": "A named agent in the repo, also a Managed Agent template. Page 17 left the agent plugins out of its review, so review it before use.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#2-anthropic-plugin-marketplaces-and-plugins",
+      "unverified": false
+    },
+    {
+      "kind": "agent-template",
+      "name": "valuation-reviewer",
+      "where": "managed-agent-cookbooks/ in anthropics/financial-services",
+      "use": "reference",
+      "note": "A named agent in the repo, also a Managed Agent template. Page 17 left the agent plugins out of its review, so review it before use.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#2-anthropic-plugin-marketplaces-and-plugins",
+      "unverified": false
+    },
+    {
+      "kind": "agent-template",
+      "name": "kyc-screener",
+      "where": "managed-agent-cookbooks/ in anthropics/financial-services",
+      "use": "reference",
+      "note": "A named agent in the repo, also a Managed Agent template. Page 17 left the agent plugins out of its review, so review it before use.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#2-anthropic-plugin-marketplaces-and-plugins",
+      "unverified": false
+    },
+    {
+      "kind": "reference",
+      "name": "Claude Code zero data retention",
+      "where": "https://code.claude.com/docs/en/zero-data-retention",
+      "use": "reference",
+      "note": "Enterprise ZDR covers Claude Code only; chat, Cowork and artifacts are not covered.",
+      "cite": "docs/compendium/14-private-equity.md#three-facts-that-shape-everything",
+      "unverified": false
+    },
+    {
+      "kind": "reference",
+      "name": "Self-hosted Managed Agents",
+      "where": "https://platform.claude.com/docs/en/managed-agents/self-hosted-data-and-access",
+      "use": "reference",
+      "note": "Anthropic recommends one self-hosted deployment per tenant or trust level; we use one deployment per wall.",
+      "cite": "docs/compendium/14-private-equity.md#where-a-twin-can-leak-across-a-wall",
+      "unverified": false
+    },
+    {
+      "kind": "reference",
+      "name": "Managed MCP",
+      "where": "https://code.claude.com/docs/en/managed-mcp",
+      "use": "reference",
+      "note": "allowManagedMcpServersOnly with an allowedMcpServers list also checks servers that plugins add; use it to keep the 12 vendor connectors out.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#5-how-to-pin-a-reviewed-copy",
+      "unverified": false
+    }
+  ],
+  "data_providers": [
+    {
+      "name": "Daloopa",
+      "kind": "financial-data",
+      "access": "mcp",
+      "note": "Remote MCP server https://mcp.daloopa.com/server/mcp, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Per vendor later, after the vendor test. Its retention and identity model are unconfirmed.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+      "unverified": true
+    },
+    {
+      "name": "Morningstar",
+      "kind": "market-data",
+      "access": "mcp",
+      "note": "Remote MCP server https://mcp.morningstar.com/mcp, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Its retention and identity model are unconfirmed.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+      "unverified": true
+    },
+    {
+      "name": "S&P Global (Kensho)",
+      "kind": "market-data",
+      "access": "mcp",
+      "note": "Remote MCP server https://kfinance.kensho.com/integrations/mcp, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Capital IQ data. Its retention and identity model are unconfirmed.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+      "unverified": true
+    },
+    {
+      "name": "FactSet",
+      "kind": "market-data",
+      "access": "mcp",
+      "note": "Remote MCP server https://mcp.factset.com/mcp, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Its retention and identity model are unconfirmed.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+      "unverified": true
+    },
+    {
+      "name": "Moody's",
+      "kind": "credit-data",
+      "access": "mcp",
+      "note": "Remote MCP server https://api.moodys.com/genai-ready-data/m1/mcp, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Its retention and identity model are unconfirmed.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+      "unverified": true
+    },
+    {
+      "name": "MT Newswires",
+      "kind": "news",
+      "access": "mcp",
+      "note": "Remote MCP server https://vast-mcp.blueskyapi.com/mtnewswires, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. The host is not the news vendor's own domain, so there is an extra party in the path. Its retention and identity model are unconfirmed.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+      "unverified": true
+    },
+    {
+      "name": "Aiera",
+      "kind": "earnings-data",
+      "access": "mcp",
+      "note": "Remote MCP server https://mcp-pub.aiera.com, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Its retention and identity model are unconfirmed.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+      "unverified": true
+    },
+    {
+      "name": "LSEG",
+      "kind": "market-data",
+      "access": "mcp",
+      "note": "Remote MCP server https://api.analytics.lseg.com/lfa/mcp, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Its retention and identity model are unconfirmed.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+      "unverified": true
+    },
+    {
+      "name": "PitchBook",
+      "kind": "private-company-data",
+      "access": "mcp",
+      "note": "Remote MCP server https://premium.mcp.pitchbook.com/mcp, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Highest exposure: searching for private targets shows the vendor the firm's pipeline. Its retention and identity model are unconfirmed.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+      "unverified": true
+    },
+    {
+      "name": "Chronograph",
+      "kind": "portfolio-monitoring",
+      "access": "mcp",
+      "note": "Remote MCP server https://ai.chronograph.pe/mcp, shipped in the financial-analysis plugin. Not allowed for the pilot. A later candidate for portfolio-monitoring if the firm already uses it, after the compendium 11 review. Its retention and identity model are unconfirmed.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+      "unverified": true
+    },
+    {
+      "name": "Egnyte",
+      "kind": "document-storage",
+      "access": "mcp",
+      "note": "Remote MCP server https://mcp-server.egnyte.com/mcp, shipped in the financial-analysis plugin. Not for a firm that uses SharePoint. For a firm that keeps deal files there it is acceptable after the compendium 11 review, per user and read-only. Its retention and identity model are unconfirmed.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+      "unverified": true
+    },
+    {
+      "name": "Box",
+      "kind": "document-storage",
+      "access": "mcp",
+      "note": "Remote MCP server https://mcp.box.com, shipped in the financial-analysis plugin. Same as Egnyte. Its retention and identity model are unconfirmed.",
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+      "unverified": true
+    }
+  ],
+  "connector_defaults": [
+    {
+      "system_kind": "crm",
+      "product": "Salesforce",
+      "how": "Salesforce Hosted MCP Server, with OAuth through an External Client App. Do not use a Claude Tag connection for walled teams.",
+      "identity": "Per user. Salesforce's own record sharing then decides what the twin sees.",
+      "runbook": "starter-kit/runbooks/salesforce-hosted-mcp.md",
+      "cite": "docs/compendium/14-private-equity.md#salesforce-and-hubspot-behind-a-wall",
+      "unverified": true
+    },
+    {
+      "system_kind": "documents",
+      "product": "Microsoft 365 (SharePoint and OneDrive)",
+      "how": "The Microsoft 365 connector from the Claude directory; a Global Admin must consent for the tenant. Read by default; admins can turn on writes.",
+      "identity": "Per user (delegated).",
+      "runbook": "starter-kit/runbooks/microsoft-365-connector.md",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false
+    },
+    {
+      "system_kind": "messaging",
+      "product": "Microsoft 365 (Teams)",
+      "how": "Part of the Microsoft 365 connector. It reads chat and calendar; admins can turn on sending.",
+      "identity": "Per user (delegated), the same as SharePoint.",
+      "runbook": "starter-kit/runbooks/microsoft-365-connector.md",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false
+    }
+  ],
+  "compliance_defaults": [
+    {
+      "field": "compliance.mnpi",
+      "value": true,
+      "reason": "Deal-specific material and MNPI are in scope, so they are kept to ZDR surfaces: Claude Code, and hosted agents in the ZDR Platform org.",
+      "cite": "docs/compendium/14-private-equity.md#three-facts-that-shape-everything",
+      "unverified": false
+    },
+    {
+      "field": "compliance.walls",
+      "value": "soft",
+      "reason": "Decided 2026-11-14: design B, soft walls. One org; the source systems enforce the walls through per-user identity; hard walls stay an upgrade path.",
+      "cite": "docs/compendium/14-private-equity.md#three-designs",
+      "unverified": false
+    },
+    {
+      "field": "compliance.retention",
+      "value": "custom-30-day",
+      "reason": "Decided 2026-11-14: accept 30-day retention for chat as the starting point and keep deal material to ZDR surfaces. Anthropic's copy is gone after 30 days, so our own governance log is the long-term audit record.",
+      "cite": "docs/compendium/14-private-equity.md#three-facts-that-shape-everything",
+      "unverified": false
+    }
+  ],
+  "typical_tasks": [
+    {
+      "id": "T1",
+      "name": "Company brief",
+      "feature": "pre-meeting-prep",
+      "trigger": "person",
+      "data_class": "highly-sensitive",
+      "inputs": [
+        "crm",
+        "documents"
+      ],
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#4-what-the-deal-team-stories-layer-on",
+      "unverified": false
+    },
+    {
+      "id": "T2",
+      "name": "Post-meeting CRM update",
+      "feature": "post-meeting-follow-up",
+      "trigger": "person",
+      "data_class": "highly-sensitive",
+      "inputs": [
+        "messaging"
+      ],
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#4-what-the-deal-team-stories-layer-on",
+      "unverified": false
+    },
+    {
+      "id": "T4",
+      "name": "CIM screening",
+      "feature": "deal-screening",
+      "trigger": "person",
+      "data_class": "highly-sensitive",
+      "inputs": [
+        "documents"
+      ],
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#4-what-the-deal-team-stories-layer-on",
+      "unverified": false
+    },
+    {
+      "id": "T5",
+      "name": "Call preparation",
+      "feature": "pre-meeting-prep",
+      "trigger": "person",
+      "data_class": "highly-sensitive",
+      "inputs": [],
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#4-what-the-deal-team-stories-layer-on",
+      "unverified": false
+    },
+    {
+      "id": "T6",
+      "name": "IC memo sections",
+      "feature": "ic-drafting",
+      "trigger": "person",
+      "data_class": "highly-sensitive",
+      "inputs": [],
+      "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#4-what-the-deal-team-stories-layer-on",
+      "unverified": false
+    }
+  ]
+}

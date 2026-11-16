@@ -6,7 +6,7 @@ All data is invented (WALLTEST- names, Project Larch, example.com addresses).
 
 ## Status
 
-**Not yet run.** The first attempt stopped at scratch-org creation with `STORAGE_LIMIT_EXCEEDED: storage limit exceeded` (the Dev Hub's data storage showed 0 MB remaining of 5 MB). No org was created and nothing was deleted. There are no results below because none were observed. Only the create step of the script has run, so expect small fixes on the first full run.
+Run once on 2026-11-15 (results below). The first attempt, earlier the same day, stopped at scratch-org creation with `STORAGE_LIMIT_EXCEEDED: storage limit exceeded` because the Dev Hub had no data storage left; it ran after space was freed. The 16 record-access cases pass. **The kit's marker metadata does not deploy as it stands** (see Results).
 
 ## What you need
 
@@ -47,14 +47,55 @@ The users are two Standard User accounts with no Modify All Data or View All Dat
 |---|---|
 | WT-01 to WT-04 | SOQL for the four records by name, then by id (with `FOR VIEW`) |
 | WT-05 to WT-08 | SOSL `FIND {WALLTEST*}` over opportunities, accounts, contacts and tasks, plus a search for the other side's token |
-| WT-09 to WT-12 | SOQL over all opportunities, accounts and contacts, `RecentlyViewed`, and the All Opportunities list view through the REST API |
+| WT-09 to WT-12 | SOQL over all opportunities, accounts and contacts, `RecentlyViewed`, and every list view the user has on those three objects, read through the REST API |
 | WT-13 to WT-16 | `COUNT()`, and a grouped count by owner |
 
 A blocked case passes only when nothing of the other side comes back (name, token, record id), the call reached the API, and its control passed. This is stricter than the protocol's leak rule, which excludes names the actor typed. A control that fails marks its pair NOT RUN.
 
 ## Results
 
-None yet. See Status.
+Run on 2026-11-15, API version 68.0 (the scratch org's), Enterprise edition, copied from the script's output. The users and records were checked first: both users are Standard User, in the role named for their side, with no Modify All Data or View All Data (ID-D, ID-I: pass).
+
+| Case | Actor | Result | What the output showed |
+|---|---|---|---|
+| WT-01 | DT | pass | own 4 records by name and by id, all 4 tokens |
+| WT-02 | DT | pass | 0 rows from the other side; no leak |
+| WT-03 | IR | pass | own 4 records by name and by id, all 4 tokens |
+| WT-04 | IR | pass | 0 rows from the other side; no leak |
+| WT-05 | DT | pass | search found 5 of 5 own-side ids (5 items) |
+| WT-06 | DT | pass | 5 items; no leak; a search for the other side's token returned 0 records |
+| WT-07 | IR | pass | search found 5 of 5 own-side ids (5 items) |
+| WT-08 | IR | pass | 5 items; no leak; a search for the other side's token returned 0 records |
+| WT-09 | DT | pass | own opportunity, account and contact ids in the lists |
+| WT-10 | DT | pass | no leak; 4 recently viewed rows; 1 list view read |
+| WT-11 | IR | pass | own opportunity, account and contact ids in the lists |
+| WT-12 | IR | pass | no leak; 3 recently viewed rows; 1 list view read |
+| WT-13 | DT | pass | count 2 |
+| WT-14 | DT | pass | grouped total 2, one owner (`WALLTEST-D-USER`); other side's count 0 |
+| WT-15 | IR | pass | count 2 |
+| WT-16 | IR | pass | grouped total 2, one owner (`WALLTEST-I-USER`); other side's count 0 |
+
+The search index caught up within the script's wait, so no pair was NOT RUN.
+
+**Marker metadata (`../force-app`): fails to deploy.** Two findings, both with the Salesforce error text:
+
+- **Twin_Marker_Edit has a description that is too long.** Validate and deploy both fail with `Twin_Marker_Edit`: `Description: data value too large: Edit access to Opportunity.Last_Updated_By_Twin__c, for the identity the twin writes as. ... (max length=255)`. The file's description is 338 characters; `Twin_Marker_Read`'s is 186 and was not named in any error. Nothing was changed here (the file is outside this folder). The fix is to shorten that description to 255 characters or fewer.
+- **Opportunity history must be on first.** In a run on the same org before history was enabled, validate also failed with `Opportunity.Last_Updated_By_Twin__c`: `The entity: Opportunity does not have history tracking enabled`. This confirms step 1 of the [marker README](../README.md#deploy-it-the-salesforce-admin-does-this). The script turns history on from `optional/enable-opportunity-history/` and retries; that step passed. In the final run history was already on, so only the description error showed.
+
+Because the deploy is all or nothing, the field and `Twin_Marker_Read` are not in the org either, and the marker's permission sets were not assigned.
+
+**Edit-access check (`UserRecordAccess`, as in level-2-writes.md step 2).** It behaves as the skill assumes. Each user asked about their own `UserId` and one opportunity on each side:
+
+| As | Own-side opportunity | Other-side opportunity |
+|---|---|---|
+| DT | HasReadAccess true, HasEditAccess true | HasReadAccess false, HasEditAccess false |
+| IR | HasReadAccess true, HasEditAccess true | HasReadAccess false, HasEditAccess false |
+
+All four answers matched what the skill needs (ACCESS-DD, -DI, -ID, -II: pass). Only the answers were compared; the script did not try the write.
+
+**Other things the run showed.** Salesforce stores the contact's email in lower case, so the script matches tokens without regard to case. A role's description is limited to 80 characters. After the script logged out the two test-user aliases, `sf org delete scratch` reported `NamedOrgNotFoundError` for a test user's auth, yet the org showed as Deleted in `sf org list --all` and the Dev Hub's active scratch org count returned to 3 of 3 free. The script now trusts the listing over that exit status.
+
+The scratch org was deleted at the end, and `sf org list` no longer shows `twin-wall-test`.
 
 ## What this does not prove
 

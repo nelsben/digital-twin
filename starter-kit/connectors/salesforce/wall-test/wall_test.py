@@ -251,7 +251,7 @@ def discover():
         for r in q["con"]["records"]:
             if r["LastName"] == pre + "CONTACT":
                 seeds[side]["ids"]["contact"] = r["Id"]
-                seeds[side]["tokens"]["contact"] = tok.search(r["Email"]).group(0)
+                seeds[side]["tokens"]["contact"] = tok.search(r["Email"].upper()).group(0)  # Salesforce lowercases emails
         for r in q["task"]["records"]:
             if r["Subject"] == pre + "ACTIVITY":
                 seeds[side]["ids"]["task"] = r["Id"]
@@ -271,7 +271,7 @@ def leaks(text, side, seeds):
     if "WALLTEST-%s-" % side in text:
         found.append("name WALLTEST-%s-" % side)
     for k, t in seeds[side]["tokens"].items():
-        if t in text:
+        if t in text.upper():  # emails come back lower case
             found.append("token of %s" % k)
     for k, i in seeds[side]["ids"].items():
         if i[:15] in text:
@@ -337,7 +337,7 @@ def read_control_ok(results, side, seeds):
     for r in results:
         if not r["ok"] or not r["records"]:
             return False
-        if seeds[side]["tokens"][r["key"]] not in blob([r]):
+        if seeds[side]["tokens"][r["key"]] not in blob([r]).upper():
             return False
     return True
 
@@ -360,26 +360,37 @@ def run_search(actor, seeds, wait):
         time.sleep(20)
 
 
+def rest_get(alias, path):
+    res = sf(["api", "request", "rest", path, "--target-org", alias])
+    if res.get("status") == 0 and res.get("result", {}).get("statusCode") == 200:
+        return True, res["result"].get("body", {}), ""
+    return False, {}, err_text(res)
+
+
 def run_lists(actor):
-    """WT-09 to WT-12 shape: all opportunities, accounts and contacts, recently viewed, the All Opportunities list view."""
+    """WT-09 to WT-12 shape: all opportunities, accounts and contacts, recently viewed, and every list view
+    the user has on those objects, read through the REST API."""
     results = [
         query(USER_ALIAS[actor], "SELECT Id, Name FROM Opportunity"),
         query(USER_ALIAS[actor], "SELECT Id, Name FROM Account"),
         query(USER_ALIAS[actor], "SELECT Id, LastName FROM Contact"),
         query(USER_ALIAS[actor], "SELECT Id, Name, Type FROM RecentlyViewed"),
     ]
-    lv = query(USER_ALIAS[actor], "SELECT Id FROM ListView WHERE SobjectType = 'Opportunity' AND DeveloperName = 'AllOpportunities'")
-    results.append(lv)
-    list_view_text = ""
-    if lv["ok"] and lv["records"]:
-        res = sf(["api", "request", "rest", "/services/data/v62.0/sobjects/Opportunity/listviews/%s/results"
-                  % lv["records"][0]["Id"], "--target-org", USER_ALIAS[actor]])
-        if isinstance(res, dict) and res.get("records") is not None or res.get("status") == 0:
-            list_view_text = json.dumps(res)
-        else:
-            list_view_text = ""
-            results.append({"ok": False, "records": [], "total": 0, "err": err_text(res)})
-    return results, list_view_text
+    texts, views = [], 0
+    for obj in ("Opportunity", "Account", "Contact"):
+        ok, body, err = rest_get(USER_ALIAS[actor], "/services/data/v62.0/sobjects/%s/listviews" % obj)
+        if not ok:
+            results.append({"ok": False, "records": [], "total": 0, "err": err})
+            continue
+        for view in body.get("listviews", []):
+            ok, res, err = rest_get(USER_ALIAS[actor], "/services/data/v62.0/sobjects/%s/listviews/%s/results" % (obj, view["id"]))
+            if ok:
+                views += 1
+                texts.append(json.dumps(res))
+            else:
+                results.append({"ok": False, "records": [], "total": 0, "err": err})
+    return results, "\n".join(texts), views
+
 
 
 def run_aggregate(actor, seeds):
@@ -440,7 +451,7 @@ def stage_cases(seeds, search_wait):
     # WT-09 to WT-12: lists
     for actor in "DI":
         c_id, b_id = "WT-%02d" % (9 + nums[actor]), "WT-%02d" % (10 + nums[actor])
-        results, lv_text = run_lists(actor)
+        results, lv_text, views = run_lists(actor)
         reached = all(r["ok"] for r in results)
         text = blob(results)
         need = [seeds[actor]["ids"][k][:15] for k in ("opp1", "opp2", "account", "contact")]
@@ -451,9 +462,8 @@ def stage_cases(seeds, search_wait):
         found = leaks(text + lv_text, OTHER[actor], seeds)
         rv = [r for r in results[3:4]]
         add(b_id, actor_name[actor], "same lists, no other-side name or id", blocked_status(found, reached, ok),
-            "leak: %s; recently viewed rows: %d; All Opportunities list view %s" % (
-                ", ".join(found) or "none", len(rv[0]["records"]) if rv and rv[0]["ok"] else -1,
-                "read" if lv_text else "not read"))
+            "leak: %s; recently viewed rows: %d; list views read: %d" % (
+                ", ".join(found) or "none", len(rv[0]["records"]) if rv and rv[0]["ok"] else -1, views))
 
     # WT-13 to WT-16: aggregates
     for actor in "DI":
@@ -550,10 +560,14 @@ def stage_delete():
     for side in "DI":
         sf(["org", "logout", "--target-org", USER_ALIAS[side], "--no-prompt"])
     res = sf(["org", "delete", "scratch", "--target-org", ORG, "--no-prompt"])
-    if res.get("status") != 0:
-        log("delete: FAILED, the scratch org still exists with alias %s. Error: %s" % (ORG, err_text(res)))
-        return False
     gone = not org_in_list(ORG)
+    if res.get("status") != 0:
+        # Seen on the first full run: the delete call reported a missing test-user auth after the logouts above,
+        # yet the org ended up Deleted. So trust the listing, not the exit status.
+        log("delete: the delete call reported: %s" % err_text(res))
+        if not gone:
+            log("delete: FAILED, the scratch org still exists with alias %s" % ORG)
+            return False
     log("delete: scratch org deleted; alias %s %s in `sf org list`" % (ORG, "is gone" if gone else "STILL LISTED"))
     return gone
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Role xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Investor Relations</name>
-    <description>Invented wall-test role. Top of its own branch: no parent role, so it sits neither above nor below Deal Team.</description>
+    <description>Wall-test role, own branch, not above Deal Team</description>
     <caseAccessLevel>None</caseAccessLevel>
     <contactAccessLevel>None</contactAccessLevel>
     <opportunityAccessLevel>None</opportunityAccessLevel>

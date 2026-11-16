@@ -324,7 +324,7 @@
         "value": "ok-with-limits",
         "rule": "plan-fit-private-network-allowlist",
         "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-        "reason": "This customer can allowlist Anthropic's IP range, so the private network is reachable at the edge.",
+        "reason": "The task reads or writes a system on a private network. This customer can allowlist Anthropic's IP range, so the private network is reachable at the edge.",
         "unverified": false,
         "basis": "compendium",
         "overridden": null
@@ -864,7 +864,7 @@
       "about": "C2",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": false,
-      "message": "A system on a private network must be reachable from Anthropic's IP range, allowlisted at the edge.",
+      "message": "The task reads or writes a system on a private network, so the system must be reachable from Anthropic's IP range, allowlisted at the edge.",
       "fix": "Have the customer allowlist 160.79.104.0/21 at the edge before the task is built."
     },
     {

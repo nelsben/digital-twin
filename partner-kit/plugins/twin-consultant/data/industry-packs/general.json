@@ -2,8 +2,9 @@
   "pack_version": 1,
   "id": "general",
   "name": "General",
-  "summary": "Starting points from Anthropic that apply to any role, for a customer whose industry has no pack.",
+  "summary": "Starting points from Anthropic and connector defaults that apply to any role, for a customer whose industry has no pack.",
   "sources": [
+    "docs/compendium/11-connectors.md",
     "docs/compendium/16-oob-skills-and-references.md"
   ],
   "settings_baseline": null,
@@ -181,7 +182,107 @@
     }
   ],
   "data_providers": [],
-  "connector_defaults": [],
+  "connector_defaults": [
+    {
+      "system_kind": "crm",
+      "product": "Salesforce",
+      "how": "Salesforce Hosted MCP Servers; Anthropic's Desktop guide gives the URL. A Claude directory connector is not confirmed. It can write. Enterprise Edition or higher is not confirmed (a secondary source). Claude Tag uses an integration user.",
+      "identity": "Per user, via OAuth through an External Client App.",
+      "runbook": "starter-kit/runbooks/salesforce-hosted-mcp.md",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": true
+    },
+    {
+      "system_kind": "crm",
+      "product": "HubSpot",
+      "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic), listed by HubSpot and marked Anthropic verified. On Team and Enterprise an Owner adds it. It creates and updates records but does not delete them, at most 10 records per bulk change. HubSpot recommends setting write tools to Needs approval.",
+      "identity": "Per user, via OAuth: each user sees only what their HubSpot permissions allow. A HubSpot Super Admin (or a user with App Marketplace access) approves the connector and sets which data it may reach.",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false
+    },
+    {
+      "system_kind": "crm",
+      "product": "Microsoft Dynamics / Dataverse",
+      "how": "No Claude directory connector. Microsoft's own remote MCP server is {org}.crm.dynamics.com/api/mcp, with full read, write and delete. It is metered in Copilot Credits. Claude Desktop and Claude Code are named as supported clients.",
+      "identity": "A custom Entra app with tenant admin consent.",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false
+    },
+    {
+      "system_kind": "documents",
+      "product": "Google Drive / Sheets",
+      "how": "The Google Drive directory connector, built and run by Google; an Owner adds it first on Team and Enterprise. It reads and creates files, with about a 10 MB export cap; shared-drive support is not confirmed. Google's Workspace MCP servers (developer preview) include a Sheets server that edits values and formulas.",
+      "identity": "Per user, via OAuth.",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": true
+    },
+    {
+      "system_kind": "documents",
+      "product": "SharePoint / OneDrive",
+      "how": "The Microsoft 365 connector from the Claude directory (work accounts on Team and Enterprise). Read by default; admins can turn on writes.",
+      "identity": "Per user (delegated); a Global Admin must consent for the tenant.",
+      "runbook": "starter-kit/runbooks/microsoft-365-connector.md",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false
+    },
+    {
+      "system_kind": "messaging",
+      "product": "Teams",
+      "how": "Part of the Microsoft 365 connector from the Claude directory. It reads chat and calendar; admins can turn on sending.",
+      "identity": "Per user (delegated), the same as SharePoint.",
+      "runbook": "starter-kit/runbooks/microsoft-365-connector.md",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false
+    },
+    {
+      "system_kind": "messaging",
+      "product": "Slack",
+      "how": "The Slack directory connector (Team and Enterprise; the Claude in Slack app installed first), which an Owner turns on. Its page documents only search of channels, DMs and files; whether it exposes send tools is Unverified. Slack's own MCP server (mcp.slack.com/mcp) can send and schedule messages.",
+      "identity": "Directory connector: per user, each member connects their own account. Slack MCP: user tokens through OAuth with a client secret, and Slack admin approval.",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": true
+    },
+    {
+      "system_kind": "email-calendar",
+      "product": "Gmail",
+      "how": "The Gmail directory connector; on Team and Enterprise an Owner or Primary Owner enables it first. It reads and searches only: it can't create, send or change mail. Google's preview Gmail MCP server can make drafts.",
+      "identity": "Per user, via OAuth with the user's own Google account; Gmail's own permissions apply.",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false
+    },
+    {
+      "system_kind": "email-calendar",
+      "product": "Google Calendar",
+      "how": "The Google Calendar directory connector; on Team and Enterprise an Owner or Primary Owner enables it first. It reads only: it can't create or change events or send invitations.",
+      "identity": "Per user, via OAuth with the user's own Google account.",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false
+    },
+    {
+      "system_kind": "ticketing",
+      "product": "Zendesk",
+      "how": "Zendesk's External AI connection (early access programme), https://<subdomain>.zendesk.com/mcp, added by an Owner as a custom connector; a Claude directory listing is not confirmed. It creates and updates tickets, and the agent asks a person to confirm each change.",
+      "identity": "Per user, via OAuth: each user authorizes their own Zendesk account. A Zendesk admin creates the connection and limits it to admins or chosen agent groups.",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": true
+    },
+    {
+      "system_kind": "ticketing",
+      "product": "Intercom",
+      "how": "The Intercom directory connector (mcp.intercom.com/mcp), listed by Intercom and marked Anthropic verified, for US-hosted workspaces; EU workspaces use mcp.eu.intercom.com/mcp as a custom connector, and Australian-hosted workspaces aren't supported yet. It writes internal notes, not replies the customer sees, and Help Center articles.",
+      "identity": "Per user via OAuth (recommended), or a bearer token; actions are attributed to the admin who authorized the connection.",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false
+    }
+  ],
   "compliance_defaults": [],
   "typical_tasks": []
 }

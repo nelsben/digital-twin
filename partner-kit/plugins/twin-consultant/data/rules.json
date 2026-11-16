@@ -654,10 +654,10 @@
         "task.data_class": "highly-sensitive"
       },
       "then": "zdr",
-      "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
       "unverified": false,
       "basis": "our-recommendation",
-      "reason": "Highly sensitive deal work keeps zero data retention."
+      "reason": "Highly sensitive data calls for a separate Enterprise org with ZDR, so the task keeps zero data retention; our recommendation, from page 10's matrix."
     },
     {
       "id": "retention-profile",
@@ -694,6 +694,21 @@
       "unverified": false,
       "basis": "our-recommendation",
       "reason": "The task reads untrusted input. Memory on claude.ai is one org-wide switch, so a per-task 'off' is a build instruction, not a setting: the task's skill writes nothing to memory, and only controlled steps write it. Our choice, from page 02's advice on memory poisoning."
+    },
+    {
+      "id": "memory-off-sensitive-class",
+      "decides": "memory",
+      "when": {
+        "task.data_class": [
+          "highly-sensitive",
+          "phi"
+        ]
+      },
+      "then": "off",
+      "cite": "docs/compendium/02-persona.md#memory",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Owners cannot view or edit a member's memories, so highly sensitive and PHI content is kept out of personal memory; our recommendation."
     },
     {
       "id": "memory-on",
@@ -926,7 +941,7 @@
       "id": "plan-fit-private-network-sensitive",
       "decides": "plan_fit",
       "when": {
-        "task.reads_private_network": true,
+        "task.touches_private_network": true,
         "task.data_class": [
           "highly-sensitive",
           "phi"
@@ -936,13 +951,13 @@
       "cite": "docs/compendium/11-connectors.md#connectors-and-sensitive-data",
       "unverified": false,
       "basis": "our-recommendation",
-      "reason": "MCP tunnels are not ZDR- or HIPAA-eligible, so this data class does not reach the private network through one: run Claude Code inside the network."
+      "reason": "The task reads or writes a system on a private network. MCP tunnels are not ZDR- or HIPAA-eligible, so this data class does not reach the private network through one: run Claude Code inside the network."
     },
     {
       "id": "plan-fit-private-network-no-route",
       "decides": "plan_fit",
       "when": {
-        "task.reads_private_network": true,
+        "task.touches_private_network": true,
         "network.can_allowlist_anthropic_ips": false,
         "capability.mcp-tunnel": "no",
         "runtime": [
@@ -954,13 +969,13 @@
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": false,
       "basis": "compendium",
-      "reason": "Without allowlisting, Anthropic's hosted runtimes (Claude Tag, Managed Agents) reach a private network only through an MCP tunnel, which is Enterprise only."
+      "reason": "The task reads or writes a system on a private network. Without allowlisting, Anthropic's hosted runtimes (Claude Tag, Managed Agents) reach a private network only through an MCP tunnel, which is Enterprise only."
     },
     {
       "id": "plan-fit-private-network-inside-only",
       "decides": "plan_fit",
       "when": {
-        "task.reads_private_network": true,
+        "task.touches_private_network": true,
         "network.can_allowlist_anthropic_ips": false,
         "capability.mcp-tunnel": "no",
         "runtime": [
@@ -974,20 +989,20 @@
       "cite": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory",
       "unverified": false,
       "basis": "our-recommendation",
-      "reason": "With no allowlisting and no MCP tunnel on this plan, the private system is reachable only from something running inside the network: Claude Code on a device there (a local MCP server), or a self-hosted runtime deployed there; our reading of page 11's routes."
+      "reason": "The task reads or writes a system on a private network. With no allowlisting and no MCP tunnel on this plan, the private system is reachable only from something running inside the network: Claude Code on a device there (a local MCP server), or a self-hosted runtime deployed there; our reading of page 11's routes."
     },
     {
       "id": "plan-fit-private-network-tunnel",
       "decides": "plan_fit",
       "when": {
-        "task.reads_private_network": true,
+        "task.touches_private_network": true,
         "network.can_allowlist_anthropic_ips": false
       },
       "then": "ok-with-limits",
       "cite": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory",
       "unverified": false,
       "basis": "compendium",
-      "reason": "The private network is reached through an MCP tunnel: Enterprise, by request, a research preview with no SLA."
+      "reason": "The task reads or writes a system on a private network, reached through an MCP tunnel: Enterprise, by request, a research preview with no SLA."
     },
     {
       "id": "plan-fit-self-hosted-platform-org",
@@ -1005,13 +1020,13 @@
       "id": "plan-fit-private-network-allowlist",
       "decides": "plan_fit",
       "when": {
-        "task.reads_private_network": true
+        "task.touches_private_network": true
       },
       "then": "ok-with-limits",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": false,
       "basis": "compendium",
-      "reason": "This customer can allowlist Anthropic's IP range, so the private network is reachable at the edge."
+      "reason": "The task reads or writes a system on a private network. This customer can allowlist Anthropic's IP range, so the private network is reachable at the edge."
     },
     {
       "id": "plan-fit-early-access-connector",
@@ -1196,6 +1211,30 @@
       "fix": "Run the twin in Claude Code on MDM-managed devices with the governance hook locked in managed settings, or agree with the customer to drop the requirement."
     },
     {
+      "id": "block-log-every-action-client-surfaces",
+      "decides": "blocker",
+      "when": {
+        "governance.action_log_required": true,
+        "runtime": [
+          "client-skill",
+          "claude-code-scheduled-task"
+        ],
+        "data_controls.surfaces": [
+          "claude-ai",
+          "desktop",
+          "cowork",
+          "slack",
+          "teams"
+        ]
+      },
+      "then": "log-every-action-not-met",
+      "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The customer requires a log of every action, and the plan gives this task a surface other than Claude Code. The governance log is a Claude Code hook, so on claude.ai, Desktop chat, Cowork, Slack or Teams no hook logs the task's actions; our recommendation.",
+      "fix": "Limit the task to Claude Code on MDM-managed devices (a data_controls override whose surfaces are claude-code) with the governance hook locked in managed settings, or agree with the customer to drop the requirement."
+    },
+    {
       "id": "block-highly-sensitive-no-zdr",
       "decides": "blocker",
       "when": {
@@ -1276,7 +1315,7 @@
       "id": "block-private-network-unreachable",
       "decides": "blocker",
       "when": {
-        "task.reads_private_network": true,
+        "task.touches_private_network": true,
         "network.can_allowlist_anthropic_ips": false,
         "capability.mcp-tunnel": "no",
         "runtime": [
@@ -1288,7 +1327,7 @@
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": false,
       "basis": "compendium",
-      "reason": "The task reads a system on a private network and runs on an Anthropic-hosted runtime (Claude Tag or Managed Agents) that cannot reach it on this plan: no MCP tunnel and no allowlisting.",
+      "reason": "The task reads or writes a system on a private network and runs on an Anthropic-hosted runtime (Claude Tag or Managed Agents) that cannot reach it on this plan: no MCP tunnel and no allowlisting.",
       "fix": "Allowlist Anthropic's IP range 160.79.104.0/21 at the edge, move the job to a runtime inside the network (Claude Code there, or a self-hosted deployment), or move to Enterprise for an MCP tunnel."
     },
     {
@@ -1484,14 +1523,14 @@
       "id": "warn-private-network-allowlist",
       "decides": "warning",
       "when": {
-        "task.reads_private_network": true,
+        "task.touches_private_network": true,
         "network.can_allowlist_anthropic_ips": true
       },
       "then": "private-network-allowlist",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": false,
       "basis": "compendium",
-      "reason": "A system on a private network must be reachable from Anthropic's IP range, allowlisted at the edge.",
+      "reason": "The task reads or writes a system on a private network, so the system must be reachable from Anthropic's IP range, allowlisted at the edge.",
       "fix": "Have the customer allowlist 160.79.104.0/21 at the edge before the task is built."
     },
     {
@@ -1638,7 +1677,7 @@
       "id": "warn-private-network-inside-only",
       "decides": "warning",
       "when": {
-        "task.reads_private_network": true,
+        "task.touches_private_network": true,
         "network.can_allowlist_anthropic_ips": false,
         "capability.mcp-tunnel": "no",
         "runtime": [
@@ -1650,7 +1689,7 @@
       "cite": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory",
       "unverified": false,
       "basis": "compendium",
-      "reason": "The task reads a system on a private network, with no allowlisting and no MCP tunnel on this plan, so the system is reachable only from Claude Code running on a device inside the network (a local MCP server), not from chat or Cowork connectors and not from a cloud scheduled task.",
+      "reason": "The task reads or writes a system on a private network, with no allowlisting and no MCP tunnel on this plan, so the system is reachable only from Claude Code running on a device inside the network (a local MCP server), not from chat or Cowork connectors and not from a cloud scheduled task.",
       "fix": "Build the task for Claude Code on a device inside the network with a local MCP server for the system, or allowlist Anthropic's IP range 160.79.104.0/21 at the edge, or move to Enterprise for an MCP tunnel."
     },
     {
@@ -1717,6 +1756,56 @@
       "basis": "our-recommendation",
       "reason": "Tasks share a connector tool but want different settings for it, so both run at the stricter task's setting.",
       "fix": "Split the tools (a separate connector or tool per task), or run both tasks at the stricter level."
+    },
+    {
+      "id": "warn-claude-code-not-in-role-runtime",
+      "decides": "warning",
+      "when": {
+        "runtime": "claude-code-scheduled-task",
+        "not": {
+          "role.works_in": "claude-code"
+        }
+      },
+      "then": "claude-code-not-in-role",
+      "cite": "docs/compendium/05-decision-matrix.md#the-options",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The runtime is claude-code-scheduled-task, a Claude Code feature, but role.works_in does not include claude-code, so the people in the role may have no Claude Code to run it in; our recommendation.",
+      "fix": "Give the role's users Claude Code (a seat, the install and the managed settings) and add claude-code to role.works_in, or override the task's runtime or surfaces."
+    },
+    {
+      "id": "warn-claude-code-not-in-role-surfaces",
+      "decides": "warning",
+      "when": {
+        "data_controls.surfaces": "claude-code",
+        "not": {
+          "role.works_in": "claude-code"
+        }
+      },
+      "then": "claude-code-not-in-role",
+      "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The planned surfaces include claude-code, but role.works_in does not include claude-code, so the people in the role may have no Claude Code to use the task in; our recommendation.",
+      "fix": "Give the role's users Claude Code (a seat, the install and the managed settings) and add claude-code to role.works_in, or override the task's runtime or surfaces."
+    },
+    {
+      "id": "warn-mixed-fleet-unmanaged-surfaces",
+      "decides": "warning",
+      "when": {
+        "role.device": "mixed",
+        "task.data_class": [
+          "internal",
+          "confidential"
+        ],
+        "runtime": "client-skill"
+      },
+      "then": "mixed-fleet-unmanaged-surfaces",
+      "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The role has managed and unmanaged devices, so the plan gives every user the surfaces allowed on an unmanaged device, and the people on managed devices get no more than that; our recommendation.",
+      "fix": "Keep the narrower surfaces for everyone, or split the role into two persona cards, one for managed devices and one for unmanaged devices."
     }
   ]
 }

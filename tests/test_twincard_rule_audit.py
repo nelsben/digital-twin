@@ -25,7 +25,7 @@ TASK_LIBRARY = LT.PLUGIN_DIR / "data" / "task-library.json"
 PHI_RULES = {"runtime-phi-none", "plan-fit-phi-no-runtime", "block-phi-no-hosted-runtime"}
 NEW_CODES = {"high-cost-ceiling-unconfirmed", "scheduled-task-own-environment-only", "zdr-org-not-confirmed",
              "private-network-inside-only", "unmanaged-share-no-access", "confidential-standard-retention",
-             "retention-not-covered"}
+             "retention-not-covered", "claude-code-not-in-role", "mixed-fleet-unmanaged-surfaces"}
 
 
 def level(persona_dir, change=None):

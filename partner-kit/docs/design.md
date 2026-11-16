@@ -78,7 +78,7 @@ python3 .../cli.py dashboard <persona-dir>     # writes dashboard.html
 python3 .../cli.py all       <persona-dir>     # the four in order; stops at the first failure
 ```
 
-`<persona-dir>` holds `card.json`; the customer profile is found at `../../customer-profile.json`. Exit code 0 on success, 1 on a validation or levelling blocker, 2 on a usage error. Errors name the field path and say what to do next.
+`<persona-dir>` holds `card.json`; the customer profile is found at `../../customer-profile.json`. Exit code 0 on success; 1 when validation fails (`level` then writes nothing) or when levelling reports a blocker (`level` still writes `levelled.json`, so the blocker can be read); 2 on a usage error or a missing persona folder. Errors name the field path and say what to do next. `level` validates first, and `--json` prints `levelled.json` (or the validation errors) instead of the summary.
 
 ## 4. The two records
 
@@ -231,7 +231,7 @@ Every question lists the card field paths it fills. Every required card field in
 
 ## 7. Levelling (`data/rules.json`, `level.py`)
 
-Rules are data, not if-statements buried in code: `{"id", "decides", "when", "then", "cite", "unverified"}`. `cite` is a compendium page path (and anchor where one exists). `unverified: true` when the compendium marks the underlying fact ⚠ Unverified; it is carried into `levelled.json`, the backlog and the dashboard so nobody builds on an unconfirmed fact unknowingly.
+Rules are data, not if-statements buried in code: `{"id", "decides", "when", "then", "cite", "unverified", "basis", "reason"}`, plus `fix` on a blocker or warning rule. `cite` is a compendium page path with an anchor that matches a heading on that page. `unverified: true` when the cited section marks the underlying fact ⚠ Unverified; it is carried into `levelled.json`, the backlog and the dashboard so nobody builds on an unconfirmed fact unknowingly. `basis` is `compendium` when the page states the result, or `our-recommendation` when the page gives the facts and the rule is our reading of them. The format is in 7.3.
 
 What it decides, per task:
 
@@ -245,7 +245,7 @@ What it decides, per task:
 | `memory` | `memory`, `reads_untrusted_input`, `data_class` | compendium 02 |
 | `plan_fit` (`ok`, `ok-with-limits`, `needs-enterprise`, `not-supported`), with the reason | all of the above against `plan-fit.json` | compendium 09 |
 
-Per persona: the plugin name (`twin-<persona-id>`), how it is distributed on this plan (group-targeted on Enterprise; to everyone on Team), the settings baseline, the Anthropic plugins to start from (industry pack), and a list of **blockers** (a task that cannot be built as asked on this plan or data class) and **warnings**.
+Per persona: the plugin name (`role.plugin_name`, else `twin-<persona-id>`), how it is distributed on this plan (group-targeted on Enterprise; to everyone on Team; installed by hand on a plan that cannot publish plugins), the settings baseline, the Anthropic plugins to start from (industry pack), and a list of **blockers** (a task that cannot be built as asked on this plan or data class) and **warnings**.
 
 Overrides on the card replace a rule's result and are shown as overridden, with the reason, everywhere.
 
@@ -291,6 +291,9 @@ The vocabulary that `tests/fixtures/twincard/expectations.json` and the levellin
 | `connectors` | a list of `{system, access, identity}`: `system` is a profile system id, `access` is `read` or `write`, `identity` is an `identity` value |
 | `memory` | `on` or `off` |
 | `plan_fit` | `ok`, `ok-with-limits`, `needs-enterprise`, `not-supported` |
+| `persona.distribution` | `group-targeted` (Enterprise), `everyone` (Team), `manual` (a plan that cannot publish plugins, so users install them by hand) |
+| `persona.settings_baseline` | a file stem in `starter-kit/settings/`, or `null` |
+| `connectors[].permission`, `tools[].permission` | `always-allow`, `needs-approval`, `blocked` (the per-tool settings in compendium 06) |
 
 Each decision in the expectations file is `{expected, cite, reason, unverified}`. A blocker or a warning is `{code, about, cite, unverified}`: `about` is a task id or `persona`, `cite` is a compendium page with an anchor, and `unverified` is true when the cited page marks the fact Unverified. An overridden decision also carries `overridden: true`, the rule's own result and the override's reason.
 
@@ -304,6 +307,9 @@ Blocker codes (the task cannot be built as asked on this plan or data class):
 - `phi-needs-hipaa-org`: PHI is in scope, and there is no dedicated HIPAA org with a signed BAA.
 - `phi-no-hosted-runtime`: a PHI task needs a hosted runtime, and none is covered for PHI.
 - `connector-cannot-write`: a task writes to a system whose connector cannot do that action.
+- `override-not-allowed`: a card override names `connectors` or `plan_fit`, which follow from the other decisions; the override is not applied.
+- `override-unknown-target`: a card override names a task or a decision that levelling does not have; the override is not applied.
+- `plugin-name-invalid`: `role.plugin_name` does not match `^twin-[a-z0-9-]+$`.
 
 Warning codes (the task can be built, with a limit someone must see):
 
@@ -311,6 +317,7 @@ Warning codes (the task can be built, with a limit someone must see):
 - `decision-undecided`: the compendium does not decide one of the task's decisions, so a person must.
 - `shared-tool-strictest`: two tasks share a connector tool, so both run at the stricter task's setting.
 - `override-applied`: a card override replaced a rule's result; the result is shown as overridden, with the reason.
+- `field-open`: a decision or a rule needs a field whose status is `open` and which has no value yet, so that decision is `null` until the field is answered.
 - `team-no-group-targeting`: on Team the role plugin is shared to everyone; group targeting needs Enterprise.
 - `team-no-managed-settings`: claude.ai on the web with no device management gets no managed settings and no hooks.
 - `team-no-governance-log`: the governance log is a Claude Code hook, so a Team twin on the web has none.
@@ -326,6 +333,46 @@ Warning codes (the task can be built, with a limit someone must see):
 - `event-source-unverified`: nothing confirmed can start the task on its event, so a person starts it until that is confirmed.
 - `connector-early-access`: the task's connector is in an early-access programme, with Unverified points.
 - `hubspot-super-admin-approval`: the HubSpot connector needs a HubSpot Super Admin's approval as well as an Owner.
+
+### 7.3 Rules, plan fit and `levelled.json`
+
+**`data/rules.json`**: `{"rules_version": 1, "decisions": {<decision>: {"combine": "first" | "strictest", "order": [...]}}, "rules": [...]}`.
+
+| Part | Meaning |
+|---|---|
+| `decisions` | One entry per decision the engine makes: the task decisions (`runtime`, `identity`, `autonomy.start`, `autonomy.ceiling`, `data_controls.settings_baseline`, `data_controls.web_tools`, `data_controls.surfaces`, `data_controls.retention`, `memory`, `plan_fit`), the connector decisions (`connectors.identity` per task, `connectors.permission` per tool and level) and the persona decisions (`persona.distribution`, `persona.settings_baseline`). `blocker` and `warning` rules need no entry: every one that holds is raised. |
+| `combine` | `first`: rules are tried in file order and the first that holds decides. `strictest`: every rule that holds is a candidate and the strictest wins: the lowest number, or the value earliest in `order`; ties go to the first rule. |
+| `when` | Data only: an object whose keys are fact names, each mapped to a value or a list of allowed values (a list-valued fact matches when any of its items does), plus `any` and `all` (lists of conditions) and `not` (one condition). Keys are checked in order and the first that fails ends the check. `{}` always holds. |
+| `then` | The decision's value; `"undecided"` (the result is `null` with a `decision-undecided` warning; `null` itself is a real value, such as no settings baseline); `{"fact": <name>}` to take a fact's value; or, on a blocker or warning rule, its code from 7.2. |
+| `reason`, `fix` | The sentence shown with the result; a blocker or warning rule's `reason` is its message and `fix` says what to do. |
+| Ids | Kebab-case and unique. |
+
+Facts are flat names. Card and profile fields keep their paths (`role.device`, `plan.tier`, `devices.mdm`, `compliance.retention`, `network.can_allowlist_anthropic_ips`, `runtime_preferences.self_hosting_required`, and others). Task fields are `task.<path>` (`task.trigger`, `task.data_class`, `task.output.audience`, `task.cost_of_mistake.level`, and so on), with derived `task.write_actions`, `task.write_products`, `task.input_products`, `task.products` (the pack's product name where a pack connector default matches the system), `task.reads_private_network` and `task.shared_tool_ceiling`. Persona-wide: `systems.kinds`, `systems.products`, `pack.id`, `pack.settings_baseline`, `persona.data_classes`, `persona.products`, and `capability.<id>` (the `plan-fit.json` value for the profile's plan). Each decision already made is a fact under its own name, and a rule may read only the decisions made before its own. Tool rules also read `tool.use` (`read` or the write action), `tool.level` and `tool.wanted_differs`. An unset field takes its catalogue default. A field that is `open` with no value yet stops the rule that reaches it: the decision is `null` and a `field-open` warning names the field. A rule that names an unknown fact or decision, a duplicate id, or a code not listed in 7.2 is a load error that names the rule.
+
+**`data/plan-fit.json`**: `{"plan_fit_version": 1, "capabilities": [{"id", "name", "team", "enterprise", "individual", "lost_on_team", "cite", "unverified"}]}`. Each plan value is `yes`, `no` or `limited`; `lost_on_team` is one sentence or `null`; `cite` and `unverified` follow the rule for rules.
+
+**`levelled.json`**, written by `level` next to `card.json` (keys in this order, two-space indent, UTF-8, a trailing newline; the same input gives the same bytes):
+
+```json
+{"levelled_version": 1, "customer": "", "persona": "",
+ "source": {"card_sha256": "", "profile_sha256": "", "rules_version": 1, "pack": ""},
+ "persona_plan": {"plugin_name": {}, "distribution": {}, "settings_baseline": {}, "starting_points": []},
+ "tasks": {"T1": {"runtime": {}, "identity": {}, "autonomy": {"start": {}, "ceiling": {}},
+                  "data_controls": {"settings_baseline": {}, "web_tools": {}, "surfaces": {}, "retention": {}},
+                  "connectors": [{"system", "access", "identity", "how", "runbook", "permission", "cite", "unverified"}],
+                  "memory": {}, "plan_fit": {}}},
+ "tools": [{"system", "use", "tasks", "permission", "wanted"}],
+ "blockers": [{"code", "about", "cite", "unverified", "message", "fix"}], "warnings": [],
+ "complete": false}
+```
+
+Every decision (`{}` above) is `{"value", "rule", "cite", "reason", "unverified", "basis", "overridden"}`; `overridden` is `null` or `{"rule_result", "reason", "approved_by"}`. A connector lists each system a task reads or writes, in the card's order, reads first; a write to a system already listed makes it `write`. Its `how`, `runbook`, `cite` and `unverified` come from the industry pack's connector default; a system with no default cites compendium 11 on adding a connector that is not in the directory.
+
+Tools: a tool is one system and one use (`read`, or a write action). `tools[].wanted` is the permission each task would give the tool at its own ceiling. When the tasks that share a tool want different permissions, a `shared-tool-strictest` warning is raised about the first of them, and each task whose ceiling is higher is levelled again with `task.shared_tool_ceiling` set to the lowest ceiling among them, until nothing changes. `tools[].permission` and `connectors[].permission` are the strictest result at the tasks' starting level.
+
+Overrides: an override replaces one task decision (`runtime`, `identity`, `autonomy.start`, `autonomy.ceiling`, `data_controls`, `memory`) as the decision is made, so later decisions follow the new value; a `data_controls` override's value is an object of the parts it replaces. The decision keeps its rule and cite, gains `overridden`, and an `override-applied` warning is raised with the decision's cite. When an Unverified warning rule then holds on an overridden decision (an override to `agent-sdk` on a ZDR task, for example), that decision becomes `unverified: true`. An override of `connectors` or `plan_fit` raises `override-not-allowed`, and one that names a task or decision levelling does not have raises `override-unknown-target`; neither is applied.
+
+`complete` is the 4.3 rule: validation passes, completeness is 100%, no open question blocks an in-pilot task, and there is no blocker.
 
 ## 8. Backlog (`backlog.py`, `data/task-library.json`)
 

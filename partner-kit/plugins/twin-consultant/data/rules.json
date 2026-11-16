@@ -1,0 +1,1505 @@
+{
+  "rules_version": 1,
+  "decisions": {
+    "runtime": {
+      "combine": "first"
+    },
+    "identity": {
+      "combine": "first"
+    },
+    "autonomy.start": {
+      "combine": "first"
+    },
+    "autonomy.ceiling": {
+      "combine": "strictest"
+    },
+    "data_controls.settings_baseline": {
+      "combine": "first"
+    },
+    "data_controls.web_tools": {
+      "combine": "first"
+    },
+    "data_controls.surfaces": {
+      "combine": "first"
+    },
+    "data_controls.retention": {
+      "combine": "first"
+    },
+    "memory": {
+      "combine": "first"
+    },
+    "connectors.identity": {
+      "combine": "first"
+    },
+    "connectors.permission": {
+      "combine": "strictest",
+      "order": [
+        "blocked",
+        "needs-approval",
+        "always-allow"
+      ]
+    },
+    "plan_fit": {
+      "combine": "first"
+    },
+    "persona.distribution": {
+      "combine": "first"
+    },
+    "persona.settings_baseline": {
+      "combine": "first"
+    }
+  },
+  "rules": [
+    {
+      "id": "runtime-person-client-skill",
+      "decides": "runtime",
+      "when": {
+        "task.trigger": "person"
+      },
+      "then": "client-skill",
+      "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill."
+    },
+    {
+      "id": "runtime-own-schedule-claude-code",
+      "decides": "runtime",
+      "when": {
+        "task.trigger": "schedule-own"
+      },
+      "then": "claude-code-scheduled-task",
+      "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "It is one person's own recurring task, done as them, so it is a Claude Code scheduled task."
+    },
+    {
+      "id": "runtime-team-slack-tag-routine",
+      "decides": "runtime",
+      "when": {
+        "task.trigger": "schedule-team",
+        "task.write_products": "Slack",
+        "task.data_class": [
+          "internal",
+          "confidential"
+        ]
+      },
+      "then": "claude-tag-routine",
+      "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Shared team work that runs on a schedule and lives in Slack is a Claude Tag channel routine."
+    },
+    {
+      "id": "runtime-phi-none",
+      "decides": "runtime",
+      "when": {
+        "task.trigger": [
+          "schedule-team",
+          "event"
+        ],
+        "task.data_class": "phi"
+      },
+      "then": "none",
+      "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Work wired into systems that holds PHI has no hosted agent runtime."
+    },
+    {
+      "id": "runtime-event-source-unverified",
+      "decides": "runtime",
+      "when": {
+        "task.trigger": "event",
+        "task.input_products": "Zendesk",
+        "runtime_preferences.self_hosting_required": false
+      },
+      "then": "client-skill",
+      "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+      "unverified": true,
+      "basis": "our-recommendation",
+      "reason": "What would start the task on an escalation is Unverified, so the manager starts it in a conversation until that is confirmed."
+    },
+    {
+      "id": "runtime-self-hosting-required",
+      "decides": "runtime",
+      "when": {
+        "task.trigger": [
+          "schedule-team",
+          "event"
+        ],
+        "runtime_preferences.self_hosting_required": true
+      },
+      "then": "managed-agents-self-hosted",
+      "cite": "docs/compendium/05-decision-matrix.md#the-options",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The customer wants work that runs without a person on its own infrastructure, and Managed Agents can be self-hosted, so it runs on a self-hosted Managed Agents deployment."
+    },
+    {
+      "id": "runtime-zdr-self-hosted",
+      "decides": "runtime",
+      "when": {
+        "task.trigger": [
+          "schedule-team",
+          "event"
+        ],
+        "any": [
+          {
+            "task.data_class": "highly-sensitive"
+          },
+          {
+            "compliance.retention": "zdr"
+          }
+        ]
+      },
+      "then": "managed-agents-self-hosted",
+      "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "A scheduled job wired into systems that needs ZDR cannot use hosted Managed Agents, which is not ZDR-eligible, so it runs on a fully self-hosted Managed Agents deployment, the page's ZDR route."
+    },
+    {
+      "id": "runtime-wired-managed-agents",
+      "decides": "runtime",
+      "when": {
+        "task.trigger": [
+          "schedule-team",
+          "event"
+        ]
+      },
+      "then": "managed-agents",
+      "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Work wired into systems with no ZDR or HIPAA need runs on Managed Agents."
+    },
+    {
+      "id": "identity-client-user",
+      "decides": "identity",
+      "when": {
+        "runtime": "client-skill"
+      },
+      "then": "user",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The connectors this task uses act per user, through each user's own sign-in."
+    },
+    {
+      "id": "identity-scheduled-task-user",
+      "decides": "identity",
+      "when": {
+        "runtime": "claude-code-scheduled-task"
+      },
+      "then": "user",
+      "cite": "docs/compendium/05-decision-matrix.md#the-options",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "A Claude Code scheduled task appears as the user, with all their connectors."
+    },
+    {
+      "id": "identity-tag-service-account",
+      "decides": "identity",
+      "when": {
+        "runtime": "claude-tag-routine"
+      },
+      "then": "service-account",
+      "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "A Claude Tag routine acts as a service account, so it survives turnover."
+    },
+    {
+      "id": "identity-hosted-vault",
+      "decides": "identity",
+      "when": {
+        "runtime": [
+          "managed-agents",
+          "managed-agents-self-hosted",
+          "agent-sdk",
+          "none"
+        ]
+      },
+      "then": "api-key-vault",
+      "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Work that runs with nobody present holds its credentials in a vault (an API key plus a vault), not in a user's sign-in."
+    },
+    {
+      "id": "autonomy-start-draft",
+      "decides": "autonomy.start",
+      "when": {},
+      "then": 1,
+      "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "Every task starts at level 1 and earns each level with evidence from evals."
+    },
+    {
+      "id": "ceiling-high-cost-undecided",
+      "decides": "autonomy.ceiling",
+      "when": {
+        "task.cost_of_mistake.level": "high"
+      },
+      "then": "undecided",
+      "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "Undecided: page 06 sets the ceiling from audience, reversibility, money, deletes and trigger, but has no rule for a high cost of a mistake, so a person must decide it."
+    },
+    {
+      "id": "ceiling-customer-facing",
+      "decides": "autonomy.ceiling",
+      "when": {
+        "task.output.audience": "external"
+      },
+      "then": 2,
+      "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The output reaches someone outside the company, so the task stays at level 1 or 2."
+    },
+    {
+      "id": "ceiling-touches-money",
+      "decides": "autonomy.ceiling",
+      "when": {
+        "task.touches_money": true
+      },
+      "then": 2,
+      "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The task touches money, so it stays at level 1 or 2."
+    },
+    {
+      "id": "ceiling-deletes",
+      "decides": "autonomy.ceiling",
+      "when": {
+        "task.write_actions": "delete"
+      },
+      "then": 2,
+      "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The task deletes, so it stays at level 1 or 2."
+    },
+    {
+      "id": "ceiling-irreversible-not-internal",
+      "decides": "autonomy.ceiling",
+      "when": {
+        "task.reversible": false,
+        "task.output.audience": [
+          "other-team",
+          "external"
+        ]
+      },
+      "then": 2,
+      "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The action cannot be undone and is not internal to the team, so it stays at level 1 or 2."
+    },
+    {
+      "id": "ceiling-untrusted-send",
+      "decides": "autonomy.ceiling",
+      "when": {
+        "task.write_actions": "send",
+        "task.reads_untrusted_input": true
+      },
+      "then": 2,
+      "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The task reads untrusted input next to a send, so a person approves each post and it stays at level 2."
+    },
+    {
+      "id": "ceiling-shared-tool",
+      "decides": "autonomy.ceiling",
+      "when": {
+        "not": {
+          "task.shared_tool_ceiling": null
+        }
+      },
+      "then": {
+        "fact": "task.shared_tool_ceiling"
+      },
+      "cite": "docs/compendium/06-autonomy.md#how-a-level-is-enforced",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The task shares a connector tool with a task whose ceiling is lower, so both run at the stricter task's level."
+    },
+    {
+      "id": "ceiling-person-started",
+      "decides": "autonomy.ceiling",
+      "when": {
+        "task.trigger": "person"
+      },
+      "then": 3,
+      "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4."
+    },
+    {
+      "id": "ceiling-event-person-until-confirmed",
+      "decides": "autonomy.ceiling",
+      "when": {
+        "task.trigger": "event",
+        "runtime": "client-skill"
+      },
+      "then": 3,
+      "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The task is internal and reversible, and a person starts it until the event source is confirmed, so it may not run unattended."
+    },
+    {
+      "id": "ceiling-unattended",
+      "decides": "autonomy.ceiling",
+      "when": {
+        "task.trigger": [
+          "schedule-own",
+          "schedule-team",
+          "event"
+        ]
+      },
+      "then": 4,
+      "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The task is internal and reversible and runs without a person, so it may rise to unattended level 4 once evals support it."
+    },
+    {
+      "id": "baseline-hosted-none",
+      "decides": "data_controls.settings_baseline",
+      "when": {
+        "runtime": [
+          "managed-agents",
+          "managed-agents-self-hosted",
+          "agent-sdk",
+          "none"
+        ]
+      },
+      "then": null,
+      "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "A hosted runtime has no client surface and no managed settings file."
+    },
+    {
+      "id": "baseline-tag-none",
+      "decides": "data_controls.settings_baseline",
+      "when": {
+        "runtime": "claude-tag-routine"
+      },
+      "then": null,
+      "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The task runs in Slack through Claude Tag, which takes no managed settings file."
+    },
+    {
+      "id": "baseline-unmanaged-none",
+      "decides": "data_controls.settings_baseline",
+      "when": {
+        "any": [
+          {
+            "devices.mdm": "none"
+          },
+          {
+            "role.device": "unmanaged"
+          }
+        ]
+      },
+      "then": null,
+      "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "With no device management the twin lives in claude.ai on the web, which has no managed settings file."
+    },
+    {
+      "id": "baseline-highly-sensitive-pack",
+      "decides": "data_controls.settings_baseline",
+      "when": {
+        "task.data_class": "highly-sensitive"
+      },
+      "then": {
+        "fact": "pack.settings_baseline"
+      },
+      "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Highly sensitive work runs on a ZDR sign-in with the industry pack's settings baseline."
+    },
+    {
+      "id": "baseline-phi-hipaa",
+      "decides": "data_controls.settings_baseline",
+      "when": {
+        "task.data_class": "phi"
+      },
+      "then": "hipaa",
+      "cite": "docs/compendium/10-sensitive-data.md#what-hipaa-covers",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "PHI work in Claude Code needs the HIPAA managed settings."
+    },
+    {
+      "id": "baseline-confidential",
+      "decides": "data_controls.settings_baseline",
+      "when": {
+        "task.data_class": "confidential"
+      },
+      "then": "confidential",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Confidential data needs managed deny rules, a sandbox and telemetry off: the confidential baseline."
+    },
+    {
+      "id": "baseline-internal-general",
+      "decides": "data_controls.settings_baseline",
+      "when": {
+        "task.data_class": "internal"
+      },
+      "then": "general",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Internal data takes the baseline managed settings: the general baseline."
+    },
+    {
+      "id": "web-tools-off-sensitive",
+      "decides": "data_controls.web_tools",
+      "when": {
+        "task.data_class": [
+          "highly-sensitive",
+          "phi"
+        ]
+      },
+      "then": "off",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Web search and fetch are not allowed for this data class: queries can reveal intent."
+    },
+    {
+      "id": "web-tools-on",
+      "decides": "data_controls.web_tools",
+      "when": {},
+      "then": "on",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Web tools are allowed for this data class."
+    },
+    {
+      "id": "surfaces-hosted-none",
+      "decides": "data_controls.surfaces",
+      "when": {
+        "runtime": [
+          "managed-agents",
+          "managed-agents-self-hosted",
+          "agent-sdk",
+          "none"
+        ]
+      },
+      "then": [],
+      "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "A hosted runtime has no client surface."
+    },
+    {
+      "id": "surfaces-tag-slack",
+      "decides": "data_controls.surfaces",
+      "when": {
+        "runtime": "claude-tag-routine"
+      },
+      "then": [
+        "slack"
+      ],
+      "cite": "docs/compendium/05-decision-matrix.md#the-options",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "A Claude Tag routine runs in Slack."
+    },
+    {
+      "id": "surfaces-sensitive-managed-claude-code",
+      "decides": "data_controls.surfaces",
+      "when": {
+        "task.data_class": [
+          "highly-sensitive",
+          "phi"
+        ],
+        "role.device": "managed"
+      },
+      "then": [
+        "claude-code"
+      ],
+      "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop."
+    },
+    {
+      "id": "surfaces-sensitive-unmanaged-none",
+      "decides": "data_controls.surfaces",
+      "when": {
+        "task.data_class": [
+          "highly-sensitive",
+          "phi"
+        ],
+        "role.device": [
+          "unmanaged",
+          "mixed"
+        ]
+      },
+      "then": [],
+      "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "This data class gets no direct access from an unmanaged device."
+    },
+    {
+      "id": "surfaces-confidential-unmanaged-web",
+      "decides": "data_controls.surfaces",
+      "when": {
+        "task.data_class": "confidential",
+        "role.device": [
+          "unmanaged",
+          "mixed"
+        ]
+      },
+      "then": [
+        "claude-ai"
+      ],
+      "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Confidential data on an unmanaged device is for claude.ai on the web only."
+    },
+    {
+      "id": "surfaces-internal-unmanaged-web-desktop",
+      "decides": "data_controls.surfaces",
+      "when": {
+        "task.data_class": "internal",
+        "role.device": [
+          "unmanaged",
+          "mixed"
+        ]
+      },
+      "then": [
+        "claude-ai",
+        "desktop"
+      ],
+      "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Internal data on an unmanaged device is for claude.ai on the web and Desktop, through SSO."
+    },
+    {
+      "id": "surfaces-managed-works-in",
+      "decides": "data_controls.surfaces",
+      "when": {},
+      "then": {
+        "fact": "role.works_in"
+      },
+      "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "On a managed device every surface the role works in is allowed, with managed settings."
+    },
+    {
+      "id": "retention-highly-sensitive-zdr",
+      "decides": "data_controls.retention",
+      "when": {
+        "task.data_class": "highly-sensitive"
+      },
+      "then": "zdr",
+      "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Highly sensitive deal work keeps zero data retention."
+    },
+    {
+      "id": "retention-profile",
+      "decides": "data_controls.retention",
+      "when": {},
+      "then": {
+        "fact": "compliance.retention"
+      },
+      "cite": "docs/compendium/10-sensitive-data.md#other-controls",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "Retention follows the customer profile's compliance.retention."
+    },
+    {
+      "id": "memory-off-not-wanted",
+      "decides": "memory",
+      "when": {
+        "memory.personal_memory_wanted": false
+      },
+      "then": "off",
+      "cite": "docs/compendium/02-persona.md#memory",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off."
+    },
+    {
+      "id": "memory-off-untrusted-input",
+      "decides": "memory",
+      "when": {
+        "task.reads_untrusted_input": true
+      },
+      "then": "off",
+      "cite": "docs/compendium/02-persona.md#memory",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The task reads untrusted input while personal memory is wanted, a memory-poisoning risk, so memory stays off for it."
+    },
+    {
+      "id": "memory-on",
+      "decides": "memory",
+      "when": {},
+      "then": "on",
+      "cite": "docs/compendium/02-persona.md#memory",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on."
+    },
+    {
+      "id": "connector-identity-user",
+      "decides": "connectors.identity",
+      "when": {
+        "runtime": [
+          "client-skill",
+          "claude-code-scheduled-task"
+        ]
+      },
+      "then": "user",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The connector acts per user, through the user's own sign-in."
+    },
+    {
+      "id": "connector-identity-tag-service-account",
+      "decides": "connectors.identity",
+      "when": {
+        "runtime": "claude-tag-routine"
+      },
+      "then": "service-account",
+      "cite": "docs/compendium/05-decision-matrix.md#the-options",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "In a channel Claude Tag acts as its own service account."
+    },
+    {
+      "id": "connector-identity-vault",
+      "decides": "connectors.identity",
+      "when": {
+        "runtime": [
+          "managed-agents",
+          "managed-agents-self-hosted",
+          "agent-sdk",
+          "none"
+        ]
+      },
+      "then": "api-key-vault",
+      "cite": "docs/compendium/05-decision-matrix.md#the-options",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "A hosted agent acts with an API key plus a vault of credentials."
+    },
+    {
+      "id": "permission-read-always-allow",
+      "decides": "connectors.permission",
+      "when": {
+        "tool.use": "read"
+      },
+      "then": "always-allow",
+      "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Reading is allowed at every level."
+    },
+    {
+      "id": "permission-write-draft-blocked",
+      "decides": "connectors.permission",
+      "when": {
+        "tool.use": [
+          "create",
+          "update",
+          "delete",
+          "send",
+          "write"
+        ],
+        "tool.level": [
+          0,
+          1
+        ]
+      },
+      "then": "blocked",
+      "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "At levels 0 and 1 the twin only drafts, so write tools are Blocked."
+    },
+    {
+      "id": "permission-write-approval",
+      "decides": "connectors.permission",
+      "when": {
+        "tool.use": [
+          "create",
+          "update",
+          "delete",
+          "send",
+          "write"
+        ],
+        "tool.level": 2
+      },
+      "then": "needs-approval",
+      "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "At level 2 a person approves each action: Needs approval."
+    },
+    {
+      "id": "permission-write-allowlist",
+      "decides": "connectors.permission",
+      "when": {
+        "tool.use": [
+          "create",
+          "update",
+          "delete",
+          "send",
+          "write"
+        ],
+        "tool.level": [
+          3,
+          4
+        ]
+      },
+      "then": "always-allow",
+      "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "At levels 3 and 4 allowlisted tools are set to Always allow."
+    },
+    {
+      "id": "permission-untrusted-send-approval",
+      "decides": "connectors.permission",
+      "when": {
+        "tool.use": "send",
+        "task.reads_untrusted_input": true
+      },
+      "then": "needs-approval",
+      "cite": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The task reads untrusted content and can send it out, so a person approves each send."
+    },
+    {
+      "id": "plan-fit-individual",
+      "decides": "plan_fit",
+      "when": {
+        "plan.tier": "individual"
+      },
+      "then": "not-supported",
+      "cite": "docs/compendium/09-plans-and-it-controls.md#what-this-means-for-the-rollout-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Individual plans are not for company data; Team is the minimum."
+    },
+    {
+      "id": "plan-fit-phi-no-runtime",
+      "decides": "plan_fit",
+      "when": {
+        "task.data_class": "phi",
+        "runtime": "none"
+      },
+      "then": "not-supported",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "PHI needs a dedicated HIPAA org, and no hosted agent runtime is covered for it."
+    },
+    {
+      "id": "plan-fit-phi-needs-hipaa",
+      "decides": "plan_fit",
+      "when": {
+        "task.data_class": "phi",
+        "capability.hipaa-route": "no"
+      },
+      "then": "needs-enterprise",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "PHI needs a dedicated HIPAA org with a signed BAA, which needs Enterprise."
+    },
+    {
+      "id": "plan-fit-phi-hipaa-org",
+      "decides": "plan_fit",
+      "when": {
+        "task.data_class": "phi"
+      },
+      "then": "ok-with-limits",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "PHI runs only in a dedicated HIPAA org, where connectors and skills are not covered by the BAA."
+    },
+    {
+      "id": "plan-fit-highly-sensitive-needs-zdr",
+      "decides": "plan_fit",
+      "when": {
+        "task.data_class": "highly-sensitive",
+        "capability.zdr": "no"
+      },
+      "then": "needs-enterprise",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Highly sensitive data needs a separate Enterprise org with ZDR."
+    },
+    {
+      "id": "plan-fit-private-network-no-route",
+      "decides": "plan_fit",
+      "when": {
+        "task.reads_private_network": true,
+        "network.can_allowlist_anthropic_ips": false,
+        "capability.mcp-tunnel": "no"
+      },
+      "then": "needs-enterprise",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "Without allowlisting, the only hosted route to a private network is an MCP tunnel, which is Enterprise only."
+    },
+    {
+      "id": "plan-fit-private-network-tunnel",
+      "decides": "plan_fit",
+      "when": {
+        "task.reads_private_network": true,
+        "network.can_allowlist_anthropic_ips": false
+      },
+      "then": "ok-with-limits",
+      "cite": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The private network is reached through an MCP tunnel: Enterprise, by request, a research preview with no SLA."
+    },
+    {
+      "id": "plan-fit-self-hosted-platform-org",
+      "decides": "plan_fit",
+      "when": {
+        "runtime": "managed-agents-self-hosted"
+      },
+      "then": "ok-with-limits",
+      "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The self-hosted Managed Agents deployment needs a Platform org with ZDR besides the people's org."
+    },
+    {
+      "id": "plan-fit-private-network-allowlist",
+      "decides": "plan_fit",
+      "when": {
+        "task.reads_private_network": true
+      },
+      "then": "ok-with-limits",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The private network has no MCP tunnel here, and this customer can allowlist Anthropic's IP range, so it is reachable at the edge."
+    },
+    {
+      "id": "plan-fit-early-access-connector",
+      "decides": "plan_fit",
+      "when": {
+        "task.products": "Zendesk"
+      },
+      "then": "ok-with-limits",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": true,
+      "basis": "compendium",
+      "reason": "The Zendesk connection is in early access and which Claude plans it supports is Unverified."
+    },
+    {
+      "id": "plan-fit-confidential-lower-audit",
+      "decides": "plan_fit",
+      "when": {
+        "task.data_class": "confidential",
+        "capability.audit-log-and-compliance-api": "no"
+      },
+      "then": "ok-with-limits",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Confidential data is acceptable on Team only where the audit need is lower, so the fit has limits."
+    },
+    {
+      "id": "plan-fit-highly-sensitive-zdr-org",
+      "decides": "plan_fit",
+      "when": {
+        "task.data_class": "highly-sensitive"
+      },
+      "then": "ok",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has."
+    },
+    {
+      "id": "plan-fit-ok",
+      "decides": "plan_fit",
+      "when": {},
+      "then": "ok",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The data class is allowed on this plan."
+    },
+    {
+      "id": "distribution-group-targeted",
+      "decides": "persona.distribution",
+      "when": {
+        "capability.group-plugin-distribution": "yes"
+      },
+      "then": "group-targeted",
+      "cite": "docs/compendium/09-plans-and-it-controls.md#what-it-can-do-on-each-plan",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "On Enterprise a plugin can be shared per group, so the role plugin reaches the role's group only."
+    },
+    {
+      "id": "distribution-everyone",
+      "decides": "persona.distribution",
+      "when": {
+        "capability.org-plugin-distribution": "yes"
+      },
+      "then": "everyone",
+      "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "On Team an Owner shares skills and plugins to everyone; group targeting needs Enterprise."
+    },
+    {
+      "id": "distribution-manual",
+      "decides": "persona.distribution",
+      "when": {},
+      "then": "manual",
+      "cite": "docs/compendium/09-plans-and-it-controls.md#what-it-can-do-on-each-plan",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "This plan cannot publish plugins to users, so users install them by hand."
+    },
+    {
+      "id": "persona-baseline-unmanaged-none",
+      "decides": "persona.settings_baseline",
+      "when": {
+        "any": [
+          {
+            "devices.mdm": "none"
+          },
+          {
+            "role.device": "unmanaged"
+          }
+        ]
+      },
+      "then": null,
+      "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "Claude.ai on the web with no device management takes no managed settings file, so there is no baseline."
+    },
+    {
+      "id": "persona-baseline-phi-hipaa",
+      "decides": "persona.settings_baseline",
+      "when": {
+        "persona.data_classes": "phi"
+      },
+      "then": "hipaa",
+      "cite": "docs/compendium/10-sensitive-data.md#what-hipaa-covers",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "PHI work needs the HIPAA managed settings."
+    },
+    {
+      "id": "persona-baseline-highly-sensitive-pack",
+      "decides": "persona.settings_baseline",
+      "when": {
+        "persona.data_classes": "highly-sensitive"
+      },
+      "then": {
+        "fact": "pack.settings_baseline"
+      },
+      "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Highly sensitive work runs on a ZDR sign-in with the industry pack's settings baseline."
+    },
+    {
+      "id": "persona-baseline-confidential",
+      "decides": "persona.settings_baseline",
+      "when": {
+        "persona.data_classes": "confidential"
+      },
+      "then": "confidential",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The role handles confidential data: the confidential baseline."
+    },
+    {
+      "id": "persona-baseline-general",
+      "decides": "persona.settings_baseline",
+      "when": {},
+      "then": "general",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The role handles internal data only: the general baseline."
+    },
+    {
+      "id": "block-plan-below-team",
+      "decides": "blocker",
+      "when": {
+        "plan.tier": "individual"
+      },
+      "then": "plan-below-team",
+      "cite": "docs/compendium/09-plans-and-it-controls.md#what-this-means-for-the-rollout-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The customer is on an individual plan, which gives IT no control and uses consumer terms; Team is the minimum for company data.",
+      "fix": "Move the role's users onto a Team or Enterprise plan before the twin is built."
+    },
+    {
+      "id": "block-log-every-action",
+      "decides": "blocker",
+      "when": {
+        "governance.action_log_required": true,
+        "any": [
+          {
+            "devices.mdm": "none"
+          },
+          {
+            "role.device": "unmanaged"
+          }
+        ]
+      },
+      "then": "log-every-action-not-met",
+      "cite": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The customer requires a log of every action, and the twin runs where no governance hook can run (claude.ai on the web, no device management).",
+      "fix": "Run the twin in Claude Code on MDM-managed devices with the governance hook locked in managed settings, or agree with the customer to drop the requirement."
+    },
+    {
+      "id": "block-highly-sensitive-no-zdr",
+      "decides": "blocker",
+      "when": {
+        "task.data_class": "highly-sensitive",
+        "capability.zdr": "no"
+      },
+      "then": "highly-sensitive-needs-zdr-org",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The task is highly sensitive, and this plan has no Enterprise org with ZDR.",
+      "fix": "Set up a separate Enterprise org with ZDR for this work, or lower the task's data class with the customer's compliance owner."
+    },
+    {
+      "id": "block-unmanaged-device-no-access",
+      "decides": "blocker",
+      "when": {
+        "task.data_class": [
+          "highly-sensitive",
+          "phi"
+        ],
+        "role.device": "unmanaged",
+        "runtime": [
+          "client-skill",
+          "claude-code-scheduled-task"
+        ]
+      },
+      "then": "unmanaged-device-no-access",
+      "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "The task is highly sensitive or PHI and would run on an unmanaged device, which gets no direct access.",
+      "fix": "Give these users managed devices, or run a hosted twin on our infrastructure that the device only displays."
+    },
+    {
+      "id": "block-phi-needs-hipaa-org",
+      "decides": "blocker",
+      "when": {
+        "any": [
+          {
+            "persona.data_classes": "phi"
+          },
+          {
+            "compliance.phi": true
+          }
+        ],
+        "not": {
+          "capability.hipaa-route": "yes",
+          "compliance.baa": true
+        }
+      },
+      "then": "phi-needs-hipaa-org",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "PHI is in scope, and there is no dedicated HIPAA org with a signed BAA.",
+      "fix": "Set up a dedicated HIPAA org on Enterprise with a signed BAA, or take PHI out of the role's tasks."
+    },
+    {
+      "id": "block-phi-no-hosted-runtime",
+      "decides": "blocker",
+      "when": {
+        "task.data_class": "phi",
+        "runtime": [
+          "none",
+          "managed-agents",
+          "managed-agents-self-hosted"
+        ]
+      },
+      "then": "phi-no-hosted-runtime",
+      "cite": "docs/compendium/10-sensitive-data.md#what-hipaa-covers",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The PHI task needs a hosted runtime, and none is covered for PHI: Managed Agents is blocked under HIPAA readiness.",
+      "fix": "Make it a task a person starts in Claude Code under the HIPAA configuration, or wait until Anthropic confirms a hosted route in writing."
+    },
+    {
+      "id": "block-private-network-unreachable",
+      "decides": "blocker",
+      "when": {
+        "task.reads_private_network": true,
+        "network.can_allowlist_anthropic_ips": false,
+        "capability.mcp-tunnel": "no",
+        "runtime": [
+          "client-skill",
+          "claude-tag-routine",
+          "managed-agents"
+        ]
+      },
+      "then": "private-network-unreachable",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The task reads a system on a private network that its runtime cannot reach on this plan: no MCP tunnel, no allowlisting, and it does not run inside the network.",
+      "fix": "Allowlist Anthropic's IP range 160.79.104.0/21 at the edge, run the job inside the network, or move to Enterprise for an MCP tunnel."
+    },
+    {
+      "id": "block-connector-cannot-write",
+      "decides": "blocker",
+      "when": {
+        "task.write_products": [
+          "Gmail",
+          "Google Calendar"
+        ]
+      },
+      "then": "connector-cannot-write",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The task writes to Gmail or Google Calendar, whose directory connectors read only: they cannot create, send or change mail or events.",
+      "fix": "End the task in a draft that a person sends, and remove the write from the card."
+    },
+    {
+      "id": "warn-agent-sdk-cover-zdr-route",
+      "decides": "warning",
+      "when": {
+        "runtime": "managed-agents-self-hosted",
+        "any": [
+          {
+            "task.data_class": "highly-sensitive"
+          },
+          {
+            "compliance.retention": "zdr"
+          }
+        ]
+      },
+      "then": "agent-sdk-cover-unverified",
+      "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+      "unverified": true,
+      "basis": "our-recommendation",
+      "reason": "The task needs ZDR cover, and whether the Agent SDK is covered is Unverified, so the plan uses self-hosted Managed Agents, the route the page confirms.",
+      "fix": "Keep the Agent SDK out of this task until Anthropic confirms its ZDR cover in writing."
+    },
+    {
+      "id": "warn-agent-sdk-runtime",
+      "decides": "warning",
+      "when": {
+        "runtime": "agent-sdk",
+        "any": [
+          {
+            "task.data_class": [
+              "highly-sensitive",
+              "phi"
+            ]
+          },
+          {
+            "compliance.retention": "zdr"
+          }
+        ]
+      },
+      "then": "agent-sdk-cover-unverified",
+      "cite": "docs/compendium/10-sensitive-data.md#what-hipaa-covers",
+      "unverified": true,
+      "basis": "compendium",
+      "reason": "The task runs on the Agent SDK and needs ZDR or HIPAA cover, and whether the Agent SDK is covered is Unverified.",
+      "fix": "Get Anthropic's written confirmation of the cover, or move the task to a route the pages confirm."
+    },
+    {
+      "id": "warn-team-no-group-targeting",
+      "decides": "warning",
+      "when": {
+        "capability.group-plugin-distribution": "no"
+      },
+      "then": "team-no-group-targeting",
+      "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The role plugin is shared to everyone; group targeting needs Enterprise.",
+      "fix": "Keep the role plugin free of anything other roles must not see, or move to Enterprise."
+    },
+    {
+      "id": "warn-team-no-managed-settings",
+      "decides": "warning",
+      "when": {
+        "capability.managed-settings-and-hooks": [
+          "no",
+          "limited"
+        ],
+        "any": [
+          {
+            "devices.mdm": "none"
+          },
+          {
+            "role.device": "unmanaged"
+          }
+        ]
+      },
+      "then": "team-no-managed-settings",
+      "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "Claude.ai on the web with no device management gets no managed settings and no hooks.",
+      "fix": "Put the guardrails in connector tool permissions and skills, and tell the customer what cannot be locked."
+    },
+    {
+      "id": "warn-team-no-governance-log",
+      "decides": "warning",
+      "when": {
+        "capability.governance-action-log": [
+          "no",
+          "limited"
+        ],
+        "any": [
+          {
+            "devices.mdm": "none"
+          },
+          {
+            "role.device": "unmanaged"
+          }
+        ]
+      },
+      "then": "team-no-governance-log",
+      "cite": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The governance log is a Claude Code hook, so a twin on the web has none.",
+      "fix": "Record use from the usage dashboard and the source systems' own audit, and say so in the design."
+    },
+    {
+      "id": "warn-team-no-audit-log",
+      "decides": "warning",
+      "when": {
+        "capability.audit-log-and-compliance-api": "no"
+      },
+      "then": "team-no-audit-log",
+      "cite": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "This plan has no audit log and no Compliance API.",
+      "fix": "Rely on the source systems' own audit logs, or move to Enterprise."
+    },
+    {
+      "id": "warn-confidential-on-team",
+      "decides": "warning",
+      "when": {
+        "persona.data_classes": "confidential",
+        "capability.audit-log-and-compliance-api": "no"
+      },
+      "then": "confidential-on-team",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Confidential data on Team is acceptable only where the audit need is lower.",
+      "fix": "Confirm with the customer's compliance owner that the lower audit need holds."
+    },
+    {
+      "id": "warn-unmanaged-connectors-read-only",
+      "decides": "warning",
+      "when": {
+        "task.write_actions": [
+          "create",
+          "update",
+          "delete",
+          "send"
+        ],
+        "task.data_class": "confidential",
+        "role.device": "unmanaged",
+        "runtime": "client-skill"
+      },
+      "then": "unmanaged-connectors-read-only",
+      "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Confidential data on an unmanaged device calls for read-only connectors, and the task writes.",
+      "fix": "Set the write tool to Needs approval at most, or have the customer accept the write in writing."
+    },
+    {
+      "id": "warn-mail-read-only",
+      "decides": "warning",
+      "when": {
+        "task.output.audience": "external",
+        "systems.products": "Gmail"
+      },
+      "then": "mail-read-only",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The mail and calendar connectors read only, so an email task ends in a draft a person sends.",
+      "fix": "Write the skill so it ends with a draft in the conversation that the person copies and sends."
+    },
+    {
+      "id": "warn-private-network-allowlist",
+      "decides": "warning",
+      "when": {
+        "task.reads_private_network": true,
+        "network.can_allowlist_anthropic_ips": true
+      },
+      "then": "private-network-allowlist",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "A system on a private network must be reachable from Anthropic's IP range, allowlisted at the edge.",
+      "fix": "Have the customer allowlist 160.79.104.0/21 at the edge before the task is built."
+    },
+    {
+      "id": "warn-tag-private-channel-only",
+      "decides": "warning",
+      "when": {
+        "runtime": "claude-tag-routine",
+        "task.data_class": "confidential"
+      },
+      "then": "tag-private-channel-only",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Claude Tag on confidential data belongs only in scoped private channels.",
+      "fix": "Run the routine in a private channel limited to the team."
+    },
+    {
+      "id": "warn-slack-directory-send-unverified",
+      "decides": "warning",
+      "when": {
+        "task.write_products": "Slack"
+      },
+      "then": "slack-directory-send-unverified",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": true,
+      "basis": "compendium",
+      "reason": "Whether the Slack directory connector can post is Unverified; post through Claude Tag or the Slack MCP server.",
+      "fix": "Post through Claude Tag or the Slack MCP server, not the directory connector."
+    },
+    {
+      "id": "warn-untrusted-input-with-send",
+      "decides": "warning",
+      "when": {
+        "task.write_actions": "send",
+        "task.reads_untrusted_input": true
+      },
+      "then": "untrusted-input-with-send",
+      "cite": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The task reads untrusted content and can send it out, so a person approves each send.",
+      "fix": "Set the send tool to Needs approval and keep the task at level 2 or below."
+    },
+    {
+      "id": "warn-memory-poisoning-risk",
+      "decides": "warning",
+      "when": {
+        "memory.personal_memory_wanted": true,
+        "task.reads_untrusted_input": true
+      },
+      "then": "memory-poisoning-risk",
+      "cite": "docs/compendium/02-persona.md#memory",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The task reads untrusted input while personal memory is wanted, so memory stays off for it.",
+      "fix": "Keep role knowledge in reviewed skills; let only controlled steps write memory."
+    },
+    {
+      "id": "warn-event-source-unverified",
+      "decides": "warning",
+      "when": {
+        "task.trigger": "event",
+        "task.input_products": "Zendesk"
+      },
+      "then": "event-source-unverified",
+      "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+      "unverified": true,
+      "basis": "our-recommendation",
+      "reason": "Nothing confirmed can start the task on its event, so a person starts it until that is confirmed.",
+      "fix": "Confirm with Anthropic and the vendor what would fire the event, then level the task again."
+    },
+    {
+      "id": "warn-connector-early-access",
+      "decides": "warning",
+      "when": {
+        "task.products": "Zendesk"
+      },
+      "then": "connector-early-access",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": true,
+      "basis": "compendium",
+      "reason": "The task's connector is in an early-access programme, with Unverified points.",
+      "fix": "Confirm the connection's plan support and per-user checks with the vendor before the build."
+    },
+    {
+      "id": "warn-hubspot-super-admin-approval",
+      "decides": "warning",
+      "when": {
+        "persona.products": "HubSpot"
+      },
+      "then": "hubspot-super-admin-approval",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false,
+      "basis": "compendium",
+      "reason": "The HubSpot connector needs a HubSpot Super Admin's approval as well as an Owner.",
+      "fix": "Name the customer's HubSpot Super Admin in the profile's owners and book the approval."
+    },
+    {
+      "id": "warn-shared-tool-strictest",
+      "decides": "warning",
+      "when": {
+        "tool.wanted_differs": true
+      },
+      "then": "shared-tool-strictest",
+      "cite": "docs/compendium/06-autonomy.md#how-a-level-is-enforced",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "reason": "Tasks share a connector tool but want different settings for it, so both run at the stricter task's setting.",
+      "fix": "Split the tools (a separate connector or tool per task), or run both tasks at the stricter level."
+    }
+  ]
+}

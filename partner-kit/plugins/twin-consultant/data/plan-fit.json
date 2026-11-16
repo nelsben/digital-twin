@@ -1,0 +1,175 @@
+{
+  "plan_fit_version": 1,
+  "capabilities": [
+    {
+      "id": "org-plugin-distribution",
+      "name": "Org-provisioned skills and plugins",
+      "team": "yes",
+      "enterprise": "yes",
+      "individual": "no",
+      "lost_on_team": null,
+      "cite": "docs/compendium/09-plans-and-it-controls.md#what-it-can-do-on-each-plan",
+      "unverified": false
+    },
+    {
+      "id": "group-plugin-distribution",
+      "name": "Targeting skills and plugins at groups",
+      "team": "no",
+      "enterprise": "yes",
+      "individual": "no",
+      "lost_on_team": "On Team an Owner shares the role plugin to everyone; it cannot be targeted at one group.",
+      "cite": "docs/compendium/09-plans-and-it-controls.md#feature-matrix",
+      "unverified": false
+    },
+    {
+      "id": "scim-provisioning",
+      "name": "SCIM provisioning",
+      "team": "no",
+      "enterprise": "yes",
+      "individual": "no",
+      "lost_on_team": "Team has no SCIM, so members are added and removed by hand.",
+      "cite": "docs/compendium/09-plans-and-it-controls.md#feature-matrix",
+      "unverified": false
+    },
+    {
+      "id": "managed-settings-and-hooks",
+      "name": "Managed settings and hooks",
+      "team": "limited",
+      "enterprise": "yes",
+      "individual": "limited",
+      "lost_on_team": "Without device management a Team twin lives in claude.ai on the web, which gets no managed settings file and no hooks.",
+      "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+      "unverified": false
+    },
+    {
+      "id": "governance-action-log",
+      "name": "Governance log of each tool call (a Claude Code hook)",
+      "team": "limited",
+      "enterprise": "limited",
+      "individual": "no",
+      "lost_on_team": "The governance log is a Claude Code hook, so a Team twin in claude.ai on the web has none; it needs Claude Code on managed devices.",
+      "cite": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management",
+      "unverified": false
+    },
+    {
+      "id": "audit-log-and-compliance-api",
+      "name": "Audit log and Compliance API",
+      "team": "no",
+      "enterprise": "yes",
+      "individual": "no",
+      "lost_on_team": "Team has no audit log and no Compliance API.",
+      "cite": "docs/compendium/09-plans-and-it-controls.md#feature-matrix",
+      "unverified": false
+    },
+    {
+      "id": "analytics-api",
+      "name": "Analytics API",
+      "team": "limited",
+      "enterprise": "yes",
+      "individual": "no",
+      "lost_on_team": "Team has the usage dashboard and adoption per plugin, but no Analytics API.",
+      "cite": "docs/compendium/09-plans-and-it-controls.md#feature-matrix",
+      "unverified": false
+    },
+    {
+      "id": "zdr",
+      "name": "Zero data retention (ZDR)",
+      "team": "no",
+      "enterprise": "limited",
+      "individual": "no",
+      "lost_on_team": "Team has no ZDR; on Enterprise it is for qualified orgs and covers Claude Code only.",
+      "cite": "docs/compendium/09-plans-and-it-controls.md#feature-matrix",
+      "unverified": false
+    },
+    {
+      "id": "hipaa-route",
+      "name": "HIPAA configuration with a BAA",
+      "team": "no",
+      "enterprise": "yes",
+      "individual": "no",
+      "lost_on_team": "Team has no HIPAA configuration and no BAA.",
+      "cite": "docs/compendium/09-plans-and-it-controls.md#feature-matrix",
+      "unverified": false
+    },
+    {
+      "id": "custom-retention",
+      "name": "Custom data retention",
+      "team": "no",
+      "enterprise": "yes",
+      "individual": "no",
+      "lost_on_team": "Team cannot set custom retention; Enterprise can, with a minimum of 30 days.",
+      "cite": "docs/compendium/09-plans-and-it-controls.md#feature-matrix",
+      "unverified": false
+    },
+    {
+      "id": "org-connector-control",
+      "name": "Org-level connector control and per-tool permissions",
+      "team": "yes",
+      "enterprise": "yes",
+      "individual": "no",
+      "lost_on_team": null,
+      "cite": "docs/compendium/09-plans-and-it-controls.md#what-it-can-do-on-each-plan",
+      "unverified": false
+    },
+    {
+      "id": "mcp-tunnel",
+      "name": "MCP tunnel to a private network",
+      "team": "no",
+      "enterprise": "limited",
+      "individual": "no",
+      "lost_on_team": "Team has no MCP tunnel, so a system on a private network must be allowlisted at the edge or reached from inside the network.",
+      "cite": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory",
+      "unverified": false
+    },
+    {
+      "id": "claude-code-scheduled-tasks",
+      "name": "Claude Code scheduled tasks (runtime)",
+      "team": "yes",
+      "enterprise": "yes",
+      "individual": "limited",
+      "lost_on_team": null,
+      "cite": "docs/compendium/09-plans-and-it-controls.md#feature-matrix",
+      "unverified": false
+    },
+    {
+      "id": "claude-tag-routines",
+      "name": "Claude Tag channel routines (runtime)",
+      "team": "yes",
+      "enterprise": "yes",
+      "individual": "no",
+      "lost_on_team": null,
+      "cite": "docs/compendium/09-plans-and-it-controls.md#feature-matrix",
+      "unverified": false
+    },
+    {
+      "id": "managed-agents-hosted",
+      "name": "Hosted Managed Agents (runtime)",
+      "team": "limited",
+      "enterprise": "limited",
+      "individual": "no",
+      "lost_on_team": null,
+      "cite": "docs/compendium/05-decision-matrix.md#the-options",
+      "unverified": false
+    },
+    {
+      "id": "managed-agents-self-hosted",
+      "name": "Self-hosted Managed Agents (runtime)",
+      "team": "limited",
+      "enterprise": "limited",
+      "individual": "no",
+      "lost_on_team": null,
+      "cite": "docs/compendium/13-devices.md#a-hosted-twin-for-unmanaged-devices-our-recommendation",
+      "unverified": false
+    },
+    {
+      "id": "agent-sdk",
+      "name": "Agent SDK (runtime we run)",
+      "team": "limited",
+      "enterprise": "limited",
+      "individual": "no",
+      "lost_on_team": null,
+      "cite": "docs/compendium/10-sensitive-data.md#what-hipaa-covers",
+      "unverified": true
+    }
+  ]
+}

@@ -1,0 +1,317 @@
+{
+  "profile_version": 1,
+  "customer": "example-capital-partners",
+  "display_name": "Example Capital Partners",
+  "fictional": true,
+  "industry": "private-equity",
+  "plan": {
+    "tier": "enterprise",
+    "seats": 40,
+    "individual_accounts_on_domain": 8
+  },
+  "identity": {
+    "idp": "Okta",
+    "sso": true,
+    "scim": true
+  },
+  "devices": {
+    "mdm": "Microsoft Intune",
+    "managed_share": "All staff laptops",
+    "unmanaged_users": "5 operating partners and some contractors, on personal devices; none in the pilot"
+  },
+  "compliance": {
+    "data_classes": [
+      "internal",
+      "confidential",
+      "highly-sensitive"
+    ],
+    "phi": false,
+    "baa": false,
+    "mnpi": true,
+    "retention": "custom-30-day",
+    "walls": "soft"
+  },
+  "systems": [
+    {
+      "id": "salesforce",
+      "kind": "crm",
+      "product": "Salesforce",
+      "edition": "Enterprise Edition",
+      "access_model": "Roles and sharing rules",
+      "private_network": false
+    },
+    {
+      "id": "hubspot",
+      "kind": "crm",
+      "product": "HubSpot",
+      "edition": "Marketing Hub Professional",
+      "access_model": "User permissions and teams",
+      "private_network": false
+    },
+    {
+      "id": "sharepoint",
+      "kind": "documents",
+      "product": "Microsoft 365 (SharePoint and OneDrive)",
+      "edition": "Microsoft 365 (plan not recorded in discovery)",
+      "access_model": "Site and library permissions",
+      "private_network": false
+    },
+    {
+      "id": "teams",
+      "kind": "messaging",
+      "product": "Microsoft Teams",
+      "edition": "Microsoft 365 (plan not recorded in discovery)",
+      "access_model": "",
+      "private_network": false
+    },
+    {
+      "id": "slack-connect",
+      "kind": "messaging",
+      "product": "Slack (Slack Connect with portfolio companies)",
+      "edition": "Not recorded in discovery",
+      "access_model": "",
+      "private_network": false
+    }
+  ],
+  "network": {
+    "can_allowlist_anthropic_ips": null
+  },
+  "runtime_preferences": {
+    "self_hosting_required": null
+  },
+  "governance": {
+    "log_destination": "Splunk (candidate)",
+    "existing_source_audit": "",
+    "spend_owner": "IT (Director of IT)",
+    "spend_limits": "",
+    "action_log_required": true
+  },
+  "owners": {
+    "sponsor": "COO",
+    "technical_owner": "Director of IT",
+    "business_owner": "RevOps manager",
+    "backup_owner": "IT administrator",
+    "compliance": "Chief Compliance Officer"
+  },
+  "provenance": {
+    "display_name": {
+      "status": "answered",
+      "source": "discovery.md#A1"
+    },
+    "industry": {
+      "status": "answered",
+      "source": "discovery.md#A2"
+    },
+    "plan.tier": {
+      "status": "answered",
+      "source": "discovery.md#B1"
+    },
+    "plan.seats": {
+      "status": "answered",
+      "source": "discovery.md#B1"
+    },
+    "plan.individual_accounts_on_domain": {
+      "status": "answered",
+      "source": "discovery.md#B2"
+    },
+    "identity.idp": {
+      "status": "answered",
+      "source": "discovery.md#D1"
+    },
+    "identity.sso": {
+      "status": "answered",
+      "source": "discovery.md#D1"
+    },
+    "identity.scim": {
+      "status": "answered",
+      "source": "discovery.md#D1"
+    },
+    "devices.mdm": {
+      "status": "answered",
+      "source": "discovery.md#D2"
+    },
+    "devices.managed_share": {
+      "status": "answered",
+      "source": "discovery.md#D2"
+    },
+    "devices.unmanaged_users": {
+      "status": "answered",
+      "source": "discovery.md#D3"
+    },
+    "compliance.data_classes": {
+      "status": "answered",
+      "source": "discovery.md#C1"
+    },
+    "compliance.phi": {
+      "status": "open",
+      "source": "discovery.md#C2",
+      "owner": "Compliance / legal",
+      "due": "2026-11-27"
+    },
+    "compliance.baa": {
+      "status": "answered",
+      "source": "discovery.md#C2"
+    },
+    "compliance.mnpi": {
+      "status": "answered",
+      "source": "discovery.md#C5"
+    },
+    "compliance.retention": {
+      "status": "open",
+      "source": "discovery.md#C3",
+      "owner": "Compliance / legal",
+      "due": "2026-12-04"
+    },
+    "compliance.walls": {
+      "status": "answered",
+      "source": "discovery.md#C4"
+    },
+    "systems.salesforce.kind": {
+      "status": "answered",
+      "source": "discovery.md#E1"
+    },
+    "systems.salesforce.product": {
+      "status": "answered",
+      "source": "discovery.md#E1"
+    },
+    "systems.salesforce.edition": {
+      "status": "answered",
+      "source": "discovery.md#E1"
+    },
+    "systems.salesforce.access_model": {
+      "status": "open",
+      "source": "discovery.md#E4",
+      "owner": "Source-system admins (Salesforce admin and HubSpot admin)",
+      "due": "2026-11-27"
+    },
+    "systems.salesforce.private_network": {
+      "status": "answered",
+      "source": "discovery.md#E5"
+    },
+    "systems.hubspot.kind": {
+      "status": "answered",
+      "source": "discovery.md#E1"
+    },
+    "systems.hubspot.product": {
+      "status": "answered",
+      "source": "discovery.md#E1"
+    },
+    "systems.hubspot.edition": {
+      "status": "answered",
+      "source": "discovery.md#E1"
+    },
+    "systems.hubspot.access_model": {
+      "status": "open",
+      "source": "discovery.md#E4",
+      "owner": "Source-system admins (Salesforce admin and HubSpot admin)",
+      "due": "2026-11-27"
+    },
+    "systems.hubspot.private_network": {
+      "status": "answered",
+      "source": "discovery.md#E5"
+    },
+    "systems.sharepoint.kind": {
+      "status": "answered",
+      "source": "discovery.md#E2"
+    },
+    "systems.sharepoint.product": {
+      "status": "answered",
+      "source": "discovery.md#E2"
+    },
+    "systems.sharepoint.edition": {
+      "status": "assumed",
+      "source": "discovery.md#E2 (E1 asks the edition of the CRM only)",
+      "owner": "Hiroshi Delacroix"
+    },
+    "systems.sharepoint.access_model": {
+      "status": "answered",
+      "source": "discovery.md#E4"
+    },
+    "systems.sharepoint.private_network": {
+      "status": "answered",
+      "source": "discovery.md#E5"
+    },
+    "systems.teams.kind": {
+      "status": "answered",
+      "source": "discovery.md#E3"
+    },
+    "systems.teams.product": {
+      "status": "answered",
+      "source": "discovery.md#E3"
+    },
+    "systems.teams.edition": {
+      "status": "assumed",
+      "source": "discovery.md#E3 (E1 asks the edition of the CRM only)",
+      "owner": "Hiroshi Delacroix"
+    },
+    "systems.teams.private_network": {
+      "status": "answered",
+      "source": "discovery.md#E5"
+    },
+    "systems.slack-connect.kind": {
+      "status": "answered",
+      "source": "discovery.md#E3"
+    },
+    "systems.slack-connect.product": {
+      "status": "answered",
+      "source": "discovery.md#E3"
+    },
+    "systems.slack-connect.edition": {
+      "status": "assumed",
+      "source": "discovery.md#E3 (E1 asks the edition of the CRM only)",
+      "owner": "Tomasz Hadjiev"
+    },
+    "systems.slack-connect.private_network": {
+      "status": "answered",
+      "source": "discovery.md#E5"
+    },
+    "network.can_allowlist_anthropic_ips": {
+      "status": "open",
+      "source": "discovery.md#E6",
+      "owner": "Security",
+      "due": "2026-11-27"
+    },
+    "governance.log_destination": {
+      "status": "open",
+      "source": "discovery.md#G1",
+      "owner": "Technical owner (Director of IT)",
+      "due": "2026-12-04"
+    },
+    "governance.existing_source_audit": {
+      "status": "open",
+      "source": "discovery.md#G2",
+      "owner": "Source-system admins (Salesforce admin)",
+      "due": "2026-11-27"
+    },
+    "governance.spend_owner": {
+      "status": "answered",
+      "source": "discovery.md#G3"
+    },
+    "governance.spend_limits": {
+      "status": "open",
+      "source": "discovery.md#G3",
+      "owner": "Executive sponsor",
+      "due": "2026-12-04"
+    },
+    "governance.action_log_required": {
+      "status": "answered",
+      "source": "discovery.md#G1"
+    },
+    "owners.sponsor": {
+      "status": "answered",
+      "source": "discovery.md#A1"
+    },
+    "owners.technical_owner": {
+      "status": "answered",
+      "source": "discovery.md#G4"
+    },
+    "owners.business_owner": {
+      "status": "answered",
+      "source": "discovery.md#G4"
+    },
+    "owners.backup_owner": {
+      "status": "answered",
+      "source": "discovery.md#G4"
+    }
+  }
+}

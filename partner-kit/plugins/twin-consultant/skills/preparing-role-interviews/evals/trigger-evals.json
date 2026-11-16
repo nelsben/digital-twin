@@ -1,0 +1,12 @@
+[
+  {"query": "Example Capital Partners wants a second twin for the portfolio operations manager role. Set up the interviews in engagements/sample-pe: I'm seeing the head of portfolio ops and an associate on the 20th.", "should_trigger": true},
+  {"query": "prep the interview notes files for the CSM role at sample-team-cs, talking to a renewals specialist tmrw", "should_trigger": true},
+  {"query": "I'm interviewing another deal-team associate on Thursday. The card for that persona is half filled already. Which questions can I just confirm and which do I still need to ask?", "should_trigger": true},
+  {"query": "Make me a tailored interview plan for the investor relations associate role at Example Capital Partners, with the typical tasks from the industry pack as prompts", "should_trigger": true},
+  {"query": "Create the persona folder and an interview notes file for the store manager role at the bakery chain before my interviews next week", "should_trigger": true},
+  {"query": "Write the persona voice file for the deal-team twin from starter-kit/templates/persona/persona.md: tone, never list and escalation", "should_trigger": false},
+  {"query": "Add a task card under agents/tasks for building the interview step of the persona-card workflow", "should_trigger": false},
+  {"query": "Fill in the discovery questionnaire answers for Example Capital Partners from yesterday's call with their Director of IT", "should_trigger": false},
+  {"query": "Run the twincard validate command on engagements/sample-pe/personas/deal-team-associate and tell me what fails", "should_trigger": false},
+  {"query": "I've finished the CSM interviews; turn the notes in the interviews folder into card.json", "should_trigger": false}
+]

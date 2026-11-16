@@ -1,0 +1,12 @@
+[
+  {"query": "Fill card.json for the customer-success-manager persona at engagements/sample-team-cs from the two notes files in its interviews folder", "should_trigger": true},
+  {"query": "turn my deal team interview notes into the persona card w/ a source for every field", "should_trigger": true},
+  {"query": "I added a third interview to engagements/sample-pe/personas/deal-team-associate/interviews; update the card from it without losing what's already answered", "should_trigger": true},
+  {"query": "The two load planners disagreed in their interviews. Build their persona card from both notes and flag what's unresolved", "should_trigger": true},
+  {"query": "Create the persona card for the dispatch coordinator from today's interview notes and tell me how complete it is and who owns the gaps", "should_trigger": true},
+  {"query": "Edit the persona voice file so the CSM twin sounds warmer with customers", "should_trigger": false},
+  {"query": "Write a task card in agents/tasks for adding the dashboard command to twincard", "should_trigger": false},
+  {"query": "Set up the interview notes files and a question plan for next week's store manager interviews", "should_trigger": false},
+  {"query": "Level the deal-team-associate card and write levelled.json", "should_trigger": false},
+  {"query": "Just run the validate command on the CSM persona folder and paste the output; don't change any files", "should_trigger": false}
+]

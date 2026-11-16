@@ -1,6 +1,6 @@
 # 06 — How much the twin may do on its own
 
-Autonomy isn't a yes-or-no setting. Give it **per task, not per twin**: the same twin can act freely on one task and only draft on another.
+Autonomy isn't a yes-or-no setting. **Plan** it per task (our recommendation), but know where it is **enforced**: in chat and Cowork, per connector tool. A task can only be as free as the settings on the tools it uses, so the same twin can act on one task and only draft on another only when those tasks use different tools. See [How a level is enforced](#how-a-level-is-enforced).
 
 ## The ladder (our recommendation)
 
@@ -13,6 +13,13 @@ Autonomy isn't a yes-or-no setting. Give it **per task, not per twin**: the same
 | **4 Run unattended** | Runs on a schedule or event with nobody present | Gets a report and handles exceptions | A nightly health scan posted to a channel | Hosted runtime with pinned versions, limited credentials, budgets, success checks and reconciliation |
 
 Sources: [Connectors](https://claude.com/docs/connectors/getting-started.md) (Always allow, Needs approval and Blocked settings), [Managed Agents MCP](https://platform.claude.com/docs/en/managed-agents/mcp-connector.md) (`always_ask` is the default), [Output styles](https://code.claude.com/docs/en/output-styles.md) (put guardrails in hooks).
+
+## How a level is enforced
+
+- **In chat and Cowork, per connector tool.** On a connector's page, each group of tools or single tool is set to Always allow, Needs approval or Blocked ([Connectors](https://claude.com/docs/connectors/getting-started.md)). The page describes no setting per skill, plugin or task.
+- **So a task's level is the strictest setting any of its tools needs.** Two tasks that share a tool share that tool's setting. If a level-1 task and a level-3 task both use the same CRM write tool, that tool can't be both Blocked and Always allow: either split the tools or run both tasks at the stricter level. (Our reading of the connector settings.)
+- **In Claude Code, a skill can narrow tools for its own turn.** `disallowed-tools` in a skill's frontmatter removes tools "from Claude's available pool while this skill is active", and the restriction clears when the user sends the next message. `allowed-tools` only pre-approves tools for that turn; it "does not restrict which tools are available". `disallowed-tools` is rejected in claude.ai and Skills API uploads, so this works in Claude Code only ([Claude Code skills](https://code.claude.com/docs/en/skills.md)).
+- **Skill hooks are session-wide, not per skill.** Hooks in a skill's frontmatter are registered when the skill is invoked and keep running "for the rest of the session" ([Claude Code skills](https://code.claude.com/docs/en/skills.md)). A PreToolUse hook can block a tool call ([Hooks](https://code.claude.com/docs/en/hooks)). ⚠ **Unverified:** whether a PreToolUse hook can tell which skill is active, which it would need to enforce a level per skill.
 
 ## Rules for moving up a level
 

@@ -188,3 +188,12 @@ Reviewed at commit `3e32c2287dcb637c184c01cc0ad82d6af7e9bb0f` (2026-11-12), read
 - Marketplace reference (sources, `ref` and `sha`, reserved names): https://code.claude.com/docs/en/plugins/marketplace-reference
 - Managed MCP (`allowedMcpServers`, `allowManagedMcpServersOnly`): https://code.claude.com/docs/en/managed-mcp
 - Apache License 2.0, section 4: https://www.apache.org/licenses/LICENSE-2.0
+
+## Consistency pass (OPS-23, fetched 2026-11-15)
+
+New sources:
+
+- Claude Code analytics (Team and Enterprise dashboard; the Analytics API isn't on Team): https://code.claude.com/docs/en/analytics
+- Claude Tag access and spend (who can use Claude, group DMs, DMs from members without an account): https://claude.com/docs/claude-tag/admins/restrict-access.md
+
+Re-fetched on 2026-11-15 to back the changes in this pass: API and data retention, Claude Code ZDR, Claude Code data usage, HIPAA setup, Claude Tag overview and identity, Claude Code skills, Hooks, Agent Skills overview, Skills API guide (audit logging, version pinning), Provisioning skills, Plugins admin, Plugin security, Connectors getting started, Server-managed settings, Pricing and plan features, Audit logs, Skills analytics API, Agent SDK overview, CMEK, Data residency, Custom retention, Self-hosted Managed Agents, MCP tunnels, Claude.ai memory, Claim and migrate accounts, Tenant restrictions. Their URLs are listed above.

@@ -10,7 +10,7 @@ A digital twin is a bundle of seven parts. Each part has its own Anthropic mecha
 | **Runtime** | Where the twin runs and what starts it | Client (claude.ai, Desktop, Claude Code) or hosted (Agent SDK, Messages API, Managed Agents, Claude Tag in Slack, scheduled tasks) | [05](05-decision-matrix.md) |
 | **Identity** | Whose name and permissions its actions carry | The user's own account, a service account, or an API key plus a credential vault | [05](05-decision-matrix.md) |
 | **Memory** | What carries over between sessions | Claude.ai memory, Project memory, the API memory tool, Managed Agents memory stores, Claude Tag channel memory | [02](02-persona.md) |
-| **Guardrails** | What it may do without asking, and what it may never do | Tool permissions (Always allow, Needs approval, Blocked), Claude Code hooks, Managed Agents `always_ask` | [06](06-autonomy.md) |
+| **Guardrails** | What it may do without asking, and what it may never do | Tool permissions set per connector tool (Always allow, Needs approval, Blocked), so autonomy is enforced per tool, not per task; in Claude Code, a skill's `disallowed-tools` and hooks; Managed Agents `always_ask` | [06](06-autonomy.md) |
 
 A sixth discipline sits across all of these: **evaluation.** It tells you whether the twin actually does the job, and whether it still does after a model update.
 

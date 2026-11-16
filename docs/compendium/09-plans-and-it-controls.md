@@ -20,7 +20,7 @@ Y = yes, N = no, L = limited. Free, Pro, Max and Ultra share one column; where F
 | Org-provisioned skills and plugins | N | Y | Y |
 | Targeting skills and plugins at groups | N | N | **Y** (via SCIM groups) |
 | Connectors | Y, the user adds them (Free: 1 custom) | L: only an Owner adds custom connectors; members sign in | L: Owner, or a custom role with the Libraries permission |
-| Per-tool connector permission (Allow / Approve / Block) | User | Owner | Owner |
+| Per-tool connector permission (Allow / Approve / Block); the only autonomy control in chat and Cowork, set per tool, not per skill or task ([06](06-autonomy.md)) | User | Owner | Owner |
 | Desktop extensions | Y | Y; allowlist or block via MDM | Y |
 | Claude Code | Pro and up | Y | Y |
 | Cowork | Pro and up | Y (cloud sessions on by default) | Y (cloud sessions off until turned on) |
@@ -79,18 +79,20 @@ Sources: [Server-managed settings](https://code.claude.com/docs/en/server-manage
   - using a Console API key or a custom `ANTHROPIC_BASE_URL`
   - running an old or modified binary.
 
-  Cowork in Desktop never fetches them. Deliver the org lock through MDM, and pair it with tenant restrictions.
+  Cowork in Desktop never fetches them. (Our recommendation) Deliver the org lock through MDM, and pair it with tenant restrictions.
 - **The Admin role can't manage Plugins & skills.** Only Owners and Primary Owners can, or an Enterprise custom role with the Libraries permission.
 - **Two separate plugin control planes.** claude.ai plugin policy and Claude Code managed settings are configured separately.
-- **Plugins can run code on the user's machine:** agents, hooks and local connectors. Anthropic doesn't review plugins added from a URL or upload.
+- **Plugins can run code on the user's machine:** agents, hooks and local connectors. Anthropic says it "does not control what MCP servers, files, or other software are included in plugins and cannot verify that they will work as intended".
 - **Claude Tag spends the org's balance.** By default, anyone in the paired Slack workspace can tag @Claude and use the org's usage balance. Restrict it to org members.
 - **Departing users leave things behind.**
   - Plugins they shared keep working until someone selects "Stop sharing".
   - Memory survives deleting conversations.
-  - Local Cowork history can't be wiped centrally.
-- **Two one-way doors:** domain capture, and turning on HIPAA.
-- **Tenant restrictions work only on the corporate network.** Unmanaged devices and personal emails are out of reach.
+  - ⚠ **Unverified:** local Cowork history can't be wiped centrally (not re-checked in this pass).
+- **Two one-way doors:** domain capture (Enterprise; it "can't be reversed", and personal accounts not migrated within 30 days are closed), and turning on HIPAA readiness.
+- **Tenant restrictions work only on the corporate network.** The company's proxy adds a header to requests to Claude, so networks it doesn't control are out of reach. Tenant restrictions are on Enterprise and Console orgs.
 - **⚠ Raise with the Anthropic account team:**
   - SSO on Team (conflicting docs).
   - Skills on Free (conflicting docs).
   - Data residency for claude.ai (no page found).
+
+Sources: [Server-managed settings](https://code.claude.com/docs/en/server-managed-settings.md), [Plugins admin](https://claude.com/docs/plugins/admin) (Admin role, separate control planes, Stop sharing), [Plugin security](https://code.claude.com/docs/en/plugins/security.md), [Claude Tag access](https://claude.com/docs/claude-tag/admins/restrict-access.md) (anyone in the workspace by default; group DMs and DMs from members without a Claude account bill to the org), [Memory](https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context) (memory isn't removed when conversations are deleted), [Domain capture](https://support.claude.com/en/articles/14625619-claim-and-migrate-accounts-on-your-domain), [API data retention](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention) (HIPAA readiness is permanent), [Tenant restrictions](https://support.claude.com/en/articles/13198485).

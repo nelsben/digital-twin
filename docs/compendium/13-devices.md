@@ -44,17 +44,40 @@ These are standard identity-provider features, not Anthropic's.
 |---|---|---|
 | **Internal** | Every surface | claude.ai web and Desktop through SSO |
 | **Confidential** | Every surface, with managed settings | **claude.ai web only.** No Claude Code or desktop extensions, because the sandbox and deny rules can't be enforced. Connectors read-only. |
-| **Highly sensitive (private equity)** | Claude Code or Desktop on a ZDR sign-in, locked by MDM | **No direct access.** Use a **hosted twin we run** instead (see below). |
+| **Highly sensitive (private equity)** | Claude Code on a ZDR sign-in, locked by MDM. Not Desktop: ZDR doesn't cover chat or Cowork | **No direct access.** Use a **hosted twin we run** instead (see below). |
 | **PHI** | Claude Code under the HIPAA configuration, locked by MDM | **Blocked.** The HIPAA settings depend on managed settings. |
+
+Sources: [Claude Code ZDR](https://code.claude.com/docs/en/zero-data-retention) (ZDR covers Claude Code inference on Enterprise, not chat or Cowork), [HIPAA setup](https://code.claude.com/docs/en/hipaa-setup), [Server-managed settings](https://code.claude.com/docs/en/server-managed-settings.md).
 
 ## A hosted twin for unmanaged devices (our recommendation)
 
 For private-equity users on unmanaged devices:
 
-- Run the twin **on our infrastructure**: the Agent SDK, or self-hosted Managed Agents, in the ZDR Platform org (org 3 in [12](12-orgs-and-ownership.md)).
+- Run the twin **on our infrastructure**: self-hosted Managed Agents, in the ZDR Platform org (org 3 in [12](12-orgs-and-ownership.md)). Self-hosted Managed Agents is the one Managed Agents setup that ZDR covers.
+- ⚠ **Unverified:** whether the Agent SDK is covered under HIPAA or ZDR. No page says so. Don't build this twin on it until Anthropic confirms in writing.
 - Give it a **simple front end**: a web page behind SSO, or a Teams or Slack bot.
 - The device only displays results. Tools, files and credentials stay on our servers.
 
 Claude Tag can't fill this role, because it's unavailable under ZDR. So the Slack or Teams front end would be ours to build.
 
 This adds engineering work. It's the price of letting unmanaged devices near deal data.
+
+Sources: [API data retention](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention) (self-hosted Managed Agents under ZDR; the Agent SDK isn't listed), [Claude Code ZDR](https://code.claude.com/docs/en/zero-data-retention) (Claude Tag is off under ZDR).
+
+## Team plan with no device management
+
+Some customers are on Team, have no MDM, and want a twin for a non-regulated role such as customer success. That twin lives in **claude.ai on the web**.
+
+**What it gets:**
+
+- **Org-level connector control.** An Owner adds the connectors, and each connector's tools can be set to Always allow, Needs approval or Blocked ([Connectors](https://claude.com/docs/connectors/getting-started.md), [Pricing](https://claude.com/pricing)).
+- **Org-provisioned skills and plugins,** shared by an Owner to everyone. Group targeting needs Enterprise ([Provisioning skills](https://support.claude.com/en/articles/13119606-provision-and-manage-skills-for-your-organization), [Plugin admin](https://claude.com/docs/plugins/admin)).
+- **A usage dashboard:** usage analytics, and the Users (30d) and Activity (30d) counts per plugin and skill ([Pricing](https://claude.com/pricing), [Plugin admin](https://claude.com/docs/plugins/admin)).
+
+**What it doesn't get:**
+
+- **Managed settings and hooks.** Both belong to Claude Code (hooks fire in the terminal, the IDE extensions, the Desktop app and cloud sessions; the page doesn't name claude.ai chat). Server-managed settings are on Team, but they configure Claude Code, and they are "a client-side control, not a security boundary" ([Server-managed settings](https://code.claude.com/docs/en/server-managed-settings.md), [Hooks](https://code.claude.com/docs/en/hooks)). Without MDM there is no managed settings file either (see the table above).
+- **The governance log** in [15](15-governance-and-performance.md), because it is a hook.
+- **An audit log or the Compliance API.** Both are Enterprise only ([Audit logs](https://support.claude.com/en/articles/9970975), [Pricing](https://claude.com/pricing)).
+
+**So such a twin cannot meet a requirement to log every action.** (Our conclusion from the sources above.) If the customer has that requirement, the twin needs Claude Code on MDM-managed devices with the governance hook locked in managed settings ([15](15-governance-and-performance.md)). Enterprise adds the audit log and the Compliance API, but neither is a log of each tool call. (Our recommendation.)

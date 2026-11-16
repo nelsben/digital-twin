@@ -23,12 +23,12 @@ Claude Code facts that are always true go in CLAUDE.md, not in the persona. Hard
 
 ## Fill it in
 
-1. Copy the folder next to your role plugin's work, for example `cp -R starter-kit/templates/persona <your-working-folder>`.
+1. Copy the folder into the role plugin in [the customer's delivery repo](../../README.md#start-a-new-customer) as that plugin's `persona/` folder. This is the layout `starter-kit/plugins/twin-pe-deal-team` uses: `persona/persona.md`, `persona/system-prompt.md`, and the output style in the plugin's `output-styles/` folder.
 2. Fill in `persona.md` first, section by section, in the second person. Give the reason for every rule. Keep it short; procedures belong in skills.
-3. Build the output style: copy the sections into `output-style/your-twin-name.md`, set `name` and `description`, rename the file, and copy it into `starter-kit/plugins/<role-plugin>/output-styles/`.
+3. Build the output style: copy the sections into `output-style/your-twin-name.md`, set `name` and `description`, rename the file, and put the finished output style in that role plugin's `output-styles/` folder in the customer's delivery repo.
 4. Build the system prompt: copy the same sections into the matching tags in `system-prompt.md`.
 5. Delete the comment at the top of each form and every FILL IN marker.
-6. Run `python3 -m unittest discover -s tests`.
+6. Check that both forms match `persona.md` section by section. This kit's `tests/test_persona.py` makes that check for the plugins kept in this repo, and can be copied into the delivery repo to run there.
 
 ## The rule
 

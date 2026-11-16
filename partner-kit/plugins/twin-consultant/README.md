@@ -22,6 +22,8 @@ The consultant plugin for the persona-card workflow. Design of record: [partner-
 |---|---|
 | [templates/customer-profile.json](templates/customer-profile.json) | Blank customer profile: one per customer, at `engagements/<customer>/customer-profile.json` |
 | [templates/card.json](templates/card.json) | Blank persona card: one per role, at `engagements/<customer>/personas/<persona-id>/card.json` |
+| [templates/interview-guide.md](templates/interview-guide.md) | Plain-language role interview: questions P1 to P6 and F1 to F9, each with the card fields it fills |
+| [templates/interview-notes.md](templates/interview-notes.md) | Notes template with one slot per question, saved under the persona's `interviews/` folder |
 | [data/fields.json](data/fields.json) | The field catalogue: type, values, required flag, the questions that ask for each field, and what reads it |
 | [scripts/twincard/](scripts/twincard/) | Standard-library Python 3.9+: `fields.py` loads the catalogue, `validate.py` checks both records, `cli.py` is the command line |
 
@@ -36,4 +38,4 @@ Each error prints as `<record>:<path>: <message>. Next: <fix>`, then a completen
 
 ## Not built yet
 
-Skills (interview to card), the interview guide and notes templates, `level.py`, `backlog.py`, `dashboard.py`, and the `level`, `backlog`, `dashboard` and `all` commands, `rules.json`, `plan-fit.json`, `task-library.json` and the industry packs.
+Skills (interview to card), `level.py`, `backlog.py`, `dashboard.py`, and the `level`, `backlog`, `dashboard` and `all` commands, `rules.json`, `plan-fit.json`, `task-library.json` and the industry packs.

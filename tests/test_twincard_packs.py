@@ -32,6 +32,16 @@ from twincard.validate import _type_ok  # noqa: E402
 LISTS = ("anthropic_starting_points", "data_providers", "connector_defaults",
          "compliance_defaults", "typical_tasks")
 UNVERIFIED_MARKER = re.compile(r"unverified|not confirmed", re.IGNORECASE)
+# The kit's connector runbook for each product the general and b2b-software packs name (OPS-55).
+KIT_RUNBOOKS = {
+    "HubSpot": "starter-kit/runbooks/hubspot-connector.md",
+    "Google Drive / Sheets": "starter-kit/runbooks/google-workspace-connectors.md",
+    "Google Drive": "starter-kit/runbooks/google-workspace-connectors.md",
+    "Gmail": "starter-kit/runbooks/google-workspace-connectors.md",
+    "Google Calendar": "starter-kit/runbooks/google-workspace-connectors.md",
+    "Slack": "starter-kit/runbooks/slack-connector.md",
+    "Zendesk": "starter-kit/runbooks/zendesk-connector.md",
+}
 
 
 def slug(heading):
@@ -166,7 +176,11 @@ class ShippedPackTests(unittest.TestCase):
         self.assertEqual(runbooks.pop("Salesforce"), "starter-kit/runbooks/salesforce-hosted-mcp.md")
         self.assertEqual(runbooks.pop("SharePoint / OneDrive"), "starter-kit/runbooks/microsoft-365-connector.md")
         self.assertEqual(runbooks.pop("Teams"), "starter-kit/runbooks/microsoft-365-connector.md")
-        self.assertTrue(all(value is None for value in runbooks.values()), runbooks)
+        for product, runbook in sorted(KIT_RUNBOOKS.items()):
+            if product in runbooks:
+                self.assertEqual(runbooks.pop(product), runbook, product)
+        # Only the products the kit has no runbook for are left.
+        self.assertEqual(runbooks, {"Microsoft Dynamics / Dataverse": None, "Intercom": None})
         for entry in pack["connector_defaults"]:
             self.assertEqual(entry["cite"], "docs/compendium/11-connectors.md#what-exists-for-our-systems")
         dynamics = next(e for e in pack["connector_defaults"] if "Dynamics" in e["product"])
@@ -187,6 +201,8 @@ class ShippedPackTests(unittest.TestCase):
                 checked += 1
                 with self.subTest(pack=pack_id, product=entry["product"]):
                     self.assertEqual(entry["runbook"], match["runbook"])
+                    if entry["product"] in KIT_RUNBOOKS:
+                        self.assertEqual(entry["runbook"], KIT_RUNBOOKS[entry["product"]])
         self.assertGreater(checked, 0)
 
     def test_private_equity_pack_content(self):
@@ -249,7 +265,10 @@ class ShippedPackTests(unittest.TestCase):
         products = {e["product"] for e in pack["connector_defaults"]}
         for product in ("HubSpot", "Google Drive", "Gmail", "Google Calendar", "Slack", "Zendesk"):
             self.assertIn(product, products)
-        self.assertTrue(all(e["runbook"] is None for e in pack["connector_defaults"]))
+        runbooks = dict((e["product"], e["runbook"]) for e in pack["connector_defaults"])
+        for product in ("HubSpot", "Google Drive", "Gmail", "Google Calendar", "Slack", "Zendesk"):
+            self.assertEqual(runbooks.pop(product), KIT_RUNBOOKS[product], product)
+        self.assertTrue(all(value is None for value in runbooks.values()), runbooks)
 
 
 class LoaderTests(unittest.TestCase):

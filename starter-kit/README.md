@@ -15,6 +15,22 @@ The starter kit is the set of parts we copy into a customer's repo to build a ro
 | [templates/role-plugin](templates/role-plugin/README.md) | The starting folder for one role plugin (one per role, never per person): manifest, README, empty skills and output styles, persona pointer, and the steps to add it to the marketplace |
 | [templates/skill](templates/skill/README.md) | The starting folder for every twin skill: `SKILL.md`, references and evals |
 | [templates/persona](templates/persona/README.md) | One persona source, shipped as an output style and a system prompt |
+| [templates/pilot](templates/pilot/README.md) | The pilot's fill-in files, one per pilot task in the backlog |
+| [templates/pilot/scorecard.md](templates/pilot/scorecard.md) | The monthly scorecard for one twin and its decision to stay, move up or move down a level |
+| [templates/pilot/memory-policy.md](templates/pilot/memory-policy.md) | What the twin may remember for one role and what it must not, with the sign-off |
+| [templates/pilot/pilot-training.md](templates/pilot/pilot-training.md) | The pilot users' training session and where they report a failure |
+| [runbooks/identity-devices-publishing.md](runbooks/identity-devices-publishing.md) | SCIM groups, the managed-settings rollout, and publishing the marketplace to the right groups |
+| [runbooks/salesforce-hosted-mcp.md](runbooks/salesforce-hosted-mcp.md) | Connect Salesforce through its hosted MCP server with per-user OAuth |
+| [runbooks/microsoft-365-connector.md](runbooks/microsoft-365-connector.md) | Connect Microsoft 365: tenant consent and a SharePoint access check |
+| [runbooks/hubspot-connector.md](runbooks/hubspot-connector.md) | Connect HubSpot to a role's twin |
+| [runbooks/google-workspace-connectors.md](runbooks/google-workspace-connectors.md) | Connect Google Drive, Gmail and Google Calendar to a role's twin |
+| [runbooks/slack-connector.md](runbooks/slack-connector.md) | Connect Slack to a role's twin, for reading and searching Slack |
+| [runbooks/zendesk-connector.md](runbooks/zendesk-connector.md) | Connect Zendesk to a role's twin |
+| [runbooks/claude-code-scheduled-task.md](runbooks/claude-code-scheduled-task.md) | Set up a Claude Code scheduled task for a twin's task |
+| [runbooks/claude-tag-routine.md](runbooks/claude-tag-routine.md) | Set up a Claude Tag routine in a Slack channel for a twin's task |
+| [runbooks/managed-agents.md](runbooks/managed-agents.md) | Set up a task on Managed Agents, hosted or self-hosted |
+| [runbooks/agent-sdk-runner.md](runbooks/agent-sdk-runner.md) | Build and host an Agent SDK runner for a task |
+| [runbooks/verification-log.md](runbooks/verification-log.md) | When each runbook was last checked against its sources, and by whom |
 | [settings](settings/README.md) | Managed-settings baselines, one per data class, for IT to deploy |
 | [docs/authoring-skills.md](docs/authoring-skills.md) | The step order for writing and evaluating a skill, evals first |
 | [tests](../tests) | Structure, settings and governance-hook tests; run before every PR |
@@ -29,8 +45,8 @@ The phases are in [docs/playbook/01-engagement-model.md](../docs/playbook/01-eng
 |---|---|
 | 1. Discovery | [sample-pe](../engagements/sample-pe/README.md) shows a finished questionnaire, stakeholder map and candidate tasks to copy the shape from. The persona-card workflow turns the interviews into a card: [playbook 05](../docs/playbook/05-persona-card-workflow.md) |
 | 2. Design | The [settings](settings/README.md) baselines (pick one per org); sample-pe `design.md` and `backlog.md` as models; [compendium 16](../docs/compendium/16-oob-skills-and-references.md) to choose what to reuse. The levelled plan, backlog and dashboard come from the card: [playbook 05](../docs/playbook/05-persona-card-workflow.md) |
-| 3. Build | [templates/skill](templates/skill/README.md) and [authoring-skills.md](docs/authoring-skills.md) for each story; [templates/persona](templates/persona/README.md); the role and shared plugins; [twin-governance](plugins/twin-governance/README.md); the [tests](../tests) |
-| 4. Pilot | The governance log from twin-governance feeds the scorecard; settings baselines are deployed to pilot devices |
+| 3. Build | [templates/skill](templates/skill/README.md) and [authoring-skills.md](docs/authoring-skills.md) for each story; the runbooks above for each connector and runtime the backlog names; [templates/persona](templates/persona/README.md); the role and shared plugins; [twin-governance](plugins/twin-governance/README.md); the [tests](../tests) |
+| 4. Pilot | The [pilot templates](templates/pilot/README.md) (scorecard, memory policy, training); the governance log from twin-governance feeds the scorecard; settings baselines are deployed to pilot devices |
 | 5. Scale | Copy the skill template and persona template for each new role; add the plugin to the marketplace; promote autonomy on scorecard evidence |
 | 6. Run / hand over | The marketplace repo, evals and tests become the customer's; the governance log destination stays with their IT |
 

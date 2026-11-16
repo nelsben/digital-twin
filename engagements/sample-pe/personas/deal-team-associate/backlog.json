@@ -7,6 +7,23 @@
     "levelled_sha256": "d80155c49b0487af9a39fa3d6feca394ca5ba8f3869e24709f20d0a398091d7a",
     "library_version": 1
   },
+  "unnamed_roles": [
+    {
+      "role": "security",
+      "tasks": 2,
+      "acting_owner": "Director of IT"
+    },
+    {
+      "role": "source-system-admin",
+      "tasks": 13,
+      "acting_owner": "Director of IT"
+    },
+    {
+      "role": "skill-owner",
+      "tasks": 2,
+      "acting_owner": "Director of IT"
+    }
+  ],
   "epic": {
     "id": "E",
     "title": "Deal-team associate twin for Example Capital Partners",
@@ -34,6 +51,7 @@
               "wall_impact": "soft",
               "inputs": "salesforce (deal record (opportunity, account)); sharepoint (prior memos and data-room files)",
               "output_and_audience": "One-page company brief, internal; to none (the conversation)",
+              "delivery": "The output stays in the conversation or a local file.",
               "skill_owner": "Callum Nwosu",
               "baseline": "4 per week x 90 minutes each x 3 users",
               "constraints": [
@@ -107,6 +125,8 @@
                 ],
                 "done_when": "Three real examples, each with its inputs and its expected result, are stored where the evals can read them.",
                 "owner_role": "skill-owner",
+                "owner_name": "Callum Nwosu",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -130,6 +150,8 @@
                 ],
                 "done_when": "Every acceptance criterion has at least one eval, and the evals run and fail without the skill.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -181,6 +203,8 @@
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -204,6 +228,8 @@
                 ],
                 "done_when": "The skill starts on every should-trigger prompt and on none of the should-not prompts.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -223,6 +249,8 @@
                 ],
                 "done_when": "A reviewer who did not write the skill has approved the pull request and the evals pass.",
                 "owner_role": "skill-owner",
+                "owner_name": "Callum Nwosu",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -242,6 +270,8 @@
                 ],
                 "done_when": "A pilot user in the role sees the skill after the plugin updates.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -265,6 +295,8 @@
                 ],
                 "done_when": "Each pilot user has connected with their own login and only the planned tools are enabled.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -286,8 +318,10 @@
                     "link": "starter-kit/runbooks/microsoft-365-connector.md#5-enable-the-connector-for-the-right-claude-group"
                   }
                 ],
-                "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools stay off.",
+                "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools are set as the story's tool tasks say.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -307,6 +341,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -326,6 +362,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -345,6 +383,8 @@
                 ],
                 "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -368,6 +408,8 @@
                 ],
                 "done_when": "The business owner has approved the allowlist on scorecard evidence, and only those tools are Always allow.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -391,6 +433,8 @@
                 ],
                 "done_when": "Compliance has seen the two-user test pass for every walled system the task reads.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -410,13 +454,15 @@
                 ],
                 "done_when": "A web search or fetch attempted during the task is refused.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
                 "id": "S-T1.confirm-unverified-decision.connectors.salesforce",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce)",
-                "part": "A9",
+                "part": "A3",
                 "how": [
                   {
                     "text": "Find the Unverified mark on the page the decision cites in levelled.json.",
@@ -433,6 +479,8 @@
                 ],
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -452,6 +500,8 @@
                 ],
                 "done_when": "The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -475,6 +525,8 @@
                 ],
                 "done_when": "The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -495,6 +547,7 @@
               "wall_impact": "soft",
               "inputs": "salesforce (account and opportunity); sharepoint (prior call notes)",
               "output_and_audience": "Briefing note for the caller, internal; to none (the conversation)",
+              "delivery": "The output stays in the conversation or a local file.",
               "skill_owner": "Callum Nwosu",
               "baseline": "1.85 per week x 45 minutes each x unknown users"
             },
@@ -534,6 +587,8 @@
                 ],
                 "done_when": "Three real examples, each with its inputs and its expected result, are stored where the evals can read them.",
                 "owner_role": "skill-owner",
+                "owner_name": "Callum Nwosu",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -557,6 +612,8 @@
                 ],
                 "done_when": "Every acceptance criterion has at least one eval, and the evals run and fail without the skill.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -604,6 +661,8 @@
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -627,6 +686,8 @@
                 ],
                 "done_when": "The skill starts on every should-trigger prompt and on none of the should-not prompts.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -646,6 +707,8 @@
                 ],
                 "done_when": "A reviewer who did not write the skill has approved the pull request and the evals pass.",
                 "owner_role": "skill-owner",
+                "owner_name": "Callum Nwosu",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -665,6 +728,8 @@
                 ],
                 "done_when": "A pilot user in the role sees the skill after the plugin updates.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -688,6 +753,8 @@
                 ],
                 "done_when": "Each pilot user has connected with their own login and only the planned tools are enabled.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -709,8 +776,10 @@
                     "link": "starter-kit/runbooks/microsoft-365-connector.md#5-enable-the-connector-for-the-right-claude-group"
                   }
                 ],
-                "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools stay off.",
+                "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools are set as the story's tool tasks say.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -730,6 +799,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -749,6 +820,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -768,6 +841,8 @@
                 ],
                 "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -791,6 +866,8 @@
                 ],
                 "done_when": "The business owner has approved the allowlist on scorecard evidence, and only those tools are Always allow.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -814,6 +891,8 @@
                 ],
                 "done_when": "Compliance has seen the two-user test pass for every walled system the task reads.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -833,13 +912,15 @@
                 ],
                 "done_when": "A web search or fetch attempted during the task is refused.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
                 "id": "S-T5.confirm-unverified-decision.connectors.salesforce",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce)",
-                "part": "A9",
+                "part": "A3",
                 "how": [
                   {
                     "text": "Find the Unverified mark on the page the decision cites in levelled.json.",
@@ -856,6 +937,8 @@
                 ],
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -875,6 +958,8 @@
                 ],
                 "done_when": "The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -898,6 +983,8 @@
                 ],
                 "done_when": "The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -926,6 +1013,7 @@
               "wall_impact": "soft",
               "inputs": "teams (meeting notes or transcript); salesforce (opportunity)",
               "output_and_audience": "Activity log and next-step fields, internal; to Salesforce opportunity",
+              "delivery": "A person sends or files it: the twin produces a draft, salesforce-update is Blocked at the starting level, and it opens at level 2.",
               "skill_owner": "Beatriz Halloran",
               "baseline": "10 per week x 15 minutes each x 18 users",
               "constraints": [
@@ -939,7 +1027,7 @@
               "Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.",
               "Keeps: I want to approve each change before it's written.",
               "Plus: no web tools are used.",
-              "Plus: every write carries the twin marker.",
+              "Plus: the twin writes nothing to the CRM at the starting level; a person files the result.",
               "Plus: each tool call reaches the governance log."
             ],
             "gated_by": [
@@ -1001,6 +1089,8 @@
                 ],
                 "done_when": "Three real examples, each with its inputs and its expected result, are stored where the evals can read them.",
                 "owner_role": "skill-owner",
+                "owner_name": "Beatriz Halloran",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1024,6 +1114,8 @@
                 ],
                 "done_when": "Every acceptance criterion has at least one eval, and the evals run and fail without the skill.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1075,6 +1167,8 @@
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1098,6 +1192,8 @@
                 ],
                 "done_when": "The skill starts on every should-trigger prompt and on none of the should-not prompts.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1117,6 +1213,8 @@
                 ],
                 "done_when": "A reviewer who did not write the skill has approved the pull request and the evals pass.",
                 "owner_role": "skill-owner",
+                "owner_name": "Beatriz Halloran",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1136,6 +1234,8 @@
                 ],
                 "done_when": "A pilot user in the role sees the skill after the plugin updates.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1159,6 +1259,8 @@
                 ],
                 "done_when": "Each pilot user has connected with their own login and only the planned tools are enabled.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -1180,8 +1282,10 @@
                     "link": "starter-kit/runbooks/microsoft-365-connector.md#5-enable-the-connector-for-the-right-claude-group"
                   }
                 ],
-                "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools stay off.",
+                "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools are set as the story's tool tasks say.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -1201,6 +1305,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1220,6 +1326,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1239,6 +1347,33 @@
                 ],
                 "done_when": "The tool is Blocked in the Claude org, as levelled.json says, and the twin cannot call it.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-T2.deliver-draft",
+                "template": "deliver-draft",
+                "title": "Agree where the twin's draft lands and who sends or files it while the twin cannot write it",
+                "part": "A4",
+                "how": [
+                  {
+                    "text": "Agree with the pilot users that the twin ends in a draft, and that a person sends or files it while the twin cannot write it itself.",
+                    "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+                  },
+                  {
+                    "text": "Where the story's delivery says the write opens, agree the evidence that moves the task up to the level where the twin writes it itself.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+                  },
+                  {
+                    "text": "Name who puts the draft in its destination (Salesforce opportunity) and write down how, from the connector's runbook.",
+                    "link": "starter-kit/runbooks/salesforce-hosted-mcp.md"
+                  }
+                ],
+                "done_when": "The business owner has agreed where each draft lands and who sends or files it, and the pilot users know.",
+                "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1258,6 +1393,8 @@
                 ],
                 "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1281,6 +1418,8 @@
                 ],
                 "done_when": "The business owner has approved the allowlist on scorecard evidence, and only those tools are Always allow.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1289,6 +1428,10 @@
                 "title": "Deploy the Salesforce twin marker field (Last updated by twin) (salesforce)",
                 "part": "A3",
                 "how": [
+                  {
+                    "text": "The CRM write tool salesforce-update is Blocked at the starting level and opens at level 2; set the marker up before it opens.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+                  },
                   {
                     "text": "Deploy the marker field and its permission sets.",
                     "link": "starter-kit/connectors/salesforce/README.md#deploy-it-the-salesforce-admin-does-this"
@@ -1300,6 +1443,8 @@
                 ],
                 "done_when": "The marker field is deployed and only the role's users can set it.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -1308,6 +1453,10 @@
                 "title": "Make the skill set the twin marker on every CRM write",
                 "part": "A2",
                 "how": [
+                  {
+                    "text": "The CRM write tool salesforce-update is Blocked at the starting level and opens at level 2; set the marker up before it opens.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+                  },
                   {
                     "text": "Add a step to the skill that sets the twin marker with every write.",
                     "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
@@ -1319,6 +1468,8 @@
                 ],
                 "done_when": "The evals show every CRM write the twin makes carries the twin marker.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1327,6 +1478,10 @@
                 "title": "Report on the twin marker in the CRM's own history",
                 "part": "A8",
                 "how": [
+                  {
+                    "text": "The CRM write tool salesforce-update is Blocked at the starting level and opens at level 2; set the marker up before it opens.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+                  },
                   {
                     "text": "Build a CRM report of the records the twin marker shows the twin changed.",
                     "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
@@ -1338,6 +1493,8 @@
                 ],
                 "done_when": "The business owner can see in the CRM which changes the twin made.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1361,6 +1518,8 @@
                 ],
                 "done_when": "Compliance has seen the two-user test pass for every walled system the task reads.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1380,13 +1539,15 @@
                 ],
                 "done_when": "A web search or fetch attempted during the task is refused.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
                 "id": "S-T2.confirm-unverified-decision.connectors.salesforce",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce)",
-                "part": "A9",
+                "part": "A3",
                 "how": [
                   {
                     "text": "Find the Unverified mark on the page the decision cites in levelled.json.",
@@ -1403,6 +1564,8 @@
                 ],
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1422,6 +1585,8 @@
                 ],
                 "done_when": "The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1445,6 +1610,8 @@
                 ],
                 "done_when": "The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -1465,6 +1632,7 @@
               "wall_impact": "soft",
               "inputs": "salesforce (pipeline report)",
               "output_and_audience": "Pipeline summary, internal; to The deal team's channel in Microsoft Teams",
+              "delivery": "A person sends or files it: the twin produces a draft, teams-send is Blocked at the starting level, and it opens at level 2.",
               "skill_owner": "not named yet",
               "baseline": "1 per week x 60 minutes each x 18 users"
             },
@@ -1519,6 +1687,8 @@
                 ],
                 "done_when": "Three real examples, each with its inputs and its expected result, are stored where the evals can read them.",
                 "owner_role": "skill-owner",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -1542,6 +1712,8 @@
                 ],
                 "done_when": "Every acceptance criterion has at least one eval, and the evals run and fail without the skill.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1589,6 +1761,8 @@
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1612,6 +1786,8 @@
                 ],
                 "done_when": "The skill starts on every should-trigger prompt and on none of the should-not prompts.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1631,6 +1807,8 @@
                 ],
                 "done_when": "A reviewer who did not write the skill has approved the pull request and the evals pass.",
                 "owner_role": "skill-owner",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -1640,24 +1818,34 @@
                 "part": "A4",
                 "how": [
                   {
-                    "text": "Stand up the self-hosted harness and sandbox in the environment the customer names.",
-                    "link": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation"
+                    "text": "Check the runbook's prerequisites and the environment the customer names.",
+                    "link": "starter-kit/runbooks/managed-agents.md#before-you-start"
+                  },
+                  {
+                    "text": "Stand up the self-hosted harness and sandbox in that environment.",
+                    "link": "starter-kit/runbooks/managed-agents.md#self-hosted"
                   },
                   {
                     "text": "Define the agent with the skill, its tools and the tool permissions the plan names.",
-                    "link": "docs/compendium/05-decision-matrix.md#the-options"
+                    "link": "starter-kit/runbooks/managed-agents.md#steps"
                   },
                   {
                     "text": "Create the schedule or the trigger that starts each run, and pin the versions.",
-                    "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+                    "link": "starter-kit/runbooks/managed-agents.md#start-a-run"
                   },
                   {
                     "text": "Confirm the route keeps the retention the task needs.",
                     "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  },
+                  {
+                    "text": "Run it once inside the customer's environment, check it, and hand it over.",
+                    "link": "starter-kit/runbooks/managed-agents.md#check-it-worked"
                   }
                 ],
                 "done_when": "The self-hosted agent has run once from its schedule or trigger inside the customer's environment.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1681,6 +1869,8 @@
                 ],
                 "done_when": "One test event, or one scheduled time, starts exactly one session, and a repeat of the same event does not start a second.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1704,6 +1894,8 @@
                 ],
                 "done_when": "The runtime reads every credential it needs from the vault and none is stored in code or configuration.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1723,6 +1915,8 @@
                 ],
                 "done_when": "A run that ends without its result is reported as failed, not as succeeded.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1746,6 +1940,8 @@
                 ],
                 "done_when": "A missed run is found and handled within one cycle, by a named person.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1769,6 +1965,8 @@
                 ],
                 "done_when": "Each pilot user has connected with their own login and only the planned tools are enabled.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -1790,8 +1988,10 @@
                     "link": "starter-kit/runbooks/microsoft-365-connector.md#5-enable-the-connector-for-the-right-claude-group"
                   }
                 ],
-                "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools stay off.",
+                "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools are set as the story's tool tasks say.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -1811,6 +2011,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1830,6 +2032,33 @@
                 ],
                 "done_when": "The tool is Blocked in the Claude org, as levelled.json says, and the twin cannot call it.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-T3.deliver-draft",
+                "template": "deliver-draft",
+                "title": "Agree where the twin's draft lands and who sends or files it while the twin cannot write it",
+                "part": "A4",
+                "how": [
+                  {
+                    "text": "Agree with the pilot users that the twin ends in a draft, and that a person sends or files it while the twin cannot write it itself.",
+                    "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+                  },
+                  {
+                    "text": "Where the story's delivery says the write opens, agree the evidence that moves the task up to the level where the twin writes it itself.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+                  },
+                  {
+                    "text": "Name who puts the draft in its destination (The deal team's channel in Microsoft Teams) and write down how, from the connector's runbook.",
+                    "link": "starter-kit/runbooks/microsoft-365-connector.md"
+                  }
+                ],
+                "done_when": "The business owner has agreed where each draft lands and who sends or files it, and the pilot users know.",
+                "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1849,6 +2078,8 @@
                 ],
                 "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1872,6 +2103,8 @@
                 ],
                 "done_when": "The business owner has approved the allowlist on scorecard evidence, and only those tools are Always allow.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1891,6 +2124,8 @@
                 ],
                 "done_when": "The business owner has approved unattended runs with every approval decided in policy.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1914,6 +2149,8 @@
                 ],
                 "done_when": "Compliance has seen the two-user test pass for every walled system the task reads.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1933,13 +2170,15 @@
                 ],
                 "done_when": "A web search or fetch attempted during the task is refused.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
                 "id": "S-T3.confirm-unverified-decision.connectors.salesforce",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce)",
-                "part": "A9",
+                "part": "A3",
                 "how": [
                   {
                     "text": "Find the Unverified mark on the page the decision cites in levelled.json.",
@@ -1956,6 +2195,8 @@
                 ],
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1975,6 +2216,8 @@
                 ],
                 "done_when": "The task uses a route the pages confirm, or Anthropic's written confirmation is recorded with its source.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1994,6 +2237,8 @@
                 ],
                 "done_when": "The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2017,6 +2262,8 @@
                 ],
                 "done_when": "The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -2045,6 +2292,7 @@
               "wall_impact": "soft",
               "inputs": "sharepoint (the CIM or teaser (an emailed document is saved to SharePoint first)); salesforce (prior contact with the company)",
               "output_and_audience": "Screening summary with a pursue-or-pass suggestion, internal; to none (the conversation), for a principal",
+              "delivery": "The output stays in the conversation or a local file.",
               "skill_owner": "Beatriz Halloran",
               "baseline": "5 per week x 40 minutes each x unknown users"
             },
@@ -2089,6 +2337,8 @@
                 ],
                 "done_when": "Three real examples, each with its inputs and its expected result, are stored where the evals can read them.",
                 "owner_role": "skill-owner",
+                "owner_name": "Beatriz Halloran",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2112,6 +2362,8 @@
                 ],
                 "done_when": "Every acceptance criterion has at least one eval, and the evals run and fail without the skill.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2159,6 +2411,8 @@
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2182,6 +2436,8 @@
                 ],
                 "done_when": "The skill starts on every should-trigger prompt and on none of the should-not prompts.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2201,6 +2457,8 @@
                 ],
                 "done_when": "A reviewer who did not write the skill has approved the pull request and the evals pass.",
                 "owner_role": "skill-owner",
+                "owner_name": "Beatriz Halloran",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2220,6 +2478,8 @@
                 ],
                 "done_when": "A pilot user in the role sees the skill after the plugin updates.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2243,6 +2503,8 @@
                 ],
                 "done_when": "Each pilot user has connected with their own login and only the planned tools are enabled.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -2264,8 +2526,10 @@
                     "link": "starter-kit/runbooks/microsoft-365-connector.md#5-enable-the-connector-for-the-right-claude-group"
                   }
                 ],
-                "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools stay off.",
+                "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools are set as the story's tool tasks say.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -2285,6 +2549,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2304,6 +2570,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2323,6 +2591,8 @@
                 ],
                 "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2346,6 +2616,8 @@
                 ],
                 "done_when": "The business owner has approved the allowlist on scorecard evidence, and only those tools are Always allow.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2369,6 +2641,8 @@
                 ],
                 "done_when": "Compliance has seen the two-user test pass for every walled system the task reads.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2388,13 +2662,15 @@
                 ],
                 "done_when": "A web search or fetch attempted during the task is refused.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
                 "id": "S-T4.confirm-unverified-decision.connectors.salesforce",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce)",
-                "part": "A9",
+                "part": "A3",
                 "how": [
                   {
                     "text": "Find the Unverified mark on the page the decision cites in levelled.json.",
@@ -2411,13 +2687,15 @@
                 ],
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
                 "id": "S-T4.warning-high-cost-ceiling-unconfirmed",
                 "template": "warning-high-cost-ceiling-unconfirmed",
                 "title": "Resolve warning high-cost-ceiling-unconfirmed: confirm the ceiling of a task whose mistakes cost a lot",
-                "part": "A9",
+                "part": "A7",
                 "how": [
                   {
                     "text": "Read which cap applied and why in levelled.json, and note that page 06 has no rule for the cost of a mistake.",
@@ -2430,6 +2708,8 @@
                 ],
                 "done_when": "The customer has confirmed the ceiling, or a lower ceiling is on the card as an override with a reason and an approver.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2449,6 +2729,8 @@
                 ],
                 "done_when": "The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2472,6 +2754,8 @@
                 ],
                 "done_when": "The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -2500,6 +2784,7 @@
               "wall_impact": "soft",
               "inputs": "sharepoint (diligence notes and data-room files)",
               "output_and_audience": "Draft memo section, internal; to none (the conversation), for the partners",
+              "delivery": "The output stays in the conversation or a local file.",
               "skill_owner": "Ravindra Sorensen",
               "baseline": "0.46 per week x 240 minutes each x unknown users",
               "constraints": [
@@ -2548,6 +2833,8 @@
                 ],
                 "done_when": "Three real examples, each with its inputs and its expected result, are stored where the evals can read them.",
                 "owner_role": "skill-owner",
+                "owner_name": "Ravindra Sorensen",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2571,6 +2858,8 @@
                 ],
                 "done_when": "Every acceptance criterion has at least one eval, and the evals run and fail without the skill.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2622,6 +2911,8 @@
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2645,6 +2936,8 @@
                 ],
                 "done_when": "The skill starts on every should-trigger prompt and on none of the should-not prompts.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2664,6 +2957,8 @@
                 ],
                 "done_when": "A reviewer who did not write the skill has approved the pull request and the evals pass.",
                 "owner_role": "skill-owner",
+                "owner_name": "Ravindra Sorensen",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2683,6 +2978,8 @@
                 ],
                 "done_when": "A pilot user in the role sees the skill after the plugin updates.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2704,8 +3001,10 @@
                     "link": "starter-kit/runbooks/microsoft-365-connector.md#5-enable-the-connector-for-the-right-claude-group"
                   }
                 ],
-                "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools stay off.",
+                "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools are set as the story's tool tasks say.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -2725,6 +3024,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2744,6 +3045,8 @@
                 ],
                 "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2767,6 +3070,8 @@
                 ],
                 "done_when": "The business owner has approved the allowlist on scorecard evidence, and only those tools are Always allow.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2790,6 +3095,8 @@
                 ],
                 "done_when": "Compliance has seen the two-user test pass for every walled system the task reads.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2809,13 +3116,15 @@
                 ],
                 "done_when": "A web search or fetch attempted during the task is refused.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
                 "id": "S-T6.warning-high-cost-ceiling-unconfirmed",
                 "template": "warning-high-cost-ceiling-unconfirmed",
                 "title": "Resolve warning high-cost-ceiling-unconfirmed: confirm the ceiling of a task whose mistakes cost a lot",
-                "part": "A9",
+                "part": "A7",
                 "how": [
                   {
                     "text": "Read which cap applied and why in levelled.json, and note that page 06 has no rule for the cost of a mistake.",
@@ -2828,6 +3137,8 @@
                 ],
                 "done_when": "The customer has confirmed the ceiling, or a lower ceiling is on the card as an override with a reason and an approver.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2847,6 +3158,8 @@
                 ],
                 "done_when": "The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2870,6 +3183,8 @@
                 ],
                 "done_when": "The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -2922,6 +3237,8 @@
                 ],
                 "done_when": "persona.md is filled in with no FILL IN marker left.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2941,6 +3258,8 @@
                 ],
                 "done_when": "Both forms match persona.md and sit where each surface reads them.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2960,6 +3279,8 @@
                 ],
                 "done_when": "The business owner has approved the persona voice.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -3007,6 +3328,8 @@
                 ],
                 "done_when": "The role's users arrive in Claude through SCIM in the right group.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -3026,6 +3349,8 @@
                 ],
                 "done_when": "Every connector the role uses is listed with its identity and approver.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -3045,6 +3370,8 @@
                 ],
                 "done_when": "A security reviewer has checked every connector before it is enabled.",
                 "owner_role": "security",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               }
             ]
@@ -3088,6 +3415,8 @@
                 ],
                 "done_when": "The baseline is on every device of the role.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -3107,6 +3436,8 @@
                 ],
                 "done_when": "A pilot device shows every key of the baseline in force.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -3126,6 +3457,8 @@
                 ],
                 "done_when": "Compliance has signed off the data policy for every data class the role holds.",
                 "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -3168,6 +3501,8 @@
                 ],
                 "done_when": "The role plugin is in the marketplace and its tests pass.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -3187,6 +3522,8 @@
                 ],
                 "done_when": "Only the role's group gets the role plugin.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -3229,6 +3566,8 @@
                 ],
                 "done_when": "The log's destination, readers and retention are agreed in writing.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -3252,6 +3591,8 @@
                 ],
                 "done_when": "The governance hook runs on every device of the role.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -3271,6 +3612,8 @@
                 ],
                 "done_when": "A test tool call appears in the governance log with its metadata.",
                 "owner_role": "security",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               },
               {
@@ -3290,6 +3633,8 @@
                 ],
                 "done_when": "Every system the twin writes keeps an audit of its changes.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Director of IT",
                 "status": "todo"
               }
             ]
@@ -3322,8 +3667,12 @@
                 "part": "A6",
                 "how": [
                   {
-                    "text": "Decide what the twin may remember for the role and what it must not.",
-                    "link": "docs/compendium/02-persona.md#memory"
+                    "text": "Copy the kit's memory-policy template and decide what the twin may remember for the role and what it must not.",
+                    "link": "starter-kit/templates/pilot/memory-policy.md#what-the-twin-may-remember-and-what-it-must-not"
+                  },
+                  {
+                    "text": "Name who can switch memory on or off for the org.",
+                    "link": "starter-kit/templates/pilot/memory-policy.md#who-can-switch-memory-on-or-off-for-the-org"
                   },
                   {
                     "text": "Write the policy into the design and the persona.",
@@ -3332,6 +3681,8 @@
                 ],
                 "done_when": "The memory policy is written down and the business owner has approved it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -3346,11 +3697,13 @@
                   },
                   {
                     "text": "Tell the pilot users why memory is off.",
-                    "link": null
+                    "link": "starter-kit/templates/pilot/memory-policy.md#what-pilot-users-are-told"
                   }
                 ],
                 "done_when": "Personal memory is off for the role's users and they know why.",
                 "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -3393,6 +3746,8 @@
                 ],
                 "done_when": "The pilot users and dates are agreed and recorded.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -3412,6 +3767,8 @@
                 ],
                 "done_when": "Every pilot task has a baseline agreed with its users.",
                 "owner_role": "consultant",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -3421,16 +3778,22 @@
                 "part": "A8",
                 "how": [
                   {
-                    "text": "Choose the adoption, quality, value and safety measures for the scorecard.",
+                    "text": "Copy the kit's scorecard template and choose the adoption, quality, value and safety measures for each task.",
+                    "link": "starter-kit/templates/pilot/scorecard.md#per-task"
+                  },
+                  {
+                    "text": "Take each measure as the compendium describes.",
                     "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
                   },
                   {
-                    "text": "Book the monthly review with the business owner.",
-                    "link": "docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often"
+                    "text": "Book the monthly review with the business owner, and record its decision on the scorecard.",
+                    "link": "starter-kit/templates/pilot/scorecard.md#decision-this-month"
                   }
                 ],
                 "done_when": "The first monthly scorecard has been reviewed with the business owner.",
                 "owner_role": "business-owner",
+                "owner_name": "RevOps manager",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -3440,16 +3803,18 @@
                 "part": "A8",
                 "how": [
                   {
-                    "text": "Run a short session on what the twin does, at what level, and what it never does.",
-                    "link": "docs/playbook/01-engagement-model.md"
+                    "text": "Run a short session on what the twin does, at what level, and what it never does, from the kit's session outline.",
+                    "link": "starter-kit/templates/pilot/pilot-training.md#part-1-session-outline"
                   },
                   {
-                    "text": "Give the pilot users one place to report a failure or a wrong draft.",
-                    "link": null
+                    "text": "Give the pilot users one place to report a failure or a wrong draft, with the kit's report form.",
+                    "link": "starter-kit/templates/pilot/pilot-training.md#where-reports-go"
                   }
                 ],
                 "done_when": "Every pilot user has been trained and knows where to report a failure.",
                 "owner_role": "change-and-enablement-lead",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               }
             ]

@@ -200,7 +200,10 @@
       "applies_to": "task-story",
       "per": null,
       "when": {
-        "runtime": "client-skill"
+        "runtime": "client-skill",
+        "not": {
+          "plan.tier": "team"
+        }
       },
       "how": [
         {
@@ -216,6 +219,33 @@
       "owner_role": "skill-engineer"
     },
     {
+      "id": "publish-in-role-plugin-team",
+      "title": "Publish the skill in the role plugin, which every member of the Team org gets",
+      "part": "A9",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "runtime": "client-skill",
+        "plan.tier": "team"
+      },
+      "how": [
+        {
+          "text": "Add the skill to the role plugin and bump the plugin's version.",
+          "link": "starter-kit/templates/role-plugin/README.md#steps"
+        },
+        {
+          "text": "Add the role plugin to the one organisation-wide configuration, so every member gets the new version.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member"
+        },
+        {
+          "text": "Write the skill's description so it says which role it is for, because there is no group target on Team.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member"
+        }
+      ],
+      "done_when": "A pilot user in the role sees the skill after the plugin updates, and its description names the role.",
+      "owner_role": "skill-engineer"
+    },
+    {
       "id": "setup-scheduled-task",
       "title": "Set up the Claude Code scheduled task and its schedule",
       "part": "A4",
@@ -226,16 +256,20 @@
       },
       "how": [
         {
-          "text": "Create the scheduled task in the task owner's Claude Code with the skill as its prompt.",
-          "link": "docs/compendium/05-decision-matrix.md#the-options"
+          "text": "Check the runbook's prerequisites: the plan, the scheduled tasks toggle, the task owner's sign-in and the committed skill.",
+          "link": "starter-kit/runbooks/claude-code-scheduled-task.md#before-you-start"
         },
         {
-          "text": "Set the schedule the card asks for and run it once by hand.",
-          "link": "docs/compendium/05-decision-matrix.md#decision-criteria"
+          "text": "Create the scheduled task in the task owner's Claude Code with the skill as its prompt, on the schedule the card asks for.",
+          "link": "starter-kit/runbooks/claude-code-scheduled-task.md#steps"
         },
         {
-          "text": "Record where the run history lives so missed or failed runs can be found.",
-          "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+          "text": "Run it once by hand and check the result and its run history.",
+          "link": "starter-kit/runbooks/claude-code-scheduled-task.md#check-it-worked"
+        },
+        {
+          "text": "Hand it over, with where the run history lives so missed or failed runs can be found.",
+          "link": "starter-kit/runbooks/claude-code-scheduled-task.md#hand-over"
         }
       ],
       "done_when": "The scheduled task has run once on its schedule and its run history shows the result.",
@@ -252,16 +286,24 @@
       },
       "how": [
         {
-          "text": "Create the routine in the Slack channel the card names, with the skill as its instructions.",
-          "link": "docs/compendium/05-decision-matrix.md#the-options"
+          "text": "Check the runbook's prerequisites: the plan, the Routines toggle, the Owner and Slack admin, and the channel.",
+          "link": "starter-kit/runbooks/claude-tag-routine.md#before-you-start"
         },
         {
-          "text": "Set the routine's schedule and run it once by hand.",
-          "link": "docs/compendium/05-decision-matrix.md#decision-criteria"
+          "text": "Create the routine in the Slack channel the card names, with the skill as its instructions, and set its schedule.",
+          "link": "starter-kit/runbooks/claude-tag-routine.md#steps"
         },
         {
           "text": "Check who can read the channel against the task's data class.",
           "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+        },
+        {
+          "text": "Run it once by hand and check that it posted in the channel.",
+          "link": "starter-kit/runbooks/claude-tag-routine.md#check-it-worked"
+        },
+        {
+          "text": "Hand the routine over to the person who answers for it in the channel.",
+          "link": "starter-kit/runbooks/claude-tag-routine.md#hand-over"
         }
       ],
       "done_when": "The routine has posted once on its schedule in a channel whose members fit the data class.",
@@ -278,16 +320,24 @@
       },
       "how": [
         {
-          "text": "Define the agent with the skill, its tools and the tool permissions the plan names.",
-          "link": "docs/compendium/05-decision-matrix.md#the-options"
+          "text": "Check the runbook's prerequisites: the Console workspace, the API key, and where our log and dedupe store live.",
+          "link": "starter-kit/runbooks/managed-agents.md#before-you-start"
         },
         {
-          "text": "Create the schedule or the trigger that starts each run.",
-          "link": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation"
+          "text": "Create the environment, upload the skill and define the agent with its tools and the tool permissions the plan names.",
+          "link": "starter-kit/runbooks/managed-agents.md#steps"
         },
         {
-          "text": "Pin the model and the agent version so a run is repeatable.",
-          "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+          "text": "Create the schedule or the trigger that starts each run, and pin the model and the agent version.",
+          "link": "starter-kit/runbooks/managed-agents.md#start-a-run"
+        },
+        {
+          "text": "Run it once and check the run against the runbook.",
+          "link": "starter-kit/runbooks/managed-agents.md#check-it-worked"
+        },
+        {
+          "text": "Hand over the agent, its pinned version and its IDs.",
+          "link": "starter-kit/runbooks/managed-agents.md#hand-over"
         }
       ],
       "done_when": "The agent has run once from its schedule or trigger with pinned versions.",
@@ -304,20 +354,28 @@
       },
       "how": [
         {
-          "text": "Stand up the self-hosted harness and sandbox in the environment the customer names.",
-          "link": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation"
+          "text": "Check the runbook's prerequisites and the environment the customer names.",
+          "link": "starter-kit/runbooks/managed-agents.md#before-you-start"
+        },
+        {
+          "text": "Stand up the self-hosted harness and sandbox in that environment.",
+          "link": "starter-kit/runbooks/managed-agents.md#self-hosted"
         },
         {
           "text": "Define the agent with the skill, its tools and the tool permissions the plan names.",
-          "link": "docs/compendium/05-decision-matrix.md#the-options"
+          "link": "starter-kit/runbooks/managed-agents.md#steps"
         },
         {
           "text": "Create the schedule or the trigger that starts each run, and pin the versions.",
-          "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+          "link": "starter-kit/runbooks/managed-agents.md#start-a-run"
         },
         {
           "text": "Confirm the route keeps the retention the task needs.",
           "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+        },
+        {
+          "text": "Run it once inside the customer's environment, check it, and hand it over.",
+          "link": "starter-kit/runbooks/managed-agents.md#check-it-worked"
         }
       ],
       "done_when": "The self-hosted agent has run once from its schedule or trigger inside the customer's environment.",
@@ -334,16 +392,24 @@
       },
       "how": [
         {
+          "text": "Check the runbook's prerequisites: the runtime, the container, outbound access and the log.",
+          "link": "starter-kit/runbooks/agent-sdk-runner.md#before-you-start"
+        },
+        {
           "text": "Build the runner with the Agent SDK, the skill and only the tools the task needs.",
-          "link": "docs/compendium/05-decision-matrix.md#the-options"
+          "link": "starter-kit/runbooks/agent-sdk-runner.md#steps"
         },
         {
-          "text": "Host the runner where the plan says and create the schedule or trigger that starts it.",
-          "link": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation"
+          "text": "Host the runner where the plan says, create the schedule or trigger that starts it, and pin the model and runner version.",
+          "link": "starter-kit/runbooks/agent-sdk-runner.md#host-and-trigger"
         },
         {
-          "text": "Pin the model and the runner version so a run is repeatable.",
-          "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+          "text": "Run it once and check it against the runbook.",
+          "link": "starter-kit/runbooks/agent-sdk-runner.md#check-it-worked"
+        },
+        {
+          "text": "Hand over the runner, its image and its pinned versions.",
+          "link": "starter-kit/runbooks/agent-sdk-runner.md#hand-over"
         }
       ],
       "done_when": "The runner has run once from its schedule or trigger with pinned versions.",
@@ -591,8 +657,44 @@
           "link": "starter-kit/runbooks/microsoft-365-connector.md#5-enable-the-connector-for-the-right-claude-group"
         }
       ],
-      "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools stay off.",
+      "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools are set as the story's tool tasks say.",
       "owner_role": "source-system-admin"
+    },
+    {
+      "id": "connect-kit-runbook",
+      "title": "Connect it by following the kit's runbook for this connector",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": "connector",
+      "when": {
+        "not": {
+          "connector.runbook": [
+            null,
+            "starter-kit/runbooks/salesforce-hosted-mcp.md",
+            "starter-kit/runbooks/microsoft-365-connector.md"
+          ]
+        }
+      },
+      "how": [
+        {
+          "text": "Check the runbook's prerequisites, including who must approve the connector.",
+          "link": "{connector.runbook}#before-you-start"
+        },
+        {
+          "text": "Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say.",
+          "link": "{connector.runbook}#steps"
+        },
+        {
+          "text": "Run the runbook's checks with a pilot user before the task is built.",
+          "link": "{connector.runbook}#check-it-worked"
+        },
+        {
+          "text": "Record the hand-over the runbook asks for in the customer's folder.",
+          "link": "{connector.runbook}#hand-over"
+        }
+      ],
+      "done_when": "A pilot user has connected with the planned identity, each tool is set as the story's tool tasks say, and the runbook's checks pass.",
+      "owner_role": "integration-engineer"
     },
     {
       "id": "connect-no-runbook",
@@ -601,7 +703,10 @@
       "applies_to": "task-story",
       "per": "connector",
       "when": {
-        "connector.runbook": null
+        "connector.runbook": null,
+        "not": {
+          "connector.kind": "product-data"
+        }
       },
       "how": [
         {
@@ -618,6 +723,33 @@
         }
       ],
       "done_when": "The connector works for a pilot user with the planned identity, and the steps are written down for a runbook.",
+      "owner_role": "integration-engineer"
+    },
+    {
+      "id": "connect-own-mcp-server",
+      "title": "Connect it through our own MCP server: the directory has no connector for this system",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": "connector",
+      "when": {
+        "connector.runbook": null,
+        "connector.kind": "product-data"
+      },
+      "how": [
+        {
+          "text": "Build our own MCP server for the system, with read-only tools that return only what the task needs.",
+          "link": "docs/compendium/11-connectors.md#building-our-own-mcp-server"
+        },
+        {
+          "text": "Make it reachable from Claude: allowlist Anthropic's IP range at the edge, or run the agent inside the network.",
+          "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
+        },
+        {
+          "text": "Review the server before it is enabled, as for a bought connector, and write down the steps you followed.",
+          "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+        }
+      ],
+      "done_when": "Our server answers the task's reads for a pilot user with the planned identity, and it has been reviewed.",
       "owner_role": "integration-engineer"
     },
     {
@@ -685,6 +817,28 @@
       ],
       "done_when": "The tool is Blocked in the Claude org, as levelled.json says, and the twin cannot call it.",
       "owner_role": "technical-owner"
+    },
+    {
+      "id": "deliver-draft",
+      "title": "Agree where the twin's draft lands and who sends or files it while the twin cannot write it",
+      "part": "A4",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "delivery.form": "person-sends"
+      },
+      "how": [
+        {
+          "text": "Agree with the pilot users that the twin ends in a draft, and that a person sends or files it while the twin cannot write it itself.",
+          "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+        },
+        {
+          "text": "Where the story's delivery says the write opens, agree the evidence that moves the task up to the level where the twin writes it itself.",
+          "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+        }
+      ],
+      "done_when": "The business owner has agreed where each draft lands and who sends or files it, and the pilot users know.",
+      "owner_role": "business-owner"
     },
     {
       "id": "evidence-level-2",
@@ -787,7 +941,11 @@
       "when": {
         "connector.kind": "crm",
         "connector.access": "write",
-        "connector.product": "Salesforce"
+        "connector.product": "Salesforce",
+        "writes.crm_opens": [
+          "now",
+          "later"
+        ]
       },
       "how": [
         {
@@ -813,7 +971,11 @@
         "connector.access": "write",
         "not": {
           "connector.product": "Salesforce"
-        }
+        },
+        "writes.crm_opens": [
+          "now",
+          "later"
+        ]
       },
       "how": [
         {
@@ -821,8 +983,8 @@
           "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
         },
         {
-          "text": "Create it in the CRM and limit who can set it to the role's users.",
-          "link": null
+          "text": "Create it in the CRM and limit who can set it to the role's users, as the kit's Salesforce marker does.",
+          "link": "starter-kit/connectors/salesforce/README.md#who-can-edit-the-field"
         }
       ],
       "done_when": "Every record type the twin writes in this CRM can carry the twin marker.",
@@ -835,7 +997,11 @@
       "applies_to": "task-story",
       "per": null,
       "when": {
-        "writes.kinds": "crm"
+        "writes.kinds": "crm",
+        "writes.crm_opens": [
+          "now",
+          "later"
+        ]
       },
       "how": [
         {
@@ -857,7 +1023,11 @@
       "applies_to": "task-story",
       "per": null,
       "when": {
-        "writes.kinds": "crm"
+        "writes.kinds": "crm",
+        "writes.crm_opens": [
+          "now",
+          "later"
+        ]
       },
       "how": [
         {
@@ -1471,7 +1641,8 @@
       "applies_to": "task-story",
       "per": null,
       "when": {
-        "codes": "unmanaged-connectors-read-only"
+        "codes": "unmanaged-connectors-read-only",
+        "tools.write_permissions": "blocked"
       },
       "how": [
         {
@@ -1479,11 +1650,44 @@
           "link": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation"
         },
         {
-          "text": "Set the task's write tools to Blocked for people on unmanaged devices so the connectors are read-only, or get the customer's written acceptance of the write.",
+          "text": "Leave the task's write tools Blocked at the starting level, as their tool tasks set them, so the connectors are read-only.",
           "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
+        },
+        {
+          "text": "When the task moves up a level, keep the write tools Blocked for people on unmanaged devices, or get the customer's written acceptance of the write and set them to Needs approval, never Always allow.",
+          "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
         }
       ],
-      "done_when": "The write tools are Blocked for people on unmanaged devices, or the customer's written acceptance is recorded.",
+      "done_when": "The write tools are Blocked at the starting level, and the customer's written acceptance is recorded before any of them opens for people on unmanaged devices.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "warning-unmanaged-connectors-read-only-approval",
+      "title": "Resolve warning unmanaged-connectors-read-only: get written acceptance of each approved write on an unmanaged device",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "unmanaged-connectors-read-only",
+        "not": {
+          "tools.write_permissions": "blocked"
+        }
+      },
+      "how": [
+        {
+          "text": "Explain why confidential data on an unmanaged device calls for read-only connectors.",
+          "link": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation"
+        },
+        {
+          "text": "Keep the task's write tools at Needs approval, as their tool tasks set them, never Always allow, so a person approves each write.",
+          "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
+        },
+        {
+          "text": "Get the customer's written acceptance of approved writes on unmanaged devices, or split the role by device so people on unmanaged devices do not get the task.",
+          "link": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation"
+        }
+      ],
+      "done_when": "The write tools are Needs approval, never Always allow, and the customer's written acceptance is recorded or the role is split by device.",
       "owner_role": "technical-owner"
     },
     {
@@ -1524,7 +1728,7 @@
         },
         {
           "text": "Test the connection from Claude before the task is built.",
-          "link": "starter-kit/runbooks/salesforce-hosted-mcp.md#8-ip-allowlist-discovery-e6"
+          "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
         }
       ],
       "done_when": "The private system answers a connector call from Claude.",
@@ -1554,7 +1758,7 @@
     },
     {
       "id": "warning-slack-directory-send-unverified",
-      "title": "Resolve warning slack-directory-send-unverified: post through Claude Tag or the Slack MCP server",
+      "title": "Resolve warning slack-directory-send-unverified: post through the Claude Tag routine, or the Slack MCP server only if the routine route is not used",
       "part": "A3",
       "applies_to": "task-story",
       "per": null,
@@ -1567,21 +1771,22 @@
           "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
         },
         {
-          "text": "Post through Claude Tag or the Slack MCP server instead.",
-          "link": "docs/compendium/05-decision-matrix.md#the-options"
+          "text": "Post through the Claude Tag routine's own post where the task runs as a routine; use the Slack MCP server only if the routine route is not used.",
+          "link": "starter-kit/runbooks/claude-tag-routine.md#steps"
         }
       ],
-      "done_when": "The task posts by a confirmed route.",
+      "done_when": "The task posts by one confirmed route: the routine's own post, or the Slack MCP server only if the routine route is not used.",
       "owner_role": "integration-engineer"
     },
     {
       "id": "warning-untrusted-input-with-send",
-      "title": "Resolve warning untrusted-input-with-send: make a person approve each send",
+      "title": "Resolve warning untrusted-input-with-send: keep the send tool Blocked now, and approved by a person once it opens",
       "part": "A7",
       "applies_to": "task-story",
       "per": null,
       "when": {
-        "codes": "untrusted-input-with-send"
+        "codes": "untrusted-input-with-send",
+        "tools.send_permissions": "blocked"
       },
       "how": [
         {
@@ -1589,11 +1794,40 @@
           "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
         },
         {
-          "text": "Set the send tool to Needs approval and keep the task at level 2 or below.",
+          "text": "Leave the send tool Blocked at the starting level, as its tool task sets it.",
+          "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
+        },
+        {
+          "text": "When the task moves up a level, set the send tool to Needs approval, never Always allow, and keep the task at level 2 or below; on a Claude Tag routine this applies only if the routine route is not used.",
+          "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+        }
+      ],
+      "done_when": "The send tool is Blocked at the starting level, never Always allow, and the task's ceiling is level 2 or below.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "warning-untrusted-input-with-send-approval",
+      "title": "Resolve warning untrusted-input-with-send: keep a person approving each send",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "untrusted-input-with-send",
+        "not": {
+          "tools.send_permissions": "blocked"
+        }
+      },
+      "how": [
+        {
+          "text": "Note that the task reads untrusted content and can send it out.",
+          "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+        },
+        {
+          "text": "Keep the send tool at Needs approval, as its tool task sets it, never Always allow, and keep the task at level 2 or below; on a Claude Tag routine this applies only if the routine route is not used.",
           "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
         }
       ],
-      "done_when": "The send tool is Needs approval and the task's ceiling is level 2 or below.",
+      "done_when": "The send tool is Needs approval, never Always allow, and the task's ceiling is level 2 or below.",
       "owner_role": "technical-owner"
     },
     {
@@ -1612,7 +1846,7 @@
         },
         {
           "text": "Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it.",
-          "link": "docs/compendium/02-persona.md#memory"
+          "link": "starter-kit/templates/pilot/memory-policy.md#tasks-that-read-input-written-by-outsiders"
         },
         {
           "text": "If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide.",
@@ -1691,7 +1925,7 @@
     {
       "id": "warning-high-cost-ceiling-unconfirmed",
       "title": "Resolve warning high-cost-ceiling-unconfirmed: confirm the ceiling of a task whose mistakes cost a lot",
-      "part": "A9",
+      "part": "A7",
       "applies_to": "task-story",
       "per": null,
       "when": {
@@ -1885,7 +2119,7 @@
         },
         {
           "text": "No runbook: the kit has no runbook for giving users a Claude Code seat and installing it yet, so write down the steps you follow.",
-          "link": null
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#3-map-groups-to-roles-and-seats"
         },
         {
           "text": "Deploy the managed settings to the devices that get Claude Code, then add claude-code to role.works_in.",
@@ -1915,7 +2149,7 @@
         },
         {
           "text": "Agree with the customer to keep the narrower surfaces for everyone, or to split the role into two persona cards, one for each kind of device.",
-          "link": null
+          "link": "partner-kit/docs/design.md#42-persona-card-cardjson"
         }
       ],
       "done_when": "The customer has chosen in writing: the narrower surfaces for everyone, or two persona cards split by device.",
@@ -2369,8 +2603,12 @@
       "when": {},
       "how": [
         {
-          "text": "Decide what the twin may remember for the role and what it must not.",
-          "link": "docs/compendium/02-persona.md#memory"
+          "text": "Copy the kit's memory-policy template and decide what the twin may remember for the role and what it must not.",
+          "link": "starter-kit/templates/pilot/memory-policy.md#what-the-twin-may-remember-and-what-it-must-not"
+        },
+        {
+          "text": "Name who can switch memory on or off for the org.",
+          "link": "starter-kit/templates/pilot/memory-policy.md#who-can-switch-memory-on-or-off-for-the-org"
         },
         {
           "text": "Write the policy into the design and the persona.",
@@ -2396,7 +2634,7 @@
         },
         {
           "text": "Tell the pilot users why memory is off.",
-          "link": null
+          "link": "starter-kit/templates/pilot/memory-policy.md#what-pilot-users-are-told"
         }
       ],
       "done_when": "Personal memory is off for the role's users and they know why.",
@@ -2418,7 +2656,7 @@
         },
         {
           "text": "Show the pilot users how to see and clear what it keeps.",
-          "link": null
+          "link": "starter-kit/templates/pilot/memory-policy.md#what-pilot-users-are-told"
         }
       ],
       "done_when": "Every pilot user knows what memory keeps and how to clear it.",
@@ -2473,12 +2711,16 @@
       "when": {},
       "how": [
         {
-          "text": "Choose the adoption, quality, value and safety measures for the scorecard.",
+          "text": "Copy the kit's scorecard template and choose the adoption, quality, value and safety measures for each task.",
+          "link": "starter-kit/templates/pilot/scorecard.md#per-task"
+        },
+        {
+          "text": "Take each measure as the compendium describes.",
           "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
         },
         {
-          "text": "Book the monthly review with the business owner.",
-          "link": "docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often"
+          "text": "Book the monthly review with the business owner, and record its decision on the scorecard.",
+          "link": "starter-kit/templates/pilot/scorecard.md#decision-this-month"
         }
       ],
       "done_when": "The first monthly scorecard has been reviewed with the business owner.",
@@ -2493,12 +2735,12 @@
       "when": {},
       "how": [
         {
-          "text": "Run a short session on what the twin does, at what level, and what it never does.",
-          "link": "docs/playbook/01-engagement-model.md"
+          "text": "Run a short session on what the twin does, at what level, and what it never does, from the kit's session outline.",
+          "link": "starter-kit/templates/pilot/pilot-training.md#part-1-session-outline"
         },
         {
-          "text": "Give the pilot users one place to report a failure or a wrong draft.",
-          "link": null
+          "text": "Give the pilot users one place to report a failure or a wrong draft, with the kit's report form.",
+          "link": "starter-kit/templates/pilot/pilot-training.md#where-reports-go"
         }
       ],
       "done_when": "Every pilot user has been trained and knows where to report a failure.",

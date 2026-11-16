@@ -89,8 +89,18 @@ Commands, from `${CLAUDE_PLUGIN_ROOT}/scripts/twincard/cli.py`: `backlog
   instructions keep each one as said, and an eval case checks it. Its
   `wanted_change` is asked for, not planned: build nothing for it unless
   the consultant adds it to the card through `planning-a-twin`.
-- **Who it waits on.** Name the task's `owner_role`, and the person from the
-  profile's `owners` or the story's `fields` when they give one.
+- **How the output is delivered.** A task story's `delivery` field says
+  where its output ends up and who puts it there: it stays in the
+  conversation, a routine in Slack posts it itself, a person sends or
+  files the twin's draft, or the twin writes it with the tools it names.
+  When a person sends or files the draft, the write tool stays Blocked
+  while you build, and the story's `deliver-draft` task says who does it.
+  Build the twin to end in that draft; never open the write yourself.
+- **Who it waits on.** Name the task's `owner_role` and its `owner_name`.
+  When a role has no named person, `owner_name` is empty and
+  `acting_owner` is the technical owner, who answers for it until the
+  customer names someone. `backlog.md` lists those roles once, on its
+  `Roles with no named person` line; ask the consultant to get a name.
 
 ## Output format
 
@@ -102,8 +112,9 @@ Why: in the pilot, priority 1, no gates. Skipped: <story: what gates it, owner>
 Statement: <statement>
 Fields: <each field: value>
 Acceptance: <each line>
-Tasks: <id> (<owner role>, <status>), ...
-First task: <id>, owner <owner role>. Built at level <autonomy.start>, not <ceiling>.
+Delivery: <the story's delivery field>
+Tasks: <id> (<owner role>, <owner name or acting owner>, <status>), ...
+First task: <id>, owner <owner role>, <owner name>. Built at level <autonomy.start>, not <ceiling>.
 Confirm this story, or name another.
 ```
 

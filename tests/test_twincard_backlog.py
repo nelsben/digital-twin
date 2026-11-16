@@ -43,10 +43,11 @@ CLIENT_SKILL_SIX = ["collect-examples", "write-evals", "write-skill", "trigger-e
                     "publish-in-role-plugin"]
 FOUNDATION = ["S-persona-voice", "S-connectors-and-identity", "S-guardrails-and-settings", "S-distribution",
               "S-governance-log", "S-memory-policy", "S-pilot-rollout-and-scorecard"]
-TOP_KEYS = ["backlog_version", "customer", "persona", "source", "epic", "retired"]
+TOP_KEYS = ["backlog_version", "customer", "persona", "source", "unnamed_roles", "epic", "retired"]
 STORY_KEYS = ["id", "title", "statement", "part", "in_pilot", "priority", "status", "fields", "acceptance",
               "gated_by", "tasks"]
-TASK_KEYS = ["id", "template", "title", "part", "how", "done_when", "owner_role", "status"]
+TASK_KEYS = ["id", "template", "title", "part", "how", "done_when", "owner_role", "owner_name", "acting_owner",
+             "status"]
 
 
 # --- Markdown anchors (the same rules as test_twincard_acceptance.py) ------------------------------
@@ -74,6 +75,23 @@ def anchors_of(page_text):
         anchors.add(base if n == 0 else "%s-%d" % (base, n))
         seen[base] = n + 1
     return anchors
+
+
+def runbook_links(link, when):
+    """A library link, with {connector.runbook} filled in from each pack runbook the template's 'when' admits."""
+    if not link or not link.startswith(B.RUNBOOK_PLACEHOLDER):
+        return [link] if link else []
+    known = set(B.allowed_facts("task-story", "connector"))
+    out = []
+    for path in sorted((PLUGIN_DIR / "data" / "industry-packs").glob("*.json")):
+        for default in load(path).get("connector_defaults") or []:
+            facts = dict((name, None) for name in known)
+            facts.update({"connector.runbook": default.get("runbook"), "connector.kind": default.get("system_kind")})
+            if default.get("runbook") and L.matches(when, facts, known):
+                target = default["runbook"] + link[len(B.RUNBOOK_PLACEHOLDER):]
+                if target not in out:
+                    out.append(target)
+    return out
 
 
 def link_problem(target):
@@ -228,6 +246,7 @@ LOCAL_SCENARIOS = [
     ("team C5 event-started", TEAM, set_task("C5", trigger="event"), None),
     ("team C2 writes HubSpot (managed-agents)", TEAM, team_c2_writes_hubspot, None),
     ("team C4 starts at level 2", TEAM, override("C4", "autonomy.start", 2), None),
+    ("team C2 starts at level 2", TEAM, override("C2", "autonomy.start", 2), None),
     ("pe T3 override agent-sdk", PE, override("T3", "runtime", "agent-sdk"), None),
     ("pe bad plugin name", PE, bad_plugin_name, None),
     ("team C1 plan_fit override", TEAM, override("C1", "plan_fit", "ok"), None),
@@ -417,9 +436,10 @@ class LibraryTests(unittest.TestCase):
             for step in template["how"]:
                 if step["link"] is None:
                     continue
-                with self.subTest(template=template["id"], link=step["link"]):
-                    self.assertFalse(step["link"].startswith("/") or "://" in step["link"], step["link"])
-                    self.assertIsNone(link_problem(step["link"]))
+                for link in runbook_links(step["link"], template["when"]):
+                    with self.subTest(template=template["id"], link=link):
+                        self.assertFalse(link.startswith("/") or "://" in link, link)
+                        self.assertIsNone(link_problem(link))
 
     def test_every_code_and_runtime_in_design_has_a_template(self):
         codes = L.design_codes()
@@ -444,11 +464,18 @@ class LibraryTests(unittest.TestCase):
             for default in load(path).get("connector_defaults") or []:
                 if default.get("runbook"):
                     runbooks.add(default["runbook"])
+        connect = [t for t in self.data["templates"] if t["id"].startswith("connect-")]
+        known = set(B.allowed_facts("task-story", "connector"))
+
+        def covering(runbook):
+            facts = dict((name, None) for name in known)
+            facts["connector.runbook"] = runbook
+            return [t["id"] for t in connect if L.matches(t["when"], facts, known)]
+        for runbook in sorted(runbooks):
+            self.assertTrue(covering(runbook), "no connect template for runbook %s" % runbook)
         covered = set()
         for template in self.data["templates"]:
             covered.update(when_values(template["when"], "connector.runbook"))
-        for runbook in sorted(runbooks):
-            self.assertIn(runbook, covered, "no connect template for runbook %s" % runbook)
         self.assertIn(None, covered, "no template says plainly that a connector has no runbook")
 
     def test_owner_roles_are_listed_in_design_section_8(self):
@@ -521,7 +548,10 @@ class BuildTests(unittest.TestCase):
         self.assertIn("Plus: each tool call reaches the governance log.", story["acceptance"])
         t2 = next(s for s in stories_of(backlog) if s["id"] == "S-T2")
         self.assertEqual(t2["fields"]["baseline"], "10 per week x 15 minutes each x 18 users")
-        self.assertIn("Plus: every write carries the twin marker.", t2["acceptance"])
+        # T2's Salesforce write is Blocked at the starting level, so the twin writes nothing to the CRM yet.
+        self.assertNotIn("Plus: every write carries the twin marker.", t2["acceptance"])
+        self.assertIn("Plus: the twin writes nothing to the CRM at the starting level; a person files the result.",
+                      t2["acceptance"])
         team = B.build(str(TEAM))["backlog"]
         c1 = next(s for s in stories_of(team) if s["id"] == "S-C1")
         self.assertNotIn("Plus: no web tools are used.", c1["acceptance"])
@@ -543,9 +573,12 @@ class BuildTests(unittest.TestCase):
                 tid = story["id"][2:]
                 if tid not in levelled["tasks"] or levelled["tasks"][tid]["runtime"]["value"] != "client-skill":
                     continue
+                # On Team the skill is published to every member, so the Team publish template ends the six.
+                six = CLIENT_SKILL_SIX[:-1] + ["publish-in-role-plugin-team" if persona_dir == TEAM
+                                               else "publish-in-role-plugin"]
                 with self.subTest(story=story["id"]):
-                    seen = [t["template"] for t in story["tasks"] if t["template"] in CLIENT_SKILL_SIX]
-                    self.assertEqual(seen, CLIENT_SKILL_SIX)
+                    seen = [t["template"] for t in story["tasks"] if t["template"] in six]
+                    self.assertEqual(seen, six)
 
     def test_open_questions_and_blockers_gate_stories(self):
         backlog = B.build(str(PE))["backlog"]
@@ -713,7 +746,7 @@ class StatusTests(unittest.TestCase):
     def test_items_no_longer_generated_are_retired(self):
         with Scenario(TEAM) as persona:
             B.write_backlog(str(persona))
-            self.edit_status(persona, {"S-C1.publish-in-role-plugin": "done", "S-C1.write-skill": "in-progress"})
+            self.edit_status(persona, {"S-C1.publish-in-role-plugin-team": "done", "S-C1.write-skill": "in-progress"})
             card = load(persona / "card.json")
             task(card, "C1")["trigger"] = "schedule-own"
             (persona / "card.json").write_text(json.dumps(card, indent=2), encoding="utf-8")
@@ -724,16 +757,16 @@ class StatusTests(unittest.TestCase):
             retired = dict((r["id"], r) for r in data["retired"])
             # C1 moves from a client skill to a Claude Code scheduled task: publishing in the role
             # plugin no longer applies, but the skill tasks apply on every runtime, so they stay.
-            self.assertEqual(set(retired), {"S-C1.publish-in-role-plugin"})
-            self.assertEqual(list(retired["S-C1.publish-in-role-plugin"]), ["id", "title", "status"])
-            self.assertEqual(retired["S-C1.publish-in-role-plugin"]["status"], "done")
+            self.assertEqual(set(retired), {"S-C1.publish-in-role-plugin-team"})
+            self.assertEqual(list(retired["S-C1.publish-in-role-plugin-team"]), ["id", "title", "status"])
+            self.assertEqual(retired["S-C1.publish-in-role-plugin-team"]["status"], "done")
             self.assertNotIn("S-C1.write-skill", retired)
             kept = next(t for f in data["epic"]["features"] for s in f["stories"] for t in s["tasks"]
                         if t["id"] == "S-C1.write-skill")
             self.assertEqual(kept["status"], "in-progress")
             for rid in retired:
                 self.assertEqual(len([line for line in proc.stdout.splitlines() if rid in line]), 1, proc.stdout)
-            self.assertIn("S-C1.publish-in-role-plugin", (persona / "backlog.md").read_text(encoding="utf-8"))
+            self.assertIn("S-C1.publish-in-role-plugin-team", (persona / "backlog.md").read_text(encoding="utf-8"))
             # Retired items stay retired on the next run, with their status.
             B.write_backlog(str(persona))
             self.assertEqual(load(persona / "backlog.json")["retired"], data["retired"])

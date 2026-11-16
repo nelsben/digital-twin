@@ -4,13 +4,16 @@
     python3 .../cli.py validate --json <persona-dir>
     python3 .../cli.py level <persona-dir>          # writes <persona-dir>/levelled.json
     python3 .../cli.py level --json <persona-dir>
+    python3 .../cli.py backlog <persona-dir>        # writes backlog.json and backlog.md
+    python3 .../cli.py backlog --json <persona-dir> [--plan-out FILE]
 
 Runs from any working directory. Exit codes: 0 on success; 1 when validation
-fails (level then writes nothing) or when levelling reports a blocker (level
-still writes levelled.json); 2 on a usage error or a missing persona folder
-(for level, a folder with no card.json).
-The backlog, dashboard and all commands are planned (partner-kit/docs/design.md,
-section 3).
+fails (level and backlog then write nothing), when levelled.json is missing or
+out of date (backlog writes nothing), or when levelling reports a blocker (level
+still writes levelled.json, backlog still writes both files); 2 on a usage error,
+a missing persona folder (for level and backlog, a folder with no card.json) or
+an unknown status in backlog.json.
+The dashboard and all commands are planned (partner-kit/docs/design.md, section 3).
 """
 
 import argparse
@@ -22,6 +25,7 @@ if __package__ in (None, ""):
     # Run as a script: make the twincard package importable from its parent folder.
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from twincard import backlog as backlog_mod  # noqa: E402
 from twincard.level import LEVELLED_FILE, write_levelled  # noqa: E402
 from twincard.validate import qualified, validate  # noqa: E402
 
@@ -43,6 +47,11 @@ def build_parser():
         "level", help="validate, then level the card by rule and write levelled.json next to card.json")
     levelling.add_argument("persona_dir", help="the persona folder that holds card.json")
     levelling.add_argument("--json", action="store_true", help="print levelled.json (or the validation errors) as JSON")
+    backlog = commands.add_parser(
+        "backlog", help="build backlog.json and backlog.md from card.json, levelled.json and the task library")
+    backlog.add_argument("persona_dir", help="the persona folder that holds card.json and levelled.json")
+    backlog.add_argument("--json", action="store_true", help="print backlog.json (or the validation errors) as JSON")
+    backlog.add_argument("--plan-out", metavar="FILE", help="also write the backlog as a tree_import plan to FILE")
     return parser
 
 
@@ -92,16 +101,61 @@ def run_level(args, persona_dir):
     return EXIT_OK
 
 
+def format_backlog(result, persona_dir):
+    backlog = result["backlog"]
+    lines = [backlog["epic"]["title"]]
+    for feature in backlog["epic"]["features"]:
+        lines.append("%s: %d stories, %d tasks" % (feature["id"], len(feature["stories"]),
+                                                   sum(len(s["tasks"]) for s in feature["stories"])))
+    lines.append("Total: %d features, %d stories, %d tasks" % backlog_mod.counts(backlog))
+    for item in result["retired_now"]:
+        lines.append("retired: %s (%s): %s" % (item["id"], item["status"], item["title"]))
+    lines.append("Wrote %s and %s." % (Path(persona_dir) / backlog_mod.BACKLOG_JSON,
+                                       Path(persona_dir) / backlog_mod.BACKLOG_MD))
+    return "\n".join(lines)
+
+
+def run_backlog(args, persona_dir):
+    try:
+        result = backlog_mod.write_backlog(str(persona_dir))
+    except backlog_mod.UsageError as exc:
+        sys.stderr.write("cli.py backlog: %s\n" % exc)
+        return EXIT_USAGE
+    if not result["ok"]:
+        if args.json:
+            print(json.dumps(result["validation"], indent=2, ensure_ascii=False))
+        elif result["validation"]["errors"]:
+            print(format_text(result["validation"]))
+        print(result["error"])
+        return EXIT_INVALID
+    if args.plan_out:
+        Path(args.plan_out).write_text(
+            json.dumps(backlog_mod.plan_tree(result["backlog"]), indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8")
+    if args.json:
+        sys.stdout.write(backlog_mod.render_json(result["backlog"]))
+    else:
+        print(format_backlog(result, persona_dir))
+    if backlog_mod.has_blocker(str(persona_dir)):
+        if not args.json:
+            print("Blocked: levelled.json reports a blocker; the gated stories say which.")
+        return EXIT_INVALID
+    return EXIT_OK
+
+
 def main(argv=None):
     args = build_parser().parse_args(argv)
     persona_dir = Path(args.persona_dir)
     if not persona_dir.is_dir():
         sys.stderr.write("cli.py %s: no such persona folder: %s\n" % (args.command, persona_dir))
         return EXIT_USAGE
-    if args.command == "level":
+    if args.command in ("level", "backlog"):
         if not (persona_dir / "card.json").is_file():
-            sys.stderr.write("cli.py level: %s holds no card.json, so it is not a persona folder\n" % persona_dir)
+            sys.stderr.write("cli.py %s: %s holds no card.json, so it is not a persona folder\n"
+                             % (args.command, persona_dir))
             return EXIT_USAGE
+        if args.command == "backlog":
+            return run_backlog(args, persona_dir)
         return run_level(args, persona_dir)
     result = validate(str(persona_dir))
     if args.json:

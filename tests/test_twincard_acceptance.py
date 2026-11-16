@@ -632,6 +632,71 @@ class LevelTests(unittest.TestCase):
                                      "%s %s removed" % (variant["id"], kind))
 
 
+# --- Backlog: backlog.json against the expectations -------------------------------------------------
+
+class BacklogBuildTests(unittest.TestCase):
+    """The backlog builder (scripts/twincard/backlog.py) reproduces the backlog part of expectations.json."""
+
+    @classmethod
+    def setUpClass(cls):
+        from twincard import backlog as tc_backlog
+        cls.engine = tc_backlog
+        cls.exp = load_expectations()
+        cls.out = {}
+        for fid, fixture in cls.exp["fixtures"].items():
+            cls.out[fid] = tc_backlog.build(str(ROOT / fixture["persona_dir"]))
+
+    def stories(self, fid):
+        return [s for f in self.out[fid]["backlog"]["epic"]["features"] for s in f["stories"]]
+
+    def test_build_succeeds(self):
+        for fid in self.exp["fixtures"]:
+            self.assertTrue(self.out[fid]["ok"], "%s: %s" % (fid, self.out[fid]["error"]))
+
+    def test_epic_title_matches(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            self.assertEqual(self.out[fid]["backlog"]["epic"]["title"], fixture["backlog"]["epic"], fid)
+
+    def test_feature_ids_match_in_order(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            got = [f["id"] for f in self.out[fid]["backlog"]["epic"]["features"]]
+            self.assertEqual(got, fixture["backlog"]["feature_ids"], fid)
+
+    def test_story_ids_match(self):
+        # Compared as a set: stories sort in-pilot first, then by priority, inside their feature,
+        # while the expectations list them in card order.
+        for fid, fixture in self.exp["fixtures"].items():
+            got = [s["id"] for s in self.stories(fid)]
+            self.assertEqual(len(got), len(set(got)), fid)
+            self.assertEqual(set(got), set(fixture["backlog"]["story_ids"]), fid)
+
+    def test_must_have_tasks_are_present(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            by_id = {s["id"]: s for s in self.stories(fid)}
+            for m in fixture["backlog"]["must_have_tasks"]:
+                titles = [t["title"].lower() for t in by_id[m["story"]]["tasks"]]
+                self.assertTrue(any(m["task"].lower() in title for title in titles),
+                                "%s %s: no task titled like %r in %s" % (fid, m["story"], m["task"], titles))
+
+    def test_committed_backlog_files_are_current(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            persona_dir = ROOT / fixture["persona_dir"]
+            backlog = self.out[fid]["backlog"]
+            for name, body in ((self.engine.BACKLOG_JSON, self.engine.render_json(backlog)),
+                               (self.engine.BACKLOG_MD, self.engine.render_md(backlog, str(persona_dir)))):
+                path = persona_dir / name
+                self.assertTrue(path.is_file(), "%s: run cli.py backlog %s" % (fid, fixture["persona_dir"]))
+                self.assertEqual(path.read_bytes(), body.encode("utf-8"),
+                                 "%s: %s is stale; run cli.py backlog %s" % (fid, name, fixture["persona_dir"]))
+
+    def test_no_in_pilot_story_is_gated_by_a_blocker(self):
+        for fid in self.exp["fixtures"]:
+            for story in self.stories(fid):
+                if story["in_pilot"]:
+                    kinds = [g["kind"] for g in story["gated_by"]]
+                    self.assertNotIn("blocker", kinds, "%s %s" % (fid, story["id"]))
+
+
 if __name__ == "__main__":
     unittest.main()
 

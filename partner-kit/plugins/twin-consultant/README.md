@@ -25,10 +25,12 @@ The consultant plugin for the persona-card workflow. Design of record: [partner-
 | [templates/interview-guide.md](templates/interview-guide.md) | Plain-language role interview: questions P1 to P6 and F1 to F9, each with the card fields it fills |
 | [templates/interview-notes.md](templates/interview-notes.md) | Notes template with one slot per question, saved under the persona's `interviews/` folder |
 | [data/fields.json](data/fields.json) | The field catalogue: type, values, required flag, the questions that ask for each field, and what reads it |
-| [scripts/twincard/](scripts/twincard/) | Standard-library Python 3.9+: `fields.py` loads the catalogue, `validate.py` checks both records, `packs.py` loads and checks industry packs, `level.py` levels a card by rule, `cli.py` is the command line |
+| [scripts/twincard/](scripts/twincard/) | Standard-library Python 3.9+: `fields.py` loads the catalogue, `validate.py` checks both records, `packs.py` loads and checks industry packs, `level.py` levels a card by rule, `backlog.py` builds the backlog from the levelled card, `cli.py` is the command line |
 | [data/rules.json](data/rules.json) | The levelling rules: each decides one thing, from facts on the card and profile, and cites the compendium section it comes from; the format is in [design section 7.3](../../docs/design.md) |
 | [data/plan-fit.json](data/plan-fit.json) | What each capability the twin relies on is on Team, Enterprise and individual plans, and what Team loses, with its compendium cite |
 | [data/industry-packs/](data/industry-packs/) | One JSON file per industry; the format is in [design section 7.1](../../docs/design.md) |
+| [data/task-library.json](data/task-library.json) | The backlog's task templates: each has an anatomy part, the story it applies to, a `when` condition in the rules language, numbered `how` steps that link the kit template, runbook or compendium page to use, `done_when` and an owner role; the format is in [design section 8](../../docs/design.md#8-backlog-backlogpy-datatask-libraryjson) |
+| [scripts/twincard/backlog.py](scripts/twincard/backlog.py) | Builds `backlog.json` and `backlog.md` from `card.json`, `levelled.json` and the task library, keeping each task's status across runs |
 
 ## Validate
 
@@ -55,6 +57,26 @@ level.write_levelled(persona_dir)  # the same, and writes levelled.json when val
 level.matches(when, facts)         # one rule condition against flat facts; an unknown fact raises LevelError
 ```
 
+## Backlog
+
+```
+python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py backlog <persona-dir>
+python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py backlog --json <persona-dir> --plan-out plan.json
+```
+
+`backlog` validates the card, checks that `levelled.json` was made from the current card and profile, then writes `<persona-dir>/backlog.json` and `<persona-dir>/backlog.md`: the epic (the role twin), one feature per card feature plus `F-twin-foundation`, one story per task plus the seven foundation stories, and the tasks `data/task-library.json` gives each story. It prints the epic title, the story and task count per feature and a total line. `--json` prints `backlog.json` instead; `--plan-out FILE` also writes the backlog in the `tree_import` plan shape for a tracker. If `levelled.json` is missing or out of date it writes nothing and says: `levelled.json is missing or out of date. Next: run the level command.`
+
+Both files are generated and never hand-edited. To mark a task, change only its `status` in `backlog.json` to `todo`, `in-progress` or `done`, then run `backlog` again: statuses are kept, story, feature and epic statuses are derived, and `backlog.md` shows the task as `[ ]`, `[~]` or `[x]`. A task the card no longer generates that had been started moves to `retired`, and the command prints one line for it.
+
+Exit code 0 means written with no blocker; 1 means validation failed or `levelled.json` is missing or out of date (nothing written), or levelling reports a blocker (both files are still written, and the blocker gates the stories it is about); 2 means a usage error, a missing folder or an unknown status in `backlog.json` (the message names the task id).
+
+```python
+from twincard import backlog
+backlog.build(persona_dir)          # {"ok", "validation", "error", "backlog", "retired_now"}; never writes
+backlog.write_backlog(persona_dir)  # the same, and writes backlog.json and backlog.md when it builds
+backlog.load_library()              # task-library.json, checked; a fault raises BacklogError naming the template
+```
+
 ## Industry packs
 
 A customer profile's `industry` is `general` or the id of a pack; `validate` reports anything else. Every entry in a pack cites a compendium page, and carries `unverified: true` where that page marks the fact Unverified or Not confirmed.
@@ -76,4 +98,4 @@ packs.pack_problems(pack)   # [{"path", "message", "fix"}], empty when the pack 
 
 ## Not built yet
 
-Skills (interview to card), `backlog.py`, `dashboard.py`, the `backlog`, `dashboard` and `all` commands, and `task-library.json`.
+Skills (interview to card), `dashboard.py`, and the `dashboard` and `all` commands.

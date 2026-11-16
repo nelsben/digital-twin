@@ -74,11 +74,12 @@ CLI (one entry point, run from anywhere):
 python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py validate  <persona-dir>
 python3 .../cli.py level     <persona-dir>     # writes levelled.json
 python3 .../cli.py backlog   <persona-dir>     # writes backlog.json, backlog.md
+python3 .../cli.py backlog   <persona-dir> --json --plan-out plan.json   # also prints backlog.json and writes the tracker plan
 python3 .../cli.py dashboard <persona-dir>     # writes dashboard.html
 python3 .../cli.py all       <persona-dir>     # the four in order; stops at the first failure
 ```
 
-`<persona-dir>` holds `card.json`; the customer profile is found at `../../customer-profile.json`. Exit code 0 on success; 1 when validation fails (`level` then writes nothing) or when levelling reports a blocker (`level` still writes `levelled.json`, so the blocker can be read); 2 on a usage error or a missing persona folder. Errors name the field path and say what to do next. `level` validates first, and `--json` prints `levelled.json` (or the validation errors) instead of the summary.
+`<persona-dir>` holds `card.json`; the customer profile is found at `../../customer-profile.json`. Exit code 0 on success; 1 when validation fails (`level` and `backlog` then write nothing), when `levelled.json` is missing or out of date (`backlog` writes nothing and says to run `level`), or when levelling reports a blocker (`level` still writes `levelled.json` and `backlog` still writes both backlog files, so the blocker can be read); 2 on a usage error, a missing persona folder or an unknown status in `backlog.json`. Errors name the field path and say what to do next. `level` validates first, and `--json` prints `levelled.json` (or the validation errors) instead of the summary.
 
 ## 4. The two records
 
@@ -376,16 +377,52 @@ Overrides: an override replaces one task decision (`runtime`, `identity`, `auton
 
 ## 8. Backlog (`backlog.py`, `data/task-library.json`)
 
-The hierarchy is the one in `docs/playbook/04-stories.md`. The anatomy parts do not add a second hierarchy; they label the tasks.
+The hierarchy is the one in `docs/playbook/04-stories.md`. The anatomy parts do not add a second hierarchy; they label the tasks. `backlog.py` reads `card.json`, `levelled.json`, the customer profile and `data/task-library.json`, and writes `backlog.json` and `backlog.md` next to the card. Both files are generated and never hand-edited. It first validates the card, then checks that `levelled.json` exists and that its `source.card_sha256` and `source.profile_sha256` match the files on disk; if not it writes nothing and says exactly `levelled.json is missing or out of date. Next: run the level command.`
 
 | Level | Generated from |
 |---|---|
-| **Epic** | The persona card: "<role name> twin for <customer>" |
-| **Feature** | Each `features[]` entry, plus one fixed feature, **Twin foundation**, for work that serves the whole persona |
-| **Story** | Under a capability feature: one per task (`As a <role>, I want my twin to <task> so that <outcome>`), with the story-template table from playbook 04 filled from the card and `levelled.json`. Under Twin foundation: one per persona-wide part (persona voice; connectors and identity; guardrails and settings; distribution; governance log; memory policy; pilot rollout and scorecard). |
-| **Task** | From `task-library.json`: templates keyed by anatomy part and by levelling result, each with `title`, `part`, `how` (the steps, linking the kit template, runbook or compendium page to use), `done_when`, `owner_role`. For example a client-skill story always gets "collect 3 examples", "write the evals", "write the skill from the template", "trigger evals", "review by a second person", "publish". A story with a Salesforce write gets the twin-marker tasks. |
+| **Epic** | The persona card: `<role name> twin for <display name>`, id `E` |
+| **Feature** | Each `features[]` entry in card order (`F-<feature id>`, kind `capability`), then one fixed feature, `F-twin-foundation` (kind `foundation`), for work that serves the whole persona |
+| **Story** | Under a capability feature: one per task, id `S-<task id>`, statement `As a <role name>, I want my twin to <task name, first letter lowered> so that I get the <output.what, first letter lowered>`, with the playbook 04 story-template table in `fields` (autonomy as `start to ceiling`, `undecided` for a null; baseline as `<frequency> per week x <minutes> minutes each x <users> users`). Stories sort in-pilot first, then by priority, then in card order. Under Twin foundation: seven stories, always in this order: `S-persona-voice`, `S-connectors-and-identity`, `S-guardrails-and-settings`, `S-distribution`, `S-governance-log`, `S-memory-policy`, `S-pilot-rollout-and-scorecard`. |
+| **Task** | One per `task-library.json` template whose `when` holds for the story, in library order |
 
-Every generated item has a stable id (`E`, `F-<feature>`, `S-<task id>`, `S-<task id>.T3`), a `part`, a `status` (`todo` at generation; kept across regeneration if `backlog.json` already has the id), and the open questions and blockers that gate it. `backlog.md` is the readable form. `backlog.json` also exports in the `tree_import` plan shape (`{"version":1,"items":[{"type","title","note","children"}]}`) so it can be filed to a tracker.
+A story's `acceptance` lists one eval line per good and per bad example on the card (three placeholder eval lines when the card has none yet), then the Plus lines that apply: `Plus: no web tools are used.` when the task's `data_controls.web_tools` is `off`; `Plus: every write carries the twin marker.` when the task writes a CRM; `Plus: each tool call reaches the governance log.` when the plan has one (below).
+
+### The task library
+
+`data/task-library.json` is `{"library_version": 1, "owner_roles": [...], "templates": [...]}`. Each template is `{"id", "title", "part", "applies_to", "per", "when", "how", "done_when", "owner_role"}`:
+
+- `id`: kebab-case, unique. `part`: `A1` to `A9`.
+- `applies_to`: `task-story`, or one of the seven foundation story ids.
+- `per`: `null` for one task per story, or `connector`, `tool` or `unverified-decision` for one task per item of the story's task (its connectors in `levelled.json`, the levelled `tools` that list the task, or each decision marked unverified plus `connectors.<system>` for each unverified connector).
+- `when`: a condition in the `rules.json` language (7.3), evaluated by `level.matches`; `{}` always applies.
+- `how`: at least two steps, each `{"text", "link"}`: one imperative sentence, and `null` or a repo-relative path with an optional `#anchor`.
+- `done_when`: at least one sentence. `owner_role`: one of `owner_roles`.
+
+`backlog.py` checks the library when it loads it and names the template at fault: an unknown part, owner role, `applies_to` or fact, an item fact without its `per`, a foundation template that reads a task fact, fewer than two steps or an empty `done_when`.
+
+Facts a `when` may read:
+
+- Every story: `plan.tier`, `role.device`, `distribution` and `settings_baseline` (the persona plan in `levelled.json`), `governance.log` (true when `plan-fit.json` gives the plan's `governance-action-log` as anything but `no` and levelling raised no `team-no-governance-log`), `compliance.walls`, `memory.personal_memory_wanted`, `systems.kinds`, `systems.products`, `writes.kinds`, `writes.products` (the profile's systems the task, or for a foundation story any task, reads or writes) and `codes` (the blocker and warning codes about the task; for a foundation story, those about `persona`).
+- Task stories also: `task.trigger`, `task.data_class`, `task.output.audience`, `task.reversible`, `task.touches_money`, `task.cost_of_mistake.level`, `task.reads_untrusted_input`, `task.in_pilot`, `task.write_actions`, and the task's levelled decisions `runtime`, `identity`, `autonomy.start`, `autonomy.ceiling`, `data_controls.settings_baseline`, `data_controls.web_tools`, `data_controls.surfaces`, `data_controls.retention`, `memory`, `plan_fit`.
+- Per item: `connector.system`, `connector.kind`, `connector.product`, `connector.access`, `connector.permission`, `connector.runbook`, `connector.unverified`; `tool.system`, `tool.use`, `tool.permission`; `decision.name`.
+
+Coverage the tests hold the library to: every code in 7.2 has a template (`blocker-<code>` or `warning-<code>`, with the code in its title); every runtime in 7.2 has one; every runbook an industry pack names has a connect template, and a connector with no runbook gets one that says so plainly; every template reaches a story in a fixture, an expectations variant or a test scenario. A code about `persona` lands in the foundation story its template names; if its template serves task stories, it lands in `S-guardrails-and-settings`.
+
+### Ids, status and gates
+
+- Ids: `E`, `F-<feature id>`, `S-<task id>` or the foundation story id, and `<story id>.<template id>` for a task; a per-item template adds the item: `S-T2.tool-blocked.salesforce-update`, `S-T2.confirm-unverified-decision.connectors.salesforce`. The item also goes at the end of the title, in brackets.
+- `status`: a task is `todo`, `in-progress` or `done`. To mark one, change only its `status` in `backlog.json` and run `backlog` again: the status is kept for every id the run generates again. Story, feature and epic statuses are derived: `done` when all their tasks are, `todo` when none has started, otherwise `in-progress`. Any other status is a usage error that names the task id (exit 2).
+- `retired`: a task the card no longer generates, whose status was not `todo`, moves to `retired` as `{"id", "title", "status"}`, and the command prints one line for each item it retires. Retired items stay there on later runs, and return to their story with their status if the card generates them again. A `todo` task that is no longer generated is dropped.
+- `gated_by`: `[{"kind", "id", "text"}]`: `blocker` items (the code and message of each blocker about the task, plus every blocker about `persona`; foundation stories get the persona blockers), then `open-question` items (each open question whose `blocks` names the task).
+
+`backlog.json` is `{"backlog_version": 1, "customer", "persona", "source": {"card_sha256", "levelled_sha256", "library_version"}, "epic": {"id", "title", "status", "features"}, "retired"}`, with keys in that order, two-space indent, UTF-8, a trailing newline and no dates or paths, so two runs give the same bytes. A story is `{"id", "title", "statement", "part", "in_pilot", "priority", "status", "fields", "acceptance", "gated_by", "tasks"}` and a task `{"id", "template", "title", "part", "how", "done_when", "owner_role", "status"}`. A task story's `part` is `A2` for a client skill and `A4` otherwise.
+
+`backlog.md` is the readable form: the epic as its title, a line saying it is generated from `card.json` and `levelled.json` and giving the command, then a section per feature and per story (statement, fields table, acceptance, gates) with the tasks as a checklist (`[ ]` todo, `[~]` in progress, `[x]` done), each with its owner role, numbered steps (links relative to the persona folder) and done-when, and the retired items at the end.
+
+`--plan-out FILE` also writes the backlog in the `tree_import` plan shape, `{"version": 1, "items": [{"type", "title", "note", "children"}]}`, epic to feature to story to task, so it can be filed to a tracker. Each note starts with the item's id; a task's note adds its owner role, its numbered steps and `Done when:`.
+
+Owner roles (`owner_roles`): the playbook 03 roles `executive-sponsor`, `technical-owner`, `backup-owner`, `business-owner`, `compliance`, `security`, `source-system-admin`, `skill-owner`, `pilot-user`, `engagement-lead`, `solution-architect`, `skill-engineer`, `integration-engineer` and `change-and-enablement-lead`, plus `consultant` for work the partner does that no single playbook role owns.
 
 ## 9. Dashboard (`dashboard.py`)
 

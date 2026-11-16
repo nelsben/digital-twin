@@ -1,0 +1,2174 @@
+{
+  "library_version": 1,
+  "owner_roles": [
+    "executive-sponsor",
+    "technical-owner",
+    "backup-owner",
+    "business-owner",
+    "compliance",
+    "security",
+    "source-system-admin",
+    "skill-owner",
+    "pilot-user",
+    "engagement-lead",
+    "solution-architect",
+    "skill-engineer",
+    "integration-engineer",
+    "change-and-enablement-lead",
+    "consultant"
+  ],
+  "templates": [
+    {
+      "id": "collect-examples",
+      "title": "Collect 3 examples of the task from real work, each with the result a person expects",
+      "part": "A8",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "not": {
+          "runtime": [
+            "none",
+            null
+          ]
+        }
+      },
+      "how": [
+        {
+          "text": "Ask the people who do the task today for three recent, real examples of it.",
+          "link": "starter-kit/docs/authoring-skills.md#step-order"
+        },
+        {
+          "text": "Record each example's inputs and the output a person would accept as done.",
+          "link": "starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals"
+        },
+        {
+          "text": "Remove any data the examples must not carry into the repository, keeping their shape.",
+          "link": "docs/compendium/10-sensitive-data.md#design-patterns-that-keep-data-out-of-the-conversation"
+        }
+      ],
+      "done_when": "Three real examples, each with its inputs and its expected result, are stored where the evals can read them.",
+      "owner_role": "skill-owner"
+    },
+    {
+      "id": "write-evals",
+      "title": "Write the evals from the examples and the story's acceptance criteria",
+      "part": "A8",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "not": {
+          "runtime": [
+            "none",
+            null
+          ]
+        }
+      },
+      "how": [
+        {
+          "text": "Turn each example and each acceptance criterion into an eval case with its expected result.",
+          "link": "starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals"
+        },
+        {
+          "text": "Put the eval cases in the files the kit expects, next to the skill.",
+          "link": "starter-kit/docs/authoring-skills.md#the-eval-files"
+        },
+        {
+          "text": "Run the evals once before any skill exists and keep the failing baseline.",
+          "link": "docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate"
+        }
+      ],
+      "done_when": "Every acceptance criterion has at least one eval, and the evals run and fail without the skill.",
+      "owner_role": "skill-engineer"
+    },
+    {
+      "id": "write-skill",
+      "title": "Write the skill from the kit template until the evals pass",
+      "part": "A2",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "runtime": "client-skill"
+      },
+      "how": [
+        {
+          "text": "Copy the kit's skill template into the role plugin's skills folder.",
+          "link": "starter-kit/templates/skill/README.md#copy-it"
+        },
+        {
+          "text": "Rename the copy to the skill's name.",
+          "link": "starter-kit/templates/skill/README.md#rename-it"
+        },
+        {
+          "text": "Fill in the description and the body, then rerun the evals until they pass.",
+          "link": "starter-kit/templates/skill/README.md#fill-it-in"
+        }
+      ],
+      "done_when": "The skill sits in the role plugin and every eval for the story passes.",
+      "owner_role": "skill-engineer"
+    },
+    {
+      "id": "trigger-evals",
+      "title": "Write and run the trigger evals for the skill",
+      "part": "A8",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "runtime": "client-skill"
+      },
+      "how": [
+        {
+          "text": "Install skill-creator where the evals run.",
+          "link": "starter-kit/docs/authoring-skills.md#install-skill-creator"
+        },
+        {
+          "text": "Write prompts that should and should not start the skill, as trigger evals.",
+          "link": "starter-kit/docs/authoring-skills.md#the-eval-files"
+        },
+        {
+          "text": "Run the trigger evals and tighten the description until they pass.",
+          "link": "docs/compendium/03-skills-authoring.md#writing-a-good-description"
+        }
+      ],
+      "done_when": "The skill starts on every should-trigger prompt and on none of the should-not prompts.",
+      "owner_role": "skill-engineer"
+    },
+    {
+      "id": "second-review",
+      "title": "Have a second person review the skill and its evals",
+      "part": "A8",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "not": {
+          "runtime": [
+            "none",
+            null
+          ]
+        }
+      },
+      "how": [
+        {
+          "text": "Open a pull request with the skill and its evals.",
+          "link": "docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often"
+        },
+        {
+          "text": "Have someone other than the author review it against the definition of done.",
+          "link": "docs/playbook/04-stories.md#definition-of-done"
+        }
+      ],
+      "done_when": "A reviewer who did not write the skill has approved the pull request and the evals pass.",
+      "owner_role": "skill-owner"
+    },
+    {
+      "id": "publish-in-role-plugin",
+      "title": "Publish the skill in the role plugin",
+      "part": "A9",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "runtime": "client-skill"
+      },
+      "how": [
+        {
+          "text": "Add the skill to the role plugin and bump the plugin's version.",
+          "link": "starter-kit/templates/role-plugin/README.md#steps"
+        },
+        {
+          "text": "Publish the marketplace so the role's users get the new version.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups"
+        }
+      ],
+      "done_when": "A pilot user in the role sees the skill after the plugin updates.",
+      "owner_role": "skill-engineer"
+    },
+    {
+      "id": "setup-scheduled-task",
+      "title": "Set up the Claude Code scheduled task and its schedule",
+      "part": "A4",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "runtime": "claude-code-scheduled-task"
+      },
+      "how": [
+        {
+          "text": "Create the scheduled task in the task owner's Claude Code with the skill as its prompt.",
+          "link": "docs/compendium/05-decision-matrix.md#the-options"
+        },
+        {
+          "text": "Set the schedule the card asks for and run it once by hand.",
+          "link": "docs/compendium/05-decision-matrix.md#decision-criteria"
+        },
+        {
+          "text": "Record where the run history lives so missed or failed runs can be found.",
+          "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+        }
+      ],
+      "done_when": "The scheduled task has run once on its schedule and its run history shows the result.",
+      "owner_role": "skill-engineer"
+    },
+    {
+      "id": "setup-tag-routine",
+      "title": "Set up the Claude Tag routine in the team's Slack channel",
+      "part": "A4",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "runtime": "claude-tag-routine"
+      },
+      "how": [
+        {
+          "text": "Create the routine in the Slack channel the card names, with the skill as its instructions.",
+          "link": "docs/compendium/05-decision-matrix.md#the-options"
+        },
+        {
+          "text": "Set the routine's schedule and run it once by hand.",
+          "link": "docs/compendium/05-decision-matrix.md#decision-criteria"
+        },
+        {
+          "text": "Check who can read the channel against the task's data class.",
+          "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+        }
+      ],
+      "done_when": "The routine has posted once on its schedule in a channel whose members fit the data class.",
+      "owner_role": "integration-engineer"
+    },
+    {
+      "id": "setup-managed-agents",
+      "title": "Set up the Managed Agents agent, its environment and its schedule or trigger",
+      "part": "A4",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "runtime": "managed-agents"
+      },
+      "how": [
+        {
+          "text": "Define the agent with the skill, its tools and the tool permissions the plan names.",
+          "link": "docs/compendium/05-decision-matrix.md#the-options"
+        },
+        {
+          "text": "Create the schedule or the trigger that starts each run.",
+          "link": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation"
+        },
+        {
+          "text": "Pin the model and the agent version so a run is repeatable.",
+          "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+        }
+      ],
+      "done_when": "The agent has run once from its schedule or trigger with pinned versions.",
+      "owner_role": "integration-engineer"
+    },
+    {
+      "id": "setup-managed-agents-self-hosted",
+      "title": "Set up self-hosted Managed Agents in the customer's environment and its schedule or trigger",
+      "part": "A4",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "runtime": "managed-agents-self-hosted"
+      },
+      "how": [
+        {
+          "text": "Stand up the self-hosted harness and sandbox in the environment the customer names.",
+          "link": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation"
+        },
+        {
+          "text": "Define the agent with the skill, its tools and the tool permissions the plan names.",
+          "link": "docs/compendium/05-decision-matrix.md#the-options"
+        },
+        {
+          "text": "Create the schedule or the trigger that starts each run, and pin the versions.",
+          "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+        },
+        {
+          "text": "Confirm the route keeps the retention the task needs.",
+          "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+        }
+      ],
+      "done_when": "The self-hosted agent has run once from its schedule or trigger inside the customer's environment.",
+      "owner_role": "integration-engineer"
+    },
+    {
+      "id": "setup-agent-sdk",
+      "title": "Build and host the Agent SDK runner and its schedule or trigger",
+      "part": "A4",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "runtime": "agent-sdk"
+      },
+      "how": [
+        {
+          "text": "Build the runner with the Agent SDK, the skill and only the tools the task needs.",
+          "link": "docs/compendium/05-decision-matrix.md#the-options"
+        },
+        {
+          "text": "Host the runner where the plan says and create the schedule or trigger that starts it.",
+          "link": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation"
+        },
+        {
+          "text": "Pin the model and the runner version so a run is repeatable.",
+          "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+        }
+      ],
+      "done_when": "The runner has run once from its schedule or trigger with pinned versions.",
+      "owner_role": "integration-engineer"
+    },
+    {
+      "id": "runtime-none",
+      "title": "Agree that people keep doing this task until a runtime is allowed for it",
+      "part": "A4",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "runtime": "none"
+      },
+      "how": [
+        {
+          "text": "Explain to the business owner why no runtime is allowed for the task's data class.",
+          "link": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation"
+        },
+        {
+          "text": "Record the condition that would allow a runtime, and who would confirm it.",
+          "link": "docs/compendium/10-sensitive-data.md#what-hipaa-covers"
+        }
+      ],
+      "done_when": "The business owner has agreed in writing that the task stays manual, and the condition to revisit it is recorded.",
+      "owner_role": "engagement-lead"
+    },
+    {
+      "id": "credentials-user",
+      "title": "Confirm the scheduled task runs under the task owner's own login and connectors",
+      "part": "A5",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "identity": "user",
+        "runtime": [
+          "claude-code-scheduled-task"
+        ]
+      },
+      "how": [
+        {
+          "text": "Check the task owner's own connectors are connected where the scheduled task runs.",
+          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+        },
+        {
+          "text": "Record that the task acts as that person, so its changes appear under that person's name.",
+          "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+        }
+      ],
+      "done_when": "The scheduled task reaches every system it needs as its owner, with no shared credential.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "credentials-service-account",
+      "title": "Create the service account the plan names, with only the access the task needs",
+      "part": "A5",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "identity": "service-account"
+      },
+      "how": [
+        {
+          "text": "Create the service account in each system the task reads or writes.",
+          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+        },
+        {
+          "text": "Grant it only the objects and actions the card lists for the task.",
+          "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
+        },
+        {
+          "text": "Record who owns the account and when its access is reviewed.",
+          "link": "docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often"
+        }
+      ],
+      "done_when": "The service account exists, holds only the task's access, and has a named owner and review date.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "credentials-api-key-vault",
+      "title": "Store the runtime's credentials in the customer's vault, read-only to the runtime",
+      "part": "A5",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "identity": "api-key-vault"
+      },
+      "how": [
+        {
+          "text": "Create a credential for each system the task uses, limited to the task's objects and actions.",
+          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+        },
+        {
+          "text": "Store the credentials in the customer's vault and give the runtime read access only.",
+          "link": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation"
+        },
+        {
+          "text": "Record who rotates each credential and how often.",
+          "link": "docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often"
+        }
+      ],
+      "done_when": "The runtime reads every credential it needs from the vault and none is stored in code or configuration.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "success-check",
+      "title": "Add an explicit success check to every run",
+      "part": "A8",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "runtime": [
+          "claude-code-scheduled-task",
+          "claude-tag-routine",
+          "managed-agents",
+          "managed-agents-self-hosted",
+          "agent-sdk"
+        ]
+      },
+      "how": [
+        {
+          "text": "Define what a successful run produces, beyond the session ending cleanly.",
+          "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+        },
+        {
+          "text": "Make each run check that result and report a failure when it is missing.",
+          "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+        }
+      ],
+      "done_when": "A run that ends without its result is reported as failed, not as succeeded.",
+      "owner_role": "skill-engineer"
+    },
+    {
+      "id": "missed-run-plan",
+      "title": "Plan for missed runs and reconcile them",
+      "part": "A4",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "runtime": [
+          "claude-code-scheduled-task",
+          "claude-tag-routine",
+          "managed-agents",
+          "managed-agents-self-hosted",
+          "agent-sdk"
+        ]
+      },
+      "how": [
+        {
+          "text": "List how a run can be missed: a skipped schedule, a failed trigger or a webhook that gave up.",
+          "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+        },
+        {
+          "text": "Add a reconciliation step that finds missed runs and reruns or reports them.",
+          "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+        },
+        {
+          "text": "Name the person who handles a run that still fails.",
+          "link": "docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often"
+        }
+      ],
+      "done_when": "A missed run is found and handled within one cycle, by a named person.",
+      "owner_role": "integration-engineer"
+    },
+    {
+      "id": "connect-salesforce-runbook",
+      "title": "Connect it by following the kit's Salesforce hosted MCP runbook",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": "connector",
+      "when": {
+        "connector.runbook": "starter-kit/runbooks/salesforce-hosted-mcp.md"
+      },
+      "how": [
+        {
+          "text": "Choose per-user OAuth as the runbook explains before anything is created.",
+          "link": "starter-kit/runbooks/salesforce-hosted-mcp.md#4-choose-per-user-oauth-the-decision-you-cannot-undo"
+        },
+        {
+          "text": "Add the connector in the Claude org.",
+          "link": "starter-kit/runbooks/salesforce-hosted-mcp.md#6-add-the-connector-in-the-claude-org"
+        },
+        {
+          "text": "Set the tool permissions first, then connect.",
+          "link": "starter-kit/runbooks/salesforce-hosted-mcp.md#7-set-tool-permissions-then-connect"
+        }
+      ],
+      "done_when": "Each pilot user has connected with their own login and only the planned tools are enabled.",
+      "owner_role": "source-system-admin"
+    },
+    {
+      "id": "connect-microsoft-365-runbook",
+      "title": "Connect it by following the kit's Microsoft 365 connector runbook",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": "connector",
+      "when": {
+        "connector.runbook": "starter-kit/runbooks/microsoft-365-connector.md"
+      },
+      "how": [
+        {
+          "text": "Decide what to approve before granting consent.",
+          "link": "starter-kit/runbooks/microsoft-365-connector.md#2-decide-what-to-approve-before-consent"
+        },
+        {
+          "text": "Grant tenant admin consent.",
+          "link": "starter-kit/runbooks/microsoft-365-connector.md#3-grant-tenant-admin-consent"
+        },
+        {
+          "text": "Enable the connector for the right Claude group.",
+          "link": "starter-kit/runbooks/microsoft-365-connector.md#5-enable-the-connector-for-the-right-claude-group"
+        }
+      ],
+      "done_when": "Consent is granted, the connector is enabled for the role's group only, and its write tools stay off.",
+      "owner_role": "source-system-admin"
+    },
+    {
+      "id": "connect-no-runbook",
+      "title": "Connect it without a kit runbook: the kit has no runbook for this connector yet",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": "connector",
+      "when": {
+        "connector.runbook": null
+      },
+      "how": [
+        {
+          "text": "Check how the system connects today: a directory connector, a vendor server or none.",
+          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+        },
+        {
+          "text": "If the directory has no connector for it, choose to buy, build or host one.",
+          "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
+        },
+        {
+          "text": "Review the connector before it is enabled, and write down the steps you followed.",
+          "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+        }
+      ],
+      "done_when": "The connector works for a pilot user with the planned identity, and the steps are written down for a runbook.",
+      "owner_role": "integration-engineer"
+    },
+    {
+      "id": "tool-always-allow",
+      "title": "Set the connector tool to Always allow, as the levelled tools list says",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": "tool",
+      "when": {
+        "tool.permission": "always-allow"
+      },
+      "how": [
+        {
+          "text": "Open the connector's page in the Claude org and find the tool.",
+          "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
+        },
+        {
+          "text": "Set the tool to Always allow and record the change.",
+          "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+        }
+      ],
+      "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "tool-needs-approval",
+      "title": "Set the connector tool to Needs approval, as the levelled tools list says",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": "tool",
+      "when": {
+        "tool.permission": "needs-approval"
+      },
+      "how": [
+        {
+          "text": "Open the connector's page in the Claude org and find the tool.",
+          "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
+        },
+        {
+          "text": "Set the tool to Needs approval and record the change.",
+          "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+        }
+      ],
+      "done_when": "The tool is set to Needs approval in the Claude org, as levelled.json says.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "tool-blocked",
+      "title": "Set the connector tool to Blocked, as the levelled tools list says",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": "tool",
+      "when": {
+        "tool.permission": "blocked"
+      },
+      "how": [
+        {
+          "text": "Open the connector's page in the Claude org and find the tool.",
+          "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
+        },
+        {
+          "text": "Set the tool to Blocked, or leave it out of the role plugin, and record the change.",
+          "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+        }
+      ],
+      "done_when": "The tool is Blocked in the Claude org, as levelled.json says, and the twin cannot call it.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "evidence-level-2",
+      "title": "Gather the evidence to move the task up to level 2, act with approval",
+      "part": "A8",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "autonomy.start": [
+          0,
+          1
+        ],
+        "autonomy.ceiling": [
+          2,
+          3,
+          4
+        ]
+      },
+      "how": [
+        {
+          "text": "Show the evals pass reliably at the current level.",
+          "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+        },
+        {
+          "text": "Bring a month of scorecard results, with the edit rate, to the business owner.",
+          "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
+        }
+      ],
+      "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
+      "owner_role": "business-owner"
+    },
+    {
+      "id": "evidence-level-3",
+      "title": "Gather the evidence to move the task up to level 3, act within an allowlist",
+      "part": "A8",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "autonomy.start": [
+          0,
+          1,
+          2
+        ],
+        "autonomy.ceiling": [
+          3,
+          4
+        ]
+      },
+      "how": [
+        {
+          "text": "Confirm every allowlisted action can be undone or stays internal.",
+          "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+        },
+        {
+          "text": "Show a stable eval pass rate, a low edit rate and few rejections at level 2.",
+          "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
+        },
+        {
+          "text": "List the tools to set to Always allow and keep every other tool on Needs approval.",
+          "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+        }
+      ],
+      "done_when": "The business owner has approved the allowlist on scorecard evidence, and only those tools are Always allow.",
+      "owner_role": "business-owner"
+    },
+    {
+      "id": "evidence-level-4",
+      "title": "Decide every approval in advance before the task runs unattended at level 4",
+      "part": "A8",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "autonomy.start": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "autonomy.ceiling": 4
+      },
+      "how": [
+        {
+          "text": "Write down each approval the task could need and decide it in policy, since an unattended run cannot ask.",
+          "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+        },
+        {
+          "text": "Show the success check and the missed-run plan have worked for a month.",
+          "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
+        }
+      ],
+      "done_when": "The business owner has approved unattended runs with every approval decided in policy.",
+      "owner_role": "business-owner"
+    },
+    {
+      "id": "twin-marker-salesforce",
+      "title": "Deploy the Salesforce twin marker field (Last updated by twin)",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": "connector",
+      "when": {
+        "connector.kind": "crm",
+        "connector.access": "write",
+        "connector.product": "Salesforce"
+      },
+      "how": [
+        {
+          "text": "Deploy the marker field and its permission sets.",
+          "link": "starter-kit/connectors/salesforce/README.md#deploy-it-the-salesforce-admin-does-this"
+        },
+        {
+          "text": "Give edit access to the marker only to the users the twin acts for.",
+          "link": "starter-kit/connectors/salesforce/README.md#who-can-edit-the-field"
+        }
+      ],
+      "done_when": "The marker field is deployed and only the role's users can set it.",
+      "owner_role": "source-system-admin"
+    },
+    {
+      "id": "twin-marker-crm",
+      "title": "Add a twin marker to this CRM: the kit has no marker for it yet",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": "connector",
+      "when": {
+        "connector.kind": "crm",
+        "connector.access": "write",
+        "not": {
+          "connector.product": "Salesforce"
+        }
+      },
+      "how": [
+        {
+          "text": "Choose a marker the CRM can hold on every record the twin writes, such as a field or a note prefix.",
+          "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+        },
+        {
+          "text": "Create it in the CRM and limit who can set it to the role's users.",
+          "link": null
+        }
+      ],
+      "done_when": "Every record type the twin writes in this CRM can carry the twin marker.",
+      "owner_role": "source-system-admin"
+    },
+    {
+      "id": "twin-marker-skill",
+      "title": "Make the skill set the twin marker on every CRM write",
+      "part": "A2",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "writes.kinds": "crm"
+      },
+      "how": [
+        {
+          "text": "Add a step to the skill that sets the twin marker with every write.",
+          "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+        },
+        {
+          "text": "Add an eval that fails when a write leaves the twin marker unset.",
+          "link": "starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals"
+        }
+      ],
+      "done_when": "The evals show every CRM write the twin makes carries the twin marker.",
+      "owner_role": "skill-engineer"
+    },
+    {
+      "id": "twin-marker-report",
+      "title": "Report on the twin marker in the CRM's own history",
+      "part": "A8",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "writes.kinds": "crm"
+      },
+      "how": [
+        {
+          "text": "Build a CRM report of the records the twin marker shows the twin changed.",
+          "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+        },
+        {
+          "text": "Add the count of twin-written changes to the monthly scorecard.",
+          "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
+        }
+      ],
+      "done_when": "The business owner can see in the CRM which changes the twin made.",
+      "owner_role": "business-owner"
+    },
+    {
+      "id": "wall-test",
+      "title": "Test the information wall with two users on either side before the pilot",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "compliance.walls": [
+          "soft",
+          "hard"
+        ],
+        "systems.kinds": [
+          "crm",
+          "documents"
+        ]
+      },
+      "how": [
+        {
+          "text": "List what the wall must keep apart in each system the task reads.",
+          "link": "docs/compendium/14-private-equity.md#what-a-wall-has-to-guarantee"
+        },
+        {
+          "text": "Run the task as a user on each side of the wall and check neither sees the other side's records.",
+          "link": "docs/compendium/14-private-equity.md#where-a-twin-can-leak-across-a-wall"
+        },
+        {
+          "text": "Use the two-user test in the system's runbook where the kit has one.",
+          "link": "starter-kit/runbooks/salesforce-hosted-mcp.md#9-test-two-users-on-either-side-of-a-soft-wall"
+        }
+      ],
+      "done_when": "Compliance has seen the two-user test pass for every walled system the task reads.",
+      "owner_role": "compliance"
+    },
+    {
+      "id": "web-tools-off",
+      "title": "Check web search and web fetch are off wherever this task runs",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "data_controls.web_tools": "off"
+      },
+      "how": [
+        {
+          "text": "Check the settings baseline or the org setting turns web tools off on the task's surfaces.",
+          "link": "starter-kit/settings/README.md#keys"
+        },
+        {
+          "text": "Try a web search in the task and confirm it is refused.",
+          "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+        }
+      ],
+      "done_when": "A web search or fetch attempted during the task is refused.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "zdr-retention",
+      "title": "Confirm the task runs only in the org with zero data retention",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "data_controls.retention": "zdr"
+      },
+      "how": [
+        {
+          "text": "Check the task's surfaces and connectors are all in the ZDR org.",
+          "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+        },
+        {
+          "text": "Record which features the ZDR org lacks that the task might expect.",
+          "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
+        }
+      ],
+      "done_when": "Compliance has confirmed the task runs only in the ZDR org.",
+      "owner_role": "compliance"
+    },
+    {
+      "id": "confirm-unverified-decision",
+      "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build",
+      "part": "A9",
+      "applies_to": "task-story",
+      "per": "unverified-decision",
+      "when": {},
+      "how": [
+        {
+          "text": "Find the Unverified mark on the page the decision cites in levelled.json.",
+          "link": "partner-kit/docs/design.md#72-decision-values"
+        },
+        {
+          "text": "Ask Anthropic or the vendor in writing, using the partner questions list.",
+          "link": "docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner"
+        },
+        {
+          "text": "Record the answer with its source and level the card again.",
+          "link": "docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss"
+        }
+      ],
+      "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "blocker-plan-below-team",
+      "title": "Resolve blocker plan-below-team: move the role's users onto a Team or Enterprise plan",
+      "part": "A9",
+      "applies_to": "S-guardrails-and-settings",
+      "per": null,
+      "when": {
+        "codes": "plan-below-team"
+      },
+      "how": [
+        {
+          "text": "Show the sponsor what an individual plan cannot do for company data.",
+          "link": "docs/compendium/09-plans-and-it-controls.md#what-this-means-for-the-rollout-our-recommendation"
+        },
+        {
+          "text": "Agree the plan the role moves to and the date, before any build.",
+          "link": "docs/compendium/09-plans-and-it-controls.md#what-it-can-do-on-each-plan"
+        }
+      ],
+      "done_when": "The role's users are on a Team or Enterprise plan and levelling no longer raises the blocker.",
+      "owner_role": "engagement-lead"
+    },
+    {
+      "id": "blocker-private-network-unreachable",
+      "title": "Resolve blocker private-network-unreachable: give the runtime a route to the private system",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "private-network-unreachable"
+      },
+      "how": [
+        {
+          "text": "Choose one route with the customer: allowlist Anthropic's IP range, run the job inside the network, or an MCP tunnel on Enterprise.",
+          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+        },
+        {
+          "text": "Record the route in the profile and level the card again.",
+          "link": "partner-kit/docs/design.md#72-decision-values"
+        }
+      ],
+      "done_when": "The runtime reaches the private system by an agreed route and levelling no longer raises the blocker.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "blocker-log-every-action-not-met",
+      "title": "Resolve blocker log-every-action-not-met: meet the requirement to log every action, or drop it",
+      "part": "A9",
+      "applies_to": "S-governance-log",
+      "per": null,
+      "when": {
+        "codes": "log-every-action-not-met"
+      },
+      "how": [
+        {
+          "text": "Show the customer why the web surface cannot run the governance hook.",
+          "link": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management"
+        },
+        {
+          "text": "Agree either Claude Code on managed devices with the hook, or dropping the requirement in writing.",
+          "link": "starter-kit/plugins/twin-governance/README.md#deploying-it-managed-hooks"
+        }
+      ],
+      "done_when": "The customer has chosen in writing and levelling no longer raises the blocker.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "blocker-highly-sensitive-needs-zdr-org",
+      "title": "Resolve blocker highly-sensitive-needs-zdr-org: set up an Enterprise org with ZDR or lower the data class",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "highly-sensitive-needs-zdr-org"
+      },
+      "how": [
+        {
+          "text": "Explain what highly sensitive data needs from the org.",
+          "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+        },
+        {
+          "text": "Agree with the compliance owner either a separate Enterprise org with ZDR or a lower data class.",
+          "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
+        }
+      ],
+      "done_when": "The task has a ZDR org or a lower data class, and levelling no longer raises the blocker.",
+      "owner_role": "compliance"
+    },
+    {
+      "id": "blocker-unmanaged-device-no-access",
+      "title": "Resolve blocker unmanaged-device-no-access: give the users managed devices or a hosted twin",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "unmanaged-device-no-access"
+      },
+      "how": [
+        {
+          "text": "Explain why the data class gets no direct access from an unmanaged device.",
+          "link": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation"
+        },
+        {
+          "text": "Agree either managed devices for these users or a hosted twin that the device only displays.",
+          "link": "docs/compendium/13-devices.md#a-hosted-twin-for-unmanaged-devices-our-recommendation"
+        }
+      ],
+      "done_when": "The task runs only on managed devices or in a hosted twin, and levelling no longer raises the blocker.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "blocker-phi-needs-hipaa-org",
+      "title": "Resolve blocker phi-needs-hipaa-org: set up a HIPAA org with a signed BAA or take PHI out",
+      "part": "A7",
+      "applies_to": "S-guardrails-and-settings",
+      "per": null,
+      "when": {
+        "codes": "phi-needs-hipaa-org"
+      },
+      "how": [
+        {
+          "text": "Explain what PHI needs: a dedicated HIPAA org on Enterprise with a signed BAA.",
+          "link": "docs/compendium/10-sensitive-data.md#what-hipaa-covers"
+        },
+        {
+          "text": "Agree with the compliance owner either that org or taking PHI out of the role's tasks.",
+          "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+        }
+      ],
+      "done_when": "A HIPAA org with a signed BAA exists or no task holds PHI, and levelling no longer raises the blocker.",
+      "owner_role": "compliance"
+    },
+    {
+      "id": "blocker-phi-no-hosted-runtime",
+      "title": "Resolve blocker phi-no-hosted-runtime: make the PHI task one a person starts, or wait for a confirmed route",
+      "part": "A4",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "phi-no-hosted-runtime"
+      },
+      "how": [
+        {
+          "text": "Explain that no hosted runtime is confirmed for PHI.",
+          "link": "docs/compendium/10-sensitive-data.md#what-hipaa-covers"
+        },
+        {
+          "text": "Agree with the business owner to make it a task a person starts in Claude Code, or to wait for written confirmation from Anthropic.",
+          "link": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation"
+        }
+      ],
+      "done_when": "The task has a runtime the pages confirm for PHI, or waits on a written confirmation, and the card says which.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "blocker-connector-cannot-write",
+      "title": "Resolve blocker connector-cannot-write: end the task in a draft a person sends",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "connector-cannot-write"
+      },
+      "how": [
+        {
+          "text": "Check which action the connector cannot do.",
+          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+        },
+        {
+          "text": "Change the task so it ends in a draft a person sends, and remove the write from the card.",
+          "link": "docs/playbook/04-stories.md#story-template"
+        }
+      ],
+      "done_when": "The card no longer asks the connector for that action and levelling no longer raises the blocker.",
+      "owner_role": "skill-owner"
+    },
+    {
+      "id": "blocker-override-not-allowed",
+      "title": "Resolve blocker override-not-allowed: remove the override of a decision that cannot be overridden",
+      "part": "A9",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "override-not-allowed"
+      },
+      "how": [
+        {
+          "text": "Read which override levelling refused and why.",
+          "link": "partner-kit/docs/design.md#7-levelling-datarulesjson-levelpy"
+        },
+        {
+          "text": "Override the decision it follows from instead, or change the card, then level again.",
+          "link": "partner-kit/docs/design.md#72-decision-values"
+        }
+      ],
+      "done_when": "The card has no override of connectors or plan_fit and levelling no longer raises the blocker.",
+      "owner_role": "consultant"
+    },
+    {
+      "id": "blocker-override-unknown-target",
+      "title": "Resolve blocker override-unknown-target: fix the override that names a task or decision levelling does not have",
+      "part": "A9",
+      "applies_to": "S-guardrails-and-settings",
+      "per": null,
+      "when": {
+        "codes": "override-unknown-target"
+      },
+      "how": [
+        {
+          "text": "Read which override names an unknown task or decision.",
+          "link": "partner-kit/docs/design.md#7-levelling-datarulesjson-levelpy"
+        },
+        {
+          "text": "Name a task on the card and an overridable decision, or remove the override, then level again.",
+          "link": "partner-kit/docs/design.md#72-decision-values"
+        }
+      ],
+      "done_when": "Every override names a real task and decision, and levelling no longer raises the blocker.",
+      "owner_role": "consultant"
+    },
+    {
+      "id": "blocker-plugin-name-invalid",
+      "title": "Resolve blocker plugin-name-invalid: give the role plugin a valid name",
+      "part": "A9",
+      "applies_to": "S-distribution",
+      "per": null,
+      "when": {
+        "codes": "plugin-name-invalid"
+      },
+      "how": [
+        {
+          "text": "Pick a name of the form twin-<role> in lower-case kebab-case.",
+          "link": "starter-kit/templates/role-plugin/README.md#steps"
+        },
+        {
+          "text": "Set it in role.plugin_name on the card, or leave it empty, then level again.",
+          "link": "partner-kit/docs/design.md#72-decision-values"
+        }
+      ],
+      "done_when": "The role plugin name matches twin-<role> and levelling no longer raises the blocker.",
+      "owner_role": "skill-engineer"
+    },
+    {
+      "id": "warning-agent-sdk-cover-unverified",
+      "title": "Resolve warning agent-sdk-cover-unverified: keep the Agent SDK out of the task until its cover is confirmed",
+      "part": "A4",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "agent-sdk-cover-unverified"
+      },
+      "how": [
+        {
+          "text": "Check which retention or HIPAA cover the task needs.",
+          "link": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation"
+        },
+        {
+          "text": "Ask Anthropic to confirm the Agent SDK's cover in writing, and use the confirmed route until then.",
+          "link": "docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner"
+        }
+      ],
+      "done_when": "The task uses a route the pages confirm, or Anthropic's written confirmation is recorded with its source.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "warning-decision-undecided",
+      "title": "Resolve warning decision-undecided: decide what the compendium leaves undecided",
+      "part": "A9",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "decision-undecided"
+      },
+      "how": [
+        {
+          "text": "Read which decision is undecided and why in levelled.json.",
+          "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+        },
+        {
+          "text": "Decide it with the customer and record the answer as an override on the card, then level again.",
+          "link": "partner-kit/docs/design.md#72-decision-values"
+        }
+      ],
+      "done_when": "The decision has a value on the card, with a reason and an approver, and the warning is gone.",
+      "owner_role": "business-owner"
+    },
+    {
+      "id": "warning-shared-tool-strictest",
+      "title": "Resolve warning shared-tool-strictest: split the shared tool or run both tasks at the stricter level",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "shared-tool-strictest"
+      },
+      "how": [
+        {
+          "text": "Find the tasks that share the tool and the level each wants.",
+          "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
+        },
+        {
+          "text": "Agree with the business owner to split the tools or to run both tasks at the stricter level.",
+          "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+        }
+      ],
+      "done_when": "The business owner has chosen and the tool settings match the choice.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "warning-override-applied",
+      "title": "Resolve warning override-applied: keep the card override under review",
+      "part": "A9",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "override-applied"
+      },
+      "how": [
+        {
+          "text": "Read the rule's own result and the override's reason in levelled.json.",
+          "link": "partner-kit/docs/design.md#7-levelling-datarulesjson-levelpy"
+        },
+        {
+          "text": "Check with the approver that the override still holds whenever the card changes.",
+          "link": "partner-kit/docs/design.md#72-decision-values"
+        }
+      ],
+      "done_when": "The approver has confirmed the override still holds for the current card.",
+      "owner_role": "consultant"
+    },
+    {
+      "id": "warning-field-open",
+      "title": "Resolve warning field-open: answer the open field that leaves a decision undecided",
+      "part": "A9",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "field-open"
+      },
+      "how": [
+        {
+          "text": "Read which field is open and who owns the answer.",
+          "link": "partner-kit/docs/design.md#43-provenance-and-completeness"
+        },
+        {
+          "text": "Get the answer from its owner, record it with its source, and level again.",
+          "link": "partner-kit/docs/design.md#72-decision-values"
+        }
+      ],
+      "done_when": "The field is answered with a source and the warning is gone.",
+      "owner_role": "consultant"
+    },
+    {
+      "id": "warning-team-no-group-targeting",
+      "title": "Resolve warning team-no-group-targeting: keep the role plugin safe for everyone in the org",
+      "part": "A9",
+      "applies_to": "S-distribution",
+      "per": null,
+      "when": {
+        "codes": "team-no-group-targeting"
+      },
+      "how": [
+        {
+          "text": "Explain that on Team the role plugin goes to everyone.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#team-plan-no-scim-no-group-targeting"
+        },
+        {
+          "text": "Check the role plugin holds nothing other roles must not see.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member"
+        }
+      ],
+      "done_when": "The role plugin holds nothing another role must not see, or the customer has chosen Enterprise.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "warning-team-no-managed-settings",
+      "title": "Resolve warning team-no-managed-settings: put the guardrails in tool permissions and skills",
+      "part": "A7",
+      "applies_to": "S-guardrails-and-settings",
+      "per": null,
+      "when": {
+        "codes": "team-no-managed-settings"
+      },
+      "how": [
+        {
+          "text": "List the guardrails that managed settings would have locked.",
+          "link": "docs/compendium/13-devices.md#team-plan-with-no-device-management"
+        },
+        {
+          "text": "Move each one into a connector tool permission or a skill, and tell the customer what cannot be locked.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#what-a-team-twin-does-not-get"
+        }
+      ],
+      "done_when": "Each guardrail is enforced by a tool permission or a skill, or listed as not lockable and accepted.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "warning-team-no-governance-log",
+      "title": "Resolve warning team-no-governance-log: record use without the governance hook",
+      "part": "A9",
+      "applies_to": "S-governance-log",
+      "per": null,
+      "when": {
+        "codes": "team-no-governance-log"
+      },
+      "how": [
+        {
+          "text": "Explain that the governance log is a Claude Code hook a Team twin on the web does not get.",
+          "link": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management"
+        },
+        {
+          "text": "Record use from the usage dashboard and the source systems' own audit instead.",
+          "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+        }
+      ],
+      "done_when": "The design says what is recorded instead of the governance log, and the customer has accepted it.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "warning-team-no-audit-log",
+      "title": "Resolve warning team-no-audit-log: rely on the source systems' audit logs",
+      "part": "A9",
+      "applies_to": "S-governance-log",
+      "per": null,
+      "when": {
+        "codes": "team-no-audit-log"
+      },
+      "how": [
+        {
+          "text": "Explain that Team has no audit log and no Compliance API.",
+          "link": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management"
+        },
+        {
+          "text": "Confirm each source system's own audit covers what compliance needs.",
+          "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+        }
+      ],
+      "done_when": "Compliance has accepted the source systems' audit in place of Claude's audit log.",
+      "owner_role": "compliance"
+    },
+    {
+      "id": "warning-confidential-on-team",
+      "title": "Resolve warning confidential-on-team: confirm the lower audit need for confidential data on Team",
+      "part": "A7",
+      "applies_to": "S-guardrails-and-settings",
+      "per": null,
+      "when": {
+        "codes": "confidential-on-team"
+      },
+      "how": [
+        {
+          "text": "Explain what Team lacks for confidential data.",
+          "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+        },
+        {
+          "text": "Get the compliance owner's written confirmation that the lower audit need holds.",
+          "link": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management"
+        }
+      ],
+      "done_when": "The compliance owner has confirmed in writing that confidential data on Team is acceptable.",
+      "owner_role": "compliance"
+    },
+    {
+      "id": "warning-unmanaged-connectors-read-only",
+      "title": "Resolve warning unmanaged-connectors-read-only: limit the write on an unmanaged device",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "unmanaged-connectors-read-only"
+      },
+      "how": [
+        {
+          "text": "Explain why confidential data on an unmanaged device calls for read-only connectors.",
+          "link": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation"
+        },
+        {
+          "text": "Set the write tool to Needs approval at most, or get the customer's written acceptance of the write.",
+          "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
+        }
+      ],
+      "done_when": "The write tool is Needs approval or Blocked, or the customer's written acceptance is recorded.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "warning-mail-read-only",
+      "title": "Resolve warning mail-read-only: end the email in a draft the person sends",
+      "part": "A2",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "mail-read-only"
+      },
+      "how": [
+        {
+          "text": "Note that the mail connector reads only.",
+          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+        },
+        {
+          "text": "Write the skill so it ends with a draft in the conversation that the person copies and sends.",
+          "link": "starter-kit/templates/skill/README.md#fill-it-in"
+        }
+      ],
+      "done_when": "The evals show the task ends in a draft and never tries to send.",
+      "owner_role": "skill-engineer"
+    },
+    {
+      "id": "warning-private-network-allowlist",
+      "title": "Resolve warning private-network-allowlist: allowlist Anthropic's IP range for the private system",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "private-network-allowlist"
+      },
+      "how": [
+        {
+          "text": "Ask the customer's network owner to allowlist Anthropic's IP range at the edge.",
+          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+        },
+        {
+          "text": "Test the connection from Claude before the task is built.",
+          "link": "starter-kit/runbooks/salesforce-hosted-mcp.md#8-ip-allowlist-discovery-e6"
+        }
+      ],
+      "done_when": "The private system answers a connector call from Claude.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "warning-tag-private-channel-only",
+      "title": "Resolve warning tag-private-channel-only: run the Claude Tag routine only in a private channel",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "tag-private-channel-only"
+      },
+      "how": [
+        {
+          "text": "Create or choose a private channel limited to the team.",
+          "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+        },
+        {
+          "text": "Check the channel's members before the routine first posts.",
+          "link": "docs/compendium/13-devices.md#team-plan-with-no-device-management"
+        }
+      ],
+      "done_when": "The routine posts only in a private channel whose members are the team.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "warning-slack-directory-send-unverified",
+      "title": "Resolve warning slack-directory-send-unverified: post through Claude Tag or the Slack MCP server",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "slack-directory-send-unverified"
+      },
+      "how": [
+        {
+          "text": "Note that posting through the Slack directory connector is unverified.",
+          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+        },
+        {
+          "text": "Post through Claude Tag or the Slack MCP server instead.",
+          "link": "docs/compendium/05-decision-matrix.md#the-options"
+        }
+      ],
+      "done_when": "The task posts by a confirmed route.",
+      "owner_role": "integration-engineer"
+    },
+    {
+      "id": "warning-untrusted-input-with-send",
+      "title": "Resolve warning untrusted-input-with-send: make a person approve each send",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "untrusted-input-with-send"
+      },
+      "how": [
+        {
+          "text": "Note that the task reads untrusted content and can send it out.",
+          "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+        },
+        {
+          "text": "Set the send tool to Needs approval and keep the task at level 2 or below.",
+          "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
+        }
+      ],
+      "done_when": "The send tool is Needs approval and the task's ceiling is level 2 or below.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "warning-memory-poisoning-risk",
+      "title": "Resolve warning memory-poisoning-risk: keep memory off for the task that reads untrusted input",
+      "part": "A6",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "memory-poisoning-risk"
+      },
+      "how": [
+        {
+          "text": "Explain how untrusted input can poison memory.",
+          "link": "docs/compendium/02-persona.md#memory"
+        },
+        {
+          "text": "Keep role knowledge in reviewed skills and let only controlled steps write memory.",
+          "link": "docs/compendium/02-persona.md#memory"
+        }
+      ],
+      "done_when": "Memory stays off for the task and its role knowledge lives in reviewed skills.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "warning-event-source-unverified",
+      "title": "Resolve warning event-source-unverified: confirm what would start the task on its event",
+      "part": "A4",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "event-source-unverified"
+      },
+      "how": [
+        {
+          "text": "Ask Anthropic and the vendor what can fire the event.",
+          "link": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation"
+        },
+        {
+          "text": "Let a person start the task until the event source is confirmed, then level again.",
+          "link": "partner-kit/docs/design.md#72-decision-values"
+        }
+      ],
+      "done_when": "The event source is confirmed in writing, or the task stays person-started.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "warning-connector-early-access",
+      "title": "Resolve warning connector-early-access: confirm the early-access connector with the vendor",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "connector-early-access"
+      },
+      "how": [
+        {
+          "text": "Ask the vendor about the connector's plan support and per-user checks.",
+          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+        },
+        {
+          "text": "Record the answer with its source before the build.",
+          "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+        }
+      ],
+      "done_when": "The vendor's answer is recorded with its source.",
+      "owner_role": "integration-engineer"
+    },
+    {
+      "id": "warning-hubspot-super-admin-approval",
+      "title": "Resolve warning hubspot-super-admin-approval: book the HubSpot Super Admin's approval",
+      "part": "A3",
+      "applies_to": "S-connectors-and-identity",
+      "per": null,
+      "when": {
+        "codes": "hubspot-super-admin-approval"
+      },
+      "how": [
+        {
+          "text": "Name the customer's HubSpot Super Admin in the profile's owners.",
+          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+        },
+        {
+          "text": "Book the approval alongside the Claude Owner's.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#getting-people-in-and-setting-roles"
+        }
+      ],
+      "done_when": "The HubSpot Super Admin has approved the connector.",
+      "owner_role": "source-system-admin"
+    },
+    {
+      "id": "persona-fill",
+      "title": "Fill in the persona from the kit template, from the card's voice section",
+      "part": "A1",
+      "applies_to": "S-persona-voice",
+      "per": null,
+      "when": {},
+      "how": [
+        {
+          "text": "Copy the kit's persona template.",
+          "link": "starter-kit/templates/persona/README.md#fill-it-in"
+        },
+        {
+          "text": "Fill in persona.md section by section from the card's voice, giving the reason for every rule.",
+          "link": "docs/compendium/02-persona.md#a-persona-template-our-recommendation"
+        }
+      ],
+      "done_when": "persona.md is filled in with no FILL IN marker left.",
+      "owner_role": "skill-engineer"
+    },
+    {
+      "id": "persona-forms",
+      "title": "Build the output style and the system prompt from the persona",
+      "part": "A1",
+      "applies_to": "S-persona-voice",
+      "per": null,
+      "when": {},
+      "how": [
+        {
+          "text": "Build each form the role's surfaces need from persona.md.",
+          "link": "starter-kit/templates/persona/README.md#which-form-goes-where"
+        },
+        {
+          "text": "Change persona.md and both forms in the same pull request, never one alone.",
+          "link": "starter-kit/templates/persona/README.md#the-rule"
+        }
+      ],
+      "done_when": "Both forms match persona.md and sit where each surface reads them.",
+      "owner_role": "skill-engineer"
+    },
+    {
+      "id": "persona-review",
+      "title": "Have the business owner and a pilot user review the persona voice",
+      "part": "A1",
+      "applies_to": "S-persona-voice",
+      "per": null,
+      "when": {},
+      "how": [
+        {
+          "text": "Show the reviewers drafts from the twin with the persona in place.",
+          "link": "docs/compendium/02-persona.md#where-the-persona-lives-on-each-surface"
+        },
+        {
+          "text": "Record what they change and update persona.md and both forms.",
+          "link": "starter-kit/templates/persona/README.md#the-rule"
+        }
+      ],
+      "done_when": "The business owner has approved the persona voice.",
+      "owner_role": "business-owner"
+    },
+    {
+      "id": "identity-scim-groups",
+      "title": "Create the role's SCIM groups and connect SCIM in Claude",
+      "part": "A5",
+      "applies_to": "S-connectors-and-identity",
+      "per": null,
+      "when": {
+        "plan.tier": "enterprise"
+      },
+      "how": [
+        {
+          "text": "Create the role's groups in the identity provider.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#1-create-the-scim-groups-in-the-identity-provider"
+        },
+        {
+          "text": "Connect SCIM in Claude.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#2-connect-scim-in-claude"
+        },
+        {
+          "text": "Map the groups to roles and seats.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#3-map-groups-to-roles-and-seats"
+        }
+      ],
+      "done_when": "The role's users arrive in Claude through SCIM in the right group.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "identity-team-members",
+      "title": "Invite the role's users and set their roles by hand",
+      "part": "A5",
+      "applies_to": "S-connectors-and-identity",
+      "per": null,
+      "when": {
+        "plan.tier": [
+          "team",
+          "individual"
+        ]
+      },
+      "how": [
+        {
+          "text": "Invite each user of the role to the organisation.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#getting-people-in-and-setting-roles"
+        },
+        {
+          "text": "Record who is in the role, since the plan has no group to hold them.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#team-plan-no-scim-no-group-targeting"
+        }
+      ],
+      "done_when": "Every user of the role is in the organisation with the right role, and the list is recorded.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "connector-inventory",
+      "title": "List every connector the role uses, its identity and who approves it",
+      "part": "A3",
+      "applies_to": "S-connectors-and-identity",
+      "per": null,
+      "when": {},
+      "how": [
+        {
+          "text": "List the systems each task reads or writes and the connector for each.",
+          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+        },
+        {
+          "text": "Record each connector's identity and the person who approves it.",
+          "link": "docs/playbook/01-engagement-model.md"
+        }
+      ],
+      "done_when": "Every connector the role uses is listed with its identity and approver.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "connector-review",
+      "title": "Review each connector before it is enabled",
+      "part": "A3",
+      "applies_to": "S-connectors-and-identity",
+      "per": null,
+      "when": {},
+      "how": [
+        {
+          "text": "Review each connector against the kit's review questions.",
+          "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+        },
+        {
+          "text": "Record the review and any limits it sets.",
+          "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
+        }
+      ],
+      "done_when": "A security reviewer has checked every connector before it is enabled.",
+      "owner_role": "security"
+    },
+    {
+      "id": "settings-deploy",
+      "title": "Deploy the managed-settings baseline levelled.json names to the role's devices",
+      "part": "A7",
+      "applies_to": "S-guardrails-and-settings",
+      "per": null,
+      "when": {
+        "not": {
+          "settings_baseline": null
+        }
+      },
+      "how": [
+        {
+          "text": "Check the baseline file before deploying it.",
+          "link": "starter-kit/settings/README.md#check-the-file-before-you-deploy"
+        },
+        {
+          "text": "Deploy it to the role's devices through device management.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#4-deploy-the-managed-settings-baseline-to-devices"
+        }
+      ],
+      "done_when": "The baseline is on every device of the role.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "settings-verify",
+      "title": "Verify on a device that the managed settings took effect",
+      "part": "A7",
+      "applies_to": "S-guardrails-and-settings",
+      "per": null,
+      "when": {
+        "not": {
+          "settings_baseline": null
+        }
+      },
+      "how": [
+        {
+          "text": "Open Claude Code on a pilot device and check the settings in force.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#5-verify-on-a-device-that-the-settings-took-effect"
+        },
+        {
+          "text": "Check each key the baseline sets.",
+          "link": "starter-kit/settings/README.md#keys"
+        }
+      ],
+      "done_when": "A pilot device shows every key of the baseline in force.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "settings-none",
+      "title": "Record what the twin relies on in place of a managed-settings baseline",
+      "part": "A7",
+      "applies_to": "S-guardrails-and-settings",
+      "per": null,
+      "when": {
+        "settings_baseline": null
+      },
+      "how": [
+        {
+          "text": "List what a baseline would have enforced.",
+          "link": "docs/compendium/13-devices.md#team-plan-with-no-device-management"
+        },
+        {
+          "text": "Record what replaces each item, or that nothing does.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#what-a-team-twin-does-not-get"
+        }
+      ],
+      "done_when": "The design lists what replaces the baseline and the customer has accepted it.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "data-policy",
+      "title": "Agree the data policy for each of the role's data classes with compliance",
+      "part": "A7",
+      "applies_to": "S-guardrails-and-settings",
+      "per": null,
+      "when": {},
+      "how": [
+        {
+          "text": "Take each data class the role's tasks hold through the decision matrix.",
+          "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+        },
+        {
+          "text": "Agree the device policy for each class.",
+          "link": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation"
+        }
+      ],
+      "done_when": "Compliance has signed off the data policy for every data class the role holds.",
+      "owner_role": "compliance"
+    },
+    {
+      "id": "role-plugin-build",
+      "title": "Create the role plugin from the kit template",
+      "part": "A9",
+      "applies_to": "S-distribution",
+      "per": null,
+      "when": {},
+      "how": [
+        {
+          "text": "Copy and rename the role-plugin template.",
+          "link": "starter-kit/templates/role-plugin/README.md#steps"
+        },
+        {
+          "text": "Add the persona and the skills, and the marketplace entry.",
+          "link": "docs/compendium/04-distribution-governance.md#recommended-pipeline-our-recommendation"
+        }
+      ],
+      "done_when": "The role plugin is in the marketplace and its tests pass.",
+      "owner_role": "skill-engineer"
+    },
+    {
+      "id": "distribute-group",
+      "title": "Publish the marketplace and the role plugin to the role's group",
+      "part": "A9",
+      "applies_to": "S-distribution",
+      "per": null,
+      "when": {
+        "distribution": "group-targeted"
+      },
+      "how": [
+        {
+          "text": "Publish the marketplace to the role's group.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups"
+        },
+        {
+          "text": "Check a user outside the group does not get the role plugin.",
+          "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+        }
+      ],
+      "done_when": "Only the role's group gets the role plugin.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "distribute-everyone",
+      "title": "Publish the role plugin to the whole organisation",
+      "part": "A9",
+      "applies_to": "S-distribution",
+      "per": null,
+      "when": {
+        "distribution": "everyone"
+      },
+      "how": [
+        {
+          "text": "Publish the role plugin for every member.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member"
+        },
+        {
+          "text": "Tell the other roles the plugin is not meant for them.",
+          "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+        }
+      ],
+      "done_when": "Every member can install the role plugin and the role's users have it.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "distribute-manual",
+      "title": "Install the role plugin by hand for each pilot user",
+      "part": "A9",
+      "applies_to": "S-distribution",
+      "per": null,
+      "when": {
+        "distribution": "manual"
+      },
+      "how": [
+        {
+          "text": "Give each pilot user the steps to install the role plugin.",
+          "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+        },
+        {
+          "text": "Check each pilot user has the current version.",
+          "link": "starter-kit/templates/role-plugin/README.md#steps"
+        }
+      ],
+      "done_when": "Every pilot user has the current role plugin installed.",
+      "owner_role": "change-and-enablement-lead"
+    },
+    {
+      "id": "governance-log-destination",
+      "title": "Agree the governance log's destination and who can read it",
+      "part": "A9",
+      "applies_to": "S-governance-log",
+      "per": null,
+      "when": {
+        "governance.log": true
+      },
+      "how": [
+        {
+          "text": "Settle where the log lives with the customer.",
+          "link": "docs/compendium/15-governance-and-performance.md#where-the-log-lives-settle-it-with-each-customer"
+        },
+        {
+          "text": "Agree who can read the log and how long it is kept.",
+          "link": "docs/compendium/15-governance-and-performance.md#one-governance-log-for-all-twins-our-recommendation"
+        }
+      ],
+      "done_when": "The log's destination, readers and retention are agreed in writing.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "governance-hook-deploy",
+      "title": "Deploy the governance hook through managed settings",
+      "part": "A9",
+      "applies_to": "S-governance-log",
+      "per": null,
+      "when": {
+        "governance.log": true
+      },
+      "how": [
+        {
+          "text": "Configure the governance hook for the customer's log destination.",
+          "link": "starter-kit/plugins/twin-governance/README.md#configuration"
+        },
+        {
+          "text": "Deploy it as a managed hook with the settings baseline.",
+          "link": "starter-kit/plugins/twin-governance/README.md#deploying-it-managed-hooks"
+        },
+        {
+          "text": "Send the log to the customer's monitoring system.",
+          "link": "starter-kit/plugins/twin-governance/README.md#getting-the-log-to-your-siem"
+        }
+      ],
+      "done_when": "The governance hook runs on every device of the role.",
+      "owner_role": "integration-engineer"
+    },
+    {
+      "id": "governance-log-check",
+      "title": "Check that a tool call reaches the governance log",
+      "part": "A9",
+      "applies_to": "S-governance-log",
+      "per": null,
+      "when": {
+        "governance.log": true
+      },
+      "how": [
+        {
+          "text": "Make a tool call through the twin on a pilot device.",
+          "link": "starter-kit/plugins/twin-governance/README.md#the-governance-log-hook"
+        },
+        {
+          "text": "Find the call's entry in the log destination.",
+          "link": "starter-kit/settings/README.md#governance-hook"
+        }
+      ],
+      "done_when": "A test tool call appears in the governance log with its metadata.",
+      "owner_role": "security"
+    },
+    {
+      "id": "governance-without-hook",
+      "title": "Record what is logged for this twin without the governance hook",
+      "part": "A9",
+      "applies_to": "S-governance-log",
+      "per": null,
+      "when": {
+        "governance.log": false
+      },
+      "how": [
+        {
+          "text": "List what the plan and surface record without the hook.",
+          "link": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management"
+        },
+        {
+          "text": "Write it into the design and get the customer's acceptance.",
+          "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+        }
+      ],
+      "done_when": "The design says what is logged for the twin and the customer has accepted it.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "source-audit",
+      "title": "Turn on the source systems' own audit for the twin's writes",
+      "part": "A9",
+      "applies_to": "S-governance-log",
+      "per": null,
+      "when": {},
+      "how": [
+        {
+          "text": "Check each system the twin writes keeps an audit of changes.",
+          "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+        },
+        {
+          "text": "Turn it on where it is off and record how long it is kept.",
+          "link": "docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often"
+        }
+      ],
+      "done_when": "Every system the twin writes keeps an audit of its changes.",
+      "owner_role": "source-system-admin"
+    },
+    {
+      "id": "memory-policy",
+      "title": "Write down the role's memory policy",
+      "part": "A6",
+      "applies_to": "S-memory-policy",
+      "per": null,
+      "when": {},
+      "how": [
+        {
+          "text": "Decide what the twin may remember for the role and what it must not.",
+          "link": "docs/compendium/02-persona.md#memory"
+        },
+        {
+          "text": "Write the policy into the design and the persona.",
+          "link": "starter-kit/templates/persona/README.md#fill-it-in"
+        }
+      ],
+      "done_when": "The memory policy is written down and the business owner has approved it.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "memory-off",
+      "title": "Keep personal memory off for the role and tell the pilot users why",
+      "part": "A6",
+      "applies_to": "S-memory-policy",
+      "per": null,
+      "when": {
+        "memory.personal_memory_wanted": false
+      },
+      "how": [
+        {
+          "text": "Turn personal memory off where the role's users work.",
+          "link": "docs/compendium/02-persona.md#memory"
+        },
+        {
+          "text": "Tell the pilot users why memory is off.",
+          "link": null
+        }
+      ],
+      "done_when": "Personal memory is off for the role's users and they know why.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "memory-on",
+      "title": "Tell the pilot users what memory keeps and how to clear it",
+      "part": "A6",
+      "applies_to": "S-memory-policy",
+      "per": null,
+      "when": {
+        "memory.personal_memory_wanted": true
+      },
+      "how": [
+        {
+          "text": "Explain what personal memory keeps and which tasks keep it off.",
+          "link": "docs/compendium/02-persona.md#memory"
+        },
+        {
+          "text": "Show the pilot users how to see and clear what it keeps.",
+          "link": null
+        }
+      ],
+      "done_when": "Every pilot user knows what memory keeps and how to clear it.",
+      "owner_role": "change-and-enablement-lead"
+    },
+    {
+      "id": "pilot-users",
+      "title": "Name the pilot users and agree the pilot dates",
+      "part": "A8",
+      "applies_to": "S-pilot-rollout-and-scorecard",
+      "per": null,
+      "when": {},
+      "how": [
+        {
+          "text": "Choose five to ten pilot users in the role.",
+          "link": "docs/playbook/01-engagement-model.md"
+        },
+        {
+          "text": "Agree the start and review dates with the business owner.",
+          "link": "docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often"
+        }
+      ],
+      "done_when": "The pilot users and dates are agreed and recorded.",
+      "owner_role": "business-owner"
+    },
+    {
+      "id": "pilot-baseline",
+      "title": "Record the baseline time for each pilot task before the pilot starts",
+      "part": "A8",
+      "applies_to": "S-pilot-rollout-and-scorecard",
+      "per": null,
+      "when": {},
+      "how": [
+        {
+          "text": "Take each pilot story's baseline from its fields table.",
+          "link": "docs/playbook/04-stories.md#story-template"
+        },
+        {
+          "text": "Confirm it with the pilot users before they start.",
+          "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
+        }
+      ],
+      "done_when": "Every pilot task has a baseline agreed with its users.",
+      "owner_role": "consultant"
+    },
+    {
+      "id": "pilot-scorecard",
+      "title": "Set up the monthly scorecard for the twin",
+      "part": "A8",
+      "applies_to": "S-pilot-rollout-and-scorecard",
+      "per": null,
+      "when": {},
+      "how": [
+        {
+          "text": "Choose the adoption, quality, value and safety measures for the scorecard.",
+          "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
+        },
+        {
+          "text": "Book the monthly review with the business owner.",
+          "link": "docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often"
+        }
+      ],
+      "done_when": "The first monthly scorecard has been reviewed with the business owner.",
+      "owner_role": "business-owner"
+    },
+    {
+      "id": "pilot-training",
+      "title": "Train the pilot users and tell them how to report a failure",
+      "part": "A8",
+      "applies_to": "S-pilot-rollout-and-scorecard",
+      "per": null,
+      "when": {},
+      "how": [
+        {
+          "text": "Run a short session on what the twin does, at what level, and what it never does.",
+          "link": "docs/playbook/01-engagement-model.md"
+        },
+        {
+          "text": "Give the pilot users one place to report a failure or a wrong draft.",
+          "link": null
+        }
+      ],
+      "done_when": "Every pilot user has been trained and knows where to report a failure.",
+      "owner_role": "change-and-enablement-lead"
+    }
+  ]
+}

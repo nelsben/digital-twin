@@ -1,0 +1,89 @@
+{
+  "skill_name": "preparing-role-interviews",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Example Capital Partners (engagements/sample-pe) wants a second twin, for the portfolio operations manager role. On 2026-11-20 I'm interviewing the head of portfolio operations and then a portfolio operations associate. I'm the interviewer, Eleanor Osei-Whitcombe. Get the interviews set up.",
+      "expected_output": "Claude reads the customer profile (industry private-equity) and the private-equity pack, proposes the persona id portfolio-operations-manager and asks the consultant to confirm it, then creates the persona folder with interviews/, one notes file per interviewee named by role label, and prints a short plan: every P and F question by its id, no question confirm-only (there is no card), and the pack's typical tasks as 'Do you do anything like ...?' prompts. It writes no card.json and records no answers.",
+      "files": [
+        "evals/files/engagements/sample-pe/customer-profile.json"
+      ],
+      "expectations": [
+        "The response proposes the persona id portfolio-operations-manager and asks the consultant to confirm it before creating the folder",
+        "The folder engagements/sample-pe/personas/portfolio-operations-manager/interviews/ exists after the run",
+        "Exactly two notes files are created: interviews/2026-11-20-head-of-portfolio-operations.md and interviews/2026-11-20-portfolio-operations-associate.md (role labels, no personal name of an interviewee)",
+        "Each notes file is the plugin's templates/interview-notes.md with only the header table filled: Customer id example-capital-partners, Persona id portfolio-operations-manager, Date 2026-11-20, the interviewee's role, and Interviewer Eleanor Osei-Whitcombe",
+        "Each notes file keeps every question heading of the template unchanged, from question P1 'Your role' to question F9 'Remembering'; no id is renumbered and no heading is reworded",
+        "No card.json is created in the persona folder",
+        "The plan names the profile's industry, private-equity, as the pack it used",
+        "The plan lists questions P1 to P6 once per person and questions F1 to F9 once per task, by their ids",
+        "The plan says no question is confirm-only, because the persona folder has no card yet",
+        "The plan turns the pack's five typical tasks into prompts: 'Do you do anything like Company brief?', 'Post-meeting CRM update?', 'CIM screening?', 'Call preparation?' and 'IC memo sections?'",
+        "Neither the notes files nor the plan contain an answer to any question (no figures, tasks or quotes the consultant did not give)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Same customer, engagements/sample-pe. I'm interviewing one more deal-team associate on 2026-11-19 for the deal-team-associate persona; Eleanor Osei-Whitcombe is interviewing. The card already has a lot in it, so tell me what I can just confirm and what I still have to ask.",
+      "expected_output": "Claude uses the existing persona folder, reads card.json, creates interviews/2026-11-19-associate.md with its header filled, and prints a plan that marks questions whose card fields are already answered as confirm-only (reading back the card's answer) and keeps the rest to ask, notably question F3 for every task and the head count in F1 for T4 to T6. card.json is not changed.",
+      "files": [
+        "evals/files/engagements/sample-pe/customer-profile.json",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/card.json"
+      ],
+      "expectations": [
+        "No new persona id is proposed; the work uses engagements/sample-pe/personas/deal-team-associate",
+        "A notes file interviews/2026-11-19-associate.md is created with Customer id example-capital-partners, Persona id deal-team-associate, Date 2026-11-19, Interviewee's role Associate (deal team) or similar, and Interviewer Eleanor Osei-Whitcombe",
+        "card.json is byte-for-byte unchanged after the run",
+        "The plan marks questions P1 to P6 as confirm-only and reads back the card's answers, for example voice.tone 'Plain, terse and factual' for question P4",
+        "The plan lists the card's tasks T1 to T6 by id and name",
+        "The plan keeps question F3 to ask for every task, because each tasks.T1.examples.good to tasks.T6.examples.good entry is open on the card",
+        "The plan keeps question F1 to ask for T4, T5 and T6, because tasks.T4.users, tasks.T5.users and tasks.T6.users are empty, and marks it confirm-only for T1, T2 and T3",
+        "Questions F2, F4, F5, F6, F7, F8 and F9 are marked confirm-only for each task whose fields for that question are answered on the card",
+        "The plan uses the question ids as they are in the guide; none is renumbered or reworded"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Set up the next round of role interviews for engagements/sample-pe.",
+      "expected_output": "No role is named, so Claude asks which role the interviews are for (it may mention the existing deal-team-associate persona as one option) and who will be interviewed. It creates nothing.",
+      "files": [
+        "evals/files/engagements/sample-pe/customer-profile.json"
+      ],
+      "expectations": [
+        "The response says no role was given and asks which role the interviews are for",
+        "The response asks who will be interviewed",
+        "No folder is created under engagements/sample-pe/personas/",
+        "No notes file is created",
+        "The response does not pick a role on the consultant's behalf"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Prep interviews for the store manager role at engagements/sample-bakery-chain. I'm talking to an assistant store manager on 2026-11-21; I'm the interviewer, Rhea Lindqvist.",
+      "expected_output": "Claude finds no customer-profile.json, says so, and uses the general pack, which has no typical tasks, so the plan has no task prompts from a pack. It proposes the persona id store-manager for confirmation, creates the folder and interviews/2026-11-21-assistant-store-manager.md, and says the customer id in the header is the folder name until a profile sets it.",
+      "files": [
+        "evals/files/engagements/sample-bakery-chain/README.md"
+      ],
+      "expectations": [
+        "The response says engagements/sample-bakery-chain has no customer-profile.json",
+        "The response says it used the general pack because there is no profile",
+        "The plan has no 'Do you do anything like ...?' prompts taken from a pack, and says the general pack lists no typical tasks",
+        "The persona id store-manager is proposed and confirmed before the folder is made",
+        "A notes file interviews/2026-11-21-assistant-store-manager.md is created with Persona id store-manager, Date 2026-11-21 and Interviewer Rhea Lindqvist",
+        "The response says the Customer id in the header is taken from the folder name, sample-bakery-chain, until a customer profile sets it",
+        "No customer-profile.json and no card.json are created"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Write the persona voice file for the deal-team twin at Example Capital Partners, starting from starter-kit/templates/persona/persona.md: tone, the never list, who it escalates to.",
+      "expected_output": "This is the persona voice file, not interview preparation. The skill does not run: no persona folder, interviews/ folder or notes file is created and no interview plan is printed.",
+      "files": [],
+      "expectations": [
+        "The skill was not invoked",
+        "No interviews/ folder or notes file is created",
+        "The response does not print an interview plan with question ids"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "skill_name": "filling-persona-cards",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Fill the persona card for engagements/sample-team-cs/personas/customer-success-manager from the two notes files in its interviews folder. There is no card.json yet. One thing the notes don't show: Odalys Fenwick, the sponsor, read the senior CSM's answer to P3 and confirmed by email on 2026-11-08 that it is her goal.",
+      "expected_output": "Claude creates card.json from the template, fills every field from the notes under the question ids the catalogue allows, writes a provenance entry per field, runs validate until it passes, and reports completeness 100% (104 of 104), as the fixture card does, then names levelling as the next step without running it.",
+      "files": [
+        "evals/files/engagements/sample-team-cs/customer-profile.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-06-csm.md",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-07-senior-csm.md"
+      ],
+      "expectations": [
+        "card.json is created in engagements/sample-team-cs/personas/customer-success-manager with id customer-success-manager and customer example-software-co",
+        "The validate command was run on the persona folder, and its last run prints Valid with 'Completeness: 100% (104 of 104 required fields answered or default)', as the fixture card does",
+        "The card has tasks C1, C2, C3, C4 and C5, the task ids the notes use",
+        "tasks.C1.frequency_per_week is 6 and tasks.C1.minutes_each is 30; provenance.tasks.C1.minutes_each.source is interviews/2026-11-06-csm.md#F1 with status answered",
+        "tasks.C1.inputs lists hubspot and google-drive, both with access read; provenance.tasks.C1.inputs[0].access.source names interviews/2026-11-06-csm.md and question F2",
+        "tasks.C2.trigger is schedule-team, and provenance.tasks.C2.trigger is answered with source interviews/2026-11-07-senior-csm.md#F5",
+        "tasks.C2.writes[0] is a send to slack, and tasks.C4.writes[0] is a create in hubspot",
+        "tasks.C3.touches_money is true; tasks.C2.reads_untrusted_input and tasks.C5.reads_untrusted_input are true; the same fields are false for C1 and C4",
+        "tasks.C1.in_pilot and tasks.C4.in_pilot are true; tasks.C2.in_pilot, tasks.C3.in_pilot and tasks.C5.in_pilot are false",
+        "tasks.C3.output.audience and tasks.C4.output.audience are external; C1, C2 and C5 are internal",
+        "provenance.tasks.C2.data_class is answered from interviews/2026-11-07-senior-csm.md#F2 (the notes say 'Confidential.'); tasks.C3.data_class, tasks.C4.data_class and tasks.C5.data_class are confidential with status default and a source naming the b2b-software pack, because their answers to question F2 state no sensitivity",
+        "memory.personal_memory_wanted is true with source interviews/2026-11-06-csm.md#F9",
+        "outcome.sponsor_goal is answered with source interviews/2026-11-07-senior-csm.md#P3, because the prompt says the sponsor confirmed it",
+        "voice.tone is answered, not open: the two answers to question P4 add to each other and do not contradict",
+        "The feature ids are call-preparation-and-follow-up, renewals and escalations",
+        "open_questions has an entry about what starts C5 that blocks C5, with owner Teodor Amsel and due 2026-12-11, from the senior CSM's notes",
+        "No figure or person's name appears in card.json that is not in the notes, the profile or the prompt",
+        "customer-profile.json is unchanged",
+        "The response ends with the completeness percentage, the fields still open or assumed with their owners, and levelling the card as the next step; no levelled.json is written"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Fill the deal-team-associate card at engagements/sample-pe/personas/deal-team-associate from its three interview notes. There's no card.json yet. Where the notes give no owner or date for something open, use Skill owners and 2026-12-04, as the other notes do.",
+      "expected_output": "Claude builds card.json from the three notes and discovery.md, leaves open the same items the fixture card.json leaves open (the good and bad examples for every task), keeps the sponsor goal answered because discovery A1 records the sponsor's own goal, validates, and names levelling as the next step.",
+      "files": [
+        "evals/files/engagements/sample-pe/customer-profile.json",
+        "evals/files/engagements/sample-pe/discovery.md",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/interviews/2026-11-10-partner.md",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/interviews/2026-11-11-principal.md",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/interviews/2026-11-12-associate.md"
+      ],
+      "expectations": [
+        "The validate command's last run prints Valid",
+        "Apart from tasks.T3.data_class, the card's provenance entries with status open are exactly the twelve the fixture card.json has open: tasks.T1.examples.good and tasks.T1.examples.bad through tasks.T6.examples.good and tasks.T6.examples.bad, each with an owner and a due date",
+        "tasks.T3.data_class is not answered: the T3 answer to question F2 states no sensitivity and no pack task matches T3, so its provenance is open or assumed, with an owner",
+        "tasks.T4.data_class and tasks.T5.data_class are highly-sensitive with status default and a source naming the private-equity pack; tasks.T1.data_class, tasks.T2.data_class and tasks.T6.data_class are answered from question F2 of their notes",
+        "outcome.sponsor_goal says less time on first-pass company briefs and CRM upkeep with a low edit rate, and is answered, citing discovery A1 (the sponsor's own answer) or the partner's answer to question P3 with discovery A1 named as the confirmation",
+        "tasks.T5.frequency_per_week is 1.85 (about eight a month) and tasks.T6.frequency_per_week is 0.46 (about two a month), each with a source naming question F1",
+        "tasks.T4.cost_of_mistake.level is high and tasks.T2.cost_of_mistake.level is medium, as the interviewees chose ('Call it high', 'Say medium')",
+        "tasks.T3.trigger is schedule-team with source interviews/2026-11-11-principal.md#F5",
+        "tasks.T2.writes[0] is an update to salesforce; tasks.T3.writes[0] is a send to teams",
+        "role.works_in is claude-code only and role.device is managed, both answered from interviews/2026-11-12-associate.md#P1",
+        "memory.personal_memory_wanted is false",
+        "The completeness line names the same six profile fields the fixture leaves unanswered (compliance.phi, compliance.retention, the editions of sharepoint, teams and slack-connect, and network.can_allowlist_anthropic_ips) and no card field other than tasks.T3.data_class",
+        "No person's name appears in card.json that is not in the notes, discovery.md, the profile or the prompt; tasks[].skill_owner is not filled with a name from anywhere else",
+        "No web search or web fetch was used",
+        "The response names levelling the card as the next step and does not run it"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Make the persona card for engagements/sample-freight-co/personas/dispatch-coordinator from the interview notes there. Put anything open on me, Rhea Lindqvist, due 2026-11-28.",
+      "expected_output": "The notes have no answer to question F4 for D1. Claude leaves tasks.D1.cost_of_mistake.level null with status open, owner and due, adds an open question that blocks D1, and does not invent a level. The sponsor goal comes only from the interviewee's P3 answer, so it is assumed with the sponsor as owner.",
+      "files": [
+        "evals/files/engagements/sample-freight-co/customer-profile.json",
+        "evals/files/engagements/sample-freight-co/personas/dispatch-coordinator/interviews/2026-11-03-dispatcher.md"
+      ],
+      "expectations": [
+        "tasks.D1.cost_of_mistake.level is null, not low, medium or high",
+        "provenance.tasks.D1.cost_of_mistake.level has status open, owner Rhea Lindqvist and due 2026-11-28",
+        "open_questions has an entry asking what happens if D1 goes wrong (question F4), with blocks listing D1, owner Rhea Lindqvist and due 2026-11-28",
+        "tasks.D1.cost_of_mistake.what_happens is empty: nothing is invented for it",
+        "outcome.sponsor_goal holds the interviewee's words about cutting late starts by a third, with status assumed, source interviews/2026-11-03-dispatcher.md#P3 and owner Marta Okonkwo-Lind, the sponsor in owners.sponsor of the profile",
+        "tasks.D1.frequency_per_week is 5 and tasks.D1.minutes_each is 45, answered from question F1",
+        "The validate command's last run prints Valid, with completeness below 100% and both outcome.sponsor_goal and tasks.D1.cost_of_mistake.level listed as not yet answered",
+        "The response lists the open and assumed fields with their owners and names levelling as the next step"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Build the load-planner card at engagements/sample-freight-co/personas/load-planner from both interview notes. Open items go to Rhea Lindqvist, due 2026-11-28.",
+      "expected_output": "The two planners disagree on what starts L1 (question F5). Claude does not pick one or blend them: tasks.L1.trigger is null with status open, and an open question quotes both answers. Fields where they agree are answered.",
+      "files": [
+        "evals/files/engagements/sample-freight-co/customer-profile.json",
+        "evals/files/engagements/sample-freight-co/personas/load-planner/interviews/2026-11-04-planner.md",
+        "evals/files/engagements/sample-freight-co/personas/load-planner/interviews/2026-11-05-senior-planner.md"
+      ],
+      "expectations": [
+        "tasks.L1.trigger is null: neither person nor schedule-team",
+        "provenance.tasks.L1.trigger has status open, owner Rhea Lindqvist and due 2026-11-28",
+        "open_questions has an entry for what starts L1 that quotes both answers: 'I start it myself on Thursday afternoon when the orders are in' and 'It runs on a schedule every Thursday for the whole planning team', with blocks listing L1",
+        "tasks.L1.minutes_each is 60 and tasks.L1.in_pilot is true, answered, with a source naming one of the two notes files and question F1",
+        "tasks.L1.cost_of_mistake.level is medium, answered from question F4",
+        "outcome.sponsor_goal is assumed with owner Marta Okonkwo-Lind, because it was heard only from the senior planner (question P3)",
+        "The validate command's last run prints Valid"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Make the persona voice for the customer success twin warmer: edit the persona.md we made from starter-kit/templates/persona so it sounds friendlier with customers.",
+      "expected_output": "This is the persona voice file, not the persona card. The skill does not run, and no card.json is created or changed.",
+      "files": [],
+      "expectations": [
+        "The skill was not invoked",
+        "No card.json is created or changed",
+        "The validate command was not run"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Fill the store-manager card at engagements/sample-bakery-chain/personas/store-manager from the notes there.",
+      "expected_output": "There is no customer profile at ../../customer-profile.json. Claude says so and offers to create it from the template and the engagement's discovery answers, which do not exist yet; it does not guess the plan, identity, devices or compliance. If it creates the profile, fictional is true and every unanswered field is open.",
+      "files": [
+        "evals/files/engagements/sample-bakery-chain/personas/store-manager/interviews/2026-11-02-store-manager.md"
+      ],
+      "expectations": [
+        "The response says engagements/sample-bakery-chain/customer-profile.json is missing",
+        "The response offers to create it from the plugin's templates/customer-profile.json and the discovery answers, and says there are no discovery answers in the folder",
+        "No value is guessed for plan.tier, identity.sso, devices.mdm or any compliance field; if a profile is written they are null or empty with status open",
+        "If a profile is written, fictional is true because the folder is under engagements/sample-*",
+        "Any name written to a file under engagements/sample-bakery-chain is invented or taken from the notes"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Refill the CSM card at engagements/sample-team-cs/personas/customer-success-manager from its notes. card.json is already there; don't lose anything.",
+      "expected_output": "Claude updates the existing card in place. Every field that already has an answered provenance entry keeps its value, status and source; the card still validates at 100%.",
+      "files": [
+        "evals/files/engagements/sample-team-cs/customer-profile.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/card.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-06-csm.md",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-07-senior-csm.md"
+      ],
+      "expectations": [
+        "Every provenance entry that had status answered in the original card.json is still present with the same status and source",
+        "The values of those fields are unchanged, for example voice.tone and tasks.C1.minutes_each",
+        "open_questions still holds OQ-1, blocking C5, with owner Teodor Amsel",
+        "The validate command's last run prints Valid with completeness 100%"
+      ]
+    }
+  ]
+}

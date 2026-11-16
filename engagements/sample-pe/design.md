@@ -311,7 +311,7 @@ One governance log for all twins, designed per [compendium 15](../../docs/compen
 |---|---|---|
 | Local Claude Code on managed devices | A hook in `twin-governance`, set in managed settings, fires after each tool call. Users cannot remove it. | ZDR sessions are invisible to the Compliance API, so this is the only record of them |
 | Hosted agents (later) | The agent's server logs each tool call | Covers unmanaged devices |
-| OpenTelemetry (Claude Code, Agent SDK) | Exported through managed settings, with prompts and tool inputs left off | Adoption and cost metrics. Check the exact metric list. |
+| OpenTelemetry (Claude Code, Agent SDK) | Exported through managed settings, with prompts and tool inputs left off | Adoption and cost metrics. **⚠ Unverified:** the exact metric list. |
 | Compliance API (chat and Cowork, which are not ZDR) | Nightly pull, metadata fields only | Does not see ZDR sessions |
 | Audit logs, skills analytics | Nightly pull | Audit logs keep 180 days |
 | Source-system audit | Salesforce, HubSpot, Microsoft 365 | The twin acts as the user, so its changes look like the user's. The "Last updated by twin" marker (Joaquin Lindahl) tells them apart. |

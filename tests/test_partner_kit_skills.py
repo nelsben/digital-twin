@@ -67,7 +67,7 @@ FIXTURE_PERSONAS = (
 )
 # A blocker or warning code is recognised only in a fixed form: right after the word
 # code, blocker or warning (singular or plural), optionally in backticks, as in
-# 'code decision-undecided' or 'blocker `connector-cannot-write`', and each further
+# 'code decision-undecided' or 'blocker `plan-below-team`', and each further
 # code in a list that follows ('warning codes a-b, c-d and e-f').
 _KEBAB = r"`?[a-z0-9]+(?:-[a-z0-9]+)+`?"
 CODE_RE = re.compile(r"\b(?:codes?|blockers?|warnings?):? (%s(?:(?:,? and |,? or |, )%s)*)" % (_KEBAB, _KEBAB))
@@ -477,11 +477,11 @@ class CheckerSelfTest(unittest.TestCase):
         self.assertEqual(len(refs), 2)
 
     def test_code_forms(self):
-        text = ("the blocker connector-cannot-write; code `decision-undecided`; warnings: "
-                "mail-read-only; warning codes, grouped; S-C4.warning-mail-read-only; "
+        text = ("the blocker plan-below-team; code `decision-undecided`; warnings: "
+                "mail-write-unconfirmed; warning codes, grouped; S-C4.warning-mail-write-unconfirmed; "
                 "warning codes team-no-audit-log, `confidential-on-team` and tag-private-channel-only.")
         self.assertEqual(code_mentions(text),
-                         ["connector-cannot-write", "decision-undecided", "mail-read-only",
+                         ["plan-below-team", "decision-undecided", "mail-write-unconfirmed",
                           "team-no-audit-log", "confidential-on-team", "tag-private-channel-only"])
         codes = known_codes()
         self.assertIn("plugin-name-invalid", codes)
@@ -498,7 +498,7 @@ class CheckerSelfTest(unittest.TestCase):
         self.assertIn("S-persona-voice", ids)
         self.assertIn("S-C1.tool-always-allow.hubspot-read", ids)
         self.assertNotIn("S-C9", ids)
-        self.assertNotIn("S-C4.blocker-connector-cannot-write", ids)
+        self.assertNotIn("S-C4.blocker-plan-below-team", ids)
 
 
 if __name__ == "__main__":

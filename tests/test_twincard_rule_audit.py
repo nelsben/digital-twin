@@ -266,7 +266,7 @@ class MixedDeviceTests(unittest.TestCase):
         out = level(TEAM, set_device("mixed"))
         warning = [w for w in out["warnings"] if (w["code"], w["about"]) == ("unmanaged-connectors-read-only", "C4")]
         self.assertTrue(warning)
-        self.assertIn("read-only", warning[0]["fix"])
+        self.assertIn("Blocked for people on unmanaged devices", warning[0]["fix"])
         self.assertNotIn("Needs approval at most", warning[0]["fix"])
 
 
@@ -358,7 +358,7 @@ class B2bPackTests(unittest.TestCase):
     def test_hubspot_warning_names_app_marketplace_access(self):
         out = level(TEAM)
         warning = next(w for w in out["warnings"] if w["code"] == "hubspot-super-admin-approval")
-        self.assertIn("App Marketplace access", warning["message"])
+        self.assertIn("App Marketplace Access", warning["message"])
 
 
 # --- Finding 15 and the remaining audit rows --------------------------------------------------------------

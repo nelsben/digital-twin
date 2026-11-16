@@ -179,6 +179,19 @@ def team_c2_writes_hubspot(profile, card):
     task(card, "C2")["writes"][0].update({"system": "hubspot", "action": "create"})
 
 
+def team_c5_writes_zendesk(profile, card):
+    task(card, "C5")["writes"].append(
+        {"system": "zendesk", "objects": "internal note on the ticket", "action": "update"})
+    card["provenance"]["tasks.C5.writes[0].action"] = {
+        "status": "answered", "source": "interviews/2026-11-07-senior-csm.md#F2"}
+
+
+def team_crm_is_dynamics(profile, card):
+    """The Team sample's CRM is one the kit has no marker for, so twin-marker-crm still has a scenario."""
+    system = next(s for s in profile["systems"] if s["id"] == "hubspot")
+    system["product"] = "Microsoft Dynamics / Dataverse"
+
+
 def bad_plugin_name(profile, card):
     card["role"]["plugin_name"] = "Deal Team"
 
@@ -253,6 +266,8 @@ LOCAL_SCENARIOS = [
     ("team C1 schedule-own", TEAM, set_task("C1", trigger="schedule-own"), None),
     ("team C5 event-started", TEAM, set_task("C5", trigger="event"), None),
     ("team C2 writes HubSpot (managed-agents)", TEAM, team_c2_writes_hubspot, None),
+    ("team C5 writes Zendesk", TEAM, team_c5_writes_zendesk, None),
+    ("team CRM is Dynamics (no kit marker)", TEAM, team_crm_is_dynamics, None),
     ("team C4 starts at level 2", TEAM, override("C4", "autonomy.start", 2), None),
     ("team C2 starts at level 2", TEAM, override("C2", "autonomy.start", 2), None),
     ("pe T3 override agent-sdk", PE, override("T3", "runtime", "agent-sdk"), None),

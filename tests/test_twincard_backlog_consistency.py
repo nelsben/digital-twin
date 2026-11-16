@@ -203,7 +203,8 @@ class OnePermissionPerToolTests(unittest.TestCase):
                     texts.append((item["id"], item["done_when"]))
                 for where, text in texts:
                     for clause in clauses(text):
-                        if "moves up" in clause or "opens at level" in clause or "open at level" in clause:
+                        if ("moves up" in clause or "opens at level" in clause or "open at level" in clause
+                                or "uses at level" in clause):
                             continue
                         stated = set(STATED.findall(NEVER.sub("", clause)))
                         if not stated:
@@ -286,7 +287,7 @@ class DeliveryTests(unittest.TestCase):
             for text in [s["text"] for s in item["how"]] + [item["done_when"], item["title"]]:
                 for clause in clauses(text):
                     other = ("Slack MCP server" in clause or
-                             (re.search(r"\bsend tool", clause) and
+                             (re.search(r"\bsend tool", clause) and "uses at level" not in clause and
                               re.search(r"Needs approval|Always allow", NEVER.sub("", clause))))
                     if other:
                         with self.subTest(task=item["id"], clause=clause):

@@ -931,7 +931,7 @@
           "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
         }
       ],
-      "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
+      "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and every write or send tool the task uses at level 2 is at Needs approval; a task whose output a routine posts itself changes no tool setting.",
       "owner_role": "business-owner"
     },
     {
@@ -1025,6 +1025,57 @@
       "owner_role": "source-system-admin"
     },
     {
+      "id": "twin-marker-hubspot",
+      "title": "Create the HubSpot twin marker (Last updated by twin)",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": "connector",
+      "when": {
+        "connector.kind": "crm",
+        "connector.access": "write",
+        "connector.product": "HubSpot",
+        "writes.crm_opens": [
+          "now",
+          "later"
+        ]
+      },
+      "how": [
+        {
+          "text": "Create the Last updated by twin date and time property on the deals the twin writes, in a test portal first.",
+          "link": "starter-kit/connectors/hubspot/README.md#create-it-the-hubspot-admin-does-this"
+        },
+        {
+          "text": "Limit who can set the property as far as the HubSpot edition allows, and record the rest as a risk with security.",
+          "link": "starter-kit/connectors/hubspot/README.md#limit-who-can-set-it"
+        }
+      ],
+      "done_when": "The Last updated by twin property exists on every HubSpot object the twin writes, and the limit on who can set it is applied or recorded as a risk.",
+      "owner_role": "source-system-admin"
+    },
+    {
+      "id": "twin-marker-zendesk",
+      "title": "Create the Zendesk twin marker (Last updated by twin field)",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": "connector",
+      "when": {
+        "connector.product": "Zendesk",
+        "connector.access": "write"
+      },
+      "how": [
+        {
+          "text": "Add the Last updated by twin text ticket field in Admin Center, editable by agents only, and add it to each ticket form the twin writes to.",
+          "link": "starter-kit/connectors/zendesk/README.md#create-it-the-zendesk-admin-does-this"
+        },
+        {
+          "text": "Make the ticket-update skill write the current UTC time into the field with every ticket change, and fail closed if the tool rejects it.",
+          "link": "starter-kit/connectors/zendesk/README.md#make-the-skill-set-it"
+        }
+      ],
+      "done_when": "The Last updated by twin field exists on every ticket form the twin writes to, and the skill sets it with every ticket change.",
+      "owner_role": "source-system-admin"
+    },
+    {
       "id": "twin-marker-crm",
       "title": "Add a twin marker to this CRM: the kit has no marker for it yet",
       "part": "A3",
@@ -1034,7 +1085,10 @@
         "connector.kind": "crm",
         "connector.access": "write",
         "not": {
-          "connector.product": "Salesforce"
+          "connector.product": [
+            "Salesforce",
+            "HubSpot"
+          ]
         },
         "writes.crm_opens": [
           "now",
@@ -1813,7 +1867,7 @@
       },
       "how": [
         {
-          "text": "Note that posting through the Slack directory connector is unverified.",
+          "text": "Note that the Slack listing names the directory connector's send and canvas tools while the connector's page documents only search, so whether it can post is unverified.",
           "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
         },
         {
@@ -2164,8 +2218,8 @@
           "link": "docs/compendium/05-decision-matrix.md#the-options"
         },
         {
-          "text": "No runbook: the kit has no runbook for giving users a Claude Code seat and installing it yet, so write down the steps you follow.",
-          "link": "starter-kit/runbooks/identity-devices-publishing.md#3-map-groups-to-roles-and-seats"
+          "text": "Give each person a Claude Code seat, install it and sign in, as the runbook says.",
+          "link": "starter-kit/runbooks/claude-code-for-a-role.md#steps"
         },
         {
           "text": "Deploy the managed settings to the devices that get Claude Code, then add claude-code to role.works_in.",
@@ -2477,7 +2531,7 @@
           "link": "docs/compendium/15-governance-and-performance.md#retention-decided"
         },
         {
-          "text": "Settle with compliance whether /feedback transcripts may be kept 5 years and local sessions 6 years; if not, turn feedback off with DISABLE_FEEDBACK_COMMAND=1 in managed settings and set a custom retention period.",
+          "text": "Settle with compliance whether /feedback transcripts may be kept 5 years and, with the Compliance API on, local Claude Code and Cowork sessions 6 years; if not, turn feedback off with DISABLE_FEEDBACK_COMMAND=1 in managed settings and set a custom retention period.",
           "link": "docs/compendium/10-sensitive-data.md#questions-to-settle-with-compliance-and-legal"
         },
         {
@@ -2503,7 +2557,7 @@
       "how": [
         {
           "text": "Set the org's spend limit, and on Enterprise a per-user limit for the role's users.",
-          "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
+          "link": "docs/compendium/09-plans-and-it-controls.md#spend-and-usage-limits"
         },
         {
           "text": "Name who watches spend and the usage alerts, and record the limits and that person in the customer's engagement folder.",

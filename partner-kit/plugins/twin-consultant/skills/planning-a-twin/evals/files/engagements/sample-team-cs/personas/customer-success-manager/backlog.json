@@ -4,7 +4,7 @@
   "persona": "customer-success-manager",
   "source": {
     "card_sha256": "bc45a8a407819b6522572843113e504c6904289dca7840b86b0ddf543e1b4a8b",
-    "levelled_sha256": "0c3b616d44a34d5e91dd8c8cd25956dacb5c3b5aa919522ae2bd88973ebd1950",
+    "levelled_sha256": "51517672180d82eb3337c6c8f7a0011c70b3062da2931cf9f551aaa9bfdd9df3",
     "library_version": 1
   },
   "unnamed_roles": [
@@ -394,7 +394,7 @@
                     "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
                   }
                 ],
-                "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
+                "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and every write or send tool the task uses at level 2 is at Needs approval; a task whose output a routine posts itself changes no tool setting.",
                 "owner_role": "business-owner",
                 "owner_name": "Marisol Quenby (Customer success team lead)",
                 "acting_owner": null,
@@ -900,16 +900,16 @@
                     "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
                   }
                 ],
-                "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
+                "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and every write or send tool the task uses at level 2 is at Needs approval; a task whose output a routine posts itself changes no tool setting.",
                 "owner_role": "business-owner",
                 "owner_name": "Marisol Quenby (Customer success team lead)",
                 "acting_owner": null,
                 "status": "todo"
               },
               {
-                "id": "S-C4.twin-marker-crm.hubspot",
-                "template": "twin-marker-crm",
-                "title": "Add a twin marker to this CRM: the kit has no marker for it yet (hubspot)",
+                "id": "S-C4.twin-marker-hubspot.hubspot",
+                "template": "twin-marker-hubspot",
+                "title": "Create the HubSpot twin marker (Last updated by twin) (hubspot)",
                 "part": "A3",
                 "how": [
                   {
@@ -917,15 +917,15 @@
                     "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
                   },
                   {
-                    "text": "Choose a marker the CRM can hold on every record the twin writes, such as a field or a note prefix.",
-                    "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+                    "text": "Create the Last updated by twin date and time property on the deals the twin writes, in a test portal first.",
+                    "link": "starter-kit/connectors/hubspot/README.md#create-it-the-hubspot-admin-does-this"
                   },
                   {
-                    "text": "Create it in the CRM and limit who can set it to the role's users, as the kit's Salesforce marker does.",
-                    "link": "starter-kit/connectors/salesforce/README.md#who-can-edit-the-field"
+                    "text": "Limit who can set the property as far as the HubSpot edition allows, and record the rest as a risk with security.",
+                    "link": "starter-kit/connectors/hubspot/README.md#limit-who-can-set-it"
                   }
                 ],
-                "done_when": "Every record type the twin writes in this CRM can carry the twin marker.",
+                "done_when": "The Last updated by twin property exists on every HubSpot object the twin writes, and the limit on who can set it is applied or recorded as a risk.",
                 "owner_role": "source-system-admin",
                 "owner_name": null,
                 "acting_owner": "Teodor Amsel (IT and operations lead)",
@@ -1575,7 +1575,7 @@
                     "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
                   }
                 ],
-                "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
+                "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and every write or send tool the task uses at level 2 is at Needs approval; a task whose output a routine posts itself changes no tool setting.",
                 "owner_role": "business-owner",
                 "owner_name": "Marisol Quenby (Customer success team lead)",
                 "acting_owner": null,
@@ -1655,7 +1655,7 @@
                 "part": "A3",
                 "how": [
                   {
-                    "text": "Note that posting through the Slack directory connector is unverified.",
+                    "text": "Note that the Slack listing names the directory connector's send and canvas tools while the connector's page documents only search, so whether it can post is unverified.",
                     "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
                   },
                   {
@@ -2068,7 +2068,7 @@
                     "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
                   }
                 ],
-                "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
+                "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and every write or send tool the task uses at level 2 is at Needs approval; a task whose output a routine posts itself changes no tool setting.",
                 "owner_role": "business-owner",
                 "owner_name": "Marisol Quenby (Customer success team lead)",
                 "acting_owner": null,
@@ -2424,7 +2424,7 @@
                     "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
                   }
                 ],
-                "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
+                "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and every write or send tool the task uses at level 2 is at Needs approval; a task whose output a routine posts itself changes no tool setting.",
                 "owner_role": "business-owner",
                 "owner_name": "Marisol Quenby (Customer success team lead)",
                 "acting_owner": null,
@@ -2895,7 +2895,7 @@
                     "link": "docs/compendium/15-governance-and-performance.md#retention-decided"
                   },
                   {
-                    "text": "Settle with compliance whether /feedback transcripts may be kept 5 years and local sessions 6 years; if not, turn feedback off with DISABLE_FEEDBACK_COMMAND=1 in managed settings and set a custom retention period.",
+                    "text": "Settle with compliance whether /feedback transcripts may be kept 5 years and, with the Compliance API on, local Claude Code and Cowork sessions 6 years; if not, turn feedback off with DISABLE_FEEDBACK_COMMAND=1 in managed settings and set a custom retention period.",
                     "link": "docs/compendium/10-sensitive-data.md#questions-to-settle-with-compliance-and-legal"
                   },
                   {
@@ -2917,7 +2917,7 @@
                 "how": [
                   {
                     "text": "Set the org's spend limit, and on Enterprise a per-user limit for the role's users.",
-                    "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
+                    "link": "docs/compendium/09-plans-and-it-controls.md#spend-and-usage-limits"
                   },
                   {
                     "text": "Name who watches spend and the usage alerts, and record the limits and that person in the customer's engagement folder.",

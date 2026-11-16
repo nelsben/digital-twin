@@ -1492,7 +1492,7 @@
       "unverified": false,
       "basis": "our-recommendation",
       "reason": "Confidential data on an unmanaged device calls for read-only connectors, and the task writes; on a mixed fleet this holds for the people on unmanaged devices.",
-      "fix": "Make the task's connectors read-only for people on unmanaged devices (set the write tools to Blocked), or have the customer accept the write in writing."
+      "fix": "Keep the task's write tools Blocked for people on unmanaged devices, or at Needs approval and never Always allow once the customer has accepted the write in writing; or split the role by device."
     },
     {
       "id": "warn-mail-write-unconfirmed",
@@ -1548,8 +1548,8 @@
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": true,
       "basis": "compendium",
-      "reason": "Whether the Slack directory connector can post is Unverified; post through Claude Tag or the Slack MCP server.",
-      "fix": "Post through Claude Tag or the Slack MCP server, not the directory connector."
+      "reason": "Compendium page 11's Slack row says the connector's listing names slack_send_message, slack_create_canvas and slack_update_canvas, while the connector page documents only search, so whether the directory connector can post is Unverified.",
+      "fix": "Post through Claude Tag or the Slack MCP server, or, if the plan uses the directory connector's send tool, set it to Blocked or Needs approval after the Slack runbook's check."
     },
     {
       "id": "warn-untrusted-input-with-send",
@@ -1563,7 +1563,7 @@
       "unverified": false,
       "basis": "compendium",
       "reason": "The task reads untrusted content and can send it out, so a person approves each send.",
-      "fix": "Set the send tool to Needs approval and keep the task at level 2 or below."
+      "fix": "Keep the send tool Blocked, or at Needs approval once it opens and never Always allow, and keep the task at level 2 or below."
     },
     {
       "id": "warn-memory-poisoning-risk",
@@ -1616,8 +1616,8 @@
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": false,
       "basis": "compendium",
-      "reason": "The HubSpot connector needs approval from a HubSpot Super Admin (or a user with App Marketplace access) as well as an Owner.",
-      "fix": "Name the customer's HubSpot Super Admin, or a user with App Marketplace access, in the profile's owners and book the approval."
+      "reason": "Page 11 says HubSpot Super Admins and users with App Marketplace Access permissions can connect the HubSpot connector without prior approval; for all other users a Super Admin must approve it first, and an Owner adds it on Team and Enterprise.",
+      "fix": "Name the HubSpot Super Admin who approves the connector for the pilot users in the profile's owners (a pilot user who is a Super Admin or has App Marketplace Access permissions needs no approval) and book the approval."
     },
     {
       "id": "warn-sensitive-scheduled-task-own-environment",

@@ -222,7 +222,11 @@ class CatalogueTests(unittest.TestCase):
                 default = entry["default"]
                 self.assertIsInstance(default, dict, "no asked_by, so a default with a source")
                 source = default.get("source", "")
-                self.assertTrue(source.startswith(("docs/compendium/", "docs/playbook/")), source)
+                # role.plugin_name's default (twin-<persona id>) is stated only by the role-plugin template.
+                allowed = ("docs/compendium/", "docs/playbook/")
+                if entry["path"] == "role.plugin_name":
+                    allowed = ("starter-kit/templates/role-plugin/README.md",)
+                self.assertTrue(source.startswith(allowed), source)
                 self.assertTrue((ROOT / source.split("#")[0]).is_file(), source)
 
     def test_asked_by_ids_exist(self):

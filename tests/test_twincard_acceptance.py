@@ -32,7 +32,8 @@ from twincard import fields as tc_fields  # noqa: E402
 from twincard.validate import validate  # noqa: E402
 
 DECISIONS = ("runtime", "identity", "autonomy.start", "autonomy.ceiling", "data_controls", "memory", "plan_fit")
-RUNTIMES = {"client-skill", "claude-code-scheduled-task", "claude-tag-routine", "managed-agents", "agent-sdk", "none"}
+RUNTIMES = {"client-skill", "claude-code-scheduled-task", "claude-tag-routine", "managed-agents",
+            "managed-agents-self-hosted", "agent-sdk", "none"}
 IDENTITIES = {"user", "service-account", "api-key-vault"}
 PLAN_FITS = {"ok", "ok-with-limits", "needs-enterprise", "not-supported"}
 DISTRIBUTIONS = {"group-targeted", "everyone"}
@@ -317,6 +318,13 @@ class DecisionTests(unittest.TestCase):
                                         or c["system"] == "usage-db", "%s %s" % (fid, tid))
                         self.assertEqual(c["identity"], "user", "%s %s" % (fid, tid))
                 self.assertEqual(d["unverified"], unverified, "%s %s connectors" % (fid, tid))
+
+    def test_plugin_name_follows_the_card(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            card = card_of(fixture)
+            given = card["role"].get("plugin_name")
+            want = given if given else "twin-%s" % card["id"]
+            self.assertEqual(fixture["persona"]["plugin_name"]["expected"], want, fid)
 
     def test_persona_baseline_agrees_with_the_pack(self):
         for fid, fixture in self.exp["fixtures"].items():

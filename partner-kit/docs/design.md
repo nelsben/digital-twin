@@ -180,6 +180,7 @@ Enumerations:
 
 - `role.works_in[]`: `claude-ai`, `desktop`, `claude-code`, `cowork`, `slack`, `teams`.
 - `role.device`: `managed`, `unmanaged`, `mixed`.
+- `role.plugin_name` (optional): when it is empty the role plugin is named `twin-<persona id>`; when it is given it must match `^twin-[a-z0-9-]+$` (the levelling engine checks the pattern; the validator treats it as a string).
 - `tasks[].trigger`: `person`, `schedule-own` (one person's recurring task), `schedule-team` (shared, lives in a channel), `event` (a system event or webhook).
 - `tasks[].inputs[].system` and `tasks[].writes[].system`: system ids from the customer profile. A system the profile does not list is a validation error.
 - `tasks[].inputs[]`: `{"system": "<profile system id>", "objects": "account", "access": "read"}`; `access` is `read` or `write`.
@@ -283,7 +284,7 @@ The vocabulary that `tests/fixtures/twincard/expectations.json` and the levellin
 
 | Decision | Values |
 |---|---|
-| `runtime` | `client-skill`, `claude-code-scheduled-task`, `claude-tag-routine`, `managed-agents`, `agent-sdk`, `none` (no runtime is allowed for this task) |
+| `runtime` | `client-skill`, `claude-code-scheduled-task`, `claude-tag-routine`, `managed-agents` (the Anthropic-hosted form), `managed-agents-self-hosted` (Managed Agents with the harness and sandbox self-hosted; the only Managed Agents form the ZDR branch of the compendium 05 decision flow allows), `agent-sdk`, `none` (no runtime is allowed for this task) |
 | `identity` | `user`, `service-account`, `api-key-vault` |
 | `autonomy.start`, `autonomy.ceiling` | an integer from 0 to 4 (the ladder in compendium 06) |
 | `data_controls` | `{settings_baseline, web_tools, surfaces, retention}`: `settings_baseline` is a file stem in `starter-kit/settings/` (`general`, `confidential`, `pe-zdr`, `hipaa`) or `null`; `web_tools` is `on` or `off`; `surfaces` is a list of `role.works_in` values (empty for a hosted runtime); `retention` is a value of `compliance.retention` |
@@ -306,7 +307,7 @@ Blocker codes (the task cannot be built as asked on this plan or data class):
 
 Warning codes (the task can be built, with a limit someone must see):
 
-- `agent-sdk-cover-unverified`: the design's runtime for the task is the Agent SDK, whose ZDR and HIPAA cover is Unverified.
+- `agent-sdk-cover-unverified`: a task wired into systems needs ZDR or HIPAA cover, and the Agent SDK cannot be used for it until Anthropic confirms that cover in writing (Unverified, compendium 05 decision flow), so the plan uses the route the page does confirm; when the page confirms no route (PHI), `phi-no-hosted-runtime` is raised instead of this warning.
 - `decision-undecided`: the compendium does not decide one of the task's decisions, so a person must.
 - `shared-tool-strictest`: two tasks share a connector tool, so both run at the stricter task's setting.
 - `override-applied`: a card override replaced a rule's result; the result is shown as overridden, with the reason.

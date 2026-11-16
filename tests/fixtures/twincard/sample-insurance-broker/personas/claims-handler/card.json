@@ -1,0 +1,599 @@
+{
+  "card_version": 1,
+  "id": "claims-handler",
+  "customer": "sample-insurance-broker",
+  "role": {
+    "name": "Claims handler",
+    "team": "Claims (commercial and injury)",
+    "headcount": 22,
+    "pilot_users": 6,
+    "works_in": [
+      "claude-ai",
+      "desktop"
+    ],
+    "device": "mixed",
+    "plugin_name": ""
+  },
+  "outcome": {
+    "sponsor_goal": "Handlers spend half the time they do now on the Friday client reports, and no 24-hour acknowledgement on a new claim is missed.",
+    "scorecard_targets": [
+      {
+        "metric": "friday_report_time_reduction_pct",
+        "value": 50
+      },
+      {
+        "metric": "new_claims_acknowledged_within_24h_pct",
+        "value": 100
+      }
+    ]
+  },
+  "voice": {
+    "serves": "The insured client (fleet manager, finance contact, council risk manager) and, through them, the insurer's claims team; all outside the firm.",
+    "jobs": [
+      "Acknowledge every new claim inside the day",
+      "Send every Friday client report before lunch",
+      "Summarise every medical report the day it lands so the insurer can reserve"
+    ],
+    "tone": "Short and plain; no jargon; polite but not gushing.",
+    "norms": [
+      "Put the claim number in the subject line",
+      "Never guess a policy number",
+      "Note every call on the file",
+      "A summary never gives an opinion on liability"
+    ],
+    "never": [
+      "Tell a client a claim is covered",
+      "Send anything to a client without the handler reading it first",
+      "Send a medical report, or anything quoting one, outside the firm without a person reading it",
+      "Contact a claimant directly"
+    ],
+    "ask_before": [
+      "Closing a claim on the system",
+      "Changing a reserve"
+    ],
+    "escalate_to": [
+      "Claims Team Leader",
+      "The client's account executive, for coverage questions",
+      "Compliance, the same day, for a complaint",
+      "Injury technical lead, for a claimant's health or capacity"
+    ]
+  },
+  "features": [
+    {
+      "id": "getting-claims-in",
+      "name": "Getting claims in",
+      "why": "If it's not in by the end of the day we've broken our promise to the client."
+    },
+    {
+      "id": "keeping-clients-in-the-loop",
+      "name": "Keeping clients in the loop",
+      "why": "Clients who know where they stand don't chase, and they renew."
+    },
+    {
+      "id": "injury-files",
+      "name": "Injury files",
+      "why": "The reserve is only as good as the summary."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T1",
+      "feature": "getting-claims-in",
+      "name": "Set up a new claim from the client's notification",
+      "frequency_per_week": 15,
+      "minutes_each": 20,
+      "users": 9,
+      "trigger": "event",
+      "inputs": [
+        {
+          "system": "outlook",
+          "objects": "claims inbox email",
+          "access": "read"
+        },
+        {
+          "system": "dynamics",
+          "objects": "client and policy",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "Claim record and an acknowledgement email with the claim number",
+        "audience": "external",
+        "destination": "Ledgerline and the client's inbox"
+      },
+      "writes": [
+        {
+          "system": "ledgerline",
+          "objects": "claim",
+          "action": "create"
+        },
+        {
+          "system": "outlook",
+          "objects": "acknowledgement email",
+          "action": "send"
+        }
+      ],
+      "data_class": "confidential",
+      "cost_of_mistake": {
+        "level": "medium",
+        "what_happens": "Past 24 hours the client complains; a claim on the wrong policy is a mess to unpick with the insurer."
+      },
+      "reversible": false,
+      "touches_money": false,
+      "reads_untrusted_input": true,
+      "examples": {
+        "good": 2,
+        "bad": 1,
+        "where": "The handler's own claim files"
+      },
+      "skill_owner": "Claims Team Leader",
+      "priority": null,
+      "in_pilot": false
+    },
+    {
+      "id": "T2",
+      "feature": "keeping-clients-in-the-loop",
+      "name": "Send each large client its Friday claims report",
+      "frequency_per_week": 1,
+      "minutes_each": null,
+      "users": 4,
+      "trigger": "schedule-own",
+      "inputs": [
+        {
+          "system": "ledgerline",
+          "objects": "open claims, reserves, last note",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "Friday claims report email",
+        "audience": "external",
+        "destination": "The client's inbox, team leader copied"
+      },
+      "writes": [
+        {
+          "system": "outlook",
+          "objects": "report email",
+          "action": "send"
+        }
+      ],
+      "data_class": "confidential",
+      "cost_of_mistake": {
+        "level": null,
+        "what_happens": "A wrong figure means an awkward call and a correction; a report sent to the wrong client is a reportable data breach."
+      },
+      "reversible": false,
+      "touches_money": false,
+      "reads_untrusted_input": false,
+      "examples": {
+        "good": 2,
+        "bad": 1,
+        "where": "The handler's sent mail"
+      },
+      "skill_owner": "Claims Team Leader",
+      "priority": 1,
+      "in_pilot": true
+    },
+    {
+      "id": "T3",
+      "feature": "injury-files",
+      "name": "Summarise a medical report for the insurer",
+      "frequency_per_week": 3.5,
+      "minutes_each": 90,
+      "users": 4,
+      "trigger": "person",
+      "inputs": [
+        {
+          "system": "sharepoint",
+          "objects": "medical report",
+          "access": "read"
+        },
+        {
+          "system": "ledgerline",
+          "objects": "claim",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "One-page medical report summary",
+        "audience": "external",
+        "destination": "Ledgerline claim file and the insurer's inbox"
+      },
+      "writes": [
+        {
+          "system": "ledgerline",
+          "objects": "claim attachment",
+          "action": "update"
+        },
+        {
+          "system": "outlook",
+          "objects": "summary email to the insurer",
+          "action": "send"
+        }
+      ],
+      "data_class": "highly-sensitive",
+      "cost_of_mistake": {
+        "level": "high",
+        "what_happens": "Wrong prognosis, wrong reserve; a misread injury becomes a complaint and possibly the ombudsman."
+      },
+      "reversible": false,
+      "touches_money": true,
+      "reads_untrusted_input": false,
+      "examples": {
+        "good": 3,
+        "bad": 2,
+        "where": "Injury files; must be anonymised first"
+      },
+      "skill_owner": "Injury technical lead",
+      "priority": 1,
+      "in_pilot": true
+    },
+    {
+      "id": "T4",
+      "feature": "keeping-clients-in-the-loop",
+      "name": "Chase missing documents on open claims",
+      "frequency_per_week": 50,
+      "minutes_each": 5,
+      "users": null,
+      "trigger": "person",
+      "inputs": [
+        {
+          "system": "ledgerline",
+          "objects": "diary",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "Chaser email",
+        "audience": "external",
+        "destination": "The recipient's inbox"
+      },
+      "writes": [
+        {
+          "system": "outlook",
+          "objects": "chaser email",
+          "action": "send"
+        }
+      ],
+      "data_class": "confidential",
+      "cost_of_mistake": {
+        "level": null,
+        "what_happens": ""
+      },
+      "reversible": false,
+      "touches_money": false,
+      "reads_untrusted_input": false,
+      "examples": {
+        "good": null,
+        "bad": null,
+        "where": ""
+      },
+      "skill_owner": "",
+      "priority": null,
+      "in_pilot": null
+    }
+  ],
+  "memory": {
+    "personal_memory_wanted": true,
+    "notes": "Client report layout preferences only. Nothing about a claimant's injuries kept from one file to the next."
+  },
+  "overrides": [
+    {
+      "task": "T3",
+      "decision": "autonomy.ceiling",
+      "value": 1,
+      "reason": "Medical report summaries stay at draft (level 1) until compliance rules on PHI and the injury technical lead has scored a month of drafts.",
+      "approved_by": "Ines Achterberg, Head of Claims (invented)"
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "OQ-1",
+      "question": "T2 cost of a mistake. Claims handler (2026-11-12): 'If it's a bit wrong, I get an awkward phone call and send a correction. Medium.' Senior claims handler (2026-11-13): 'If it goes to the wrong client, that's a data breach and we report it. High, not medium.' Which is it?",
+      "blocks": [
+        "T2"
+      ],
+      "owner": "Claims Team Leader",
+      "due": "2026-11-24"
+    },
+    {
+      "id": "OQ-2",
+      "question": "T2 minutes each. Claims handler (2026-11-12): 'about two and a half hours' for six clients. Senior claims handler (2026-11-13): 'About an hour for both' council clients. Which figure is the baseline?",
+      "blocks": [
+        "T2"
+      ],
+      "owner": "Claims Team Leader",
+      "due": "2026-11-24"
+    },
+    {
+      "id": "OQ-3",
+      "question": "What happens if a chaser (T4) goes wrong? F4 was not asked of the claims handler, and the senior claims handler said to ask the team leader.",
+      "blocks": [
+        "T4"
+      ],
+      "owner": "Claims Team Leader",
+      "due": "2026-11-24"
+    },
+    {
+      "id": "OQ-4",
+      "question": "Is T4 (chasing documents) in the pilot? Nobody said.",
+      "blocks": [
+        "T4"
+      ],
+      "owner": "Claims Team Leader",
+      "due": "2026-11-24"
+    },
+    {
+      "id": "OQ-5",
+      "question": "Do the medical reports on injury claims count as PHI for the firm?",
+      "blocks": [
+        "T3"
+      ],
+      "owner": "Head of Compliance",
+      "due": "2026-11-27"
+    }
+  ],
+  "provenance": {
+    "role.name": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#P1"
+    },
+    "role.team": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#P1"
+    },
+    "role.headcount": {
+      "status": "answered",
+      "source": "discovery.md#A3"
+    },
+    "role.pilot_users": {
+      "status": "answered",
+      "source": "discovery.md#A3"
+    },
+    "role.works_in": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#P1"
+    },
+    "role.device": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#P1"
+    },
+    "outcome.sponsor_goal": {
+      "status": "answered",
+      "source": "discovery.md#A1"
+    },
+    "outcome.scorecard_targets.friday_report_time_reduction_pct.value": {
+      "status": "answered",
+      "source": "discovery.md#A1"
+    },
+    "outcome.scorecard_targets.new_claims_acknowledged_within_24h_pct.value": {
+      "status": "answered",
+      "source": "discovery.md#A1"
+    },
+    "voice.serves": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#P2"
+    },
+    "voice.jobs": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#P3"
+    },
+    "voice.tone": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#P4"
+    },
+    "voice.norms": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#P3"
+    },
+    "voice.never": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#P5"
+    },
+    "voice.ask_before": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#P5"
+    },
+    "voice.escalate_to": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#P6"
+    },
+    "memory.personal_memory_wanted": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F9"
+    },
+    "memory.notes": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F9"
+    },
+    "tasks.T1.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F5"
+    },
+    "tasks.T1.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F6"
+    },
+    "tasks.T1.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F2"
+    },
+    "tasks.T1.cost_of_mistake.level": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F4"
+    },
+    "tasks.T1.reversible": {
+      "status": "assumed",
+      "source": "interviews/2026-11-12-claims-handler.md#F7",
+      "owner": "Claims Team Leader"
+    },
+    "tasks.T1.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F7"
+    },
+    "tasks.T1.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F8"
+    },
+    "tasks.T1.in_pilot": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F1"
+    },
+    "tasks.T1.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F2"
+    },
+    "tasks.T1.inputs[1].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F2"
+    },
+    "tasks.T1.writes[0].action": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F7"
+    },
+    "tasks.T1.writes[1].action": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F7"
+    },
+    "tasks.T2.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F5"
+    },
+    "tasks.T2.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F6"
+    },
+    "tasks.T2.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F2"
+    },
+    "tasks.T2.cost_of_mistake.level": {
+      "status": "open",
+      "source": "interviews/2026-11-12-claims-handler.md#F4",
+      "owner": "Claims Team Leader",
+      "due": "2026-11-24"
+    },
+    "tasks.T2.reversible": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F7"
+    },
+    "tasks.T2.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F7"
+    },
+    "tasks.T2.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F8"
+    },
+    "tasks.T2.in_pilot": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F1"
+    },
+    "tasks.T2.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F2"
+    },
+    "tasks.T2.writes[0].action": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F7"
+    },
+    "tasks.T3.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F5"
+    },
+    "tasks.T3.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F6"
+    },
+    "tasks.T3.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F2"
+    },
+    "tasks.T3.cost_of_mistake.level": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F4"
+    },
+    "tasks.T3.reversible": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F7"
+    },
+    "tasks.T3.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F7"
+    },
+    "tasks.T3.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F8"
+    },
+    "tasks.T3.in_pilot": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F1"
+    },
+    "tasks.T3.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F2"
+    },
+    "tasks.T3.inputs[1].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F2"
+    },
+    "tasks.T3.writes[0].action": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F2"
+    },
+    "tasks.T3.writes[1].action": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F2"
+    },
+    "tasks.T4.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F5"
+    },
+    "tasks.T4.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F6"
+    },
+    "tasks.T4.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F2"
+    },
+    "tasks.T4.cost_of_mistake.level": {
+      "status": "open",
+      "source": "interviews/2026-11-12-claims-handler.md#F4",
+      "owner": "Claims Team Leader",
+      "due": "2026-11-24"
+    },
+    "tasks.T4.reversible": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F7"
+    },
+    "tasks.T4.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F7"
+    },
+    "tasks.T4.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F8"
+    },
+    "tasks.T4.in_pilot": {
+      "status": "open",
+      "source": "interviews/2026-11-12-claims-handler.md#F1",
+      "owner": "Claims Team Leader",
+      "due": "2026-11-24"
+    },
+    "tasks.T4.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F2"
+    },
+    "tasks.T4.writes[0].action": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F7"
+    },
+    "tasks.T2.minutes_each": {
+      "status": "open",
+      "source": "interviews/2026-11-12-claims-handler.md#F1",
+      "owner": "Claims Team Leader",
+      "due": "2026-11-24"
+    }
+  }
+}

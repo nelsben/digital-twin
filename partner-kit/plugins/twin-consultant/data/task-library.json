@@ -1747,7 +1747,7 @@
           "link": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation"
         },
         {
-          "text": "In the connector's Tool permissions, set every Gmail and Google Calendar write tool to Blocked or Needs approval.",
+          "text": "In the connector's Tool permissions, leave each Gmail and Google Calendar write tool at the permission this story's tool tasks set, and record it.",
           "link": "starter-kit/runbooks/google-workspace-connectors.md#steps"
         },
         {

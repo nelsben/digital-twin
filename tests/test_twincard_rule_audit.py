@@ -202,7 +202,9 @@ class ZdrOrgTests(unittest.TestCase):
         self.assertEqual(ids_of(out, "warnings", "zdr-org-not-confirmed"), ["T1", "T2", "T3", "T4", "T5", "T6"])
 
     def test_no_warning_when_the_profile_shows_zdr(self):
-        out = level(PE, set_profile("compliance", "retention", "zdr"))
+        # OPS-53: the warning reads compliance.zdr_cover, so the profile shows ZDR when the cover is in place.
+        out = level(PE, chain(set_profile("compliance", "retention", "zdr"),
+                              set_profile("compliance", "zdr_cover", "in-place")))
         self.assertEqual(ids_of(out, "warnings", "zdr-org-not-confirmed"), [])
 
 

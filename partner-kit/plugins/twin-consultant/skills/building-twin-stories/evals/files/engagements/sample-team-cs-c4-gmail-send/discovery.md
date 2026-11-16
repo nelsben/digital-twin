@@ -28,7 +28,7 @@ Discovery date: 2026-11-04. One call with Teodor Amsel, the IT and operations le
 |---|---|---|---|
 | C1 | Data classes per role | Internal and confidential only. Contracts, CRM data and customer calls are confidential; nothing is more sensitive than that. | answered |
 | C2 | Any PHI? Is there a BAA? | No PHI, so no BAA. | answered |
-| C3 | Required retention; accept the ZDR exceptions? | No special requirement: standard retention is fine for us. Compliance is Pieter Achterberg, our finance and legal lead. | answered |
+| C3 | Required retention; accept the ZDR exceptions? | No special requirement: standard retention is fine for us. We have no zero-data-retention agreement and do not need one. Compliance is Pieter Achterberg, our finance and legal lead. | answered |
 | C4 | Information barriers: soft or hard? | None. We have no walls; the whole team sees every account. | answered |
 | C5 | Is there MNPI? | No MNPI. | answered |
 

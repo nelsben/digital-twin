@@ -8,7 +8,7 @@
 | Interviewee's role | |
 | Interviewer | |
 
-Write what they said in their words. Questions are in [interview-guide.md](interview-guide.md).
+Write what they said in their words. Questions are in the interview guide, `partner-kit/plugins/twin-consultant/templates/interview-guide.md` in the partner kit.
 
 ## Where this file is saved
 

@@ -3,8 +3,8 @@
   "customer": "example-capital-partners",
   "persona": "deal-team-associate",
   "source": {
-    "card_sha256": "08016d0633d84f785445a706b67e7a3bfc34a364bd74c8ab780a0a0cb873d6ec",
-    "levelled_sha256": "e1be7f7d27a77cd79c0b1a1c095b0a28dcbac863cb52cd8d02b7141eb0dad63a",
+    "card_sha256": "46c79c3f5d8f1a2784ab3e9730345d50779bc4418e06f93123a87e2ad2131fb1",
+    "levelled_sha256": "d80155c49b0487af9a39fa3d6feca394ca5ba8f3869e24709f20d0a398091d7a",
     "library_version": 1
   },
   "epic": {
@@ -35,12 +35,16 @@
               "inputs": "salesforce (deal record (opportunity, account)); sharepoint (prior memos and data-room files)",
               "output_and_audience": "One-page company brief, internal; to none (the conversation)",
               "skill_owner": "Callum Nwosu",
-              "baseline": "4 per week x 90 minutes each x 3 users"
+              "baseline": "4 per week x 90 minutes each x 3 users",
+              "constraints": [
+                "A reviewer checks every brief before it goes further."
+              ]
             },
             "acceptance": [
               "Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.",
               "Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.",
               "Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.",
+              "Keeps: A reviewer checks every brief before it goes further.",
               "Plus: no web tools are used.",
               "Plus: each tool call reaches the governance log."
             ],
@@ -169,6 +173,10 @@
                   {
                     "text": "On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills).",
                     "link": "docs/compendium/05-decision-matrix.md#the-options"
+                  },
+                  {
+                    "text": "Make the skill keep these rules from the interviews, in the interviewee's words: A reviewer checks every brief before it goes further..",
+                    "link": null
                   }
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
@@ -405,25 +413,6 @@
                 "status": "todo"
               },
               {
-                "id": "S-T1.zdr-retention",
-                "template": "zdr-retention",
-                "title": "Confirm the task runs only in the org with zero data retention",
-                "part": "A7",
-                "how": [
-                  {
-                    "text": "Check the task's surfaces and connectors are all in the ZDR org.",
-                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
-                  },
-                  {
-                    "text": "Record which features the ZDR org lacks that the task might expect.",
-                    "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
-                  }
-                ],
-                "done_when": "Compliance has confirmed the task runs only in the ZDR org.",
-                "owner_role": "compliance",
-                "status": "todo"
-              },
-              {
                 "id": "S-T1.confirm-unverified-decision.connectors.salesforce",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce)",
@@ -457,11 +446,34 @@
                     "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
                   },
                   {
-                    "text": "Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again.",
+                    "text": "Confirm with the customer whether a zero-data-retention agreement covers the org this work runs in, record the answer as compliance.zdr_cover in the profile, then level again.",
                     "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
                   }
                 ],
-                "done_when": "The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.",
+                "done_when": "The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.",
+                "owner_role": "compliance",
+                "status": "todo"
+              },
+              {
+                "id": "S-T1.zdr-retention-agreement-first",
+                "template": "zdr-retention-agreement-first",
+                "title": "Get the zero-data-retention agreement signed, then confirm the task runs only in that org",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "The profile's compliance.zdr_cover is planned or still open: no signed zero-data-retention agreement covers this work yet. Do not let the task go live until the agreement is signed and covers the org it runs in.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  },
+                  {
+                    "text": "Check the task's surfaces and connectors are all in the ZDR org.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  },
+                  {
+                    "text": "Record which features the ZDR org lacks that the task might expect.",
+                    "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
+                  }
+                ],
+                "done_when": "The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.",
                 "owner_role": "compliance",
                 "status": "todo"
               }
@@ -824,25 +836,6 @@
                 "status": "todo"
               },
               {
-                "id": "S-T5.zdr-retention",
-                "template": "zdr-retention",
-                "title": "Confirm the task runs only in the org with zero data retention",
-                "part": "A7",
-                "how": [
-                  {
-                    "text": "Check the task's surfaces and connectors are all in the ZDR org.",
-                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
-                  },
-                  {
-                    "text": "Record which features the ZDR org lacks that the task might expect.",
-                    "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
-                  }
-                ],
-                "done_when": "Compliance has confirmed the task runs only in the ZDR org.",
-                "owner_role": "compliance",
-                "status": "todo"
-              },
-              {
                 "id": "S-T5.confirm-unverified-decision.connectors.salesforce",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce)",
@@ -876,11 +869,34 @@
                     "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
                   },
                   {
-                    "text": "Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again.",
+                    "text": "Confirm with the customer whether a zero-data-retention agreement covers the org this work runs in, record the answer as compliance.zdr_cover in the profile, then level again.",
                     "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
                   }
                 ],
-                "done_when": "The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.",
+                "done_when": "The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.",
+                "owner_role": "compliance",
+                "status": "todo"
+              },
+              {
+                "id": "S-T5.zdr-retention-agreement-first",
+                "template": "zdr-retention-agreement-first",
+                "title": "Get the zero-data-retention agreement signed, then confirm the task runs only in that org",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "The profile's compliance.zdr_cover is planned or still open: no signed zero-data-retention agreement covers this work yet. Do not let the task go live until the agreement is signed and covers the org it runs in.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  },
+                  {
+                    "text": "Check the task's surfaces and connectors are all in the ZDR org.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  },
+                  {
+                    "text": "Record which features the ZDR org lacks that the task might expect.",
+                    "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
+                  }
+                ],
+                "done_when": "The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.",
                 "owner_role": "compliance",
                 "status": "todo"
               }
@@ -911,12 +927,17 @@
               "inputs": "teams (meeting notes or transcript); salesforce (opportunity)",
               "output_and_audience": "Activity log and next-step fields, internal; to Salesforce opportunity",
               "skill_owner": "Beatriz Halloran",
-              "baseline": "10 per week x 15 minutes each x 18 users"
+              "baseline": "10 per week x 15 minutes each x 18 users",
+              "constraints": [
+                "I want to approve each change before it's written."
+              ],
+              "wanted_change": "Asked for, not planned: Later it could start when the meeting ends."
             },
             "acceptance": [
               "Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.",
               "Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.",
               "Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.",
+              "Keeps: I want to approve each change before it's written.",
               "Plus: no web tools are used.",
               "Plus: every write carries the twin marker.",
               "Plus: each tool call reaches the governance log."
@@ -1046,6 +1067,10 @@
                   {
                     "text": "On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills).",
                     "link": "docs/compendium/05-decision-matrix.md#the-options"
+                  },
+                  {
+                    "text": "Make the skill keep these rules from the interviews, in the interviewee's words: I want to approve each change before it's written..",
+                    "link": null
                   }
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
@@ -1358,25 +1383,6 @@
                 "status": "todo"
               },
               {
-                "id": "S-T2.zdr-retention",
-                "template": "zdr-retention",
-                "title": "Confirm the task runs only in the org with zero data retention",
-                "part": "A7",
-                "how": [
-                  {
-                    "text": "Check the task's surfaces and connectors are all in the ZDR org.",
-                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
-                  },
-                  {
-                    "text": "Record which features the ZDR org lacks that the task might expect.",
-                    "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
-                  }
-                ],
-                "done_when": "Compliance has confirmed the task runs only in the ZDR org.",
-                "owner_role": "compliance",
-                "status": "todo"
-              },
-              {
                 "id": "S-T2.confirm-unverified-decision.connectors.salesforce",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce)",
@@ -1410,11 +1416,34 @@
                     "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
                   },
                   {
-                    "text": "Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again.",
+                    "text": "Confirm with the customer whether a zero-data-retention agreement covers the org this work runs in, record the answer as compliance.zdr_cover in the profile, then level again.",
                     "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
                   }
                 ],
-                "done_when": "The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.",
+                "done_when": "The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.",
+                "owner_role": "compliance",
+                "status": "todo"
+              },
+              {
+                "id": "S-T2.zdr-retention-agreement-first",
+                "template": "zdr-retention-agreement-first",
+                "title": "Get the zero-data-retention agreement signed, then confirm the task runs only in that org",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "The profile's compliance.zdr_cover is planned or still open: no signed zero-data-retention agreement covers this work yet. Do not let the task go live until the agreement is signed and covers the org it runs in.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  },
+                  {
+                    "text": "Check the task's surfaces and connectors are all in the ZDR org.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  },
+                  {
+                    "text": "Record which features the ZDR org lacks that the task might expect.",
+                    "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
+                  }
+                ],
+                "done_when": "The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.",
                 "owner_role": "compliance",
                 "status": "todo"
               }
@@ -1907,25 +1936,6 @@
                 "status": "todo"
               },
               {
-                "id": "S-T3.zdr-retention",
-                "template": "zdr-retention",
-                "title": "Confirm the task runs only in the org with zero data retention",
-                "part": "A7",
-                "how": [
-                  {
-                    "text": "Check the task's surfaces and connectors are all in the ZDR org.",
-                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
-                  },
-                  {
-                    "text": "Record which features the ZDR org lacks that the task might expect.",
-                    "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
-                  }
-                ],
-                "done_when": "Compliance has confirmed the task runs only in the ZDR org.",
-                "owner_role": "compliance",
-                "status": "todo"
-              },
-              {
                 "id": "S-T3.confirm-unverified-decision.connectors.salesforce",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce)",
@@ -1978,11 +1988,34 @@
                     "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
                   },
                   {
-                    "text": "Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again.",
+                    "text": "Confirm with the customer whether a zero-data-retention agreement covers the org this work runs in, record the answer as compliance.zdr_cover in the profile, then level again.",
                     "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
                   }
                 ],
-                "done_when": "The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.",
+                "done_when": "The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.",
+                "owner_role": "compliance",
+                "status": "todo"
+              },
+              {
+                "id": "S-T3.zdr-retention-agreement-first",
+                "template": "zdr-retention-agreement-first",
+                "title": "Get the zero-data-retention agreement signed, then confirm the task runs only in that org",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "The profile's compliance.zdr_cover is planned or still open: no signed zero-data-retention agreement covers this work yet. Do not let the task go live until the agreement is signed and covers the org it runs in.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  },
+                  {
+                    "text": "Check the task's surfaces and connectors are all in the ZDR org.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  },
+                  {
+                    "text": "Record which features the ZDR org lacks that the task might expect.",
+                    "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
+                  }
+                ],
+                "done_when": "The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.",
                 "owner_role": "compliance",
                 "status": "todo"
               }
@@ -2358,25 +2391,6 @@
                 "status": "todo"
               },
               {
-                "id": "S-T4.zdr-retention",
-                "template": "zdr-retention",
-                "title": "Confirm the task runs only in the org with zero data retention",
-                "part": "A7",
-                "how": [
-                  {
-                    "text": "Check the task's surfaces and connectors are all in the ZDR org.",
-                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
-                  },
-                  {
-                    "text": "Record which features the ZDR org lacks that the task might expect.",
-                    "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
-                  }
-                ],
-                "done_when": "Compliance has confirmed the task runs only in the ZDR org.",
-                "owner_role": "compliance",
-                "status": "todo"
-              },
-              {
                 "id": "S-T4.confirm-unverified-decision.connectors.salesforce",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce)",
@@ -2429,11 +2443,34 @@
                     "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
                   },
                   {
-                    "text": "Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again.",
+                    "text": "Confirm with the customer whether a zero-data-retention agreement covers the org this work runs in, record the answer as compliance.zdr_cover in the profile, then level again.",
                     "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
                   }
                 ],
-                "done_when": "The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.",
+                "done_when": "The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.",
+                "owner_role": "compliance",
+                "status": "todo"
+              },
+              {
+                "id": "S-T4.zdr-retention-agreement-first",
+                "template": "zdr-retention-agreement-first",
+                "title": "Get the zero-data-retention agreement signed, then confirm the task runs only in that org",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "The profile's compliance.zdr_cover is planned or still open: no signed zero-data-retention agreement covers this work yet. Do not let the task go live until the agreement is signed and covers the org it runs in.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  },
+                  {
+                    "text": "Check the task's surfaces and connectors are all in the ZDR org.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  },
+                  {
+                    "text": "Record which features the ZDR org lacks that the task might expect.",
+                    "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
+                  }
+                ],
+                "done_when": "The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.",
                 "owner_role": "compliance",
                 "status": "todo"
               }
@@ -2464,12 +2501,16 @@
               "inputs": "sharepoint (diligence notes and data-room files)",
               "output_and_audience": "Draft memo section, internal; to none (the conversation), for the partners",
               "skill_owner": "Ravindra Sorensen",
-              "baseline": "0.46 per week x 240 minutes each x unknown users"
+              "baseline": "0.46 per week x 240 minutes each x unknown users",
+              "constraints": [
+                "It's always a draft and always reviewed."
+              ]
             },
             "acceptance": [
               "Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.",
               "Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.",
               "Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.",
+              "Keeps: It's always a draft and always reviewed.",
               "Plus: no web tools are used.",
               "Plus: each tool call reaches the governance log."
             ],
@@ -2573,6 +2614,10 @@
                   {
                     "text": "On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills).",
                     "link": "docs/compendium/05-decision-matrix.md#the-options"
+                  },
+                  {
+                    "text": "Make the skill keep these rules from the interviews, in the interviewee's words: It's always a draft and always reviewed..",
+                    "link": null
                   }
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
@@ -2767,25 +2812,6 @@
                 "status": "todo"
               },
               {
-                "id": "S-T6.zdr-retention",
-                "template": "zdr-retention",
-                "title": "Confirm the task runs only in the org with zero data retention",
-                "part": "A7",
-                "how": [
-                  {
-                    "text": "Check the task's surfaces and connectors are all in the ZDR org.",
-                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
-                  },
-                  {
-                    "text": "Record which features the ZDR org lacks that the task might expect.",
-                    "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
-                  }
-                ],
-                "done_when": "Compliance has confirmed the task runs only in the ZDR org.",
-                "owner_role": "compliance",
-                "status": "todo"
-              },
-              {
                 "id": "S-T6.warning-high-cost-ceiling-unconfirmed",
                 "template": "warning-high-cost-ceiling-unconfirmed",
                 "title": "Resolve warning high-cost-ceiling-unconfirmed: confirm the ceiling of a task whose mistakes cost a lot",
@@ -2815,11 +2841,34 @@
                     "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
                   },
                   {
-                    "text": "Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again.",
+                    "text": "Confirm with the customer whether a zero-data-retention agreement covers the org this work runs in, record the answer as compliance.zdr_cover in the profile, then level again.",
                     "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
                   }
                 ],
-                "done_when": "The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.",
+                "done_when": "The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.",
+                "owner_role": "compliance",
+                "status": "todo"
+              },
+              {
+                "id": "S-T6.zdr-retention-agreement-first",
+                "template": "zdr-retention-agreement-first",
+                "title": "Get the zero-data-retention agreement signed, then confirm the task runs only in that org",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "The profile's compliance.zdr_cover is planned or still open: no signed zero-data-retention agreement covers this work yet. Do not let the task go live until the agreement is signed and covers the org it runs in.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  },
+                  {
+                    "text": "Check the task's surfaces and connectors are all in the ZDR org.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  },
+                  {
+                    "text": "Record which features the ZDR org lacks that the task might expect.",
+                    "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
+                  }
+                ],
+                "done_when": "The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.",
                 "owner_role": "compliance",
                 "status": "todo"
               }

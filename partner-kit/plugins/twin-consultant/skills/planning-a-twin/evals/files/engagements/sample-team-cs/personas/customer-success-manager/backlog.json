@@ -3,8 +3,8 @@
   "customer": "example-software-co",
   "persona": "customer-success-manager",
   "source": {
-    "card_sha256": "e2ad4ae934c6b70149a6569c4ddbe2571889e8701c7495a6189629e49a34c0bb",
-    "levelled_sha256": "343a45d7ecb719b4cc75ce94eaaba99ffaa7255be2a365aff573532ef117af90",
+    "card_sha256": "ed6b2c0d5ae57095d3a004a56c5be31d2d0b9cff6a7d84d13523eeaef7041141",
+    "levelled_sha256": "18daa425221439764f97c67a2ad8f68e974f28e947799209dd3e0d59f810abee",
     "library_version": 1
   },
   "epic": {
@@ -408,12 +408,16 @@
               "inputs": "google-drive (call notes or transcript)",
               "output_and_audience": "Draft follow-up email, which the manager sends, and a call note on the HubSpot record, external; to a draft in the conversation; the HubSpot company record",
               "skill_owner": "Marisol Quenby",
-              "baseline": "6 per week x 25 minutes each x 8 users"
+              "baseline": "6 per week x 25 minutes each x 8 users",
+              "constraints": [
+                "I want to approve the note before it's created."
+              ]
             },
             "acceptance": [
               "Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.",
+              "Keeps: I want to approve the note before it's created.",
               "Plus: every write carries the twin marker."
             ],
             "gated_by": [],
@@ -505,6 +509,10 @@
                   {
                     "text": "On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills).",
                     "link": "docs/compendium/05-decision-matrix.md#the-options"
+                  },
+                  {
+                    "text": "Make the skill keep these rules from the interviews, in the interviewee's words: I want to approve the note before it's created..",
+                    "link": null
                   }
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
@@ -1380,12 +1388,16 @@
               "inputs": "hubspot (renewal deal, line items, products, quote)",
               "output_and_audience": "Draft renewal quote email, which the manager checks and sends from Gmail, external; to none (a draft in the conversation)",
               "skill_owner": "Marisol Quenby",
-              "baseline": "2 per week x 40 minutes each x 8 users"
+              "baseline": "2 per week x 40 minutes each x 8 users",
+              "constraints": [
+                "I check the figures before I send."
+              ]
             },
             "acceptance": [
               "Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
-              "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake."
+              "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.",
+              "Keeps: I check the figures before I send."
             ],
             "gated_by": [],
             "tasks": [
@@ -1476,6 +1488,10 @@
                   {
                     "text": "On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills).",
                     "link": "docs/compendium/05-decision-matrix.md#the-options"
+                  },
+                  {
+                    "text": "Make the skill keep these rules from the interviews, in the interviewee's words: I check the figures before I send..",
+                    "link": null
                   }
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
@@ -1650,7 +1666,8 @@
               "inputs": "zendesk (the customer's open tickets)",
               "output_and_audience": "Summary of the customer's open tickets, internal; to none (the conversation)",
               "skill_owner": "Marisol Quenby",
-              "baseline": "2 per week x 30 minutes each x 8 users"
+              "baseline": "2 per week x 30 minutes each x 8 users",
+              "wanted_change": "Asked for, not planned: Something happening: the escalation itself, ideally. Today I start it when I'm told."
             },
             "acceptance": [
               "Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",

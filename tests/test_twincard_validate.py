@@ -74,7 +74,7 @@ def template_paths(value, prefix=""):
 PROFILE_REQUIRED = [
     "display_name", "industry", "plan.tier", "identity.sso", "identity.scim", "devices.mdm",
     "compliance.data_classes", "compliance.phi", "compliance.baa", "compliance.mnpi",
-    "compliance.retention", "compliance.walls",
+    "compliance.retention", "compliance.zdr_cover", "compliance.walls",
     "systems.crm.kind", "systems.crm.product", "systems.crm.edition", "systems.crm.private_network",
     "network.can_allowlist_anthropic_ips", "governance.action_log_required",
 ]
@@ -107,7 +107,7 @@ def valid_profile():
         "compliance": {
             "data_classes": ["internal", "confidential"],
             "phi": False, "baa": False, "mnpi": False,
-            "retention": "standard", "walls": "none",
+            "retention": "standard", "zdr_cover": "none", "walls": "none",
         },
         "systems": [
             {"id": "crm", "kind": "crm", "product": "Salesforce", "edition": "Enterprise",

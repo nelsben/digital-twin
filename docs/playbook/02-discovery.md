@@ -21,7 +21,7 @@ Run this with every customer. Each answer feeds a design decision, and the link 
 |---|---|---|---|
 | C1 | Which data classes will each role touch: internal, confidential, highly sensitive, PHI? | It decides the orgs, surfaces and controls | [10](../compendium/10-sensitive-data.md) |
 | C2 | Does any role handle PHI? Is there a BAA? | HIPAA is permanent per org, and many features are excluded | [10](../compendium/10-sensitive-data.md) |
-| C3 | What retention does compliance require? Will they accept the ZDR exceptions (flagged content kept up to 2 years, feedback 5 years)? | The retention settings, and whether feedback is turned off | [10](../compendium/10-sensitive-data.md) |
+| C3 | What retention does compliance require? Will they accept the ZDR exceptions (flagged content kept up to 2 years, feedback 5 years)? Is zero-data-retention cover in place, planned or not available? | The retention settings, and whether feedback is turned off | [10](../compendium/10-sensitive-data.md) |
 | C4 | Are information barriers required? Soft (enforced by source-system permissions) or hard (provable separation)? | It decides the wall design and the org count | [14](../compendium/14-private-equity.md) |
 | C5 | Is there MNPI? | Web tools off; ZDR surfaces only | [14](../compendium/14-private-equity.md) |
 

@@ -29,6 +29,7 @@
     "baa": false,
     "mnpi": true,
     "retention": "custom-30-day",
+    "zdr_cover": "planned",
     "walls": "soft"
   },
   "systems": [
@@ -159,6 +160,12 @@
     "compliance.retention": {
       "status": "default",
       "source": "data/industry-packs/private-equity.json"
+    },
+    "compliance.zdr_cover": {
+      "status": "assumed",
+      "source": "design.md#12-open-design-decisions",
+      "owner": "Tomasz Hadjiev",
+      "due": "2026-12-04"
     },
     "compliance.walls": {
       "status": "answered",

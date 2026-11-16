@@ -84,6 +84,11 @@ Commands, from `${CLAUDE_PLUGIN_ROOT}/scripts/twincard/cli.py`: `backlog
   settings baseline; the distribution). Leave the task `in-progress` until
   the consultant says the admin has done it. Example:
   `S-C1.tool-always-allow.hubspot-read`.
+- **Rules from the interviews.** A story's `constraints` field and its
+  `Keeps:` acceptance lines are rules in the interviewee's words. The twin's
+  instructions keep each one as said, and an eval case checks it. Its
+  `wanted_change` is asked for, not planned: build nothing for it unless
+  the consultant adds it to the card through `planning-a-twin`.
 - **Who it waits on.** Name the task's `owner_role`, and the person from the
   profile's `owners` or the story's `fields` when they give one.
 

@@ -95,8 +95,9 @@ if neither gives them, ask. Never make them up.
 - **Disagreement.** When two interviewees give answers that cannot both be
   true (a different number, allowed value or yes/no), do not pick one or
   average them. The field is `open` and empty, and the open question quotes
-  both answers with their file names. Answers that add to each other (two
-  descriptions of tone) are not a disagreement: combine them.
+  both answers with their file names. Two tones add to each other: combine
+  them, citing both files with `; `. A task two people put under different
+  features keeps the first file's, plus an open question (field rules).
 - **Several sources.** An answer from more than one person cites each, with
   `; `: `"interviews/a.md#P2; interviews/b.md#P2"`.
 - **Said in conversation.** An answer the consultant gives in the chat is
@@ -106,7 +107,7 @@ if neither gives them, ask. Never make them up.
 - **Open is empty.** A working guess is `assumed`, with an owner, not `open`.
 - **Today, not the wish.** `tasks[].trigger` is how the task starts now;
   "ideally" or "later" goes in an open question. The rules for question F8,
-  question F7 and per-something rates are in
+  question F7, per-something rates, rules, wished changes and surfaces are in
   [references/field-rules.md](references/field-rules.md).
 - **Only what was said.** No figure, name or system that is not in the
   notes, the profile, the discovery answers or the consultant's message. A

@@ -54,7 +54,7 @@
         "card.json is unchanged: its overrides list is still empty",
         "Warnings are grouped by code: zdr-org-not-confirmed once, naming T1 to T6, high-cost-ceiling-unconfirmed once, naming T4 and T6, and agent-sdk-cover-unverified once, naming T3",
         "The reply lists the nine open questions on the card (E4, E6, F3, G1, OD-1, OD-8, OD-9, OD-11, OD-13), each with its owner and due date, and says OD-8 and OD-13 have no due date",
-        "The reply says the plan is not complete: completeness is 92% (99 of 107 required fields) and open questions block the in-pilot tasks T1 and T2",
+        "The reply says the plan is not complete: completeness is 91% (99 of 108 required fields) and open questions block the in-pilot tasks T1 and T2",
         "The reply ends with the path to dashboard.html, 0 blockers, 9 warnings and 9 open questions, and names building-twin-stories as the next step",
         "No web search or web fetch was used"
       ]

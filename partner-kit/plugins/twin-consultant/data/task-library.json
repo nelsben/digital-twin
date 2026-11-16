@@ -934,7 +934,10 @@
       "applies_to": "task-story",
       "per": null,
       "when": {
-        "data_controls.retention": "zdr"
+        "data_controls.retention": "zdr",
+        "not": {
+          "codes": "zdr-org-not-confirmed"
+        }
       },
       "how": [
         {
@@ -1744,11 +1747,38 @@
           "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
         },
         {
-          "text": "Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again.",
+          "text": "Confirm with the customer whether a zero-data-retention agreement covers the org this work runs in, record the answer as compliance.zdr_cover in the profile, then level again.",
           "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
         }
       ],
-      "done_when": "The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.",
+      "done_when": "The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.",
+      "owner_role": "compliance"
+    },
+    {
+      "id": "zdr-retention-agreement-first",
+      "title": "Get the zero-data-retention agreement signed, then confirm the task runs only in that org",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "data_controls.retention": "zdr",
+        "codes": "zdr-org-not-confirmed"
+      },
+      "how": [
+        {
+          "text": "The profile's compliance.zdr_cover is planned or still open: no signed zero-data-retention agreement covers this work yet. Do not let the task go live until the agreement is signed and covers the org it runs in.",
+          "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+        },
+        {
+          "text": "Check the task's surfaces and connectors are all in the ZDR org.",
+          "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+        },
+        {
+          "text": "Record which features the ZDR org lacks that the task might expect.",
+          "link": "docs/compendium/12-orgs-and-ownership.md#recommended-starting-point"
+        }
+      ],
+      "done_when": "The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.",
       "owner_role": "compliance"
     },
     {

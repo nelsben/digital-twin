@@ -8,7 +8,7 @@
 | Interviewee's role | Claims handler, commercial motor and property |
 | Interviewer | Partner engagement lead |
 
-Write what they said in their words. Questions are in [interview-guide.md](interview-guide.md).
+Write what they said in their words. Questions are in the interview guide, `partner-kit/plugins/twin-consultant/templates/interview-guide.md` in the partner kit.
 
 > Fictional. The interviewee, every client and every figure here are invented.
 

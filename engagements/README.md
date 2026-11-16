@@ -14,8 +14,7 @@ Both are fictional: every company, person and figure in them is invented. A real
 ## Starting a real customer folder
 
 1. Create `engagements/<customer>/` and copy [customer-profile.json](../partner-kit/plugins/twin-consultant/templates/customer-profile.json) and [discovery.md](../partner-kit/plugins/twin-consultant/templates/discovery.md) into it. Write the discovery answers in `discovery.md`; the profile and the card cite its rows (`discovery.md#A1`).
-2. Create `engagements/<customer>/personas/<persona-id>/` and copy [card.json](../partner-kit/plugins/twin-consultant/templates/card.json) into it, with the interview notes in an `interviews/` folder beside it.
-3. Follow the steps in the [twin-consultant plugin README](../partner-kit/plugins/twin-consultant/README.md).
+2. Build each persona folder by following the [persona-card workflow](../docs/playbook/05-persona-card-workflow.md), from the interviews to the dashboard.
 
 ## Regenerating a persona folder
 

@@ -101,6 +101,9 @@
         "level": "medium",
         "what_happens": "A wrong fact can reach a partner discussion. A reviewer checks every brief."
       },
+      "constraints": [
+        "A reviewer checks every brief before it goes further."
+      ],
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": true,
@@ -150,6 +153,10 @@
         "level": "medium",
         "what_happens": "Stale or wrong pipeline data (low to medium). Writes start as drafts a person approves."
       },
+      "constraints": [
+        "I want to approve each change before it's written."
+      ],
+      "wanted_change": "Later it could start when the meeting ends.",
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": false,
@@ -318,6 +325,9 @@
         "level": "high",
         "what_happens": "The memo informs a decision. Always a draft, always reviewed."
       },
+      "constraints": [
+        "It's always a draft and always reviewed."
+      ],
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": true,
@@ -579,6 +589,10 @@
       "status": "answered",
       "source": "interviews/2026-11-12-associate.md#F3"
     },
+    "tasks.T1.constraints": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F4"
+    },
     "tasks.T2.name": {
       "status": "answered",
       "source": "interviews/2026-11-11-principal.md#F1"
@@ -662,6 +676,14 @@
     "tasks.T2.skill_owner": {
       "status": "answered",
       "source": "interviews/2026-11-11-principal.md#F3"
+    },
+    "tasks.T2.constraints": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F7"
+    },
+    "tasks.T2.wanted_change": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F5"
     },
     "tasks.T3.name": {
       "status": "answered",
@@ -965,6 +987,10 @@
     "tasks.T6.skill_owner": {
       "status": "answered",
       "source": "interviews/2026-11-10-partner.md#F3"
+    },
+    "tasks.T6.constraints": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F4"
     },
     "role.plugin_name": {
       "status": "assumed",

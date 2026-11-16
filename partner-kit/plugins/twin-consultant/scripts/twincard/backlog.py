@@ -98,6 +98,10 @@ ITEM_FACTS = {
 }
 ALL_ITEM_FACTS = tuple(name for names in ITEM_FACTS.values() for name in names)
 GOVERNANCE_CAPABILITY = "governance-action-log"
+# Fields from the interviews that a task story carries when the card holds them (design section 8).
+WRITE_SKILL = "write-skill"
+CONSTRAINTS_STEP = "Make the skill keep these rules from the interviews, in the interviewee's words: %s."
+WANTED_CHANGE_LABEL = "Asked for, not planned: "
 
 
 class BacklogError(ValueError):
@@ -470,7 +474,7 @@ def _story_fields(task, decisions, profile):
                                                         _show(c.get("permission")))
                            for c in decisions.get("connectors") or []) or "none"
     inputs = "; ".join("%s (%s)" % (i.get("system"), i.get("objects")) for i in task.get("inputs") or []) or "none"
-    return {
+    fields = {
         "data_class": task.get("data_class"),
         "surface": "%s; surfaces: %s" % (_show(_value(decisions.get("runtime"))),
                                          _show(_value(controls.get("surfaces")))),
@@ -484,6 +488,23 @@ def _story_fields(task, decisions, profile):
         "baseline": "%s per week x %s minutes each x %s users" % (
             _num(task.get("frequency_per_week")), _num(task.get("minutes_each")), _num(task.get("users"))),
     }
+    # From the interviews, only when the card holds them; neither changes levelling (design section 8).
+    constraints = _constraints(task)
+    if constraints:
+        fields["constraints"] = constraints
+    if _text(task.get("wanted_change")):
+        fields["wanted_change"] = WANTED_CHANGE_LABEL + _text(task.get("wanted_change"))
+    return fields
+
+
+def _text(value):
+    return value.strip() if isinstance(value, str) else ""
+
+
+def _constraints(task):
+    """The task's business rules and deadlines from the interviews, as the card holds them, empty ones dropped."""
+    items = task.get("constraints")
+    return [item for item in items if _text(item)] if isinstance(items, list) else []
 
 
 def _acceptance(task, facts):
@@ -499,6 +520,7 @@ def _acceptance(task, facts):
     if not lines:
         lines = ["Eval %d of 3: written from a real example once the skill owner has collected it, with the "
                  "expected result." % i for i in range(1, 4)]
+    lines += ["Keeps: %s" % item for item in _constraints(task)]
     if facts["data_controls.web_tools"] == "off":
         lines.append("Plus: no web tools are used.")
     if "crm" in facts["writes.kinds"]:
@@ -590,8 +612,18 @@ def _task_story(task, role, base, profile, levelled, systems, questions, persona
         "fields": _story_fields(task, decisions, profile),
         "acceptance": _acceptance(task, facts),
         "gated_by": _gates(blockers, [q for q in questions if tid in (q.get("blocks") or [])]),
-        "tasks": _tasks_for(story_id, facts, library, False, tid, decisions, levelled, systems),
+        "tasks": _with_constraints(_tasks_for(story_id, facts, library, False, tid, decisions, levelled, systems),
+                                   _constraints(task)),
     }
+
+
+def _with_constraints(tasks, constraints):
+    """The write-skill task gains one step that lists the task's constraints as rules the skill must keep."""
+    if constraints:
+        for item in tasks:
+            if item["template"] == WRITE_SKILL:
+                item["how"].append({"text": CONSTRAINTS_STEP % "; ".join(constraints), "link": None})
+    return tasks
 
 
 def _foundation_stories(role, base, levelled, persona_blockers, library):
@@ -762,6 +794,7 @@ def _md_story(story):
                  _md(story["priority"]) if story["priority"] is not None else "none", _md(story["status"])),
              "", "| Field | Value |", "|---|---|"]
     for key, value in story["fields"].items():
+        value = "; ".join(value) if isinstance(value, list) else value
         lines.append("| %s | %s |" % (key.replace("_", " ").capitalize(), _cell(value)))
     lines += ["", "**Acceptance criteria:**", ""]
     lines += ["%d. %s" % (i, _md(text, lead=True)) for i, text in enumerate(story["acceptance"], 1)]

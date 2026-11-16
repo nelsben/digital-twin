@@ -28,7 +28,7 @@ Discovery date: 2026-10-30. Who took part: Jules Ferreira-Hahn, the office manag
 |---|---|---|---|---|
 | C1 | Internal and confidential material only. | answered | | |
 | C2 | No PHI, so no BAA. | answered | | |
-| C3 | Standard retention. Compliance owner: Jules Ferreira-Hahn, the office manager. | answered | | |
+| C3 | Standard retention. No zero-data-retention agreement, and none is needed. Compliance owner: Jules Ferreira-Hahn, the office manager. | answered | | |
 | C4 | No information walls. | answered | | |
 | C5 | No MNPI. | answered | | |
 

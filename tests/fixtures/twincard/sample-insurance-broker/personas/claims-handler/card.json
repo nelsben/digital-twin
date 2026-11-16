@@ -11,6 +11,9 @@
       "claude-ai",
       "desktop"
     ],
+    "wanted_surfaces": [
+      "teams"
+    ],
     "device": "mixed",
     "plugin_name": ""
   },
@@ -118,6 +121,9 @@
         "level": "medium",
         "what_happens": "Past 24 hours the client complains; a claim on the wrong policy is a mess to unpick with the insurer."
       },
+      "constraints": [
+        "Every new claim has to be acknowledged to the client within 24 hours."
+      ],
       "reversible": false,
       "touches_money": false,
       "reads_untrusted_input": true,
@@ -260,6 +266,10 @@
         "level": null,
         "what_happens": ""
       },
+      "constraints": [
+        "If a claimant sounds vulnerable, bereaved or confused, we flag them as a vulnerable customer on the file and a senior handles every contact from then on."
+      ],
+      "wanted_change": "What I'd love is for it to notice by itself when something is fourteen days overdue and send the chaser.",
       "reversible": false,
       "touches_money": false,
       "reads_untrusted_input": false,
@@ -351,6 +361,10 @@
       "source": "discovery.md#A3"
     },
     "role.works_in": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#P1"
+    },
+    "role.wanted_surfaces": {
       "status": "answered",
       "source": "interviews/2026-11-12-claims-handler.md#P1"
     },
@@ -454,6 +468,11 @@
     "tasks.T1.writes[1].action": {
       "status": "answered",
       "source": "interviews/2026-11-12-claims-handler.md#F7"
+    },
+    "tasks.T1.constraints": {
+      "status": "assumed",
+      "source": "interviews/2026-11-12-claims-handler.md#P6; interviews/2026-11-12-claims-handler.md#F4",
+      "owner": "Claims Team Leader"
     },
     "tasks.T2.trigger": {
       "status": "answered",
@@ -588,6 +607,15 @@
     "tasks.T4.writes[0].action": {
       "status": "answered",
       "source": "interviews/2026-11-12-claims-handler.md#F7"
+    },
+    "tasks.T4.constraints": {
+      "status": "assumed",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#P6",
+      "owner": "Claims Team Leader"
+    },
+    "tasks.T4.wanted_change": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F5"
     },
     "tasks.T2.minutes_each": {
       "status": "open",

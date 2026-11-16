@@ -8,6 +8,7 @@
     "headcount": null,
     "pilot_users": null,
     "works_in": [],
+    "wanted_surfaces": [],
     "device": "",
     "plugin_name": ""
   },
@@ -69,6 +70,8 @@
         "level": "",
         "what_happens": ""
       },
+      "constraints": [],
+      "wanted_change": "",
       "reversible": null,
       "touches_money": null,
       "reads_untrusted_input": null,

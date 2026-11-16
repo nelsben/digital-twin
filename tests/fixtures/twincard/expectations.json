@@ -12,7 +12,7 @@
       },
       "validate": {
         "exit": 0,
-        "completeness_pct": 92,
+        "completeness_pct": 91,
         "complete": false
       },
       "persona": {
@@ -1234,14 +1234,7 @@
           }
         ],
         "blockers_removed": [],
-        "warnings_added": [
-          {
-            "code": "zdr-org-not-confirmed",
-            "about": "C1",
-            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
-            "unverified": false
-          }
-        ],
+        "warnings_added": [],
         "warnings_removed": [
           {
             "code": "confidential-standard-retention",

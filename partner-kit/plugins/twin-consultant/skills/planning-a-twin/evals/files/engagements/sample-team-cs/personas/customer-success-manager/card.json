@@ -180,6 +180,9 @@
         "level": "medium",
         "what_happens": "A wrong price would reach the customer, but the manager checks the figures before sending."
       },
+      "constraints": [
+        "I check the figures before I send."
+      ],
       "reversible": true,
       "touches_money": true,
       "reads_untrusted_input": false,
@@ -224,6 +227,9 @@
         "level": "medium",
         "what_happens": "A wrong commitment in the email, or a note on the wrong record."
       },
+      "constraints": [
+        "I want to approve the note before it's created."
+      ],
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": true,
@@ -262,6 +268,7 @@
         "level": "medium",
         "what_happens": "A missed ticket in an escalation call."
       },
+      "wanted_change": "Something happening: the escalation itself, ideally. Today I start it when I'm told.",
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": true,
@@ -570,6 +577,10 @@
       "status": "answered",
       "source": "interviews/2026-11-07-senior-csm.md#F3"
     },
+    "tasks.C3.constraints": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F4"
+    },
     "tasks.C4.name": {
       "status": "answered",
       "source": "interviews/2026-11-06-csm.md#F1"
@@ -642,6 +653,10 @@
       "status": "answered",
       "source": "interviews/2026-11-06-csm.md#F3"
     },
+    "tasks.C4.constraints": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F7"
+    },
     "tasks.C5.name": {
       "status": "answered",
       "source": "interviews/2026-11-07-senior-csm.md#F1"
@@ -709,6 +724,10 @@
     "tasks.C5.skill_owner": {
       "status": "answered",
       "source": "interviews/2026-11-07-senior-csm.md#F3"
+    },
+    "tasks.C5.wanted_change": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F5"
     }
   }
 }

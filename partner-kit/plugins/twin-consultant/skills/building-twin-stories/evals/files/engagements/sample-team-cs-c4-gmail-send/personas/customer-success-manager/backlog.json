@@ -3,8 +3,8 @@
   "customer": "example-software-co",
   "persona": "customer-success-manager",
   "source": {
-    "card_sha256": "e2ad4ae934c6b70149a6569c4ddbe2571889e8701c7495a6189629e49a34c0bb",
-    "levelled_sha256": "3a1a394be709df0edf573049af4c26a6fcc1dc06323f29003d6b54980bff6a75",
+    "card_sha256": "ed6b2c0d5ae57095d3a004a56c5be31d2d0b9cff6a7d84d13523eeaef7041141",
+    "levelled_sha256": "18daa425221439764f97c67a2ad8f68e974f28e947799209dd3e0d59f810abee",
     "library_version": 1
   },
   "epic": {
@@ -97,7 +97,7 @@
                 "part": "A2",
                 "how": [
                   {
-                    "text": "Copy the kit's skill template into the role plugin's skills folder.",
+                    "text": "Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime.",
                     "link": "starter-kit/templates/skill/README.md#copy-it"
                   },
                   {
@@ -107,9 +107,33 @@
                   {
                     "text": "Fill in the description and the body, then rerun the evals until they pass.",
                     "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "On client-skill, the skill loads from the role plugin, which an Owner publishes to claude.ai, Desktop and Cowork and which reaches a signed-in Claude Code.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On managed-agents, the skill loads from the agent's skills array (skills uploaded through the Skills API), or from a mounted GitHub repo's .claude/skills folder.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On managed-agents-self-hosted, load the skill the same two ways as hosted Managed Agents (Unverified: no compendium page says where a self-hosted deployment loads skills from).",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads).",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills).",
+                    "link": "docs/compendium/05-decision-matrix.md#the-options"
                   }
                 ],
-                "done_when": "The skill sits in the role plugin and every eval for the story passes.",
+                "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
                 "status": "todo"
               },
@@ -384,12 +408,16 @@
               "inputs": "google-drive (call notes or transcript)",
               "output_and_audience": "Draft follow-up email, which the manager sends, and a call note on the HubSpot record, external; to a draft in the conversation; the HubSpot company record",
               "skill_owner": "Marisol Quenby",
-              "baseline": "6 per week x 25 minutes each x 8 users"
+              "baseline": "6 per week x 25 minutes each x 8 users",
+              "constraints": [
+                "I want to approve the note before it's created."
+              ]
             },
             "acceptance": [
               "Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.",
+              "Keeps: I want to approve the note before it's created.",
               "Plus: every write carries the twin marker."
             ],
             "gated_by": [],
@@ -447,7 +475,7 @@
                 "part": "A2",
                 "how": [
                   {
-                    "text": "Copy the kit's skill template into the role plugin's skills folder.",
+                    "text": "Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime.",
                     "link": "starter-kit/templates/skill/README.md#copy-it"
                   },
                   {
@@ -457,9 +485,37 @@
                   {
                     "text": "Fill in the description and the body, then rerun the evals until they pass.",
                     "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "On client-skill, the skill loads from the role plugin, which an Owner publishes to claude.ai, Desktop and Cowork and which reaches a signed-in Claude Code.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On managed-agents, the skill loads from the agent's skills array (skills uploaded through the Skills API), or from a mounted GitHub repo's .claude/skills folder.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On managed-agents-self-hosted, load the skill the same two ways as hosted Managed Agents (Unverified: no compendium page says where a self-hosted deployment loads skills from).",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads).",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills).",
+                    "link": "docs/compendium/05-decision-matrix.md#the-options"
+                  },
+                  {
+                    "text": "Make the skill keep these rules from the interviews, in the interviewee's words: I want to approve the note before it's created..",
+                    "link": null
                   }
                 ],
-                "done_when": "The skill sits in the role plugin and every eval for the story passes.",
+                "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
                 "status": "todo"
               },
@@ -847,6 +903,76 @@
                   }
                 ],
                 "done_when": "Every acceptance criterion has at least one eval, and the evals run and fail without the skill.",
+                "owner_role": "skill-engineer",
+                "status": "todo"
+              },
+              {
+                "id": "S-C2.write-skill",
+                "template": "write-skill",
+                "title": "Write the skill from the kit template until the evals pass",
+                "part": "A2",
+                "how": [
+                  {
+                    "text": "Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Rename the copy to the skill's name.",
+                    "link": "starter-kit/templates/skill/README.md#rename-it"
+                  },
+                  {
+                    "text": "Fill in the description and the body, then rerun the evals until they pass.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "On client-skill, the skill loads from the role plugin, which an Owner publishes to claude.ai, Desktop and Cowork and which reaches a signed-in Claude Code.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On managed-agents, the skill loads from the agent's skills array (skills uploaded through the Skills API), or from a mounted GitHub repo's .claude/skills folder.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On managed-agents-self-hosted, load the skill the same two ways as hosted Managed Agents (Unverified: no compendium page says where a self-hosted deployment loads skills from).",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads).",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills).",
+                    "link": "docs/compendium/05-decision-matrix.md#the-options"
+                  }
+                ],
+                "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
+                "owner_role": "skill-engineer",
+                "status": "todo"
+              },
+              {
+                "id": "S-C2.trigger-evals",
+                "template": "trigger-evals",
+                "title": "Write and run the trigger evals for the skill",
+                "part": "A8",
+                "how": [
+                  {
+                    "text": "Install skill-creator where the evals run.",
+                    "link": "starter-kit/docs/authoring-skills.md#install-skill-creator"
+                  },
+                  {
+                    "text": "Write prompts that should and should not start the skill, as trigger evals.",
+                    "link": "starter-kit/docs/authoring-skills.md#the-eval-files"
+                  },
+                  {
+                    "text": "Run the trigger evals and tighten the description until they pass.",
+                    "link": "docs/compendium/03-skills-authoring.md#writing-a-good-description"
+                  }
+                ],
+                "done_when": "The skill starts on every should-trigger prompt and on none of the should-not prompts.",
                 "owner_role": "skill-engineer",
                 "status": "todo"
               },
@@ -1262,12 +1388,16 @@
               "inputs": "hubspot (renewal deal, line items, products, quote)",
               "output_and_audience": "Draft renewal quote email, which the manager checks and sends from Gmail, external; to none (a draft in the conversation)",
               "skill_owner": "Marisol Quenby",
-              "baseline": "2 per week x 40 minutes each x 8 users"
+              "baseline": "2 per week x 40 minutes each x 8 users",
+              "constraints": [
+                "I check the figures before I send."
+              ]
             },
             "acceptance": [
               "Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
-              "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake."
+              "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.",
+              "Keeps: I check the figures before I send."
             ],
             "gated_by": [],
             "tasks": [
@@ -1324,7 +1454,7 @@
                 "part": "A2",
                 "how": [
                   {
-                    "text": "Copy the kit's skill template into the role plugin's skills folder.",
+                    "text": "Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime.",
                     "link": "starter-kit/templates/skill/README.md#copy-it"
                   },
                   {
@@ -1334,9 +1464,37 @@
                   {
                     "text": "Fill in the description and the body, then rerun the evals until they pass.",
                     "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "On client-skill, the skill loads from the role plugin, which an Owner publishes to claude.ai, Desktop and Cowork and which reaches a signed-in Claude Code.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On managed-agents, the skill loads from the agent's skills array (skills uploaded through the Skills API), or from a mounted GitHub repo's .claude/skills folder.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On managed-agents-self-hosted, load the skill the same two ways as hosted Managed Agents (Unverified: no compendium page says where a self-hosted deployment loads skills from).",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads).",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills).",
+                    "link": "docs/compendium/05-decision-matrix.md#the-options"
+                  },
+                  {
+                    "text": "Make the skill keep these rules from the interviews, in the interviewee's words: I check the figures before I send..",
+                    "link": null
                   }
                 ],
-                "done_when": "The skill sits in the role plugin and every eval for the story passes.",
+                "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
                 "status": "todo"
               },
@@ -1508,7 +1666,8 @@
               "inputs": "zendesk (the customer's open tickets)",
               "output_and_audience": "Summary of the customer's open tickets, internal; to none (the conversation)",
               "skill_owner": "Marisol Quenby",
-              "baseline": "2 per week x 30 minutes each x 8 users"
+              "baseline": "2 per week x 30 minutes each x 8 users",
+              "wanted_change": "Asked for, not planned: Something happening: the escalation itself, ideally. Today I start it when I'm told."
             },
             "acceptance": [
               "Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
@@ -1570,7 +1729,7 @@
                 "part": "A2",
                 "how": [
                   {
-                    "text": "Copy the kit's skill template into the role plugin's skills folder.",
+                    "text": "Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime.",
                     "link": "starter-kit/templates/skill/README.md#copy-it"
                   },
                   {
@@ -1580,9 +1739,33 @@
                   {
                     "text": "Fill in the description and the body, then rerun the evals until they pass.",
                     "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "On client-skill, the skill loads from the role plugin, which an Owner publishes to claude.ai, Desktop and Cowork and which reaches a signed-in Claude Code.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On managed-agents, the skill loads from the agent's skills array (skills uploaded through the Skills API), or from a mounted GitHub repo's .claude/skills folder.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On managed-agents-self-hosted, load the skill the same two ways as hosted Managed Agents (Unverified: no compendium page says where a self-hosted deployment loads skills from).",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill.",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads).",
+                    "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+                  },
+                  {
+                    "text": "On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills).",
+                    "link": "docs/compendium/05-decision-matrix.md#the-options"
                   }
                 ],
-                "done_when": "The skill sits in the role plugin and every eval for the story passes.",
+                "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
                 "status": "todo"
               },

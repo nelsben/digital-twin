@@ -1,6 +1,6 @@
 # Level 2: writing to Salesforce with approval
 
-Open this only when the user's role setup puts this task at autonomy level 2 and the Salesforce update tool is set to Needs approval. At level 1 none of it applies. The marker field is described in [starter-kit/connectors/salesforce/README.md](../../../../../connectors/salesforce/README.md).
+Open this only when the user's role setup puts this task at autonomy level 2 and the Salesforce `dispatch` tool (the only write route) is set to Needs approval, as in [Move to level 2](../../../../../runbooks/salesforce-hosted-mcp.md#move-to-level-2). At level 1 none of it applies. The marker field is described in [starter-kit/connectors/salesforce/README.md](../../../../../connectors/salesforce/README.md).
 
 Contents: before the write, the write, if it fails, after the write.
 

@@ -2,6 +2,7 @@
 
 - **Date checked:** 2026-11-15
 - **Checked by:** Claude Opus 5.5 (`claude-opus-5-5`), task SHA-21
+- **Updated 2026-11-15 (OPS-24):** rows marked OPS-24 below were added or changed after the review; the summary counts above were not recomputed.
 - **Runbooks:** [identity-devices-publishing.md](identity-devices-publishing.md), [salesforce-hosted-mcp.md](salesforce-hosted-mcp.md), [microsoft-365-connector.md](microsoft-365-connector.md)
 
 | Runbook | Confirmed | Corrected | Unverified | Total |
@@ -147,6 +148,13 @@
 | 5 | "the Claude setting hides write tools" | Corrected | https://claude.com/docs/connectors/getting-started.md | "hides" → "blocks" (the setting is **Blocked**) |
 | 5 | Salesforce-side read-only enforcement | Unverified | | Reworded to the marker |
 | 5 | "`mcp_api` is the only scope [A] lists" | Corrected | https://claude.com/docs/third-party/claude-desktop/connectors-salesforce.md | [A] lists two scopes → "`mcp_api` is the only access scope [A] lists, besides `refresh_token`" |
+| 4 (pe-zdr, OPS-24) | Host `api.salesforce.com` replaces `REPLACE-WITH-SALESFORCE-HOSTED-MCP-HOST`; `https://api.salesforce.com/*` matches both server URLs on port 443; no port means 443 only; a pattern with a path wildcard matches every path | Confirmed | https://code.claude.com/docs/en/managed-mcp | Host taken from the server URLs in https://github.com/salesforce/salesforce-skills/blob/claude-prod/salesforce-for-sales/.mcp.json. Added [I] |
+| 5 (OPS-24) | The five tool names `discover`, `describe`, `dispatch`, `dispatch_readonly`, `display_widget`; `discover`, `describe`, `dispatch` marked "should be blocked"; `dispatch_readonly` listed beside `dispatch` | Confirmed | https://github.com/salesforce/salesforce-skills/blob/claude-prod/salesforce-for-sales/.mcp.json | Table rewritten to one row per tool; the row for `query`, `get` removed |
+| 5 (OPS-24) | `dispatch_readonly` cannot create or update | Unverified | | The description text is ambiguous about writes; marker added |
+| 5 (OPS-24) | The model can find a read call through `dispatch_readonly` with `discover` and `describe` Blocked | Unverified | | Marker added; our choice is Always allow for both **(Our recommendation)** |
+| Move to level 2 (OPS-24) | Per-tool settings Always allow, Needs approval, Blocked; the user is asked before a tool runs, with **Allow once** or **Always allow** | Confirmed | https://claude.com/docs/connectors/getting-started.md | |
+| Move to level 2 (OPS-24) | A member cannot choose **Always allow** over an Owner's Needs approval for a custom connector | Unverified | | Marker added |
+| Move to level 2 (OPS-24) | `dispatch` can run any REST call including sObject delete | Confirmed | https://github.com/salesforce/salesforce-skills/blob/claude-prod/salesforce-for-sales/.mcp.json | |
 | 6 | **Organization settings > Connectors**, **Add**, **Custom**, **Web** | Confirmed | https://claude.com/docs/connectors/custom/add-unlisted.md | |
 | 6 | **Continue**; keep **Detected**; **Add**; layout varies | Confirmed | https://claude.com/docs/connectors/custom/add-unlisted.md | |
 | 7.1 | The Owner sets each tool's permission for the whole organization | Unverified | https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities | Help center says org-wide tool permissions apply to everyone and members can't override them, but not whether this covers custom connectors; marker added |
@@ -223,8 +231,19 @@
 | 8c | "search the Microsoft 365 audit log (Compliance Center)" | Corrected | https://learn.microsoft.com/en-us/purview/audit-search | → Microsoft Purview portal, **Audit** solution, **Search**; filter by **Users** and **File, folder, or site**; needs the Audit Logs or View-Only Audit Logs role; records typically appear 60 to 90 minutes after the event |
 | 8c | Audit fields | Confirmed | https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide | |
 | 8c | Filters for the connector's app | Unverified | | Reworded to the marker |
+| 3 (pe-zdr, OPS-24) | The host of the Microsoft 365 connector's server URL for `REPLACE-WITH-MICROSOFT-365-MCP-HOST`, and where an admin reads it | Unverified | | https://claude.com/docs/connectors/microsoft/365.md, https://support.claude.com/en/articles/12542951-set-up-the-microsoft-365-connector and https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide name no host (page 1 re-read 2026-11-15). Matching rules from https://code.claude.com/docs/en/managed-mcp. Marker added |
+| 8b (OPS-24) | Step 4 assignment stops an unassigned user from using the connector, so user 2 is added for the test | Confirmed | https://support.claude.com/en/articles/12542951-set-up-the-microsoft-365-connector | Consent alone lets all users in; assignment required limits it ([D] too). Setup line and control row 8.1b added |
+| 9 (OPS-24) | Removing a user from Claude also removes the Entra app assignment and revokes the Microsoft 365 session | Unverified | | Old wording stated it as fact; now the admin does both by hand, marker added |
 | 9 | Refresh tokens expire after 90 days of inactivity by default | Confirmed | https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide | |
 | 9 | Members disconnect in **Customize > Connectors**; Owner removes in **Organization settings > Connectors** | Confirmed | https://support.claude.com/en/articles/12542951-set-up-the-microsoft-365-connector | |
+
+## starter-kit/connectors/salesforce/README.md (OPS-24)
+
+| Line or step | Claim | State | Source URL | Old wording → new wording (corrections) |
+|---|---|---|---|---|
+| Deploy 1 | Salesforce allows 20 tracked fields per object | Unverified | | developer.salesforce.com returned HTTP 403 on 2026-11-15; stated as fact before; marker added |
+| Report | The marker row and the changed-field rows share `CreatedById` and `CreatedDate` | Unverified | | Never observed: the marker has not deployed to an org yet; marker added |
+| Report (RevOps) | Retention period of Field History rows | Unverified | | "(⚠ confirm the retention ...)" → the compendium's marker |
 
 ## Sources that could not be read
 
@@ -232,6 +251,7 @@
 |---|---|
 | https://developer.salesforce.com/docs/platform/hosted-mcp-servers/guide/activate-mcp-servers.html | HTTP 403 |
 | https://developer.salesforce.com/docs/platform/hosted-mcp-servers/guide/create-external-client-app.html (and `.md`) | HTTP 403 |
+| https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_opportunityfieldhistory.htm | HTTP 403 |
 | https://developer.salesforce.com/docs/platform/hosted-mcp-servers/guide/setup-overview.html | HTTP 403 |
 | https://developer.salesforce.com/docs/platform/hosted-mcp-servers/guide/client-connection-overview.html | HTTP 403 |
 | developer.salesforce.com Metadata API page for the MCP server External Client App (`meta-mcp-server-eca.html`) | HTTP 403 |

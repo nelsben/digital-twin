@@ -19,7 +19,7 @@ The field is a DateTime. A checkbox set to true on the first twin write stays tr
 
 Prerequisites: the [Salesforce CLI](https://developer.salesforce.com/tools/salesforcecli) (`sf`), and an org you have logged in to (`sf org login web --alias <alias>`). Deploy to a sandbox first.
 
-1. **Turn on history for Opportunity, once.** Setup, Object Manager, Opportunity, Fields & Relationships, Set History Tracking, tick Enable Opportunity History. Salesforce allows 20 tracked fields per object, so check that one is free. The field's `trackHistory` setting only works when object-level history is on.
+1. **Turn on history for Opportunity, once.** Setup, Object Manager, Opportunity, Fields & Relationships, Set History Tracking, tick Enable Opportunity History. Check that a tracked-field slot is free. **⚠ Unverified:** the 20 tracked fields per object limit; Salesforce's pages returned HTTP 403 on 2026-11-15, so confirm the limit for the customer's edition. The field's `trackHistory` setting only works when object-level history is on.
 2. **Validate, then deploy.** From this folder:
 
    ```
@@ -59,7 +59,7 @@ Put these rules in the skill's `SKILL.md` and add an eval that fails when an upd
 
 ## Report on twin-written changes
 
-With tracking on, every change to the marker is a row in `OpportunityFieldHistory`, next to the rows for the fields the twin changed in the same update. Both rows have the same `CreatedById` (the user the twin acted as) and the same `CreatedDate`.
+With tracking on, every change to the marker is a row in `OpportunityFieldHistory`, next to the rows for the fields the twin changed in the same update. Both rows should have the same `CreatedById` (the user the twin acted as) and the same `CreatedDate`. **⚠ Unverified:** the marker has not been deployed to an org yet (see the [wall-test README](wall-test/README.md)), so this has not been observed; confirm it on the first test write.
 
 **Which opportunities the twin touched, and when**, in the Developer Console query editor or `sf data query`:
 
@@ -81,7 +81,7 @@ ORDER BY CreatedDate DESC
 
 Rows that share a `CreatedDate` with a marker row are the twin's. Rows with no marker row beside them are human edits. This is why the skill must send the marker in the same update.
 
-**For RevOps managers, no code.** Build a report from the standard Opportunity Field History report type and filter on Field equals "Last updated by twin". Show Opportunity Name, Edited By, Date Edited and New Value. Salesforce shows history rows for a limited time (⚠ confirm the retention for the customer's edition), so export the monthly scorecard figures rather than relying on old history rows. The scorecard is described in [compendium 15](../../../docs/compendium/15-governance-and-performance.md).
+**For RevOps managers, no code.** Build a report from the standard Opportunity Field History report type and filter on Field equals "Last updated by twin". Show Opportunity Name, Edited By, Date Edited and New Value. Salesforce shows history rows for a limited time (**⚠ Unverified:** the retention period; confirm it for the customer's edition), so export the monthly scorecard figures rather than relying on old history rows. The scorecard is described in [compendium 15](../../../docs/compendium/15-governance-and-performance.md).
 
 ## Limits
 

@@ -14,10 +14,19 @@ cross-record references all come from data/fields.json. Paths use ids, not
 positions (tasks.T1.minutes_each); an entry without its id is named by
 position (tasks[0].id). Design of record: partner-kit/docs/design.md,
 sections 4 and 5.
+
+Beyond the catalogue's types: a card needs at least one task; a top-level key
+neither record has is an error naming the closest known key; record versions
+are the exact integer; numbers are finite and not negative; and each override
+names a value from design 7.2's vocabulary (override_values in fields.json,
+read here and by level's guard), with a reason and an approver, once per task
+and decision.
 """
 
 import datetime
+import difflib
 import json
+import math
 import re
 from pathlib import Path
 
@@ -101,6 +110,9 @@ class _Report:
     def warning(self, record, path, message, fix):
         self._add(self.warnings, record, path, message, fix)
 
+    def has_error(self, record, path):
+        return any(e["record"] == record and e["path"] == path for e in self.errors)
+
 
 def _join(prefix, name):
     return prefix + "." + name if prefix else name
@@ -134,8 +146,9 @@ def _instances(data, entry, keys, duplicates, report, record):
             child = {}
         if is_list:
             if not isinstance(child, list):
-                report.error(record, inst_path, "is not a list",
-                             "Make %s a list of objects, or an empty list" % inst_path)
+                if not report.has_error(record, inst_path):
+                    report.error(record, inst_path, "is not a list",
+                                 "Make %s a list of objects, or an empty list" % inst_path)
                 return
             key = keys.get(cat_path)
             compare = duplicates.get(cat_path)
@@ -202,9 +215,10 @@ def _load(path, record, report):
 def _check_envelope(data, record, catalogue, report):
     version_key, provenance_key = catalogue["envelope"][record]
     expected = catalogue["record_versions"][record]
-    if data.get(version_key) != expected:
-        report.error(record, version_key, "is %r, not %r" % (data.get(version_key, None), expected),
-                     "Set %s to %d" % (version_key, expected))
+    version = data.get(version_key)
+    if not (type(version) is int and version == expected):
+        report.error(record, version_key, "is %s, not the integer %d" % (json.dumps(version), expected),
+                     "Set %s to %d, written as a whole number" % (version_key, expected))
     provenance = data.get(provenance_key, _MISSING)
     if not isinstance(provenance, dict):
         report.error(record, provenance_key, "is missing or not an object",
@@ -399,6 +413,23 @@ def _check_sources(record, provenance, values, sources, report):
                 report.error(record, path, "source %s does not open: it %s" % (one, problem), SOURCE_FIX)
 
 
+def _lower_bound(record, entry, catalogue):
+    return catalogue.get("lower_bounds", {}).get("%s:%s" % (record, entry["path"]), 0)
+
+
+def _check_number(record, path, entry, value, catalogue, report):
+    """A number or integer field is finite and at least its lower bound (0 unless lower_bounds says)."""
+    if entry["type"] not in ("integer", "number"):
+        return
+    low = _lower_bound(record, entry, catalogue)
+    if not math.isfinite(value):
+        report.error(record, path, "is %s, which is not a finite number" % value,
+                     "Set it to a number of at least %s" % low)
+    elif value < low:
+        report.error(record, path, "is %s, which is below %s" % (value, low),
+                     "Set it to a number of at least %s" % low)
+
+
 def _check_record(data, record, catalogue, report):
     """Check one record. Return (required_paths, provenance, values_by_catalogue_path)."""
     provenance = _check_envelope(data, record, catalogue, report)
@@ -408,10 +439,22 @@ def _check_record(data, record, catalogue, report):
     required = []
     values = {}
     known_paths = set()
+    no_provenance = set(catalogue.get("no_provenance", {}).get(record, []))
     for entry in _fields.fields_for(record, catalogue):
         for path, value in _instances(data, entry, keys, duplicates, report, record):
             known_paths.add(path)
             values.setdefault(entry["path"], []).append((path, value))
+            if entry["path"] in no_provenance:
+                # Recorded with the entry it belongs to (an override's reason and approver): no provenance,
+                # not counted in completeness; a required one is a non-empty string.
+                if entry["required"] and not (isinstance(value, str) and value.strip()):
+                    report.error(record, path, "is required and is %s" % (
+                        "missing" if value is _MISSING else "empty" if isinstance(value, str) else json.dumps(value)),
+                        "Write it as a non-empty string")
+                elif not _is_unset(value) and not _type_ok(entry, value):
+                    report.error(record, path, "should be %s; got %r" % (_expected(entry), value),
+                                 "Change it to %s" % _expected(entry))
+                continue
             if entry["key"]:
                 # A key field names or links an entry: always required, no provenance,
                 # not counted in completeness. A key list may be empty.
@@ -438,6 +481,8 @@ def _check_record(data, record, catalogue, report):
             if not _type_ok(entry, value):
                 report.error(record, path, "should be %s; got %r" % (_expected(entry), value),
                              "Change it to %s" % _expected(entry))
+            else:
+                _check_number(record, path, entry, value, catalogue, report)
     for path, prov in provenance.items():
         _check_provenance_entry(record, path, prov, rules, report)
         if path not in known_paths:
@@ -508,6 +553,139 @@ def _check_industry(profile, report):
                      % ", ".join(known))
 
 
+# --- Override values (design 7.2), read by validate and by level's guard -----------------------------
+
+def _closed_values(spec, catalogue):
+    """The allowed strings of one vocabulary entry: its values, or the values of the field it names."""
+    if "values_from" in spec:
+        record, path = spec["values_from"].split(":", 1)
+        entry = _fields.entry_for(record, path, catalogue) or {}
+        return list(entry.get("values") or [])
+    return list(spec.get("values") or [])
+
+
+def _one_value_problem(spec, value, catalogue):
+    """None when value fits spec, else (message, fix) listing what is allowed."""
+    kind = spec["type"]
+    if kind == "integer":
+        low, high = spec["min"], spec["max"]
+        if isinstance(value, int) and not isinstance(value, bool) and low <= value <= high:
+            return None
+        return ("is %s, which is not a whole number from %d to %d" % (json.dumps(value), low, high),
+                "Set it to a whole number from %d to %d (true and false are not numbers)" % (low, high))
+    allowed = _closed_values(spec, catalogue)
+    shown = ", ".join(allowed) + (", or null" if spec.get("null") else "")
+    if kind == "enum":
+        if (value is None and spec.get("null")) or (isinstance(value, str) and value in allowed):
+            return None
+        return ("is %s, which is not one of: %s" % (json.dumps(value, ensure_ascii=False), shown),
+                "Use one of: %s, written exactly so" % shown)
+    if kind == "enum-list":
+        if isinstance(value, list) and all(isinstance(v, str) and v in allowed for v in value):
+            return None
+        return ("is %s, which is not a list drawn from: %s" % (json.dumps(value, ensure_ascii=False), shown),
+                "Make it a list drawn from: %s" % shown)
+    if kind == "string":
+        if isinstance(value, str):
+            return None
+        return ("is %s, which is not a string" % json.dumps(value, ensure_ascii=False), "Make it a string")
+    raise ValueError("fields.json override_values: unknown type %r" % kind)
+
+
+def override_value_problems(decision, value, catalogue=None):
+    """[(path suffix, message, fix)] for an override value outside design 7.2's vocabulary; [] when it fits.
+
+    Only the overridable decisions have a vocabulary; any other decision gives [] here (validate's enum
+    check and level's target check deal with it).
+    """
+    catalogue = catalogue if catalogue is not None else _fields.load_catalogue()
+    spec = (catalogue.get("override_values") or {}).get(decision)
+    if not isinstance(spec, dict):
+        return []
+    if spec["type"] != "object":
+        problem = _one_value_problem(spec, value, catalogue)
+        return [] if problem is None else [("",) + problem]
+    parts = spec["parts"]
+    names = ", ".join(parts)
+    if not isinstance(value, dict) or not value:
+        return [("", "is %s, which is not an object with at least one of: %s"
+                 % (json.dumps(value, ensure_ascii=False), names),
+                 'Write the parts it replaces as an object, for example {"web_tools": "off"}')]
+    out = []
+    for key, part in value.items():
+        if key not in parts:
+            close = difflib.get_close_matches(str(key), list(parts), n=1)
+            out.append(("." + str(key), "names part %r, which is not one of: %s%s"
+                        % (key, names, "; did you mean %s?" % close[0] if close else ""),
+                        "Rename it to %s, or remove it" % (close[0] if close else "one of: " + names)))
+            continue
+        problem = _one_value_problem(parts[key], part, catalogue)
+        if problem is not None:
+            out.append(("." + key,) + problem)
+    return out
+
+def _check_overrides(card, catalogue, report):
+    """Each override's value fits its decision's vocabulary, and no task and decision is overridden twice."""
+    overrides = card.get("overrides")
+    if not isinstance(overrides, list):
+        return
+    seen = {}
+    for index, item in enumerate(overrides):
+        if not isinstance(item, dict):
+            continue
+        decision = item.get("decision")
+        if "value" in item or isinstance(decision, str):
+            for suffix, message, fix in override_value_problems(decision, item.get("value"), catalogue):
+                report.error("card", "overrides[%d].value%s" % (index, suffix), message, fix)
+        key = (item.get("task"), decision)
+        if not all(isinstance(part, str) for part in key):
+            continue
+        if key in seen:
+            report.error("card", "overrides[%d]" % index,
+                         "overrides[%d] and overrides[%d] both override %s on task %s"
+                         % (seen[key], index, decision, key[0]),
+                         "Keep one of the two entries, the one the customer approved, and delete the other")
+        else:
+            seen[key] = index
+
+
+def _check_tasks(card, report):
+    """A card needs a tasks list with at least one task."""
+    tasks = card.get("tasks", _MISSING)
+    if isinstance(tasks, list) and tasks:
+        return
+    got = "missing" if tasks is _MISSING else ("an empty list" if tasks == [] else "%s, not a list"
+                                                % json.dumps(tasks, ensure_ascii=False))
+    report.error("card", "tasks", "a card needs at least one task; tasks is %s" % got,
+                 "Add the role's tasks from the interview notes as a list of task objects, as in "
+                 "templates/card.json")
+
+
+def _known_top_level(record, catalogue):
+    names = list(catalogue["envelope"][record])
+    for entry in _fields.fields_for(record, catalogue):
+        name = re.split(r"[.\[]", entry["path"])[0]
+        if name not in names:
+            names.append(name)
+    return names
+
+
+def _check_unknown_keys(data, record, catalogue, report):
+    """A top-level key the catalogue does not know is an error naming the closest known key."""
+    known = _known_top_level(record, catalogue)
+    for key in data:
+        if key in known:
+            continue
+        close = difflib.get_close_matches(key, known, n=1, cutoff=0.5)
+        if close:
+            report.error(record, key, "is not a field of %s; the closest known key is %s"
+                         % (RECORD_FILES[record], close[0]),
+                         "Rename %s to %s, or remove it" % (key, close[0]))
+        else:
+            report.error(record, key, "is not a field of %s" % RECORD_FILES[record],
+                         "Remove it; the known keys are %s" % ", ".join(known))
+
+
 def qualified(record, path):
     """The record-qualified path used in reports: card:voice.tone, profile:plan.tier."""
     return "%s:%s" % (record, path)
@@ -531,6 +709,10 @@ def validate(persona_dir, catalogue=None):
     for record, data in (("profile", profile), ("card", card)):
         if data is None:
             continue
+        _check_unknown_keys(data, record, catalogue, report)
+        if record == "card":
+            _check_tasks(data, report)
+            _check_overrides(data, catalogue, report)
         paths, provenance, values = _check_record(data, record, catalogue, report)
         _check_sources(record, provenance, values, sources, report)
         values_by_record[record] = values

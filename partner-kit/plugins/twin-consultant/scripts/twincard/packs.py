@@ -67,17 +67,41 @@ def list_packs():
 
 
 def load_pack(pack_id):
-    """Return the pack with this id, or raise PackError naming the ids that exist."""
+    """Return the pack with this id, or raise PackError naming the ids that exist.
+
+    A pack file that is not JSON, or not a pack object (pack_version 1, its own id, and lists of
+    objects where the pack has lists), raises PackError naming the file.
+    """
     known = list_packs()
     if not isinstance(pack_id, str) or pack_id not in known:
-        raise PackError("There is no industry pack %r. Packs that exist: %s. Use one of them, or 'general' "
-                        "for a customer with no pack." % (pack_id, ", ".join(known) or "(none)"))
+        raise PackError("There is no industry pack %r (data/industry-packs/%s.json). Packs that exist: %s. Use one "
+                        "of them, or 'general' for a customer with no pack."
+                        % (pack_id, pack_id, ", ".join(known) or "(none)"))
     path = PACKS_DIR / (pack_id + ".json")
     try:
         pack = json.loads(path.read_text(encoding="utf-8"))
-    except (ValueError, UnicodeDecodeError) as exc:
-        raise PackError("Pack %r does not parse as JSON (%s). Fix the syntax in %s." % (pack_id, exc, path))
+    except (OSError, ValueError, UnicodeDecodeError) as exc:
+        raise PackError("Pack %r (%s) does not parse as JSON (%s). Fix the syntax in %s." % (pack_id, path, exc, path))
+    problem = _shape_problem(pack, pack_id)
+    if problem:
+        raise PackError("Pack %r (%s) is not an industry pack: %s. Start from a pack that loads, such as "
+                        "general.json." % (pack_id, path, problem))
     return pack
+
+
+def _shape_problem(pack, pack_id):
+    """Why a parsed pack file is not in the pack shape, or None. pack_problems() checks the content."""
+    if not isinstance(pack, dict):
+        return "it is not a JSON object"
+    if pack.get("pack_version") != PACK_VERSION or isinstance(pack.get("pack_version"), bool):
+        return "pack_version is not %d" % PACK_VERSION
+    if pack.get("id") != pack_id:
+        return "its id is %s, not %r" % (json.dumps(pack.get("id")), pack_id)
+    for name in LISTS:
+        value = pack.get(name, [])
+        if not isinstance(value, list) or not all(isinstance(entry, dict) for entry in value):
+            return "%s is not a list of objects" % name
+    return None
 
 
 def _is_text(value):

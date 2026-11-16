@@ -66,6 +66,7 @@ class Base(unittest.TestCase):
     def plugin_copy(self):
         """Copy the plugin's scripts and data (and design.md) to the temporary folder; run that cli.py."""
         kit = self.tmp / "kit" / "partner-kit"
+        shutil.rmtree(kit, ignore_errors=True)
         shutil.copytree(PLUGIN / "scripts", kit / "plugins" / "twin-consultant" / "scripts",
                         ignore=shutil.ignore_patterns("__pycache__"))
         shutil.copytree(PLUGIN / "data", kit / "plugins" / "twin-consultant" / "data")

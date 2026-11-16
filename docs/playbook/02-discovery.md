@@ -28,7 +28,7 @@ Run this with every customer. Each answer feeds a design decision, and the link 
 ## D. Identity and devices
 | # | Question | Why it matters | See |
 |---|---|---|---|
-| D1 | Which identity provider is used (Okta, Entra)? Are SSO and SCIM available? | Group targeting, provisioning, device checks | [09](../compendium/09-plans-and-it-controls.md) |
+| D1 | Which identity provider is used (Okta, Entra, Google Workspace)? Are SSO and SCIM available? | Group targeting, provisioning, device checks. SCIM and group targeting depend on the plan | [09](../compendium/09-plans-and-it-controls.md) |
 | D2 | Do they use MDM? What share of users are on managed devices, and what share on unmanaged? | The strongest controls need MDM; unmanaged devices need a hosted twin for sensitive data | [13](../compendium/13-devices.md) |
 | D3 | Are there contractors or other external users? | Device and identity policy | [13](../compendium/13-devices.md) |
 
@@ -43,6 +43,9 @@ Run this with every customer. Each answer feeds a design decision, and the link 
 | E6 | Can the customer allowlist Anthropic's IP range (`160.79.104.0/21`)? | Needed for remote connectors | [11](../compendium/11-connectors.md) |
 
 ## F. Roles and tasks (run per role, in interviews)
+
+The per-role questions are run with the [interview guide](../../partner-kit/plugins/twin-consultant/templates/interview-guide.md). Its question ids are the ones the persona card cites, and F1 to F5 here are the summary.
+
 | # | Question | Why it matters |
 |---|---|---|
 | F1 | Which tasks take most of your week? How often, and how long each? | Choosing tasks; the value baseline |
@@ -54,7 +57,7 @@ Run this with every customer. Each answer feeds a design decision, and the link 
 ## G. Governance, logging and spend
 | # | Question | Why it matters | See |
 |---|---|---|---|
-| G1 | Which security log system, data warehouse or observability tool do they run? | Where the governance log goes | [15](../compendium/15-governance-and-performance.md) |
+| G1 | Which security log system, data warehouse or observability tool do they run? Does security or compliance require a log of every action the twin takes? | Where the governance log goes. The answer decides whether a plan without audit logs fits | [15](../compendium/15-governance-and-performance.md), [09](../compendium/09-plans-and-it-controls.md) |
 | G2 | What do they already log in Salesforce (Event Monitoring, Field Audit Trail)? Do they use Claude through any Salesforce integration? | Source-system audit; existing Salesforce–Anthropic logging | [15](../compendium/15-governance-and-performance.md) |
 | G3 | Who owns tooling and spend? What is the budget, and what spend limits are wanted? | Spend controls, per-user limits, alerts | [15](../compendium/15-governance-and-performance.md) |
 | G4 | Who is the technical owner, the business owner and the backup Owner? | Ownership of each org | [03](03-stakeholders.md) |

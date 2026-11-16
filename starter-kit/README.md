@@ -19,15 +19,16 @@ The starter kit is the set of parts we copy into a customer's repo to build a ro
 | [docs/authoring-skills.md](docs/authoring-skills.md) | The step order for writing and evaluating a skill, evals first |
 | [tests](../tests) | Structure, settings and governance-hook tests; run before every PR |
 | [engagements/sample-pe](../engagements/sample-pe/README.md) | The worked example: an invented private-equity customer, discovery through backlog |
+| [engagements/sample-team-cs](../engagements/sample-team-cs/README.md) | The second worked example: an invented software company on the Team plan, interview notes through dashboard |
 
 ## Using it on an engagement
 
-The phases are in [docs/playbook/01-engagement-model.md](../docs/playbook/01-engagement-model.md). Phase 0 (Qualify) needs no kit parts.
+The phases are in [docs/playbook/01-engagement-model.md](../docs/playbook/01-engagement-model.md). Phase 0 (Qualify) starts the customer profile from the [partner kit's template](../partner-kit/plugins/twin-consultant/templates/customer-profile.json) as the fit note.
 
 | Phase | Kit parts used |
 |---|---|
-| 1. Discovery | [sample-pe](../engagements/sample-pe/README.md) shows a finished questionnaire, stakeholder map and candidate tasks to copy the shape from |
-| 2. Design | The [settings](settings/README.md) baselines (pick one per org); sample-pe `design.md` and `backlog.md` as models; [compendium 16](../docs/compendium/16-oob-skills-and-references.md) to choose what to reuse |
+| 1. Discovery | [sample-pe](../engagements/sample-pe/README.md) shows a finished questionnaire, stakeholder map and candidate tasks to copy the shape from. The persona-card workflow turns the interviews into a card: [playbook 05](../docs/playbook/05-persona-card-workflow.md) |
+| 2. Design | The [settings](settings/README.md) baselines (pick one per org); sample-pe `design.md` and `backlog.md` as models; [compendium 16](../docs/compendium/16-oob-skills-and-references.md) to choose what to reuse. The levelled plan, backlog and dashboard come from the card: [playbook 05](../docs/playbook/05-persona-card-workflow.md) |
 | 3. Build | [templates/skill](templates/skill/README.md) and [authoring-skills.md](docs/authoring-skills.md) for each story; [templates/persona](templates/persona/README.md); the role and shared plugins; [twin-governance](plugins/twin-governance/README.md); the [tests](../tests) |
 | 4. Pilot | The governance log from twin-governance feeds the scorecard; settings baselines are deployed to pilot devices |
 | 5. Scale | Copy the skill template and persona template for each new role; add the plugin to the marketplace; promote autonomy on scorecard evidence |

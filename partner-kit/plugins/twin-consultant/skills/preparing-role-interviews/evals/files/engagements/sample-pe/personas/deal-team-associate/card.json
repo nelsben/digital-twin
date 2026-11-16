@@ -104,6 +104,8 @@
       "constraints": [
         "A reviewer checks every brief before it goes further."
       ],
+      "story_want": "draft the one-page company brief from Salesforce and SharePoint",
+      "story_benefit": "I spend my time on the model and the diligence calls instead",
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": true,
@@ -157,6 +159,8 @@
         "I want to approve each change before it's written."
       ],
       "wanted_change": "Later it could start when the meeting ends.",
+      "story_want": "draft the activity log and next-step fields on the Salesforce opportunity for me to approve",
+      "story_benefit": "Salesforce is up to date after every meeting",
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": false,
@@ -201,6 +205,8 @@
         "level": "medium",
         "what_happens": "A wrong stage or amount in front of the partners."
       },
+      "story_want": "write the Monday pipeline summary from the Salesforce pipeline report",
+      "story_benefit": "the pipeline view is right without anyone spending an hour on it",
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": false,
@@ -244,6 +250,8 @@
         "level": "high",
         "what_happens": "A missed red flag, or a good deal passed over (medium to high)."
       },
+      "story_want": "screen the CIM or teaser and suggest pursue or pass",
+      "story_benefit": "the screening notes are done by Wednesday",
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": true,
@@ -287,6 +295,8 @@
         "level": "low",
         "what_happens": "The caller reads it before the call."
       },
+      "story_want": "pull together a briefing note for whoever is on the call",
+      "story_benefit": "the caller walks in knowing what we already know",
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": false,
@@ -328,6 +338,8 @@
       "constraints": [
         "It's always a draft and always reviewed."
       ],
+      "story_want": "",
+      "story_benefit": "",
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": true,
@@ -996,6 +1008,46 @@
       "status": "assumed",
       "source": "design.md#the-marketplace",
       "owner": "Eleanor Osei-Whitcombe"
+    },
+    "tasks.T1.story_want": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T1.story_benefit": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T4.story_want": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T4.story_benefit": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T5.story_want": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T5.story_benefit": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T2.story_want": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T2.story_benefit": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T3.story_want": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T3.story_benefit": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
     }
   }
 }

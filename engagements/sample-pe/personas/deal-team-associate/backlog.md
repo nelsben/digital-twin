@@ -2,9 +2,13 @@
 
 Generated from card.json and levelled.json by `python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py backlog engagements/sample-pe/personas/deal-team-associate`; never edit it by hand. To mark a task, change only its status in backlog.json, then run the command again.
 
-Status: todo. 5 features, 13 stories, 134 tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done.
+Status: todo. 5 features, 13 stories, 146 tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done.
 
 Roles with no named person: security, 2 tasks, acting owner Director of IT; source-system-admin, 13 tasks, acting owner Director of IT; skill-owner, 2 tasks, acting owner Director of IT.
+
+Stories ready to build: 0 of 6.
+
+Stories with no target: 6. Agree the scorecard targets with the sponsor.
 
 ## F-pre-meeting-preparation: Pre-meeting preparation
 
@@ -12,7 +16,7 @@ Kind: capability. Status: todo. 2 stories.
 
 ### S-T1: Prepare a one-page company brief
 
-As a Deal-team associate, I want my twin to prepare a one-page company brief so that I get the one-page company brief.
+As a deal-team associate, I want my twin to draft the one-page company brief from Salesforce and SharePoint so that I spend my time on the model and the diligence calls instead.
 
 Part A2. In pilot: yes. Priority: 1. Status: todo.
 
@@ -32,25 +36,36 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
 
 **Acceptance criteria:**
 
-1. Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.
-2. Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.
-3. Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.
-4. Keeps: A reviewer checks every brief before it goes further.
-5. Plus: no web tools are used.
-6. Plus: each tool call reaches the governance log.
+1. To write: collect at least 3 real examples from Callum Nwosu and write one eval case from each.
+2. Keeps: A reviewer checks every brief before it goes further.
+3. Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.
+4. Plus: no web tools are used.
+5. Plus: each tool call reaches the governance log.
+
+Target: not set. Agree the scorecard targets with the sponsor before the pilot starts.
+
+Ready to build: no
+- examples: 0 counted examples (0 good, 0 bad); at least 3 needed.
+- compliance-sign-off: Waiting for S-T1.compliance-sign-off: compliance signs the story off before it is built.
 
 **Gated by:**
 
-- open-question E4: Do the Salesforce and HubSpot admins confirm in writing that deal-team and investor-relations roles are fully separated?
-- open-question E6: Can Anthropic's range 160.79.104.0/21 be allowlisted?
-- open-question F3: Two to three real good and bad examples per skill, redacted.
-- open-question G1: Where does the governance log go (Splunk is the candidate), how is it hosted and who may read it?
-- open-question OD-9: ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count.
-- open-question OD-11: Numeric scorecard targets for hours saved and edit rate on T1 and T2.
-- open-question OD-13: Keep the Salesforce and Microsoft 365 connectors out of chat and Cowork for the deal-team group. Due: before any pilot user connects.
+- open-question E4: Do the Salesforce and HubSpot admins confirm in writing that deal-team and investor-relations roles are fully separated? (spike SP-E4)
+- open-question E6: Can Anthropic's range 160.79.104.0/21 be allowlisted? (spike SP-E6)
+- open-question F3: Two to three real good and bad examples per skill, redacted. (spike SP-F3)
+- open-question G1: Where does the governance log go (Splunk is the candidate), how is it hosted and who may read it? (spike SP-G1)
+- open-question OD-9: ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count. (spike SP-OD-9)
+- open-question OD-11: Numeric scorecard targets for hours saved and edit rate on T1 and T2. (spike SP-OD-11)
+- open-question OD-13: Keep the Salesforce and Microsoft 365 connectors out of chat and Cowork for the deal-team group. Due: before any pilot user connects. (spike SP-OD-13)
+- sign-off compliance: Compliance has not signed the story off yet (S-T1.compliance-sign-off).
 
 **Tasks:**
 
+- [ ] **S-T1.compliance-sign-off** Get compliance's sign-off on the story before it is built (owner: compliance, Chief Compliance Officer, part A7)
+  1. Check the story meets the definition of ready before compliance reads it. See [docs/playbook/04-stories.md#definition-of-ready-before-building](../../../../docs/playbook/04-stories.md#definition-of-ready-before-building).
+  2. Compliance reads the story's fields, the levelled decisions for the task and its data controls. See [partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson](../../../../partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson).
+  3. Record the sign-off, with the signer's name and the date, in the customer's engagement folder. See [engagements/README.md](../../../../engagements/README.md).
+  - Done when: The sign-off is recorded in the customer's engagement folder with a name and a date.
 - [ ] **S-T1.collect-examples** Collect 3 examples of the task from real work, each with the result a person expects (owner: skill-owner, Callum Nwosu, part A8)
   1. Ask the people who do the task today for three recent, real examples of it. See [starter-kit/docs/authoring-skills.md#step-order](../../../../starter-kit/docs/authoring-skills.md#step-order).
   2. Record each example's inputs and the output a person would accept as done. See [starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals](../../../../starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals).
@@ -71,7 +86,7 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
   7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
-  10. Make the skill keep these rules from the interviews, in the interviewee's words: A reviewer checks every brief before it goes further..
+  10. Make the skill keep these rules from the interviews, in the interviewee's words: A reviewer checks every brief before it goes further.. See [partner-kit/docs/design.md#42-persona-card-cardjson](../../../../partner-kit/docs/design.md#42-persona-card-cardjson).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
 - [ ] **S-T1.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
@@ -86,6 +101,12 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
   1. Add the skill to the role plugin and bump the plugin's version. See [starter-kit/templates/role-plugin/README.md#steps](../../../../starter-kit/templates/role-plugin/README.md#steps).
   2. Publish the marketplace so the role's users get the new version. See [starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups](../../../../starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups).
   - Done when: A pilot user in the role sees the skill after the plugin updates.
+- [ ] **S-T1.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
+  1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
+  3. Name who reviews a change before it is published: someone other than its author. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  4. Have the skill owner make one change while the engineer watches. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  - Done when: The skill owner has made one change to the skill with the engineer watching.
 - [ ] **S-T1.connect-salesforce-runbook.salesforce** Connect it by following the kit's Salesforce hosted MCP runbook (salesforce) (owner: source-system-admin, acting: Director of IT, part A3)
   1. Choose per-user OAuth as the runbook explains before anything is created. See [starter-kit/runbooks/salesforce-hosted-mcp.md#4-choose-per-user-oauth-the-decision-you-cannot-undo](../../../../starter-kit/runbooks/salesforce-hosted-mcp.md#4-choose-per-user-oauth-the-decision-you-cannot-undo).
   2. Add the connector in the Claude org. See [starter-kit/runbooks/salesforce-hosted-mcp.md#6-add-the-connector-in-the-claude-org](../../../../starter-kit/runbooks/salesforce-hosted-mcp.md#6-add-the-connector-in-the-claude-org).
@@ -139,7 +160,7 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
 
 ### S-T5: Prepare for a management or expert call
 
-As a Deal-team associate, I want my twin to prepare for a management or expert call so that I get the briefing note for the caller.
+As a deal-team associate, I want my twin to pull together a briefing note for whoever is on the call so that the caller walks in knowing what we already know.
 
 Part A2. In pilot: no. Priority: 4. Status: todo.
 
@@ -158,18 +179,29 @@ Part A2. In pilot: no. Priority: 4. Status: todo.
 
 **Acceptance criteria:**
 
-1. Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.
-2. Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.
-3. Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.
-4. Plus: no web tools are used.
-5. Plus: each tool call reaches the governance log.
+1. To write: collect at least 3 real examples from Callum Nwosu and write one eval case from each.
+2. Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.
+3. Plus: no web tools are used.
+4. Plus: each tool call reaches the governance log.
+
+Target: not set. Agree the scorecard targets with the sponsor before the pilot starts.
+
+Ready to build: no
+- examples: 0 counted examples (0 good, 0 bad); at least 3 needed.
+- compliance-sign-off: Waiting for S-T5.compliance-sign-off: compliance signs the story off before it is built.
 
 **Gated by:**
 
-- open-question F3: Two to three real good and bad examples per skill, redacted.
+- open-question F3: Two to three real good and bad examples per skill, redacted. (spike SP-F3)
+- sign-off compliance: Compliance has not signed the story off yet (S-T5.compliance-sign-off).
 
 **Tasks:**
 
+- [ ] **S-T5.compliance-sign-off** Get compliance's sign-off on the story before it is built (owner: compliance, Chief Compliance Officer, part A7)
+  1. Check the story meets the definition of ready before compliance reads it. See [docs/playbook/04-stories.md#definition-of-ready-before-building](../../../../docs/playbook/04-stories.md#definition-of-ready-before-building).
+  2. Compliance reads the story's fields, the levelled decisions for the task and its data controls. See [partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson](../../../../partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson).
+  3. Record the sign-off, with the signer's name and the date, in the customer's engagement folder. See [engagements/README.md](../../../../engagements/README.md).
+  - Done when: The sign-off is recorded in the customer's engagement folder with a name and a date.
 - [ ] **S-T5.collect-examples** Collect 3 examples of the task from real work, each with the result a person expects (owner: skill-owner, Callum Nwosu, part A8)
   1. Ask the people who do the task today for three recent, real examples of it. See [starter-kit/docs/authoring-skills.md#step-order](../../../../starter-kit/docs/authoring-skills.md#step-order).
   2. Record each example's inputs and the output a person would accept as done. See [starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals](../../../../starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals).
@@ -204,6 +236,12 @@ Part A2. In pilot: no. Priority: 4. Status: todo.
   1. Add the skill to the role plugin and bump the plugin's version. See [starter-kit/templates/role-plugin/README.md#steps](../../../../starter-kit/templates/role-plugin/README.md#steps).
   2. Publish the marketplace so the role's users get the new version. See [starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups](../../../../starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups).
   - Done when: A pilot user in the role sees the skill after the plugin updates.
+- [ ] **S-T5.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
+  1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
+  3. Name who reviews a change before it is published: someone other than its author. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  4. Have the skill owner make one change while the engineer watches. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  - Done when: The skill owner has made one change to the skill with the engineer watching.
 - [ ] **S-T5.connect-salesforce-runbook.salesforce** Connect it by following the kit's Salesforce hosted MCP runbook (salesforce) (owner: source-system-admin, acting: Director of IT, part A3)
   1. Choose per-user OAuth as the runbook explains before anything is created. See [starter-kit/runbooks/salesforce-hosted-mcp.md#4-choose-per-user-oauth-the-decision-you-cannot-undo](../../../../starter-kit/runbooks/salesforce-hosted-mcp.md#4-choose-per-user-oauth-the-decision-you-cannot-undo).
   2. Add the connector in the Claude org. See [starter-kit/runbooks/salesforce-hosted-mcp.md#6-add-the-connector-in-the-claude-org](../../../../starter-kit/runbooks/salesforce-hosted-mcp.md#6-add-the-connector-in-the-claude-org).
@@ -261,7 +299,7 @@ Kind: capability. Status: todo. 2 stories.
 
 ### S-T2: Update the CRM after a meeting
 
-As a Deal-team associate, I want my twin to update the CRM after a meeting so that I get the activity log and next-step fields.
+As a deal-team associate, I want my twin to draft the activity log and next-step fields on the Salesforce opportunity for me to approve so that Salesforce is up to date after every meeting.
 
 Part A2. In pilot: yes. Priority: 2. Status: todo.
 
@@ -282,26 +320,37 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
 
 **Acceptance criteria:**
 
-1. Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.
-2. Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.
-3. Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.
-4. Keeps: I want to approve each change before it's written.
-5. Plus: no web tools are used.
-6. Plus: the twin writes nothing to the CRM at the starting level; a person files the result.
-7. Plus: each tool call reaches the governance log.
+1. To write: collect at least 3 real examples from Beatriz Halloran and write one eval case from each.
+2. Keeps: I want to approve each change before it's written.
+3. Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.
+4. Plus: no web tools are used.
+5. Plus: the twin writes nothing to the CRM at the starting level; a person files the result.
+6. Plus: each tool call reaches the governance log.
+
+Target: not set. Agree the scorecard targets with the sponsor before the pilot starts.
+
+Ready to build: no
+- examples: 0 counted examples (0 good, 0 bad); at least 3 needed.
+- compliance-sign-off: Waiting for S-T2.compliance-sign-off: compliance signs the story off before it is built.
 
 **Gated by:**
 
-- open-question E4: Do the Salesforce and HubSpot admins confirm in writing that deal-team and investor-relations roles are fully separated?
-- open-question E6: Can Anthropic's range 160.79.104.0/21 be allowlisted?
-- open-question F3: Two to three real good and bad examples per skill, redacted.
-- open-question G1: Where does the governance log go (Splunk is the candidate), how is it hosted and who may read it?
-- open-question OD-9: ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count.
-- open-question OD-11: Numeric scorecard targets for hours saved and edit rate on T1 and T2.
-- open-question OD-13: Keep the Salesforce and Microsoft 365 connectors out of chat and Cowork for the deal-team group. Due: before any pilot user connects.
+- open-question E4: Do the Salesforce and HubSpot admins confirm in writing that deal-team and investor-relations roles are fully separated? (spike SP-E4)
+- open-question E6: Can Anthropic's range 160.79.104.0/21 be allowlisted? (spike SP-E6)
+- open-question F3: Two to three real good and bad examples per skill, redacted. (spike SP-F3)
+- open-question G1: Where does the governance log go (Splunk is the candidate), how is it hosted and who may read it? (spike SP-G1)
+- open-question OD-9: ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count. (spike SP-OD-9)
+- open-question OD-11: Numeric scorecard targets for hours saved and edit rate on T1 and T2. (spike SP-OD-11)
+- open-question OD-13: Keep the Salesforce and Microsoft 365 connectors out of chat and Cowork for the deal-team group. Due: before any pilot user connects. (spike SP-OD-13)
+- sign-off compliance: Compliance has not signed the story off yet (S-T2.compliance-sign-off).
 
 **Tasks:**
 
+- [ ] **S-T2.compliance-sign-off** Get compliance's sign-off on the story before it is built (owner: compliance, Chief Compliance Officer, part A7)
+  1. Check the story meets the definition of ready before compliance reads it. See [docs/playbook/04-stories.md#definition-of-ready-before-building](../../../../docs/playbook/04-stories.md#definition-of-ready-before-building).
+  2. Compliance reads the story's fields, the levelled decisions for the task and its data controls. See [partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson](../../../../partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson).
+  3. Record the sign-off, with the signer's name and the date, in the customer's engagement folder. See [engagements/README.md](../../../../engagements/README.md).
+  - Done when: The sign-off is recorded in the customer's engagement folder with a name and a date.
 - [ ] **S-T2.collect-examples** Collect 3 examples of the task from real work, each with the result a person expects (owner: skill-owner, Beatriz Halloran, part A8)
   1. Ask the people who do the task today for three recent, real examples of it. See [starter-kit/docs/authoring-skills.md#step-order](../../../../starter-kit/docs/authoring-skills.md#step-order).
   2. Record each example's inputs and the output a person would accept as done. See [starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals](../../../../starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals).
@@ -322,7 +371,7 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
   7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
-  10. Make the skill keep these rules from the interviews, in the interviewee's words: I want to approve each change before it's written..
+  10. Make the skill keep these rules from the interviews, in the interviewee's words: I want to approve each change before it's written.. See [partner-kit/docs/design.md#42-persona-card-cardjson](../../../../partner-kit/docs/design.md#42-persona-card-cardjson).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
 - [ ] **S-T2.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
@@ -337,6 +386,12 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
   1. Add the skill to the role plugin and bump the plugin's version. See [starter-kit/templates/role-plugin/README.md#steps](../../../../starter-kit/templates/role-plugin/README.md#steps).
   2. Publish the marketplace so the role's users get the new version. See [starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups](../../../../starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups).
   - Done when: A pilot user in the role sees the skill after the plugin updates.
+- [ ] **S-T2.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
+  1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
+  3. Name who reviews a change before it is published: someone other than its author. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  4. Have the skill owner make one change while the engineer watches. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  - Done when: The skill owner has made one change to the skill with the engineer watching.
 - [ ] **S-T2.connect-salesforce-runbook.salesforce** Connect it by following the kit's Salesforce hosted MCP runbook (salesforce) (owner: source-system-admin, acting: Director of IT, part A3)
   1. Choose per-user OAuth as the runbook explains before anything is created. See [starter-kit/runbooks/salesforce-hosted-mcp.md#4-choose-per-user-oauth-the-decision-you-cannot-undo](../../../../starter-kit/runbooks/salesforce-hosted-mcp.md#4-choose-per-user-oauth-the-decision-you-cannot-undo).
   2. Add the connector in the Claude org. See [starter-kit/runbooks/salesforce-hosted-mcp.md#6-add-the-connector-in-the-claude-org](../../../../starter-kit/runbooks/salesforce-hosted-mcp.md#6-add-the-connector-in-the-claude-org).
@@ -414,7 +469,7 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
 
 ### S-T3: Weekly pipeline summary for the Monday deal meeting
 
-As a Deal-team associate, I want my twin to weekly pipeline summary for the Monday deal meeting so that I get the pipeline summary.
+As a deal-team associate, I want my twin to write the Monday pipeline summary from the Salesforce pipeline report so that the pipeline view is right without anyone spending an hour on it.
 
 Part A4. In pilot: no. Priority: 6. Status: todo.
 
@@ -433,21 +488,31 @@ Part A4. In pilot: no. Priority: 6. Status: todo.
 
 **Acceptance criteria:**
 
-1. Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.
-2. Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.
-3. Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.
-4. Plus: no web tools are used.
-5. Plus: each tool call reaches the governance log.
+1. To write: collect at least 3 real examples from the skill owner (not named yet) and write one eval case from each.
+2. Plus: no web tools are used.
+3. Plus: each tool call reaches the governance log.
+
+Target: not set. Agree the scorecard targets with the sponsor before the pilot starts.
+
+Ready to build: no
+- examples: 0 counted examples (0 good, 0 bad); at least 3 needed.
+- compliance-sign-off: Waiting for S-T3.compliance-sign-off: compliance signs the story off before it is built.
 
 **Gated by:**
 
-- open-question E6: Can Anthropic's range 160.79.104.0/21 be allowlisted?
-- open-question F3: Two to three real good and bad examples per skill, redacted.
-- open-question OD-8: Identity for the hosted Monday summary, whether it may post to Teams, and whether a wrapper server is needed. Due: before T3 is built (after the pilot).
-- open-question OD-9: ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count.
+- open-question E6: Can Anthropic's range 160.79.104.0/21 be allowlisted? (spike SP-E6)
+- open-question F3: Two to three real good and bad examples per skill, redacted. (spike SP-F3)
+- open-question OD-8: Identity for the hosted Monday summary, whether it may post to Teams, and whether a wrapper server is needed. Due: before T3 is built (after the pilot). (spike SP-OD-8)
+- open-question OD-9: ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count. (spike SP-OD-9)
+- sign-off compliance: Compliance has not signed the story off yet (S-T3.compliance-sign-off).
 
 **Tasks:**
 
+- [ ] **S-T3.compliance-sign-off** Get compliance's sign-off on the story before it is built (owner: compliance, Chief Compliance Officer, part A7)
+  1. Check the story meets the definition of ready before compliance reads it. See [docs/playbook/04-stories.md#definition-of-ready-before-building](../../../../docs/playbook/04-stories.md#definition-of-ready-before-building).
+  2. Compliance reads the story's fields, the levelled decisions for the task and its data controls. See [partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson](../../../../partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson).
+  3. Record the sign-off, with the signer's name and the date, in the customer's engagement folder. See [engagements/README.md](../../../../engagements/README.md).
+  - Done when: The sign-off is recorded in the customer's engagement folder with a name and a date.
 - [ ] **S-T3.collect-examples** Collect 3 examples of the task from real work, each with the result a person expects (owner: skill-owner, acting: Director of IT, part A8)
   1. Ask the people who do the task today for three recent, real examples of it. See [starter-kit/docs/authoring-skills.md#step-order](../../../../starter-kit/docs/authoring-skills.md#step-order).
   2. Record each example's inputs and the output a person would accept as done. See [starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals](../../../../starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals).
@@ -478,6 +543,12 @@ Part A4. In pilot: no. Priority: 6. Status: todo.
   1. Open a pull request with the skill and its evals. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   2. Have someone other than the author review it against the definition of done. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
   - Done when: A reviewer who did not write the skill has approved the pull request and the evals pass.
+- [ ] **S-T3.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A4)
+  1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
+  3. Name who reviews a change before it is published: someone other than its author. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  4. Have the skill owner make one change while the engineer watches. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  - Done when: The skill owner has made one change to the skill with the engineer watching.
 - [ ] **S-T3.setup-managed-agents-self-hosted** Set up self-hosted Managed Agents in the customer's environment and its schedule or trigger (owner: integration-engineer, part A4)
   1. Check the runbook's prerequisites and the environment the customer names. See [starter-kit/runbooks/managed-agents.md#before-you-start](../../../../starter-kit/runbooks/managed-agents.md#before-you-start).
   2. Stand up the self-hosted harness and sandbox in that environment. See [starter-kit/runbooks/managed-agents.md#self-hosted](../../../../starter-kit/runbooks/managed-agents.md#self-hosted).
@@ -575,7 +646,7 @@ Kind: capability. Status: todo. 1 stories.
 
 ### S-T4: Screen an inbound CIM or teaser
 
-As a Deal-team associate, I want my twin to screen an inbound CIM or teaser so that I get the screening summary with a pursue-or-pass suggestion.
+As a deal-team associate, I want my twin to screen the CIM or teaser and suggest pursue or pass so that the screening notes are done by Wednesday.
 
 Part A2. In pilot: no. Priority: 3. Status: todo.
 
@@ -594,19 +665,30 @@ Part A2. In pilot: no. Priority: 3. Status: todo.
 
 **Acceptance criteria:**
 
-1. Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.
-2. Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.
-3. Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.
-4. Plus: no web tools are used.
-5. Plus: each tool call reaches the governance log.
+1. To write: collect at least 3 real examples from Beatriz Halloran and write one eval case from each.
+2. Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.
+3. Plus: no web tools are used.
+4. Plus: each tool call reaches the governance log.
+
+Target: not set. Agree the scorecard targets with the sponsor before the pilot starts.
+
+Ready to build: no
+- examples: 0 counted examples (0 good, 0 bad); at least 3 needed.
+- compliance-sign-off: Waiting for S-T4.compliance-sign-off: compliance signs the story off before it is built.
 
 **Gated by:**
 
-- open-question F3: Two to three real good and bad examples per skill, redacted.
-- open-question OD-1: Layer on Anthropic's private-equity and financial-analysis plugins, or build?
+- open-question F3: Two to three real good and bad examples per skill, redacted. (spike SP-F3)
+- open-question OD-1: Layer on Anthropic's private-equity and financial-analysis plugins, or build? (spike SP-OD-1)
+- sign-off compliance: Compliance has not signed the story off yet (S-T4.compliance-sign-off).
 
 **Tasks:**
 
+- [ ] **S-T4.compliance-sign-off** Get compliance's sign-off on the story before it is built (owner: compliance, Chief Compliance Officer, part A7)
+  1. Check the story meets the definition of ready before compliance reads it. See [docs/playbook/04-stories.md#definition-of-ready-before-building](../../../../docs/playbook/04-stories.md#definition-of-ready-before-building).
+  2. Compliance reads the story's fields, the levelled decisions for the task and its data controls. See [partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson](../../../../partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson).
+  3. Record the sign-off, with the signer's name and the date, in the customer's engagement folder. See [engagements/README.md](../../../../engagements/README.md).
+  - Done when: The sign-off is recorded in the customer's engagement folder with a name and a date.
 - [ ] **S-T4.collect-examples** Collect 3 examples of the task from real work, each with the result a person expects (owner: skill-owner, Beatriz Halloran, part A8)
   1. Ask the people who do the task today for three recent, real examples of it. See [starter-kit/docs/authoring-skills.md#step-order](../../../../starter-kit/docs/authoring-skills.md#step-order).
   2. Record each example's inputs and the output a person would accept as done. See [starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals](../../../../starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals).
@@ -641,6 +723,12 @@ Part A2. In pilot: no. Priority: 3. Status: todo.
   1. Add the skill to the role plugin and bump the plugin's version. See [starter-kit/templates/role-plugin/README.md#steps](../../../../starter-kit/templates/role-plugin/README.md#steps).
   2. Publish the marketplace so the role's users get the new version. See [starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups](../../../../starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups).
   - Done when: A pilot user in the role sees the skill after the plugin updates.
+- [ ] **S-T4.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
+  1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
+  3. Name who reviews a change before it is published: someone other than its author. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  4. Have the skill owner make one change while the engineer watches. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  - Done when: The skill owner has made one change to the skill with the engineer watching.
 - [ ] **S-T4.connect-salesforce-runbook.salesforce** Connect it by following the kit's Salesforce hosted MCP runbook (salesforce) (owner: source-system-admin, acting: Director of IT, part A3)
   1. Choose per-user OAuth as the runbook explains before anything is created. See [starter-kit/runbooks/salesforce-hosted-mcp.md#4-choose-per-user-oauth-the-decision-you-cannot-undo](../../../../starter-kit/runbooks/salesforce-hosted-mcp.md#4-choose-per-user-oauth-the-decision-you-cannot-undo).
   2. Add the connector in the Claude org. See [starter-kit/runbooks/salesforce-hosted-mcp.md#6-add-the-connector-in-the-claude-org](../../../../starter-kit/runbooks/salesforce-hosted-mcp.md#6-add-the-connector-in-the-claude-org).
@@ -702,7 +790,9 @@ Kind: capability. Status: todo. 1 stories.
 
 ### S-T6: Draft a section of an investment committee memo from diligence notes
 
-As a Deal-team associate, I want my twin to draft a section of an investment committee memo from diligence notes so that I get the draft memo section.
+As a deal-team associate, I want my twin to produce the draft memo section so that I get back the 240 minutes it takes me each time.
+
+(Statement drafted by the kit: confirm the wording with the interviewee.)
 
 Part A2. In pilot: no. Priority: 5. Status: todo.
 
@@ -722,20 +812,31 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
 
 **Acceptance criteria:**
 
-1. Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.
-2. Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.
-3. Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.
-4. Keeps: It's always a draft and always reviewed.
-5. Plus: no web tools are used.
-6. Plus: each tool call reaches the governance log.
+1. To write: collect at least 3 real examples from Ravindra Sorensen and write one eval case from each.
+2. Keeps: It's always a draft and always reviewed.
+3. Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.
+4. Plus: no web tools are used.
+5. Plus: each tool call reaches the governance log.
+
+Target: not set. Agree the scorecard targets with the sponsor before the pilot starts.
+
+Ready to build: no
+- examples: 0 counted examples (0 good, 0 bad); at least 3 needed.
+- compliance-sign-off: Waiting for S-T6.compliance-sign-off: compliance signs the story off before it is built.
 
 **Gated by:**
 
-- open-question F3: Two to three real good and bad examples per skill, redacted.
-- open-question OD-1: Layer on Anthropic's private-equity and financial-analysis plugins, or build?
+- open-question F3: Two to three real good and bad examples per skill, redacted. (spike SP-F3)
+- open-question OD-1: Layer on Anthropic's private-equity and financial-analysis plugins, or build? (spike SP-OD-1)
+- sign-off compliance: Compliance has not signed the story off yet (S-T6.compliance-sign-off).
 
 **Tasks:**
 
+- [ ] **S-T6.compliance-sign-off** Get compliance's sign-off on the story before it is built (owner: compliance, Chief Compliance Officer, part A7)
+  1. Check the story meets the definition of ready before compliance reads it. See [docs/playbook/04-stories.md#definition-of-ready-before-building](../../../../docs/playbook/04-stories.md#definition-of-ready-before-building).
+  2. Compliance reads the story's fields, the levelled decisions for the task and its data controls. See [partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson](../../../../partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson).
+  3. Record the sign-off, with the signer's name and the date, in the customer's engagement folder. See [engagements/README.md](../../../../engagements/README.md).
+  - Done when: The sign-off is recorded in the customer's engagement folder with a name and a date.
 - [ ] **S-T6.collect-examples** Collect 3 examples of the task from real work, each with the result a person expects (owner: skill-owner, Ravindra Sorensen, part A8)
   1. Ask the people who do the task today for three recent, real examples of it. See [starter-kit/docs/authoring-skills.md#step-order](../../../../starter-kit/docs/authoring-skills.md#step-order).
   2. Record each example's inputs and the output a person would accept as done. See [starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals](../../../../starter-kit/docs/authoring-skills.md#mapping-a-storys-acceptance-criteria-to-evals).
@@ -756,7 +857,7 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
   7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
-  10. Make the skill keep these rules from the interviews, in the interviewee's words: It's always a draft and always reviewed..
+  10. Make the skill keep these rules from the interviews, in the interviewee's words: It's always a draft and always reviewed.. See [partner-kit/docs/design.md#42-persona-card-cardjson](../../../../partner-kit/docs/design.md#42-persona-card-cardjson).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
 - [ ] **S-T6.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
@@ -771,6 +872,12 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
   1. Add the skill to the role plugin and bump the plugin's version. See [starter-kit/templates/role-plugin/README.md#steps](../../../../starter-kit/templates/role-plugin/README.md#steps).
   2. Publish the marketplace so the role's users get the new version. See [starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups](../../../../starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups).
   - Done when: A pilot user in the role sees the skill after the plugin updates.
+- [ ] **S-T6.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
+  1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
+  3. Name who reviews a change before it is published: someone other than its author. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  4. Have the skill owner make one change while the engineer watches. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  - Done when: The skill owner has made one change to the skill with the engineer watching.
 - [ ] **S-T6.connect-microsoft-365-runbook.sharepoint** Connect it by following the kit's Microsoft 365 connector runbook (sharepoint) (owner: source-system-admin, acting: Director of IT, part A3)
   1. Decide what to approve before granting consent. See [starter-kit/runbooks/microsoft-365-connector.md#2-decide-what-to-approve-before-consent](../../../../starter-kit/runbooks/microsoft-365-connector.md#2-decide-what-to-approve-before-consent).
   2. Grant tenant admin consent. See [starter-kit/runbooks/microsoft-365-connector.md#3-grant-tenant-admin-consent](../../../../starter-kit/runbooks/microsoft-365-connector.md#3-grant-tenant-admin-consent).
@@ -1089,6 +1196,20 @@ Part A8. In pilot: yes. Priority: none. Status: todo.
   1. Run a short session on what the twin does, at what level, and what it never does, from the kit's session outline. See [starter-kit/templates/pilot/pilot-training.md#part-1-session-outline](../../../../starter-kit/templates/pilot/pilot-training.md#part-1-session-outline).
   2. Give the pilot users one place to report a failure or a wrong draft, with the kit's report form. See [starter-kit/templates/pilot/pilot-training.md#where-reports-go](../../../../starter-kit/templates/pilot/pilot-training.md#where-reports-go).
   - Done when: Every pilot user has been trained and knows where to report a failure.
+
+## Spikes
+
+Open questions on the card. A spike is time-boxed research that answers one; it holds no build work. Mark a spike by changing its status in backlog.json.
+
+- [ ] **SP-E4** Do the Salesforce and HubSpot admins confirm in writing that deal-team and investor-relations roles are fully separated? (owner: Source-system admins (Salesforce admin and HubSpot admin); due: 2026-11-27; blocks: S-T1, S-T2)
+- [ ] **SP-E6** Can Anthropic's range 160.79.104.0/21 be allowlisted? (owner: Security; due: 2026-11-27; blocks: S-T1, S-T2, S-T3)
+- [ ] **SP-F3** Two to three real good and bad examples per skill, redacted. (owner: Skill owners; due: 2026-12-04; blocks: S-T1, S-T2, S-T3, S-T4, S-T5, S-T6)
+- [ ] **SP-G1** Where does the governance log go (Splunk is the candidate), how is it hosted and who may read it? (owner: Technical owner (Director of IT); due: 2026-12-04; blocks: S-T1, S-T2)
+- [ ] **SP-OD-1** Layer on Anthropic's private-equity and financial-analysis plugins, or build? (owner: Review: Rashida Kovalenko. Sign-off: Eleanor Osei-Whitcombe; due: 2026-12-04; blocks: S-T4, S-T6)
+- [ ] **SP-OD-8** Identity for the hosted Monday summary, whether it may post to Teams, and whether a wrapper server is needed. Due: before T3 is built (after the pilot). (owner: Ngozi Brandvold and Tomasz Hadjiev; Joaquin Lindahl for the Salesforce role; due: not set; blocks: S-T3)
+- [ ] **SP-OD-9** ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count. (owner: Tomasz Hadjiev, with the Anthropic account team; due: 2026-12-04; blocks: S-T1, S-T2, S-T3)
+- [ ] **SP-OD-11** Numeric scorecard targets for hours saved and edit rate on T1 and T2. (owner: Samir Castellanos, with Marguerite Oyelaran; due: 2026-12-04; blocks: S-T1, S-T2)
+- [ ] **SP-OD-13** Keep the Salesforce and Microsoft 365 connectors out of chat and Cowork for the deal-team group. Due: before any pilot user connects. (owner: Tomasz Hadjiev; due: not set; blocks: S-T1, S-T2)
 
 ## Retired
 

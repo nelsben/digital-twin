@@ -49,9 +49,8 @@ No notes files, or no persona folder: say which is missing and ask.
 2. **Start the card.** No `card.json`: copy the template and set `id` (the
    folder name) and `customer` (the profile's `customer`). A `card.json`
    exists: load it and keep every field whose `provenance` status is
-   `answered`, with its value and source, even if your reading differs. If
-   new notes contradict a kept answer, add an open question; do not
-   overwrite it.
+   `answered`, with its value and source, even if your reading differs. If new
+   notes contradict a kept answer, add an open question; do not overwrite it.
 3. **Build the lists.** Task ids come from each notes file's "Task id:" line.
    Features come from the closing table of the notes: the name in their
    words, the id in kebab-case (`call-preparation-and-follow-up`). Each
@@ -108,7 +107,8 @@ if neither gives them, ask. Never make them up.
 - **Today, not the wish.** `tasks[].trigger` is how the task starts now;
   "ideally" or "later" goes in an open question. The rules for question F8,
   question F7, per-something rates, rules, wished changes and surfaces are in
-  [references/field-rules.md](references/field-rules.md).
+  [references/field-rules.md](references/field-rules.md). A story want or
+  benefit is the interviewee's words, first person, or empty: invent none.
 - **Only what was said.** No figure, name or system that is not in the
   notes, the profile, the discovery answers or the consultant's message. A
   field the notes do not touch stays empty; if it is required it is `open`.

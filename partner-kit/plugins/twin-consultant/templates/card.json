@@ -72,6 +72,8 @@
       },
       "constraints": [],
       "wanted_change": "",
+      "story_want": "",
+      "story_benefit": "",
       "reversible": null,
       "touches_money": null,
       "reads_untrusted_input": null,

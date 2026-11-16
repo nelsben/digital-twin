@@ -10,7 +10,7 @@ Discovery date: 2026-11-04. One call with Teodor Amsel, the IT and operations le
 
 | # | Question (short) | Answer | Status |
 |---|---|---|---|
-| A1 | Sponsor and 6-month outcome | Odalys Fenwick, VP Customer Success at Example Software Co, sponsors it. In her words: "In 6 months each customer success manager spends less time preparing for calls and writing follow-ups, and no renewal is missed for lack of warning." | answered |
+| A1 | Sponsor and 6-month outcome | Odalys Fenwick, VP Customer Success at Example Software Co, sponsors it. In her words: "In 6 months each customer success manager spends less time preparing for calls and writing follow-ups, and no renewal is missed for lack of warning." Asked for numbers, she added: "Hold the edit rate below 30 percent on what the twin drafts, and save at least 15 minutes on each task." | answered |
 | A2 | First roles; is private equity in scope? | Customer success first. We are a B2B software company; private equity is not in scope. | answered |
 | A3 | Headcount per role; pilot size | 60 people in the company. The customer success team is 8 managers, and 4 of them will pilot. | answered |
 

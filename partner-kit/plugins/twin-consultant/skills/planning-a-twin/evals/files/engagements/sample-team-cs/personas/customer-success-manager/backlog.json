@@ -3,8 +3,8 @@
   "customer": "example-software-co",
   "persona": "customer-success-manager",
   "source": {
-    "card_sha256": "ed6b2c0d5ae57095d3a004a56c5be31d2d0b9cff6a7d84d13523eeaef7041141",
-    "levelled_sha256": "6d4a869217215cdc61d80ff2d258abba3f9690d03edb762d510ee03863044d6d",
+    "card_sha256": "d1ea72cd65ac0607dae9edffdc75db1ee499860a3991b46e1083c560ca7abf12",
+    "levelled_sha256": "acc1a9464c437584c70b8d4a8caafa8526fcb7a2c4063f483643eebe39944b7d",
     "library_version": 1
   },
   "unnamed_roles": [
@@ -33,7 +33,8 @@
           {
             "id": "S-C1",
             "title": "Account brief before a customer call",
-            "statement": "As a Customer success manager, I want my twin to account brief before a customer call so that I get the one-page account brief.",
+            "statement": "As a customer success manager, I want my twin to brief me on the account before each call so that I walk into the call already knowing the account.",
+            "statement_source": "card",
             "part": "A2",
             "in_pilot": true,
             "priority": 1,
@@ -53,7 +54,29 @@
             "acceptance": [
               "Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
-              "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake."
+              "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.",
+              "Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses."
+            ],
+            "target": {
+              "text": "Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 6 per week, 30 minutes each, 8 users.",
+              "set": true
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": true,
+                "note": "3 counted examples (2 good, 1 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: hubspot and google-drive."
+              }
             ],
             "gated_by": [],
             "tasks": [
@@ -222,6 +245,35 @@
                   }
                 ],
                 "done_when": "A pilot user in the role sees the skill after the plugin updates, and its description names the role.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C1.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A2",
+                "how": [
+                  {
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  }
+                ],
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
@@ -449,7 +501,8 @@
           {
             "id": "S-C4",
             "title": "Follow-up email after a customer call, and a call note in HubSpot",
-            "statement": "As a Customer success manager, I want my twin to follow-up email after a customer call, and a call note in HubSpot so that I get the draft follow-up email, which the manager sends, and a call note on the HubSpot record.",
+            "statement": "As a customer success manager, I want my twin to draft the follow-up email and the call note for HubSpot so that the follow-up is out the same afternoon.",
+            "statement_source": "card",
             "part": "A2",
             "in_pilot": true,
             "priority": 2,
@@ -474,7 +527,29 @@
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.",
               "Keeps: I want to approve the note before it's created.",
+              "Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.",
               "Plus: the twin writes nothing to the CRM at the starting level; a person files the result."
+            ],
+            "target": {
+              "text": "Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 6 per week, 25 minutes each, 8 users.",
+              "set": true
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": true,
+                "note": "3 counted examples (2 good, 1 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: google-drive and hubspot."
+              }
             ],
             "gated_by": [],
             "tasks": [
@@ -572,7 +647,7 @@
                   },
                   {
                     "text": "Make the skill keep these rules from the interviews, in the interviewee's words: I want to approve the note before it's created..",
-                    "link": null
+                    "link": "partner-kit/docs/design.md#42-persona-card-cardjson"
                   }
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
@@ -647,6 +722,35 @@
                   }
                 ],
                 "done_when": "A pilot user in the role sees the skill after the plugin updates, and its description names the role.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C4.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A2",
+                "how": [
+                  {
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  }
+                ],
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
@@ -982,7 +1086,8 @@
           {
             "id": "S-C2",
             "title": "Weekly renewal-risk digest",
-            "statement": "As a Customer success manager, I want my twin to weekly renewal-risk digest so that I get the renewal-risk digest.",
+            "statement": "As a customer success manager, I want my twin to flag the accounts whose renewal is at risk each week so that no renewal is missed for lack of warning.",
+            "statement_source": "card",
             "part": "A4",
             "in_pilot": false,
             "priority": 3,
@@ -1003,6 +1108,27 @@
               "Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake."
+            ],
+            "target": {
+              "text": "Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 1 per week, 90 minutes each, 8 users.",
+              "set": true
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": true,
+                "note": "3 counted examples (2 good, 1 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: hubspot, usage-db and slack."
+              }
             ],
             "gated_by": [],
             "tasks": [
@@ -1148,6 +1274,35 @@
                 "done_when": "A reviewer who did not write the skill has approved the pull request and the evals pass.",
                 "owner_role": "skill-owner",
                 "owner_name": "Marisol Quenby",
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C2.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A4",
+                "how": [
+                  {
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  }
+                ],
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
                 "acting_owner": null,
                 "status": "todo"
               },
@@ -1586,7 +1741,8 @@
           {
             "id": "S-C3",
             "title": "Renewal quote email to the customer",
-            "statement": "As a Customer success manager, I want my twin to renewal quote email to the customer so that I get the draft renewal quote email, which the manager checks and sends from Gmail.",
+            "statement": "As a customer success manager, I want my twin to draft the renewal quote email from the HubSpot deal so that I only check the figures and send it.",
+            "statement_source": "card",
             "part": "A2",
             "in_pilot": false,
             "priority": 4,
@@ -1610,7 +1766,29 @@
               "Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.",
-              "Keeps: I check the figures before I send."
+              "Keeps: I check the figures before I send.",
+              "Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses."
+            ],
+            "target": {
+              "text": "Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 2 per week, 40 minutes each, 8 users.",
+              "set": true
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": true,
+                "note": "3 counted examples (2 good, 1 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: hubspot."
+              }
             ],
             "gated_by": [],
             "tasks": [
@@ -1708,7 +1886,7 @@
                   },
                   {
                     "text": "Make the skill keep these rules from the interviews, in the interviewee's words: I check the figures before I send..",
-                    "link": null
+                    "link": "partner-kit/docs/design.md#42-persona-card-cardjson"
                   }
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
@@ -1783,6 +1961,35 @@
                   }
                 ],
                 "done_when": "A pilot user in the role sees the skill after the plugin updates, and its description names the role.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C3.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A2",
+                "how": [
+                  {
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  }
+                ],
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
@@ -1893,7 +2100,8 @@
           {
             "id": "S-C5",
             "title": "Open-ticket summary when a ticket is escalated",
-            "statement": "As a Customer success manager, I want my twin to open-ticket summary when a ticket is escalated so that I get the summary of the customer's open tickets.",
+            "statement": "As a customer success manager, I want my twin to pull the customer's open tickets into one summary so that I see the whole ticket picture in one place.",
+            "statement_source": "card",
             "part": "A2",
             "in_pilot": false,
             "priority": 5,
@@ -1914,7 +2122,29 @@
             "acceptance": [
               "Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
-              "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake."
+              "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.",
+              "Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses."
+            ],
+            "target": {
+              "text": "Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 2 per week, 30 minutes each, 8 users.",
+              "set": true
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": true,
+                "note": "3 counted examples (2 good, 1 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: zendesk."
+              }
             ],
             "gated_by": [],
             "tasks": [
@@ -2083,6 +2313,35 @@
                   }
                 ],
                 "done_when": "A pilot user in the role sees the skill after the plugin updates, and its description names the role.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C5.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A2",
+                "how": [
+                  {
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  }
+                ],
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
@@ -2992,5 +3251,17 @@
       }
     ]
   },
+  "spikes": [
+    {
+      "id": "SP-OQ-1",
+      "kind": "spike",
+      "title": "What could start C5 on the escalation itself, without a person: a Zendesk trigger calling a hosted agent, or a Slack…",
+      "question": "What could start C5 on the escalation itself, without a person: a Zendesk trigger calling a hosted agent, or a Slack alert? Until then the manager starts it.",
+      "blocks": [],
+      "owner": "Teodor Amsel",
+      "due": "2026-12-11",
+      "status": "todo"
+    }
+  ],
   "retired": []
 }

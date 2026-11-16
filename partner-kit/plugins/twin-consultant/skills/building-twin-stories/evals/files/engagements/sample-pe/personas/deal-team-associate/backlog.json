@@ -3,8 +3,8 @@
   "customer": "example-capital-partners",
   "persona": "deal-team-associate",
   "source": {
-    "card_sha256": "46c79c3f5d8f1a2784ab3e9730345d50779bc4418e06f93123a87e2ad2131fb1",
-    "levelled_sha256": "d80155c49b0487af9a39fa3d6feca394ca5ba8f3869e24709f20d0a398091d7a",
+    "card_sha256": "f72c43ac12040ed75efbe5f09d5b6b7a133ec9cab0f6989506330a40dd109938",
+    "levelled_sha256": "807c02aa7f3eb798b246d1a1efbe407b3f99eccb5440c18414e767c5accd1067",
     "library_version": 1
   },
   "unnamed_roles": [
@@ -38,7 +38,8 @@
           {
             "id": "S-T1",
             "title": "Prepare a one-page company brief",
-            "statement": "As a Deal-team associate, I want my twin to prepare a one-page company brief so that I get the one-page company brief.",
+            "statement": "As a deal-team associate, I want my twin to draft the one-page company brief from Salesforce and SharePoint so that I spend my time on the model and the diligence calls instead.",
+            "statement_source": "card",
             "part": "A2",
             "in_pilot": true,
             "priority": 1,
@@ -59,51 +60,113 @@
               ]
             },
             "acceptance": [
-              "Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.",
-              "Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.",
-              "Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.",
+              "To write: collect at least 3 real examples from Callum Nwosu and write one eval case from each.",
               "Keeps: A reviewer checks every brief before it goes further.",
+              "Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.",
               "Plus: no web tools are used.",
               "Plus: each tool call reaches the governance log."
+            ],
+            "target": {
+              "text": "Target: not set. Agree the scorecard targets with the sponsor before the pilot starts.",
+              "set": false
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": false,
+                "note": "0 counted examples (0 good, 0 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: salesforce and sharepoint."
+              },
+              {
+                "check": "compliance-sign-off",
+                "met": false,
+                "note": "Waiting for S-T1.compliance-sign-off: compliance signs the story off before it is built."
+              }
             ],
             "gated_by": [
               {
                 "kind": "open-question",
                 "id": "E4",
-                "text": "Do the Salesforce and HubSpot admins confirm in writing that deal-team and investor-relations roles are fully separated?"
+                "text": "Do the Salesforce and HubSpot admins confirm in writing that deal-team and investor-relations roles are fully separated?",
+                "spike": "SP-E4"
               },
               {
                 "kind": "open-question",
                 "id": "E6",
-                "text": "Can Anthropic's range 160.79.104.0/21 be allowlisted?"
+                "text": "Can Anthropic's range 160.79.104.0/21 be allowlisted?",
+                "spike": "SP-E6"
               },
               {
                 "kind": "open-question",
                 "id": "F3",
-                "text": "Two to three real good and bad examples per skill, redacted."
+                "text": "Two to three real good and bad examples per skill, redacted.",
+                "spike": "SP-F3"
               },
               {
                 "kind": "open-question",
                 "id": "G1",
-                "text": "Where does the governance log go (Splunk is the candidate), how is it hosted and who may read it?"
+                "text": "Where does the governance log go (Splunk is the candidate), how is it hosted and who may read it?",
+                "spike": "SP-G1"
               },
               {
                 "kind": "open-question",
                 "id": "OD-9",
-                "text": "ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count."
+                "text": "ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count.",
+                "spike": "SP-OD-9"
               },
               {
                 "kind": "open-question",
                 "id": "OD-11",
-                "text": "Numeric scorecard targets for hours saved and edit rate on T1 and T2."
+                "text": "Numeric scorecard targets for hours saved and edit rate on T1 and T2.",
+                "spike": "SP-OD-11"
               },
               {
                 "kind": "open-question",
                 "id": "OD-13",
-                "text": "Keep the Salesforce and Microsoft 365 connectors out of chat and Cowork for the deal-team group. Due: before any pilot user connects."
+                "text": "Keep the Salesforce and Microsoft 365 connectors out of chat and Cowork for the deal-team group. Due: before any pilot user connects.",
+                "spike": "SP-OD-13"
+              },
+              {
+                "kind": "sign-off",
+                "id": "compliance",
+                "text": "Compliance has not signed the story off yet (S-T1.compliance-sign-off)."
               }
             ],
             "tasks": [
+              {
+                "id": "S-T1.compliance-sign-off",
+                "template": "compliance-sign-off",
+                "title": "Get compliance's sign-off on the story before it is built",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Check the story meets the definition of ready before compliance reads it.",
+                    "link": "docs/playbook/04-stories.md#definition-of-ready-before-building"
+                  },
+                  {
+                    "text": "Compliance reads the story's fields, the levelled decisions for the task and its data controls.",
+                    "link": "partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson"
+                  },
+                  {
+                    "text": "Record the sign-off, with the signer's name and the date, in the customer's engagement folder.",
+                    "link": "engagements/README.md"
+                  }
+                ],
+                "done_when": "The sign-off is recorded in the customer's engagement folder with a name and a date.",
+                "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
+                "status": "todo"
+              },
               {
                 "id": "S-T1.collect-examples",
                 "template": "collect-examples",
@@ -198,7 +261,7 @@
                   },
                   {
                     "text": "Make the skill keep these rules from the interviews, in the interviewee's words: A reviewer checks every brief before it goes further..",
-                    "link": null
+                    "link": "partner-kit/docs/design.md#42-persona-card-cardjson"
                   }
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
@@ -269,6 +332,35 @@
                   }
                 ],
                 "done_when": "A pilot user in the role sees the skill after the plugin updates.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-T1.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A2",
+                "how": [
+                  {
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  }
+                ],
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
@@ -534,7 +626,8 @@
           {
             "id": "S-T5",
             "title": "Prepare for a management or expert call",
-            "statement": "As a Deal-team associate, I want my twin to prepare for a management or expert call so that I get the briefing note for the caller.",
+            "statement": "As a deal-team associate, I want my twin to pull together a briefing note for whoever is on the call so that the caller walks in knowing what we already know.",
+            "statement_source": "card",
             "part": "A2",
             "in_pilot": false,
             "priority": 4,
@@ -552,20 +645,76 @@
               "baseline": "1.85 per week x 45 minutes each x unknown users"
             },
             "acceptance": [
-              "Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.",
-              "Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.",
-              "Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.",
+              "To write: collect at least 3 real examples from Callum Nwosu and write one eval case from each.",
+              "Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.",
               "Plus: no web tools are used.",
               "Plus: each tool call reaches the governance log."
+            ],
+            "target": {
+              "text": "Target: not set. Agree the scorecard targets with the sponsor before the pilot starts.",
+              "set": false
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": false,
+                "note": "0 counted examples (0 good, 0 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: salesforce and sharepoint."
+              },
+              {
+                "check": "compliance-sign-off",
+                "met": false,
+                "note": "Waiting for S-T5.compliance-sign-off: compliance signs the story off before it is built."
+              }
             ],
             "gated_by": [
               {
                 "kind": "open-question",
                 "id": "F3",
-                "text": "Two to three real good and bad examples per skill, redacted."
+                "text": "Two to three real good and bad examples per skill, redacted.",
+                "spike": "SP-F3"
+              },
+              {
+                "kind": "sign-off",
+                "id": "compliance",
+                "text": "Compliance has not signed the story off yet (S-T5.compliance-sign-off)."
               }
             ],
             "tasks": [
+              {
+                "id": "S-T5.compliance-sign-off",
+                "template": "compliance-sign-off",
+                "title": "Get compliance's sign-off on the story before it is built",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Check the story meets the definition of ready before compliance reads it.",
+                    "link": "docs/playbook/04-stories.md#definition-of-ready-before-building"
+                  },
+                  {
+                    "text": "Compliance reads the story's fields, the levelled decisions for the task and its data controls.",
+                    "link": "partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson"
+                  },
+                  {
+                    "text": "Record the sign-off, with the signer's name and the date, in the customer's engagement folder.",
+                    "link": "engagements/README.md"
+                  }
+                ],
+                "done_when": "The sign-off is recorded in the customer's engagement folder with a name and a date.",
+                "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
+                "status": "todo"
+              },
               {
                 "id": "S-T5.collect-examples",
                 "template": "collect-examples",
@@ -727,6 +876,35 @@
                   }
                 ],
                 "done_when": "A pilot user in the role sees the skill after the plugin updates.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-T5.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A2",
+                "how": [
+                  {
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  }
+                ],
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
@@ -1000,7 +1178,8 @@
           {
             "id": "S-T2",
             "title": "Update the CRM after a meeting",
-            "statement": "As a Deal-team associate, I want my twin to update the CRM after a meeting so that I get the activity log and next-step fields.",
+            "statement": "As a deal-team associate, I want my twin to draft the activity log and next-step fields on the Salesforce opportunity for me to approve so that Salesforce is up to date after every meeting.",
+            "statement_source": "card",
             "part": "A2",
             "in_pilot": true,
             "priority": 2,
@@ -1022,52 +1201,114 @@
               "wanted_change": "Asked for, not planned: Later it could start when the meeting ends."
             },
             "acceptance": [
-              "Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.",
-              "Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.",
-              "Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.",
+              "To write: collect at least 3 real examples from Beatriz Halloran and write one eval case from each.",
               "Keeps: I want to approve each change before it's written.",
+              "Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.",
               "Plus: no web tools are used.",
               "Plus: the twin writes nothing to the CRM at the starting level; a person files the result.",
               "Plus: each tool call reaches the governance log."
+            ],
+            "target": {
+              "text": "Target: not set. Agree the scorecard targets with the sponsor before the pilot starts.",
+              "set": false
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": false,
+                "note": "0 counted examples (0 good, 0 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: teams and salesforce."
+              },
+              {
+                "check": "compliance-sign-off",
+                "met": false,
+                "note": "Waiting for S-T2.compliance-sign-off: compliance signs the story off before it is built."
+              }
             ],
             "gated_by": [
               {
                 "kind": "open-question",
                 "id": "E4",
-                "text": "Do the Salesforce and HubSpot admins confirm in writing that deal-team and investor-relations roles are fully separated?"
+                "text": "Do the Salesforce and HubSpot admins confirm in writing that deal-team and investor-relations roles are fully separated?",
+                "spike": "SP-E4"
               },
               {
                 "kind": "open-question",
                 "id": "E6",
-                "text": "Can Anthropic's range 160.79.104.0/21 be allowlisted?"
+                "text": "Can Anthropic's range 160.79.104.0/21 be allowlisted?",
+                "spike": "SP-E6"
               },
               {
                 "kind": "open-question",
                 "id": "F3",
-                "text": "Two to three real good and bad examples per skill, redacted."
+                "text": "Two to three real good and bad examples per skill, redacted.",
+                "spike": "SP-F3"
               },
               {
                 "kind": "open-question",
                 "id": "G1",
-                "text": "Where does the governance log go (Splunk is the candidate), how is it hosted and who may read it?"
+                "text": "Where does the governance log go (Splunk is the candidate), how is it hosted and who may read it?",
+                "spike": "SP-G1"
               },
               {
                 "kind": "open-question",
                 "id": "OD-9",
-                "text": "ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count."
+                "text": "ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count.",
+                "spike": "SP-OD-9"
               },
               {
                 "kind": "open-question",
                 "id": "OD-11",
-                "text": "Numeric scorecard targets for hours saved and edit rate on T1 and T2."
+                "text": "Numeric scorecard targets for hours saved and edit rate on T1 and T2.",
+                "spike": "SP-OD-11"
               },
               {
                 "kind": "open-question",
                 "id": "OD-13",
-                "text": "Keep the Salesforce and Microsoft 365 connectors out of chat and Cowork for the deal-team group. Due: before any pilot user connects."
+                "text": "Keep the Salesforce and Microsoft 365 connectors out of chat and Cowork for the deal-team group. Due: before any pilot user connects.",
+                "spike": "SP-OD-13"
+              },
+              {
+                "kind": "sign-off",
+                "id": "compliance",
+                "text": "Compliance has not signed the story off yet (S-T2.compliance-sign-off)."
               }
             ],
             "tasks": [
+              {
+                "id": "S-T2.compliance-sign-off",
+                "template": "compliance-sign-off",
+                "title": "Get compliance's sign-off on the story before it is built",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Check the story meets the definition of ready before compliance reads it.",
+                    "link": "docs/playbook/04-stories.md#definition-of-ready-before-building"
+                  },
+                  {
+                    "text": "Compliance reads the story's fields, the levelled decisions for the task and its data controls.",
+                    "link": "partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson"
+                  },
+                  {
+                    "text": "Record the sign-off, with the signer's name and the date, in the customer's engagement folder.",
+                    "link": "engagements/README.md"
+                  }
+                ],
+                "done_when": "The sign-off is recorded in the customer's engagement folder with a name and a date.",
+                "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
+                "status": "todo"
+              },
               {
                 "id": "S-T2.collect-examples",
                 "template": "collect-examples",
@@ -1162,7 +1403,7 @@
                   },
                   {
                     "text": "Make the skill keep these rules from the interviews, in the interviewee's words: I want to approve each change before it's written..",
-                    "link": null
+                    "link": "partner-kit/docs/design.md#42-persona-card-cardjson"
                   }
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
@@ -1233,6 +1474,35 @@
                   }
                 ],
                 "done_when": "A pilot user in the role sees the skill after the plugin updates.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-T2.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A2",
+                "how": [
+                  {
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  }
+                ],
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
@@ -1619,7 +1889,8 @@
           {
             "id": "S-T3",
             "title": "Weekly pipeline summary for the Monday deal meeting",
-            "statement": "As a Deal-team associate, I want my twin to weekly pipeline summary for the Monday deal meeting so that I get the pipeline summary.",
+            "statement": "As a deal-team associate, I want my twin to write the Monday pipeline summary from the Salesforce pipeline report so that the pipeline view is right without anyone spending an hour on it.",
+            "statement_source": "card",
             "part": "A4",
             "in_pilot": false,
             "priority": 6,
@@ -1637,35 +1908,93 @@
               "baseline": "1 per week x 60 minutes each x 18 users"
             },
             "acceptance": [
-              "Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.",
-              "Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.",
-              "Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.",
+              "To write: collect at least 3 real examples from the skill owner (not named yet) and write one eval case from each.",
               "Plus: no web tools are used.",
               "Plus: each tool call reaches the governance log."
+            ],
+            "target": {
+              "text": "Target: not set. Agree the scorecard targets with the sponsor before the pilot starts.",
+              "set": false
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": false,
+                "note": "0 counted examples (0 good, 0 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: salesforce and teams."
+              },
+              {
+                "check": "compliance-sign-off",
+                "met": false,
+                "note": "Waiting for S-T3.compliance-sign-off: compliance signs the story off before it is built."
+              }
             ],
             "gated_by": [
               {
                 "kind": "open-question",
                 "id": "E6",
-                "text": "Can Anthropic's range 160.79.104.0/21 be allowlisted?"
+                "text": "Can Anthropic's range 160.79.104.0/21 be allowlisted?",
+                "spike": "SP-E6"
               },
               {
                 "kind": "open-question",
                 "id": "F3",
-                "text": "Two to three real good and bad examples per skill, redacted."
+                "text": "Two to three real good and bad examples per skill, redacted.",
+                "spike": "SP-F3"
               },
               {
                 "kind": "open-question",
                 "id": "OD-8",
-                "text": "Identity for the hosted Monday summary, whether it may post to Teams, and whether a wrapper server is needed. Due: before T3 is built (after the pilot)."
+                "text": "Identity for the hosted Monday summary, whether it may post to Teams, and whether a wrapper server is needed. Due: before T3 is built (after the pilot).",
+                "spike": "SP-OD-8"
               },
               {
                 "kind": "open-question",
                 "id": "OD-9",
-                "text": "ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count."
+                "text": "ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count.",
+                "spike": "SP-OD-9"
+              },
+              {
+                "kind": "sign-off",
+                "id": "compliance",
+                "text": "Compliance has not signed the story off yet (S-T3.compliance-sign-off)."
               }
             ],
             "tasks": [
+              {
+                "id": "S-T3.compliance-sign-off",
+                "template": "compliance-sign-off",
+                "title": "Get compliance's sign-off on the story before it is built",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Check the story meets the definition of ready before compliance reads it.",
+                    "link": "docs/playbook/04-stories.md#definition-of-ready-before-building"
+                  },
+                  {
+                    "text": "Compliance reads the story's fields, the levelled decisions for the task and its data controls.",
+                    "link": "partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson"
+                  },
+                  {
+                    "text": "Record the sign-off, with the signer's name and the date, in the customer's engagement folder.",
+                    "link": "engagements/README.md"
+                  }
+                ],
+                "done_when": "The sign-off is recorded in the customer's engagement folder with a name and a date.",
+                "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
+                "status": "todo"
+              },
               {
                 "id": "S-T3.collect-examples",
                 "template": "collect-examples",
@@ -1809,6 +2138,35 @@
                 "owner_role": "skill-owner",
                 "owner_name": null,
                 "acting_owner": "Director of IT",
+                "status": "todo"
+              },
+              {
+                "id": "S-T3.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A4",
+                "how": [
+                  {
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  }
+                ],
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2279,7 +2637,8 @@
           {
             "id": "S-T4",
             "title": "Screen an inbound CIM or teaser",
-            "statement": "As a Deal-team associate, I want my twin to screen an inbound CIM or teaser so that I get the screening summary with a pursue-or-pass suggestion.",
+            "statement": "As a deal-team associate, I want my twin to screen the CIM or teaser and suggest pursue or pass so that the screening notes are done by Wednesday.",
+            "statement_source": "card",
             "part": "A2",
             "in_pilot": false,
             "priority": 3,
@@ -2297,25 +2656,82 @@
               "baseline": "5 per week x 40 minutes each x unknown users"
             },
             "acceptance": [
-              "Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.",
-              "Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.",
-              "Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.",
+              "To write: collect at least 3 real examples from Beatriz Halloran and write one eval case from each.",
+              "Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.",
               "Plus: no web tools are used.",
               "Plus: each tool call reaches the governance log."
+            ],
+            "target": {
+              "text": "Target: not set. Agree the scorecard targets with the sponsor before the pilot starts.",
+              "set": false
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": false,
+                "note": "0 counted examples (0 good, 0 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: sharepoint and salesforce."
+              },
+              {
+                "check": "compliance-sign-off",
+                "met": false,
+                "note": "Waiting for S-T4.compliance-sign-off: compliance signs the story off before it is built."
+              }
             ],
             "gated_by": [
               {
                 "kind": "open-question",
                 "id": "F3",
-                "text": "Two to three real good and bad examples per skill, redacted."
+                "text": "Two to three real good and bad examples per skill, redacted.",
+                "spike": "SP-F3"
               },
               {
                 "kind": "open-question",
                 "id": "OD-1",
-                "text": "Layer on Anthropic's private-equity and financial-analysis plugins, or build?"
+                "text": "Layer on Anthropic's private-equity and financial-analysis plugins, or build?",
+                "spike": "SP-OD-1"
+              },
+              {
+                "kind": "sign-off",
+                "id": "compliance",
+                "text": "Compliance has not signed the story off yet (S-T4.compliance-sign-off)."
               }
             ],
             "tasks": [
+              {
+                "id": "S-T4.compliance-sign-off",
+                "template": "compliance-sign-off",
+                "title": "Get compliance's sign-off on the story before it is built",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Check the story meets the definition of ready before compliance reads it.",
+                    "link": "docs/playbook/04-stories.md#definition-of-ready-before-building"
+                  },
+                  {
+                    "text": "Compliance reads the story's fields, the levelled decisions for the task and its data controls.",
+                    "link": "partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson"
+                  },
+                  {
+                    "text": "Record the sign-off, with the signer's name and the date, in the customer's engagement folder.",
+                    "link": "engagements/README.md"
+                  }
+                ],
+                "done_when": "The sign-off is recorded in the customer's engagement folder with a name and a date.",
+                "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
+                "status": "todo"
+              },
               {
                 "id": "S-T4.collect-examples",
                 "template": "collect-examples",
@@ -2477,6 +2893,35 @@
                   }
                 ],
                 "done_when": "A pilot user in the role sees the skill after the plugin updates.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-T4.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A2",
+                "how": [
+                  {
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  }
+                ],
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
@@ -2771,7 +3216,8 @@
           {
             "id": "S-T6",
             "title": "Draft a section of an investment committee memo from diligence notes",
-            "statement": "As a Deal-team associate, I want my twin to draft a section of an investment committee memo from diligence notes so that I get the draft memo section.",
+            "statement": "As a deal-team associate, I want my twin to produce the draft memo section so that I get back the 240 minutes it takes me each time.",
+            "statement_source": "drafted",
             "part": "A2",
             "in_pilot": false,
             "priority": 5,
@@ -2792,26 +3238,83 @@
               ]
             },
             "acceptance": [
-              "Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.",
-              "Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.",
-              "Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.",
+              "To write: collect at least 3 real examples from Ravindra Sorensen and write one eval case from each.",
               "Keeps: It's always a draft and always reviewed.",
+              "Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.",
               "Plus: no web tools are used.",
               "Plus: each tool call reaches the governance log."
+            ],
+            "target": {
+              "text": "Target: not set. Agree the scorecard targets with the sponsor before the pilot starts.",
+              "set": false
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": false,
+                "note": "0 counted examples (0 good, 0 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: sharepoint."
+              },
+              {
+                "check": "compliance-sign-off",
+                "met": false,
+                "note": "Waiting for S-T6.compliance-sign-off: compliance signs the story off before it is built."
+              }
             ],
             "gated_by": [
               {
                 "kind": "open-question",
                 "id": "F3",
-                "text": "Two to three real good and bad examples per skill, redacted."
+                "text": "Two to three real good and bad examples per skill, redacted.",
+                "spike": "SP-F3"
               },
               {
                 "kind": "open-question",
                 "id": "OD-1",
-                "text": "Layer on Anthropic's private-equity and financial-analysis plugins, or build?"
+                "text": "Layer on Anthropic's private-equity and financial-analysis plugins, or build?",
+                "spike": "SP-OD-1"
+              },
+              {
+                "kind": "sign-off",
+                "id": "compliance",
+                "text": "Compliance has not signed the story off yet (S-T6.compliance-sign-off)."
               }
             ],
             "tasks": [
+              {
+                "id": "S-T6.compliance-sign-off",
+                "template": "compliance-sign-off",
+                "title": "Get compliance's sign-off on the story before it is built",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Check the story meets the definition of ready before compliance reads it.",
+                    "link": "docs/playbook/04-stories.md#definition-of-ready-before-building"
+                  },
+                  {
+                    "text": "Compliance reads the story's fields, the levelled decisions for the task and its data controls.",
+                    "link": "partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson"
+                  },
+                  {
+                    "text": "Record the sign-off, with the signer's name and the date, in the customer's engagement folder.",
+                    "link": "engagements/README.md"
+                  }
+                ],
+                "done_when": "The sign-off is recorded in the customer's engagement folder with a name and a date.",
+                "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
+                "status": "todo"
+              },
               {
                 "id": "S-T6.collect-examples",
                 "template": "collect-examples",
@@ -2906,7 +3409,7 @@
                   },
                   {
                     "text": "Make the skill keep these rules from the interviews, in the interviewee's words: It's always a draft and always reviewed..",
-                    "link": null
+                    "link": "partner-kit/docs/design.md#42-persona-card-cardjson"
                   }
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
@@ -2977,6 +3480,35 @@
                   }
                 ],
                 "done_when": "A pilot user in the role sees the skill after the plugin updates.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-T6.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A2",
+                "how": [
+                  {
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  }
+                ],
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
@@ -3823,5 +4355,129 @@
       }
     ]
   },
+  "spikes": [
+    {
+      "id": "SP-E4",
+      "kind": "spike",
+      "title": "Do the Salesforce and HubSpot admins confirm in writing that deal-team and investor-relations roles are fully separated?",
+      "question": "Do the Salesforce and HubSpot admins confirm in writing that deal-team and investor-relations roles are fully separated?",
+      "blocks": [
+        "S-T1",
+        "S-T2"
+      ],
+      "owner": "Source-system admins (Salesforce admin and HubSpot admin)",
+      "due": "2026-11-27",
+      "status": "todo"
+    },
+    {
+      "id": "SP-E6",
+      "kind": "spike",
+      "title": "Can Anthropic's range 160.79.104.0/21 be allowlisted?",
+      "question": "Can Anthropic's range 160.79.104.0/21 be allowlisted?",
+      "blocks": [
+        "S-T1",
+        "S-T2",
+        "S-T3"
+      ],
+      "owner": "Security",
+      "due": "2026-11-27",
+      "status": "todo"
+    },
+    {
+      "id": "SP-F3",
+      "kind": "spike",
+      "title": "Two to three real good and bad examples per skill, redacted.",
+      "question": "Two to three real good and bad examples per skill, redacted.",
+      "blocks": [
+        "S-T1",
+        "S-T2",
+        "S-T3",
+        "S-T4",
+        "S-T5",
+        "S-T6"
+      ],
+      "owner": "Skill owners",
+      "due": "2026-12-04",
+      "status": "todo"
+    },
+    {
+      "id": "SP-G1",
+      "kind": "spike",
+      "title": "Where does the governance log go (Splunk is the candidate), how is it hosted and who may read it?",
+      "question": "Where does the governance log go (Splunk is the candidate), how is it hosted and who may read it?",
+      "blocks": [
+        "S-T1",
+        "S-T2"
+      ],
+      "owner": "Technical owner (Director of IT)",
+      "due": "2026-12-04",
+      "status": "todo"
+    },
+    {
+      "id": "SP-OD-1",
+      "kind": "spike",
+      "title": "Layer on Anthropic's private-equity and financial-analysis plugins, or build?",
+      "question": "Layer on Anthropic's private-equity and financial-analysis plugins, or build?",
+      "blocks": [
+        "S-T4",
+        "S-T6"
+      ],
+      "owner": "Review: Rashida Kovalenko. Sign-off: Eleanor Osei-Whitcombe",
+      "due": "2026-12-04",
+      "status": "todo"
+    },
+    {
+      "id": "SP-OD-8",
+      "kind": "spike",
+      "title": "Identity for the hosted Monday summary, whether it may post to Teams, and whether a wrapper server is needed.",
+      "question": "Identity for the hosted Monday summary, whether it may post to Teams, and whether a wrapper server is needed. Due: before T3 is built (after the pilot).",
+      "blocks": [
+        "S-T3"
+      ],
+      "owner": "Ngozi Brandvold and Tomasz Hadjiev; Joaquin Lindahl for the Salesforce role",
+      "due": "",
+      "status": "todo"
+    },
+    {
+      "id": "SP-OD-9",
+      "kind": "spike",
+      "title": "ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count.",
+      "question": "ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count.",
+      "blocks": [
+        "S-T1",
+        "S-T2",
+        "S-T3"
+      ],
+      "owner": "Tomasz Hadjiev, with the Anthropic account team",
+      "due": "2026-12-04",
+      "status": "todo"
+    },
+    {
+      "id": "SP-OD-11",
+      "kind": "spike",
+      "title": "Numeric scorecard targets for hours saved and edit rate on T1 and T2.",
+      "question": "Numeric scorecard targets for hours saved and edit rate on T1 and T2.",
+      "blocks": [
+        "S-T1",
+        "S-T2"
+      ],
+      "owner": "Samir Castellanos, with Marguerite Oyelaran",
+      "due": "2026-12-04",
+      "status": "todo"
+    },
+    {
+      "id": "SP-OD-13",
+      "kind": "spike",
+      "title": "Keep the Salesforce and Microsoft 365 connectors out of chat and Cowork for the deal-team group.",
+      "question": "Keep the Salesforce and Microsoft 365 connectors out of chat and Cowork for the deal-team group. Due: before any pilot user connects.",
+      "blocks": [
+        "S-T1",
+        "S-T2"
+      ],
+      "owner": "Tomasz Hadjiev",
+      "due": "",
+      "status": "todo"
+    }
+  ],
   "retired": []
 }

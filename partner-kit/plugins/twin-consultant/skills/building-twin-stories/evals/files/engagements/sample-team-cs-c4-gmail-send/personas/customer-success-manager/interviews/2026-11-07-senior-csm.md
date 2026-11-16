@@ -44,7 +44,7 @@ Task id: C2    Task name: Weekly renewal-risk digest
 
 #### F1. Your tasks
 
-"Once a week, about an hour and a half across the team. All eight of us use it. Not in the pilot."
+"Once a week, about an hour and a half across the team. All eight of us use it. Not in the pilot. I want it to flag the accounts whose renewal is at risk each week, so no renewal is missed for lack of warning."
 
 #### F2. What goes in, what comes out
 
@@ -84,7 +84,7 @@ Task id: C3    Task name: Renewal quote email to the customer
 
 #### F1. Your tasks
 
-"About two a week, 40 minutes each. All eight of us send them. Not in the pilot."
+"About two a week, 40 minutes each. All eight of us send them. Not in the pilot. I want it to draft the renewal quote email from the HubSpot deal, so I only check the figures and send it."
 
 #### F2. What goes in, what comes out
 
@@ -124,7 +124,7 @@ Task id: C5    Task name: Open-ticket summary when a ticket is escalated
 
 #### F1. Your tasks
 
-"About two escalations a week, half an hour each to pull the tickets together. All eight of us do it. Not in the pilot."
+"About two escalations a week, half an hour each to pull the tickets together. All eight of us do it. Not in the pilot. I want it to pull the customer's open tickets into one summary, so I see the whole ticket picture in one place."
 
 #### F2. What goes in, what comes out
 

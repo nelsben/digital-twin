@@ -43,10 +43,11 @@ Commands, from `${CLAUDE_PLUGIN_ROOT}/scripts/twincard/cli.py`: `backlog
 2. **Pick the next story.** Order: stories in the pilot that have a
    priority, lowest number first; then stories in the pilot with no priority
    (the foundation stories, in backlog order); then the rest by priority.
-   Skip a story that is done, and any story whose `gated_by` lists anything:
-   a blocker (such as blocker `connector-cannot-write`) or an open question
-   still on the card. For each in-pilot story you skip, name what gates it
-   and its owner (from the card's open question). Show the pick (format
+   Skip a story that is done, any story whose `gated_by` lists anything
+   (such as blocker `connector-cannot-write`, an open question with its
+   `spike`, or a compliance `sign-off`) and any story whose `ready` is not all
+   met. For each in-pilot story you skip, name what gates it or the unmet
+   check, and its owner (from the card's open question). Show the pick (format
    below) and ask the consultant to confirm it or name another story. Start
    nothing until they do.
 3. **Work one task at a time**, the first task of the story that is not
@@ -96,6 +97,10 @@ Commands, from `${CLAUDE_PLUGIN_ROOT}/scripts/twincard/cli.py`: `backlog
   When a person sends or files the draft, the write tool stays Blocked
   while you build, and the story's `deliver-draft` task says who does it.
   Build the twin to end in that draft; never open the write yourself.
+- **Reading a story.** What `ready`, `target`, a `drafted` statement and the
+  backlog's `spikes` mean is in
+  [references/reading-a-story.md](references/reading-a-story.md). Build only
+  when every check is met; a drafted statement goes back to the interviewee.
 - **Who it waits on.** Name the task's `owner_role` and its `owner_name`.
   When a role has no named person, `owner_name` is empty and
   `acting_owner` is the technical owner, who answers for it until the
@@ -109,9 +114,10 @@ When picking:
 ```markdown
 ## Next story: S-C1 Account brief before a customer call
 Why: in the pilot, priority 1, no gates. Skipped: <story: what gates it, owner>
-Statement: <statement>
+Statement: <statement> (<card, or drafted: confirm with the interviewee>)
 Fields: <each field: value>
 Acceptance: <each line>
+Target: <the target text>. Ready: <yes, or each unmet check: its note>
 Delivery: <the story's delivery field>
 Tasks: <id> (<owner role>, <owner name or acting owner>, <status>), ...
 First task: <id>, owner <owner role>, <owner name>. Built at level <autonomy.start>, not <ceiling>.

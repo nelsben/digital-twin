@@ -3,7 +3,7 @@
   "customer": "example-capital-partners",
   "persona": "deal-team-associate",
   "source": {
-    "card_sha256": "46c79c3f5d8f1a2784ab3e9730345d50779bc4418e06f93123a87e2ad2131fb1",
+    "card_sha256": "f72c43ac12040ed75efbe5f09d5b6b7a133ec9cab0f6989506330a40dd109938",
     "profile_sha256": "eb23d8fe089c589586c08ff54b29a2370a53e7a344a02ddb54023034838983b5",
     "rules_version": 1,
     "pack": "private-equity"

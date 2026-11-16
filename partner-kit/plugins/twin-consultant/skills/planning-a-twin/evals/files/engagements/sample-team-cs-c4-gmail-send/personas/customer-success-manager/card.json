@@ -15,7 +15,16 @@
   },
   "outcome": {
     "sponsor_goal": "In 6 months each customer success manager spends less time preparing for calls and writing follow-ups, and no renewal is missed for lack of warning.",
-    "scorecard_targets": []
+    "scorecard_targets": [
+      {
+        "metric": "edit_rate_below_pct",
+        "value": 30
+      },
+      {
+        "metric": "minutes_saved_per_task",
+        "value": 15
+      }
+    ]
   },
   "voice": {
     "serves": "Customer success managers, each looking after about 40 accounts, and the VP Customer Success when a renewal is at risk.",
@@ -93,6 +102,8 @@
         "level": "medium",
         "what_happens": "A wrong renewal date or contact in front of the customer."
       },
+      "story_want": "brief me on the account before each call",
+      "story_benefit": "I walk into the call already knowing the account",
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": true,
@@ -142,6 +153,8 @@
         "level": "medium",
         "what_happens": "An at-risk account is missed, or a healthy one is flagged."
       },
+      "story_want": "flag the accounts whose renewal is at risk each week",
+      "story_benefit": "no renewal is missed for lack of warning",
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": true,
@@ -183,6 +196,8 @@
       "constraints": [
         "I check the figures before I send."
       ],
+      "story_want": "draft the renewal quote email from the HubSpot deal",
+      "story_benefit": "I only check the figures and send it",
       "reversible": true,
       "touches_money": true,
       "reads_untrusted_input": false,
@@ -235,6 +250,8 @@
       "constraints": [
         "I want to approve the note before it's created."
       ],
+      "story_want": "draft the follow-up email and the call note for HubSpot",
+      "story_benefit": "the follow-up is out the same afternoon",
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": true,
@@ -274,6 +291,8 @@
         "what_happens": "A missed ticket in an escalation call."
       },
       "wanted_change": "Something happening: the escalation itself, ideally. Today I start it when I'm told.",
+      "story_want": "pull the customer's open tickets into one summary",
+      "story_benefit": "I see the whole ticket picture in one place",
       "reversible": true,
       "touches_money": false,
       "reads_untrusted_input": true,
@@ -737,6 +756,54 @@
     "tasks.C5.wanted_change": {
       "status": "answered",
       "source": "interviews/2026-11-07-senior-csm.md#F5"
+    },
+    "tasks.C1.story_want": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F1"
+    },
+    "tasks.C1.story_benefit": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F1"
+    },
+    "tasks.C4.story_want": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F1"
+    },
+    "tasks.C4.story_benefit": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F1"
+    },
+    "tasks.C2.story_want": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C2.story_benefit": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C3.story_want": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C3.story_benefit": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C5.story_want": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C5.story_benefit": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "outcome.scorecard_targets.edit_rate_below_pct.value": {
+      "status": "answered",
+      "source": "discovery.md#A1"
+    },
+    "outcome.scorecard_targets.minutes_saved_per_task.value": {
+      "status": "answered",
+      "source": "discovery.md#A1"
     }
   }
 }

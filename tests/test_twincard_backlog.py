@@ -208,6 +208,7 @@ LOCAL_SCENARIOS = [
     ("pe mixed devices", PE, role_device("mixed"), None),
     ("team custom-30-day retention", TEAM, profile_section("compliance", "retention", "custom-30-day"), None),
     ("team C1 schedule-own", TEAM, set_task("C1", trigger="schedule-own"), None),
+    ("team C5 event-started", TEAM, set_task("C5", trigger="event"), None),
     ("team C2 writes HubSpot (managed-agents)", TEAM, team_c2_writes_hubspot, None),
     ("team C4 starts at level 2", TEAM, override("C4", "autonomy.start", 2), None),
     ("pe T3 override agent-sdk", PE, override("T3", "runtime", "agent-sdk"), None),

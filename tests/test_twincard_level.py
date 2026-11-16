@@ -158,7 +158,10 @@ def pe_t1_phi(profile, card):
 
 
 def pe_private_salesforce(profile, card):
+    """Security has answered E6 with a no, and Salesforce sits on a private network."""
     profile["network"]["can_allowlist_anthropic_ips"] = False
+    profile["provenance"]["network.can_allowlist_anthropic_ips"] = {"status": "answered",
+                                                                    "source": "discovery.md#E6"}
     next(s for s in profile["systems"] if s["id"] == "salesforce")["private_network"] = True
 
 
@@ -244,6 +247,7 @@ SCENARIOS = [
     ("pe T1 schedule-own", PE, set_task("T1", trigger="schedule-own")),
     ("pe T1 PHI schedule-own", PE, chain(pe_t1_phi, set_task("T1", trigger="schedule-own"))),
     ("pe mixed devices", PE, role_device("mixed")),
+    ("team C5 event-started", TEAM, set_task("C5", trigger="event")),
 ]
 
 

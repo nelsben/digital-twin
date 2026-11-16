@@ -9,7 +9,7 @@ interview notes ──► persona card ──► levelled plan ──► backlog
                      card.json       levelled.json     backlog.json   dashboard.html
 ```
 
-There are four skills, one per step, and five commands: `validate`, `level`, `backlog`, `dashboard` and `all`. The [plugin README](../../partner-kit/plugins/twin-consultant/README.md) has the usage, the exit codes and the table of skills. This page does not repeat them.
+There are five skills, one per step, and five commands for these steps: `validate`, `level`, `backlog`, `dashboard` and `all`. Building, evaluating and deploying the artifacts adds four more, `build`, `check`, `record` and `package` ([below](#build-evaluate-and-deploy)). The [plugin README](../../partner-kit/plugins/twin-consultant/README.md) has the usage, the exit codes and the table of skills. This page does not repeat them.
 
 ## Phase 0: Qualify
 
@@ -44,6 +44,17 @@ Done when: the card validates and every open field has an owner and a date, as t
 ## Phase 3: Build
 
 Skill: `building-twin-stories`. It picks the next story from the backlog, works its tasks one at a time and keeps each task's status true. Evals come first ([engagement model, principle 2](01-engagement-model.md#principles-for-every-engagement)) and every task starts at autonomy level 1. After each status change, run `backlog` and then `dashboard`, so `backlog.md` and `dashboard.html` agree. See [04 Writing stories](04-stories.md#from-the-persona-card) for how the generated backlog relates to a hand-written one.
+
+## Build, evaluate and deploy
+
+Skill: `building-twin-artifacts`. The design is [section 8a](../../partner-kit/docs/design.md#8a-build).
+
+1. **Build.** Command: `build`. It scaffolds each pilot task's skill and runtime wrapper under the persona's `build/` folder.
+2. **Evaluate.** Write the evals from real examples with the task's owner, then the skill, then run the evals. Command: `check`, then `record`, which sets `evals-passing` from the eval tool's own output. Real examples and eval runs stay in the customer's environment.
+3. **Package.** Command: `package <customer-dir>`. It writes the customer marketplace, the bundles for hosted runtimes and `build/deploy.md`, the deploy checklist, from what is `evals-passing`. `--include-drafts` writes a draft to look at with the customer, never to publish.
+4. **Deploy.** The customer's admin works through `deploy.md` in the customer's org, in order. Credentials go in the customer's secret store, never in the engagement folder. The consultant records `deployed`, then `verified` with the runbook's check-it-worked result, with `record`.
+
+Done when: each pilot artifact is `verified`.
 
 ## Phases 4 and 5: Pilot and Scale
 

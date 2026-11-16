@@ -12,6 +12,8 @@
     python3 .../cli.py check <persona-dir> [<artifact-id>]   # checks each built artifact; writes nothing
     python3 .../cli.py record <persona-dir> <artifact-id> --status evals-passing --evidence FILE --by NAME
                               [--pass-mark PERCENT --approved-by NAME]   # updates build/build.json
+    python3 .../cli.py record <persona-dir> <artifact-id> --status deployed|verified --evidence NOTE --by NAME
+    python3 .../cli.py package <customer-dir> [--include-drafts]   # writes <customer-dir>/build/
 
 Runs from any working directory. Exit codes: 0 on success; 1 when validation
 fails (level, backlog and dashboard then write nothing), when levelled.json is
@@ -37,6 +39,12 @@ exits 0 when there are no problems and 1 otherwise (also when levelled.json is m
 record exits 0 when it moved the status, 1 on a refusal (one line on stdout ending "Next: ...",
 nothing written), and 2 when build.json is missing or unusable, the artifact id is unknown or an
 argument is not usable. Neither is part of all.
+package takes the customer folder (engagements/<customer>), not a persona folder. It writes
+build/marketplace/ and build/bundles/ from artifacts at evals-passing or above and records packaged
+for each (with --include-drafts: build/marketplace-draft/ and build/bundles-draft/, drafted artifacts
+too, nothing recorded), and always build/deploy.md. Each persona or plugin left out is one line on
+stderr with the reason. It exits 0 when it wrote deploy.md, and 2 when the folder is not a customer
+folder or a build.json is unusable.
 """
 
 import argparse
@@ -53,6 +61,7 @@ from twincard import backlog as backlog_mod  # noqa: E402
 from twincard import build as build_mod  # noqa: E402
 from twincard import dashboard as dashboard_mod  # noqa: E402
 from twincard import fields as fields_mod  # noqa: E402
+from twincard import package as package_mod  # noqa: E402
 from twincard import packs as packs_mod  # noqa: E402
 from twincard.level import LEVELLED_FILE, LevelError, write_levelled  # noqa: E402
 from twincard.validate import qualified, validate  # noqa: E402
@@ -116,17 +125,27 @@ def build_parser():
     checking.add_argument("persona_dir", help="the persona folder that holds card.json and build/build.json")
     checking.add_argument("artifact_id", nargs="?", help="one task id to check (default: every artifact)")
     recording = commands.add_parser(
-        "record", help="move one artifact one status up on eval evidence (drafted to evals-passing)")
+        "record", help="move one artifact one status up on evidence: drafted to evals-passing on eval output, "
+                       "packaged to deployed and deployed to verified on a note")
     recording.add_argument("persona_dir", help="the persona folder that holds card.json and build/build.json")
     recording.add_argument("artifact_id", help="the task id of the artifact")
     recording.add_argument("--status", required=True, choices=build_mod.STATUSES, help="the status to move to")
     recording.add_argument("--evidence", required=True, metavar="FILE",
-                           help="skill-creator's benchmark.json or the `claude plugin eval` JSON result, "
-                                "saved under build/evidence/<artifact-id>/")
-    recording.add_argument("--by", required=True, metavar="NAME", help="who is recording the result")
+                           help="for evals-passing, skill-creator's benchmark.json or the `claude plugin eval` "
+                                "JSON result; for deployed and verified, a text note; saved under "
+                                "build/evidence/<artifact-id>/")
+    recording.add_argument("--by", required=True, metavar="NAME",
+                           help="who is recording the result (for deployed, the admin who deployed it)")
     recording.add_argument("--pass-mark", type=pass_mark, default=100.0, metavar="PERCENT",
                            help="the with-skill pass rate needed, in percent (default 100)")
     recording.add_argument("--approved-by", metavar="NAME", help="who accepted a pass mark below 100")
+    packaging = commands.add_parser(
+        "package", help="write the customer marketplace, the bundles and deploy.md under <customer-dir>/build/")
+    packaging.add_argument("persona_dir", metavar="customer_dir",
+                           help="the customer folder that holds customer-profile.json and personas/")
+    packaging.add_argument("--include-drafts", action="store_true",
+                           help="write marketplace-draft/ and bundles-draft/ with drafted artifacts too; records "
+                                "nothing")
     return parser
 
 
@@ -355,9 +374,30 @@ def run_record(args, persona_dir):
     except build_mod.Refused as exc:
         print("record refused: %s." % _sentence(exc))
         return EXIT_INVALID
+    if entry["pass_rate"] is None:
+        print("%s: %s, recorded by %s from %s." % (args.artifact_id, entry["status"], entry["by"], entry["evidence"]))
+        return EXIT_OK
     print("%s: %s, recorded by %s from %s: with-skill pass rate %s, without-skill baseline %s, pass mark %s%%%s." % (
         args.artifact_id, entry["status"], entry["by"], entry["evidence"], entry["pass_rate"], entry["baseline_rate"],
         entry["pass_mark"], ", approved by %s" % entry["approved_by"] if entry["approved_by"] else ""))
+    return EXIT_OK
+
+
+def run_package(args):
+    try:
+        result = package_mod.package(args.persona_dir, args.include_drafts)
+    except package_mod.PackageError as exc:
+        raise Refusal(str(exc))
+    for line in result["notes"]:
+        sys.stderr.write("package: %s.\n" % _sentence(line))
+    where = result["marketplace"]
+    if where is not None:
+        print("Wrote %s: %d plugin(s): %s." % (where, len(result["plugins"]), ", ".join(result["plugins"])))
+    for bundle in result["bundles"]:
+        print("Wrote bundle %s." % bundle)
+    for item in result["recorded"]:
+        print("%s: packaged." % item)
+    print("Wrote %s." % result["deploy"])
     return EXIT_OK
 
 
@@ -369,6 +409,7 @@ OUTPUTS = {
     "build": (),
     "check": (),
     "record": (),
+    "package": (),
 }
 
 
@@ -405,6 +446,8 @@ def data_error_line(exc):
 
 
 def run(args):
+    if args.command == "package":
+        return run_package(args)
     persona_dir = Path(args.persona_dir)
     if not persona_dir.is_dir():
         raise Refusal("no such persona folder: %s. Next: give the path of a persona folder, "

@@ -86,6 +86,27 @@ in `build.json`, by the card's `tasks[].priority`, lowest first.
 What `check` tests, the evidence fields `record` reads, and every refusal
 are in [references/check-and-record.md](references/check-and-record.md).
 
+## Packaging and deployment
+
+Once artifacts are evals-passing, the consultant runs
+`python3 ${CLAUDE_PLUGIN_ROOT}/scripts/twincard/cli.py package <customer-dir>`.
+It writes the customer's marketplace, the hosted bundles and `build/deploy.md`,
+the deploy checklist, and sets packaged. With `--include-drafts` it writes a
+draft to look at with the customer, never to publish, and records nothing.
+
+- **The customer's admin runs `deploy.md`** in the customer's org, in order.
+  Neither you nor the consultant does it for them.
+- **The consultant records.** When the admin reports a step done, save
+  their note under `build/evidence/<task-id>/` in the customer's copy and run
+  `record <persona-dir> <task-id> --status deployed --by <admin> --evidence <note>`;
+  then `--status verified` with the runbook's check-it-worked result.
+- **Credentials live in the customer's secret store**, never in the
+  engagement folder. A note or a checklist names an environment variable or
+  a placeholder such as `<agent-id>`, never a key, token, password, id or
+  address.
+- **A step `deploy.md` lacks is a gap in the backlog.** Tell the
+  consultant; never add it to `deploy.md` by hand.
+
 ## Rules
 
 - **Never write or invent an eval result.** `record` reads only the file
@@ -93,9 +114,10 @@ are in [references/check-and-record.md](references/check-and-record.md).
   one by hand. If a run did not happen, the status stays drafted.
 - **Evals before the instructions.** Steps 2 and 3 come before step 4,
   always.
-- **One status at a time, never backwards.** `record` sets evals-passing
-  only. Packaged, deployed and verified come from the package command
-  (OPS-76), not from you.
+- **One status at a time, never backwards.** Only the package command
+  sets packaged. `record` sets evals-passing on the eval tool's file, and
+  deployed and verified on the notes from the customer's deployment, never
+  on your say-so.
 - **A refusal is an answer.** When `check` or `record` refuses, show its
   line and its "Next:" step to the consultant. Do not work around it.
 - **Real examples only.** Invent no example, input or expected result for

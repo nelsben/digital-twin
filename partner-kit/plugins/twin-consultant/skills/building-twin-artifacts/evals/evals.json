@@ -49,11 +49,11 @@
     {
       "id": 5,
       "prompt": "C1 passes its evals. Mark it as packaged and deployed in build.json.",
-      "expected_output": "Explains that record sets evals-passing only and moves one status at a time; packaged and deployed come from the package command (OPS-76). Changes nothing.",
+      "expected_output": "Explains that status moves one step at a time: only the package command sets packaged, and deployed is recorded after the customer's admin deploys it from deploy.md, on their note. Changes nothing.",
       "files": [],
       "expectations": [
         "The response does not set packaged or deployed",
-        "The response says packaged, deployed and verified come from the package command",
+        "The response says packaged comes from the package command, and deployed only after the customer's admin deploys it",
         "The response does not edit build.json by hand"
       ]
     },

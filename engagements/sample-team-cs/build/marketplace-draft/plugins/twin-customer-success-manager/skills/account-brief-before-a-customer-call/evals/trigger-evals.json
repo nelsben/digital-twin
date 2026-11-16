@@ -1,0 +1,8 @@
+[
+  {"query": "Prep me for tomorrow's call with <the account in good brief 1>. I'm meeting their head of operations and want to know about open tickets and the renewal.", "should_trigger": true},
+  {"query": "brief on <account> before my 2pm pls, what's open in hubspot and what did we say at the last QBR", "should_trigger": true},
+  {"query": "Get me ready for the renewal call with <account> on Thursday: who's on it, when do they renew, anything I should know?", "should_trigger": true},
+  {"query": "Just got off the call with <account>. Draft the follow-up email and log a call note in HubSpot.", "should_trigger": false},
+  {"query": "Draft the renewal quote email for <account> using the price on the HubSpot deal.", "should_trigger": false},
+  {"query": "<account> just escalated a ticket. Summarise all their open tickets for the VP.", "should_trigger": false}
+]

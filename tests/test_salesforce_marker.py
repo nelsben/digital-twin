@@ -108,6 +108,17 @@ class TestPermissionSets(unittest.TestCase):
         self.assertEqual(text_of(fp, "readable"), "true")
         self.assertEqual(text_of(fp, "editable"), "true")
 
+    def test_permission_set_descriptions_fit_salesforce_limit(self):
+        # Salesforce caps a PermissionSet description at 255 characters. The OPS-13
+        # scratch-org deploy failed on a 338-character one ("max length=255"), and
+        # the all-or-nothing deploy then lost the field too. See the wall-test README.
+        limit = 255
+        paths = sorted(PERMSET_DIR.glob("*.permissionset-meta.xml"))
+        self.assertTrue(paths, "no permission set files found")
+        for path in paths:
+            description = text_of(parse(path), "description") or ""
+            self.assertLessEqual(len(description), limit, path.name)
+
     def test_permission_sets_touch_only_the_marker_field(self):
         for path in (READ_PERMSET_FILE, EDIT_PERMSET_FILE):
             root = parse(path)

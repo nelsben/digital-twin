@@ -27,7 +27,7 @@ Y = yes, N = no, L = limited. Free, Pro, Max and Ultra share one column; where F
 | Claude Tag (Slack) | N | Y (beta) | Y (beta) |
 | Claude Code scheduled tasks | Pro and up | Y; Owner can turn off | Y; Owner can turn off |
 | Memory | User-controlled | Org-wide on/off only; admins can't view memories | Same, plus audit events |
-| SSO / SAML | N | ⚠ Conflict: the pricing page says Y, the roles article says Enterprise-only | Y |
+| SSO / SAML | N | **⚠ Conflict:** the pricing page says Y, the roles article says Enterprise-only | Y |
 | SCIM provisioning | N | N | Y |
 | Domain verification / capture | N | Verify and block *new* sign-ups only | **Capture and migrate existing accounts** |
 | Audit logs | N | N | Y (180 days) |
@@ -41,6 +41,14 @@ Y = yes, N = no, L = limited. Free, Pro, Max and Ultra share one column; where F
 | Roles | None | User, Admin, Owner, Primary Owner | The same four, plus custom roles for groups |
 
 **The API / Console** is a separate product with commercial terms. It offers SSO, tenant restrictions, HIPAA readiness and ZDR by arrangement, plus `inference_geo` for US-only processing. Claude Code running with a Console API key **bypasses claude.ai's server-managed settings**.
+
+**Not in the matrix: hooks, the governance log and the agent runtimes.**
+
+- **Managed settings and hooks:** server-managed settings "are available for Claude for Teams and Claude for Enterprise customers"; on Team they "apply uniformly to all users in the organization", and group configurations "require an Enterprise plan" ([Server-managed settings](https://code.claude.com/docs/en/server-managed-settings.md)). **⚠ Unverified:** no page read gives a per-plan value for hooks themselves, or for a managed settings file delivered by MDM; the [hooks page](https://code.claude.com/docs/en/hooks) names surfaces, not plans.
+- **The governance action log:** **⚠ Unverified:** no page read gives a per-plan value; it is our own build, resting on a Claude Code hook or a hosted agent's server log ([15](15-governance-and-performance.md#one-governance-log-for-all-twins-our-recommendation)).
+- **Hosted Managed Agents:** configured through the Claude API, not a claude.ai plan ([Agent SDK overview](https://code.claude.com/docs/en/agent-sdk/overview.md), [Managed Agents](https://platform.claude.com/docs/en/managed-agents/overview), beta). **⚠ Unverified:** no page read ties it to Free, Pro, Max, Ultra, Team or Enterprise.
+- **Self-hosted Managed Agents:** by request: "To request access to self-hosted Claude Managed Agents, contact your Anthropic account team" ([Self-hosted Managed Agents](https://platform.claude.com/docs/en/managed-agents/self-hosted)). **⚠ Unverified:** no page read gives a per-plan value.
+- **Agent SDK:** API key authentication, not a claude.ai plan: "Unless previously approved, Anthropic does not allow third party developers to offer claude.ai login or rate limits for their products, including agents built on the Claude Agent SDK" ([Agent SDK overview](https://code.claude.com/docs/en/agent-sdk/overview.md)). **⚠ Unverified:** no page read gives a per-plan value.
 
 Sources: [Pricing](https://claude.com/pricing), [Skills](https://claude.com/docs/skills/overview.md), [Plugins admin](https://claude.com/docs/plugins/admin.md), [Connectors](https://claude.com/docs/connectors/getting-started.md), [Desktop policies](https://support.claude.com/en/articles/12622667), [Domain capture](https://support.claude.com/en/articles/14625619-claim-and-migrate-accounts-on-your-domain), [Roles](https://support.claude.com/en/articles/9267276), [Audit logs](https://support.claude.com/en/articles/9970975), [Compliance API](https://platform.claude.com/docs/manage-claude/compliance-api), [ZDR](https://code.claude.com/docs/en/zero-data-retention.md), [HIPAA](https://support.claude.com/en/articles/13296973), [CMEK](https://support.claude.com/en/articles/15505325), [Memory](https://support.claude.com/en/articles/11817273), [Claude Tag](https://claude.com/docs/claude-tag/overview.md), [Scheduled tasks](https://code.claude.com/docs/en/routines.md).
 
@@ -87,10 +95,10 @@ Sources: [Server-managed settings](https://code.claude.com/docs/en/server-manage
 - **Departing users leave things behind.**
   - Plugins they shared keep working until someone selects "Stop sharing".
   - Memory survives deleting conversations.
-  - ⚠ **Unverified:** local Cowork history can't be wiped centrally (not re-checked in this pass).
+  - **⚠ Unverified:** local Cowork history can't be wiped centrally (not re-checked in this pass).
 - **Two one-way doors:** domain capture (Enterprise; it "can't be reversed", and personal accounts not migrated within 30 days are closed), and turning on HIPAA readiness.
 - **Tenant restrictions work only on the corporate network.** The company's proxy adds a header to requests to Claude, so networks it doesn't control are out of reach. Tenant restrictions are on Enterprise and Console orgs.
-- **⚠ Raise with the Anthropic account team:**
+- **Raise with the Anthropic account team:**
   - SSO on Team (conflicting docs).
   - Skills on Free (conflicting docs).
   - Data residency for claude.ai (no page found).

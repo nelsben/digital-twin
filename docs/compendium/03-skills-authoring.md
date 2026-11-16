@@ -35,7 +35,7 @@ Each surface accepts different frontmatter, so a skill written for one may break
 
 The `name` field allows 64 characters at most: lowercase letters, numbers and hyphens, with no "anthropic" or "claude".
 
-⚠ **Conflict:** the platform docs allow a 1,024-character `description`, but the claude.ai help article says 200. **Keep descriptions under 200 characters** until this is resolved.
+**⚠ Conflict:** the platform docs allow a 1,024-character `description`, but the claude.ai help article says 200. **Keep descriptions under 200 characters** until this is resolved.
 
 **(Our recommendation)** Use `name` and `description` only by default. Add Claude Code–only keys in a Claude Code–specific variant, never in the shared master copy.
 

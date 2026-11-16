@@ -58,7 +58,7 @@
           "autonomy.ceiling": {
             "expected": 3,
             "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-            "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+            "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
             "unverified": false
           },
           "data_controls": {
@@ -77,7 +77,7 @@
           "memory": {
             "expected": "off",
             "cite": "docs/compendium/02-persona.md#memory",
-            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off. Memory on claude.ai is one org-wide switch, so this is what we recommend for the org; our choice.",
             "unverified": false
           },
           "plan_fit": {
@@ -126,7 +126,7 @@
           "autonomy.ceiling": {
             "expected": 3,
             "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-            "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+            "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
             "unverified": false
           },
           "data_controls": {
@@ -145,7 +145,7 @@
           "memory": {
             "expected": "off",
             "cite": "docs/compendium/02-persona.md#memory",
-            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off. Memory on claude.ai is one org-wide switch, so this is what we recommend for the org; our choice.",
             "unverified": false
           },
           "plan_fit": {
@@ -176,7 +176,7 @@
           "runtime": {
             "expected": "managed-agents-self-hosted",
             "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
-            "reason": "A scheduled job wired into systems that needs ZDR cannot use hosted Managed Agents, which is not ZDR-eligible, so it runs on a fully self-hosted Managed Agents deployment, the page's ZDR route.",
+            "reason": "A scheduled job wired into systems that needs ZDR cannot use hosted Managed Agents, which is not ZDR-eligible, so it runs on a fully self-hosted Managed Agents deployment, one of the page's two ZDR routes (the other is the Messages API with eligible features).",
             "unverified": false
           },
           "identity": {
@@ -194,7 +194,7 @@
           "autonomy.ceiling": {
             "expected": 4,
             "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-            "reason": "The post is internal and reversible and runs on a schedule, so it may rise to unattended level 4 once evals support it.",
+            "reason": "No rule on page 06 caps this task lower, so it may rise to unattended level 4 once evals support it.",
             "unverified": false
           },
           "data_controls": {
@@ -211,13 +211,13 @@
           "memory": {
             "expected": "off",
             "cite": "docs/compendium/02-persona.md#memory",
-            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off. Memory on claude.ai is one org-wide switch, so this is what we recommend for the org; our choice.",
             "unverified": false
           },
           "plan_fit": {
             "expected": "ok-with-limits",
             "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-            "reason": "The self-hosted Managed Agents deployment needs org 3, a Platform org with ZDR, besides the people's Enterprise org.",
+            "reason": "A self-hosted Managed Agents deployment runs from a Platform (API) org besides the people's org, as page 14's org plan does for private equity; we apply that plan here, our choice.",
             "unverified": false
           },
           "connectors": {
@@ -279,7 +279,7 @@
           "memory": {
             "expected": "off",
             "cite": "docs/compendium/02-persona.md#memory",
-            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off. Memory on claude.ai is one org-wide switch, so this is what we recommend for the org; our choice.",
             "unverified": false
           },
           "plan_fit": {
@@ -328,7 +328,7 @@
           "autonomy.ceiling": {
             "expected": 3,
             "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-            "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+            "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
             "unverified": false
           },
           "data_controls": {
@@ -347,7 +347,7 @@
           "memory": {
             "expected": "off",
             "cite": "docs/compendium/02-persona.md#memory",
-            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off. Memory on claude.ai is one org-wide switch, so this is what we recommend for the org; our choice.",
             "unverified": false
           },
           "plan_fit": {
@@ -415,7 +415,7 @@
           "memory": {
             "expected": "off",
             "cite": "docs/compendium/02-persona.md#memory",
-            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off. Memory on claude.ai is one org-wide switch, so this is what we recommend for the org; our choice.",
             "unverified": false
           },
           "plan_fit": {
@@ -624,7 +624,7 @@
           "autonomy.ceiling": {
             "expected": 3,
             "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-            "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+            "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
             "unverified": false
           },
           "data_controls": {
@@ -643,7 +643,7 @@
           "memory": {
             "expected": "on",
             "cite": "docs/compendium/02-persona.md#memory",
-            "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on.",
+            "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on for it. Memory on claude.ai is one org-wide switch, so this says only that the task does not need it off; our choice.",
             "unverified": false
           },
           "plan_fit": {
@@ -674,7 +674,7 @@
           "runtime": {
             "expected": "claude-tag-routine",
             "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
-            "reason": "Shared team work that runs on a schedule and lives in Slack is a Claude Tag channel routine.",
+            "reason": "Shared team work that runs on a schedule and lives in Slack is a Claude Tag channel routine. Keeping it to internal and confidential data is our choice, because page 10 allows Claude Tag for those classes only; it is not used under ZDR, which turns Claude Tag off, or when the customer requires self-hosting.",
             "unverified": false
           },
           "identity": {
@@ -711,13 +711,13 @@
           "memory": {
             "expected": "off",
             "cite": "docs/compendium/02-persona.md#memory",
-            "reason": "The task reads untrusted input while personal memory is wanted, a memory-poisoning risk, so memory stays off for it.",
+            "reason": "The task reads untrusted input. Memory on claude.ai is one org-wide switch, so a per-task 'off' is a build instruction, not a setting: the task's skill writes nothing to memory, and only controlled steps write it. Our choice, from page 02's advice on memory poisoning.",
             "unverified": false
           },
           "plan_fit": {
             "expected": "ok-with-limits",
             "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-            "reason": "On Team the usage database has no MCP tunnel, and this customer can allowlist Anthropic's IP range, so it is reachable at the edge.",
+            "reason": "This customer can allowlist Anthropic's IP range, so the private network is reachable at the edge.",
             "unverified": false
           },
           "connectors": {
@@ -784,7 +784,7 @@
           "memory": {
             "expected": "on",
             "cite": "docs/compendium/02-persona.md#memory",
-            "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on.",
+            "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on for it. Memory on claude.ai is one org-wide switch, so this says only that the task does not need it off; our choice.",
             "unverified": false
           },
           "plan_fit": {
@@ -847,7 +847,7 @@
           "memory": {
             "expected": "on",
             "cite": "docs/compendium/02-persona.md#memory",
-            "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on.",
+            "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on for it. Memory on claude.ai is one org-wide switch, so this says only that the task does not need it off; our choice.",
             "unverified": false
           },
           "plan_fit": {
@@ -896,7 +896,7 @@
           "autonomy.ceiling": {
             "expected": 3,
             "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
-            "reason": "The summary is internal and reversible, and a person starts it until the event source is confirmed, so it may not run unattended.",
+            "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it until the event source is confirmed, so it may not run unattended.",
             "unverified": false
           },
           "data_controls": {
@@ -915,7 +915,7 @@
           "memory": {
             "expected": "off",
             "cite": "docs/compendium/02-persona.md#memory",
-            "reason": "The task reads untrusted input while personal memory is wanted, a memory-poisoning risk, so memory stays off for it.",
+            "reason": "The task reads untrusted input. Memory on claude.ai is one org-wide switch, so a per-task 'off' is a build instruction, not a setting: the task's skill writes nothing to memory, and only controlled steps write it. Our choice, from page 02's advice on memory poisoning.",
             "unverified": false
           },
           "plan_fit": {
@@ -1248,13 +1248,13 @@
           "T3.runtime": {
             "expected": "none",
             "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
-            "reason": "Work wired into systems that holds PHI has no hosted agent runtime.",
+            "reason": "Work wired into systems that holds PHI has no hosted agent runtime: Managed Agents is blocked under HIPAA readiness, and whether the Agent SDK is covered is Unverified.",
             "unverified": true
           },
           "T3.plan_fit": {
             "expected": "not-supported",
             "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
-            "reason": "PHI needs a dedicated HIPAA org, and no hosted agent runtime is covered for it.",
+            "reason": "PHI needs a dedicated HIPAA org, and page 10 reads its lists as giving no hosted agent runtime for it; whether the Agent SDK is covered is Unverified.",
             "unverified": true
           }
         },
@@ -1328,7 +1328,7 @@
           "C1.autonomy.ceiling": {
             "expected": 2,
             "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-            "reason": "A card override replaces the rule's result of 3.",
+            "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
             "unverified": false,
             "overridden": true,
             "rule_result": 3,
@@ -1478,7 +1478,7 @@
           "C2.plan_fit": {
             "expected": "needs-enterprise",
             "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-            "reason": "Without allowlisting, the only hosted route to a private network is an MCP tunnel, which is Enterprise only.",
+            "reason": "Without allowlisting, Anthropic's hosted runtimes (Claude Tag, Managed Agents) reach a private network only through an MCP tunnel, which is Enterprise only.",
             "unverified": false
           }
         },

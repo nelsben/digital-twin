@@ -114,7 +114,7 @@ one line for each retired item).
 ### Rests on an unverified fact
 - C5 runtime: <what>. Confirm <what> with <whom>. Cite: <page#anchor>
 ### Undecided: a person decides, recorded as an override
-- T4 autonomy.ceiling: <what the page lacks>
+- <task> <decision>: <what the page lacks>
 ### Warnings, by code
 - memory-poisoning-risk (C2, C5): <message> Next: <fix>
 ### Open questions

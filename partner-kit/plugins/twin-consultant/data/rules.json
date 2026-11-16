@@ -380,7 +380,7 @@
       "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
       "unverified": false,
       "basis": "our-recommendation",
-      "reason": "The task is internal and reversible, and a person starts it until the event source is confirmed, so it may not run unattended."
+      "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it until the event source is confirmed, so it may not run unattended."
     },
     {
       "id": "ceiling-unattended",

@@ -132,6 +132,8 @@ All fetched on 2026-11-14. Anthropic's documentation now lives on three sites:
 - Google Drive connector: https://claude.com/docs/connectors/google/drive.md
 - Google Workspace MCP: https://developers.google.com/workspace/guides/configure-mcp-servers
 - Microsoft 365 connector: https://claude.com/docs/connectors/microsoft/365.md
+- Microsoft 365 connector security guide (Always allow limits, confirmation, HIPAA, audit log, attribution): https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+- Set up the Microsoft 365 connector (read-only by default, tenant consent): https://support.claude.com/en/articles/12542951-set-up-the-microsoft-365-connector
 - Work IQ MCP: https://learn.microsoft.com/en-us/microsoft-365-copilot/extensibility/work-iq/mcp/overview
 - Slack MCP: https://docs.slack.dev/ai/slack-mcp-server.md
 - Slack connector: https://claude.com/docs/connectors/slack/index.md

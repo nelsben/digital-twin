@@ -1,0 +1,8 @@
+{
+  "name": "twin-consultant",
+  "version": "0.1.0",
+  "description": "Consultant tools for the persona-card workflow: the persona card and customer profile records, their field catalogue and a validator.",
+  "author": {
+    "name": "digital-twin-kit maintainers"
+  }
+}

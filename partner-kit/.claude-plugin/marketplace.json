@@ -1,0 +1,14 @@
+{
+  "name": "digital-twin-partner",
+  "description": "Partner-only tooling for delivering role twins. Never installed in a customer org.",
+  "owner": {
+    "name": "digital-twin-kit maintainers"
+  },
+  "plugins": [
+    {
+      "name": "twin-consultant",
+      "source": "./plugins/twin-consultant",
+      "description": "Consultant tools for the persona-card workflow: the persona card and customer profile records, their field catalogue and a validator."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+[
+  {"query": "Build has scaffolded the Team sample's artifacts. Help me get C1 from drafted to evals-passing.", "should_trigger": true},
+  {"query": "check says C1 still has FILL IN in its references file and the Inputs table is missing google-drive. What do I do?", "should_trigger": true},
+  {"query": "I've got the skill-creator benchmark.json for the account brief. How do I record it so build.json shows evals-passing?", "should_trigger": true},
+  {"query": "write the evals for the account-brief skill from the owner's good and bad examples, then the SKILL.md", "should_trigger": true},
+  {"query": "Fill in agent.json for T3 (system prompt from the persona, model, skill id) so the hosted agent can pass check.", "should_trigger": true},
+  {"query": "What's the next story in the backlog I should pick up for the Team sample?", "should_trigger": false},
+  {"query": "Level the card again and tell me which decisions changed after the HubSpot answer came in.", "should_trigger": false},
+  {"query": "Fill in the persona card from yesterday's interview notes with the CS team lead.", "should_trigger": false},
+  {"query": "Prepare the interview guide for next week's session with the deal team associates.", "should_trigger": false},
+  {"query": "Package the role plugin and deploy it to the customer's org.", "should_trigger": false}
+]

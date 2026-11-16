@@ -620,22 +620,54 @@ class RefusalTests(unittest.TestCase):
 
 # --- The committed samples ---------------------------------------------------------------------------------
 
+DRAFTED = {(CS, "C1"): "plugin/twin-customer-success-manager/skills/account-brief-before-a-customer-call/"}
+
+
 class SampleTests(unittest.TestCase):
     def test_samples_match_a_fresh_run(self):
+        """A fresh build gives the committed bytes, except the Team sample's C1, which a person drafted
+        (OPS-75): its four skill files and its status. build.json still records the scaffold's hashes."""
         for sample in SAMPLES:
             with self.subTest(sample=sample.name), Copy(sample) as persona:
                 out = build(persona, "--all-tasks")
                 self.assertEqual(out.returncode, 0, out.stderr)
                 fresh, committed = snapshot(persona / "build"), snapshot(sample / "build")
                 self.assertEqual(sorted(fresh), sorted(committed))
+                drafted = [folder for (where, _), folder in DRAFTED.items() if where == sample]
                 for name in fresh:
+                    if name == "build.json" or any(name.startswith(folder) for folder in drafted):
+                        continue
                     self.assertEqual(fresh[name], committed[name], name)
+                data = json.loads(fresh["build.json"].decode("utf-8"))
+                for item in data["artifacts"]:
+                    if (sample, item["id"]) in DRAFTED:
+                        self.assertEqual(item["status"], "scaffolded")
+                        item["status"] = "drafted"
+                self.assertEqual(data, json.loads(committed["build.json"].decode("utf-8")))
+
+    def test_a_rerun_over_the_committed_build_changes_nothing(self):
+        for sample in SAMPLES:
+            with self.subTest(sample=sample.name), tempfile.TemporaryDirectory() as tmp:
+                engagement = sample.parent.parent
+                shutil.copytree(str(engagement), str(Path(tmp) / engagement.name))
+                persona = Path(tmp) / engagement.name / sample.relative_to(engagement)
+                out = build(persona, "--all-tasks")
+                self.assertEqual(out.returncode, 0, out.stderr)
+                self.assertEqual(snapshot(persona / "build"), snapshot(sample / "build"))
 
     def test_every_artifact_is_honestly_scaffolded(self):
+        """Nothing is above drafted; only the Team sample's C1 is drafted, with no FILL IN and no history."""
         for sample in SAMPLES:
             for item in manifest(sample)["artifacts"]:
                 with self.subTest(sample=sample.name, task=item["id"]):
-                    self.assertIn(item["status"], ("scaffolded", "not-built"))
+                    self.assertEqual(item["history"], [])
+                    if (sample, item["id"]) not in DRAFTED:
+                        self.assertIn(item["status"], ("scaffolded", "not-built"))
+                        continue
+                    self.assertEqual(item["status"], "drafted")
+                    for entry in item["files"]:
+                        path = ROOT / entry["path"]
+                        self.assertNotIn("FILL IN", path.read_text(encoding="utf-8"), entry["path"])
 
     def test_no_secrets_in_the_build_folders(self):
         for sample in SAMPLES:

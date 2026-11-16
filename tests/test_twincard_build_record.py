@@ -150,9 +150,9 @@ class CheckSkillTests(unittest.TestCase):
             dump(new / "evals" / "evals.json", evals)
             # The manifest names the folder by the artifact's skill_name, so the check finds no SKILL.md
             # there unless the manifest follows; follow it the way a person renaming the skill would.
-            data = load(skill.parents[4] / "build.json")
+            data = load(skill.parents[3] / "build.json")
             artifact(data, "C1")["skill_name"] = "claude-account-brief"
-            dump(skill.parents[4] / "build.json", data)
+            dump(skill.parents[3] / "build.json", data)
         self.check_c1(change, r"SKILL\.md: .*reserved word claude")
 
     def test_description_under_200(self):

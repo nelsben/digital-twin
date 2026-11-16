@@ -540,7 +540,7 @@ Some work stays engagement-specific: the backlog never generates it, and the con
 - **Keeping connectors out of chosen surfaces for a group** (for example out of chat and Cowork): a spike in `backlog.md` until the compendium confirms the setting.
 - **A hosted front end for users on unmanaged devices**: a Scale-phase story in `backlog.md`.
 - **A connector for a later team** (a system only a team that joins later uses): a Scale-phase task in `backlog.md`, after any spike it waits for.
-- **Concrete eval cases** (the prompt, the expected result and the pass mark for each real example): the story cards in `backlog.md`, then the skill's `evals/` folder in the role plugin. The generated backlog gives one acceptance line per counted example, not the case itself, and `build` ([8a](#8a-build)) scaffolds the `evals/` files with one `FILL IN` case per counted example but never writes a case's prompt, expected result or pass mark.
+- **Concrete eval cases** (the prompt, the expected result and the pass mark for each real example): the story cards in `backlog.md`, then the skill's `evals/` folder in the role plugin. The generated backlog gives one acceptance line per counted example, not the case itself, and `build` ([8a](#8a-build)) scaffolds the `evals/` files with one `FILL IN` case per counted example but never writes a case's prompt, expected result or pass mark. The consultant writes the cases with the task's owner by the `building-twin-artifacts` skill ([8a](#check-and-record)), from real examples kept in the customer's environment.
 
 ## 8a. Build
 
@@ -583,9 +583,9 @@ The templates it reads are byte-for-byte copies of the starter-kit's, in the plu
 
 ### The manifest and statuses
 
-`build/build.json`: `build_version` 1, `customer`, `persona`, `source` (`levelled_sha256`, the hash of `levelled.json`'s text as `backlog` computes it, and `build_kinds_version`), `plugin` (its name and files) and `artifacts`, one per task in card order. Each artifact has `id` (the task id), `task`, `kind`, `runtime` (`value`, `rule`, `cite`, `unverified`), `skill_name`, `skill_name_derived`, `skill_location` (`plugin`, `skills` or `null`), `in_pilot`, `runbook`, `files` (each a repo-relative `path` and the `sha256` the scaffold wrote), `status` and `reason` (why nothing is built, for `none`). There is no timestamp, so the same inputs give the same bytes. A task not selected on this run keeps the artifact an earlier run recorded.
+`build/build.json`: `build_version` 1, `customer`, `persona`, `source` (`levelled_sha256`, the hash of `levelled.json`'s text as `backlog` computes it, and `build_kinds_version`), `plugin` (its name and files) and `artifacts`, one per task in card order. Each artifact has `id` (the task id), `task`, `kind`, `runtime` (`value`, `rule`, `cite`, `unverified`), `skill_name`, `skill_name_derived`, `skill_location` (`plugin`, `skills` or `null`), `in_pilot`, `runbook`, `files` (each a repo-relative `path` and the `sha256` the scaffold wrote), `status`, `history` (what `record` appended, below; `[]` until then) and `reason` (why nothing is built, for `none`). There is no timestamp, so the same inputs give the same bytes. A task not selected on this run keeps the artifact an earlier run recorded.
 
-Statuses, in order: `scaffolded`, `drafted`, `evals-passing`, `packaged`, `deployed`, `verified`, plus `not-built` for runtime `none`. `build` computes only the first two: `drafted` when no file of the artifact still contains `FILL IN`, else `scaffolded`. A person records the later ones in `build.json`, and `build` never lowers a recorded status above `drafted`.
+Statuses, in order: `scaffolded`, `drafted`, `evals-passing`, `packaged`, `deployed`, `verified`, plus `not-built` for runtime `none`. `build` computes only the first two: `drafted` when no file of the artifact still contains `FILL IN`, else `scaffolded`. `record` sets `evals-passing` ([below](#check-and-record)); the package command (OPS-76) will set `packaged`, `deployed` and `verified`. `build` never lowers a recorded status above `drafted`, and keeps each artifact's `history`.
 
 ### Never overwrite
 
@@ -594,6 +594,45 @@ A missing file is written. A file whose hash equals the recorded hash may be rew
 ### Refusals and exit codes
 
 Exit 1, nothing written, a `Next:` line: validation fails; `levelled.json` is missing or stale (the same test `backlog` uses, 8); or `levelled.json` reports a blocker. Exit 2, as in section 3: a usage error, a missing persona folder or one with no `card.json`, an output that cannot be written, `build-kinds.json` missing, not JSON or not in its shape, a `build.json` that is not JSON or not in its shape, or an unknown status in it.
+
+### Check and record
+
+`cli.py check <persona-dir> [<artifact-id>]` runs deterministic checks on each artifact in `build/build.json` (or the one named) and writes nothing. It needs `levelled.json` to be current, since one check reads its tools. It prints one line per problem, `<repo path>: <problem>. Next: <fix>.`, then `check: <n> problem(s) in <m> artifact(s) checked.` It exits 0 when there are no problems and 1 otherwise, or when `levelled.json` is missing or stale; 2 when `build.json` is missing or unusable, or the artifact id is unknown. `not-built` artifacts are skipped. The checks, with their source:
+
+| Applies to | Check | Source |
+|---|---|---|
+| every artifact | No `FILL IN` in any file the manifest lists or any file under the skill folder; a missing file is a problem | 8a seeding: `FILL IN` marks what a person must decide |
+| skill | The frontmatter has only `name` and `description` | [compendium 16](../../docs/compendium/16-oob-skills-and-references.md): "Keep the frontmatter to `name` and `description`, the format that works on every surface" |
+| skill | `name` equals the folder name and meets the name rule (`validate`'s `skill_name_problem`) | [compendium 03](../../docs/compendium/03-skills-authoring.md): "The `name` field allows 64 characters at most: lowercase letters, numbers and hyphens, with no "anthropic" or "claude"." |
+| skill | `description` is under 200 characters; the message gives the 1,024 and 200 conflict | compendium 03's Conflict line: "**Keep descriptions under 200 characters** until this is resolved." |
+| skill | The body is under 500 lines | compendium 03: "Keep the body under 500 lines." |
+| skill | Every file `SKILL.md` links exists, inside the folder and at most one folder down | compendium 03: "Link reference files directly from `SKILL.md`, one level deep." |
+| skill | `evals/evals.json` has `skill_name` equal to the name and an `evals` list of at least 3 cases, each with a non-empty `prompt` and at least one `expectations` entry | skill-creator's [`references/schemas.md`](https://github.com/anthropics/skills/blob/main/skills/skill-creator/references/schemas.md) (evals.json); compendium 03's method, at least three cases |
+| skill | `evals/trigger-evals.json` is a list of `{"query", "should_trigger"}` with at least one true and one false entry | [authoring-skills.md](../../starter-kit/docs/authoring-skills.md#the-eval-files): "a list of `{"query": ..., "should_trigger": true|false}`" with near-miss negatives |
+| skill | Every system `levelled.json`'s `tools` gives the task appears in the first table under the Inputs heading (letters and digits compared, case ignored) | 8a seeding: one Inputs row per levelled tool |
+| agent bundle | `agent.json` and `environment.json` parse; `model` and `system` are set; `skills` names a `skill_id`; the skill folder exists; `config.networking.type` is `limited` | the [Managed Agents runbook](../../starter-kit/runbooks/managed-agents.md#steps); 8a, what it writes |
+| routine, scheduled task, SDK runner | No `FILL IN` left in the sheet | as for every artifact |
+
+`cli.py record <persona-dir> <artifact-id> --status <s> --evidence <file> --by <name> [--pass-mark <percent> --approved-by <name>]` moves one artifact one status at a time, never backwards. It may set only `evals-passing`, from `drafted`; `build` sets `scaffolded` and `drafted`, and the package command (OPS-76) will set `packaged`, `deployed` and `verified`. It appends one entry to the artifact's `history`: `{status, by, evidence, pass_rate, baseline_rate, pass_mark, approved_by}`, with `evidence` a repo-relative path, rates as fractions to four places, `pass_mark` in percent and `approved_by` null when not given. No timestamp. It needs, in this order, or it refuses (exit 1, one line ending `Next:`, nothing written):
+
+1. The status asked for is the next one: not the current one, not lower ("never backwards"), not `packaged` or above ("Next:" names the package command), not a skip, not `drafted` (build sets it), and the artifact is not `not-built`.
+2. A pass mark below 100 comes with `--approved-by`, which is recorded.
+3. `check` passes for the artifact.
+4. The evidence is a file under `<persona-dir>/build/evidence/<artifact-id>/` (resolved, so `..` cannot leave it) and is JSON.
+5. The evidence is one of the two shapes below, has a without-skill baseline, and its with-skill pass rate is at or above the pass mark (default 100%).
+
+Exit 2: `build.json` missing or not in its shape, an unknown artifact id, an unknown status, or a pass mark that is not above 0 and at most 100.
+
+**Evidence shapes.** Read from the pages, not from a captured run:
+
+| Tool | Recognised by | Pass rate | Baseline | Also refused when |
+|---|---|---|---|---|
+| skill-creator benchmark, `benchmark.json` ([schemas.md](https://github.com/anthropics/skills/blob/main/skills/skill-creator/references/schemas.md), benchmark.json) | `run_summary` and `runs` | `run_summary.with_skill.pass_rate.mean` | `run_summary.without_skill.pass_rate.mean`, and at least one run whose `configuration` is `without_skill` | `metadata.skill_name` is not the artifact's skill; a case id in `evals/evals.json` has no run whose `configuration` is `with_skill` (`runs[].eval_id`) |
+| `claude plugin eval` JSON result, `aggregate-result.json` or `--json` ([plugin evals](https://code.claude.com/docs/en/plugin-evals), JSON result) | `schemaVersion` and `cases` | the mean of `cases[].aggregates.score` (the page's `aggregates.overallScore`) | the mean of `cases[].aggregates.score` minus `cases[].aggregates.delta` ("With-arm score minus without-arm score") | `schemaVersion` is not 1; `partial` is true; a run in `cases[].arms.with` or `cases[].arms.without` has `skippedPaidGraders`; a case has no `delta` (it ran one arm) |
+
+The benchmark page says "`configuration`: Must be `"with_skill"` or `"without_skill"`" and gives `run_summary` per configuration with `pass_rate` `mean`. The plugin eval page says the result "is a versioned document with `schemaVersion: 1`" and lists `aggregates.overallScore`, `cases[].aggregates.score` and `cases[].aggregates.delta`; it shows no full example document, so the test fixture `tests/fixtures/twincard/evidence/plugin-eval-result.json` is built from that field table. Plugin eval cases are directories, not `evals.json` ids, so record does not match them to `evals.json`.
+
+**Never invent a result.** No one writes or edits an evidence file or a `history` entry by hand, and no tool in this kit writes one. Real examples, eval prompts built from them and eval runs stay in the customer's environment or the engagement's private store, never in this repo. The fictional samples stay at `drafted` at most and hold no evidence; the Team sample's C1 is drafted, by hand, from its fictional interview notes. The `building-twin-artifacts` skill walks the consultant through the order: build, run the task without the skill, eval cases from the counted examples with the task's owner, the minimum `SKILL.md`, skill-creator's benchmark (or `claude plugin eval` once packaged) on Haiku, Sonnet and Opus, then check and record.
 
 ## 9. Dashboard (`dashboard.py`)
 

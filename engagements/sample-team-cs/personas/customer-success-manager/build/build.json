@@ -53,7 +53,8 @@
           "sha256": "db1b22d1174b328182da3bb0bd566d28f53e1e985deeb12f05d4b2eb29cbab1e"
         }
       ],
-      "status": "scaffolded",
+      "status": "drafted",
+      "history": [],
       "reason": null
     },
     {
@@ -94,6 +95,7 @@
         }
       ],
       "status": "scaffolded",
+      "history": [],
       "reason": null
     },
     {
@@ -130,6 +132,7 @@
         }
       ],
       "status": "scaffolded",
+      "history": [],
       "reason": null
     },
     {
@@ -166,6 +169,7 @@
         }
       ],
       "status": "scaffolded",
+      "history": [],
       "reason": null
     },
     {
@@ -202,6 +206,7 @@
         }
       ],
       "status": "scaffolded",
+      "history": [],
       "reason": null
     }
   ]

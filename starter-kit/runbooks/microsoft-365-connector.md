@@ -30,6 +30,7 @@ Pages used:
 - [H] [Compendium 11, Connectors](../../docs/compendium/11-connectors.md) and [14, Private equity](../../docs/compendium/14-private-equity.md)
 - [I] [Anthropic IP addresses](https://platform.claude.com/docs/en/api/ip-addresses)
 - [J] [Search the audit log (Microsoft Purview, Microsoft Learn)](https://learn.microsoft.com/en-us/purview/audit-search)
+- [K] [Control MCP server access for your organization](https://code.claude.com/docs/en/managed-mcp)
 
 ## What access the connector gets (read this before consent)
 
@@ -58,7 +59,7 @@ Pages used:
 **Who: Security with the Director of IT; Compliance consulted.**
 
 - Consent is tenant-wide. By default it lets every user in the tenant use the app unless you restrict it, and Microsoft warns that tenant-wide consent is a sensitive operation: review the permissions first. ([D])
-- Decide whether to revoke any write scopes after consent (step 3, option "revoke"), based on autonomy level 1. Re-running consent later re-grants the full current set, including writes, so any revocation must be repeated. ([B])
+- Decide whether to revoke any write scopes after consent (the paragraph "To list or revoke a permission later" at the end of step 3), based on autonomy level 1. Re-running consent later re-grants the full current set, including writes, so any revocation must be repeated. ([B])
 - Record the decision in the engagement's connector plan.
 
 ## 3. Grant tenant admin consent
@@ -75,6 +76,8 @@ Then pick one consent route. ([B])
 | **Manual in Entra** | No Claude account, or troubleshooting | 1. Add both service principals in Microsoft Graph Explorer with `POST https://graph.microsoft.com/v1.0/servicePrincipals`: **M365 MCP Client for Claude** (appId `08ad6f98-a4f8-4635-bb8d-f1a3044760f0`) and **M365 MCP Server for Claude** (appId `07c030f6-5743-41b7-ba00-0a6e85f37c17`). 2. In a browser, open `https://login.microsoftonline.com/<tenant-id>/adminconsent?client_id=<appId>` once for each appId. |
 
 The admin consent URL format is `https://login.microsoftonline.com/{organization}/adminconsent?client_id={client-id}`, where `{organization}` is the tenant ID or a verified domain. ([D]) A successful approval ends on a page whose address contains `admin_consent=True`. ([A])
+
+For the pe-zdr managed-settings file: the value to paste over `REPLACE-WITH-MICROSOFT-365-MCP-HOST` in `starter-kit/settings/pe-zdr.managed-settings.json` is the host of the Microsoft 365 connector's server URL, so the entry reads `https://<that host>/*` ([K] describes the matching). **⚠ Unverified:** the host. Neither Claude's connector page [A] nor the help-center pages [B] and [C] name it. Where to read it is also unverified. The Claude org Owner tries the Microsoft 365 connector entry (**Organization settings > Connectors**, or the entry's server URL in Claude Code's `/mcp` list once a user is connected), and the Partner integration engineer pastes only that value, then runs `claude mcp list` on a managed machine to check the server loads. Do not guess a host. Until it is confirmed, the pe-zdr allowlist matches no Microsoft 365 server.
 
 Check: in the Entra admin center, **Enterprise applications**, remove the application-type filter, open **M365 MCP Server for Claude** and **Permissions**; the approved permissions are listed. ([A], [B]) Confirm the list matches the decision in step 2.
 
@@ -152,15 +155,18 @@ Record for each library: who has access (users and groups), how (inheritance, un
 
 ### 8b. Test with two users
 
-Setup (Microsoft 365 admin): pick library A, intended for the deal team only, with a harmless test file named `wall-test-A`. Pick user 1 (deal team) and user 2 (investor relations or another walled group).
+Setup (Microsoft 365 admin): pick library A, intended for the deal team only, with a harmless test file named `wall-test-A`. Pick user 1 (deal team) and user 2 (investor relations or another walled group). Pick library B on user 2's own side, with a harmless test file named `wall-test-B` that user 2 can open and user 1 is not required to.
 
 First, signed in to SharePoint directly as each user, confirm user 1 can open the file and user 2 cannot. If this fails, fix SharePoint first; the connector cannot be stricter than the source system. ([C], [H])
+
+Test setup: for the duration of this test, add user 2 to the Entra app assignment from step 4 on both apps (**M365 MCP Server for Claude** and **M365 MCP Client for Claude**). Without it, step 4 stops user 2 from using the connector at all, and 8.2 and 8.3 would pass for that reason and not because of SharePoint permissions. Remove user 2 afterwards unless Compliance says otherwise, and record both changes.
 
 Then, each user connected as in step 5, in their own Claude session (Partner integration engineer observing):
 
 | # | Do this | Pass if |
 |---|---|---|
 | 8.1 | User 1 asks Claude to find `wall-test-A` in the named deal-team SharePoint site | User 1 sees it |
+| 8.1b | Control: user 2 asks Claude to find a file in a library on user 2's own side (a harmless test file, for example `wall-test-B`, that user 2 can open in SharePoint) | User 2 sees it. If not, user 2 is not connected or not assigned: fix that, because 8.2 and 8.3 prove nothing until this passes |
 | 8.2 | User 2 asks Claude to find `wall-test-A` by exact filename, then by words from inside it | User 2 sees nothing about it (no name, no content) |
 | 8.3 | User 2 asks Claude to list or summarise what is in the deal-team site | Nothing from library A appears |
 | 8.4 | User 1 asks Claude to change or create a file in the library | Claude cannot: write tools are blocked (step 6) |
@@ -171,17 +177,20 @@ Search tips from [A]: results can lag for new uploads, and naming the specific S
 
 **Who: Security** (needs the Audit Logs or View-Only Audit Logs role). After 8b, search the audit log in the Microsoft Purview portal (**Audit** solution, **Search**), filtering by **Users** and by **File, folder, or site** for library A ([J]). Records for core services are typically available 60 to 90 minutes after the event, so wait before you search ([J]). Entries show timestamp, user, operation and resource. ([C]) Confirm user 2 has no access events on library A. **⚠ Unverified:** confirm at setup the exact audit search filters for the connector's app.
 
-Record the date, both users, the libraries, and each result in the engagement's wall-test notes. The check must pass before the pilot starts. A single failure in 8.2 or 8.3 means stop and fix the cause (a group on the site, an inherited or unique permission, a sharing link, a guest), then repeat 8a and 8b in full.
+Record the date, both users, the libraries, and each result in the engagement's wall-test notes. These 8.x checks are a pre-check. The gate before the pilot is the full protocol, [wall-test-protocol.md](../../engagements/sample-pe/wall-test-protocol.md) (the worked example of the protocol, on invented records seeded in the live systems): no pilot user connects until every case in it passes. A single failure in 8.2 or 8.3 means stop and fix the cause (a group on the site, an inherited or unique permission, a sharing link, a guest), then repeat 8a and 8b in full.
 
 ## 9. Hand over
 
-**Who: Partner integration engineer to the Microsoft 365 admin, the Claude org Owner and Security.** Hand over the consent decision and who consented (step 3), the Entra assignment list (step 4), the tool settings (step 6), the library permission listings and wall-test record (step 8), and the unverified items still open. Offboarding: a removed user is also removed from the Entra app assignment and their Microsoft 365 session is revoked; refresh tokens expire after 90 days of inactivity by default ([C]). Members can disconnect themselves in **Customize > Connectors**, and an Owner can remove the connector for the org in **Organization settings > Connectors**. ([B])
+**Who: Partner integration engineer to the Microsoft 365 admin, the Claude org Owner and Security.** Hand over the consent decision and who consented (step 3), the Entra assignment list (step 4), the tool settings (step 6), the library permission listings and wall-test record (step 8), and the unverified items still open. Offboarding: remove the user from the Entra app assignment (step 4) and revoke their Microsoft 365 sessions through the customer's identity process **⚠ Unverified:** Claude's pages do not say that removing a user from Claude also removes the Entra assignment or revokes the Microsoft 365 session, so do both by hand; refresh tokens expire after 90 days of inactivity by default ([C]). Members can disconnect themselves in **Customize > Connectors**, and an Owner can remove the connector for the org in **Organization settings > Connectors**. ([B])
 
 ## Open items to verify (all marked unverified above)
 
-1. Whether a role below Global Administrator is enough for the first consent.
-2. Whether app-consent policies at the customer can block the connector's apps (Conditional Access behaviour is now confirmed in step 1.6).
-3. Whether the Microsoft 365 connector can be limited to one Claude group on the Claude side.
-4. The site permissions page path and a per-user "check permissions" control in SharePoint.
-5. Whether the Graph permissions listing includes SharePoint site-group membership.
-6. Audit-log search filters for the connector.
+1. The host of the Microsoft 365 connector's server URL, for the pe-zdr allowlist (step 3).
+2. Whether a role below Global Administrator is enough for the first consent.
+3. Whether app-consent policies at the customer can block the connector's apps (Conditional Access behaviour is now confirmed in step 1.6).
+4. Whether the Microsoft 365 connector can be limited to one Claude group on the Claude side.
+5. The library permissions menu names and messages in 8a, which rest on a Microsoft Support page, not a Microsoft Learn page.
+6. The site permissions page path and a per-user "check permissions" control in SharePoint.
+7. Whether the Graph permissions listing includes SharePoint site-group membership.
+8. Audit-log search filters for the connector.
+9. Whether removing a user from Claude also removes the Entra assignment and revokes the Microsoft 365 session (step 9).

@@ -31,6 +31,7 @@ Pages used:
 - [F] [Anthropic IP addresses](https://platform.claude.com/docs/en/api/ip-addresses)
 - [G] Salesforce's official GitHub, `salesforce/salesforce-skills` (branch `claude-prod`): [salesforce-for-sales/.mcp.json](https://github.com/salesforce/salesforce-skills/blob/claude-prod/salesforce-for-sales/.mcp.json) and [salesforce-for-sales/SETUP.md](https://github.com/salesforce/salesforce-skills/blob/claude-prod/salesforce-for-sales/SETUP.md)
 - [H] [Get started with connectors](https://claude.com/docs/connectors/getting-started.md) and [Use connectors to extend Claude's capabilities](https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities)
+- [I] [Control MCP server access for your organization](https://code.claude.com/docs/en/managed-mcp), the `serverUrl` matching rules
 
 ## 1. Prerequisites
 
@@ -83,6 +84,7 @@ Notes:
 - OAuth client: **Use your own OAuth client**, with the Consumer Key from step 3. Claude's other options, "Use Claude's published identity" (CIMD) and "Register automatically" (DCR), need the server's authorization server to support them. **⚠ Unverified:** whether Salesforce's does; [A] uses a pre-registered client ID, so this runbook takes that route. ([B], [C], [A])
 - Leave the client secret blank unless Salesforce requires one ([B]). **⚠ Unverified:** whether it does; see step 3.
 - Server URL: `https://api.salesforce.com/platform/mcp/v1/platform/headless-360` for production, and `https://api.salesforce.com/platform/mcp/v1/sandbox/platform/headless-360` for a sandbox ([A]).
+- For the pe-zdr managed-settings file: paste `api.salesforce.com` over `REPLACE-WITH-SALESFORCE-HOSTED-MCP-HOST` in `starter-kit/settings/pe-zdr.managed-settings.json`, so the entry reads `https://api.salesforce.com/*`. It is the host of both server URLs above. With no port written, the entry matches port 443 only, and a path-wildcard entry matches every path on that host, so it also admits the sandbox URL ([I]; [A]).
 - Authorization server: `https://login.salesforce.com` by default, the org's My Domain URL (for example `https://<mydomain>.my.salesforce.com`) to send users to its own login page, or `https://test.salesforce.com` for a sandbox. Exactly one ([A]). The Claude dialog may not show a field named "Authorization server"; the server's metadata normally supplies it. **⚠ Unverified:** confirm this for the claude.ai dialog at setup, because [A] describes the Desktop console.
 - Do not use the Claude Desktop route in [A] (the Desktop 3P Connectors page, the `salesforce-h360` name and the Salesforce plugin marketplace) for the pilot unless the customer runs Claude Desktop under managed configuration. It is a separate route; the compendium's per-user, claude.ai-based design uses step 6.
 
@@ -92,15 +94,21 @@ Notes:
 
 At autonomy level 1 ("Draft") the twin prepares work and a person acts. The control is "Write tools Blocked, or left out of the role plugin" ([E], [06](../../docs/compendium/06-autonomy.md)). Claude's three settings per tool are **Always allow**, **Needs approval** and **Blocked** ([B], [E]). For this pilot:
 
-| Tool kind | Setting at level 1 |
-|---|---|
-| Read tools (query, get, describe) | **Always allow** |
-| Any tool that creates, updates or deletes | **Blocked** |
-| Anything you cannot classify | **Blocked** until the CRM admin classifies it |
+| Tool | What it does ([G]) | Setting at level 1 |
+|---|---|---|
+| `discover` | Semantic search across Salesforce APIs to find available operations | **Always allow** (see the conflict below) |
+| `describe` | Full specification of a discovered operation or object | **Always allow** (see the conflict below) |
+| `dispatch` | Executes any Salesforce REST call, including sObject create, update and delete. It is the only route that writes | **Blocked** |
+| `dispatch_readonly` | Executes Salesforce REST calls; the name marks it as the read route, and [G] lists it beside `dispatch`. **⚠ Unverified:** confirm at setup that it cannot create or update | **Always allow** |
+| `display_widget` | Validates and renders widget JSON; the wall test does not use it | **Blocked** |
 
-For headless-360, Salesforce's own guide says to "Set tool restrictions to keep the beta read-only", and its plugin configuration marks `discover`, `describe` and `dispatch` as "should be blocked" [G]; set those to **Blocked**.
+Anything the live server lists beyond these five is **Blocked** until the CRM admin classifies it. There is no tool named `query`, `get` or `update`; set permissions only on the names the connector lists in step 7.
 
-Two defences, not one: the Claude setting blocks write tools for the twin, and Salesforce itself should deny writes where the role allows it. **⚠ Unverified:** whether the hosted server can be limited to read at the Salesforce side (a read-only scope, or a read-only permission set for pilot users); confirm at setup. `mcp_api` is the only access scope [A] lists, besides `refresh_token`. Raising a tool to **Needs approval** is a level 2 decision made on scorecard evidence, not in this runbook.
+What the wall test needs. WT-05 to WT-16 in the [wall-test protocol](../../engagements/sample-pe/wall-test-protocol.md) search, list and count records as each test user. Those calls run through `dispatch_readonly`, so it must be **Always allow** or the control cases (WT-05, WT-07, WT-09, WT-11, WT-13, WT-15) cannot show own-side records. The cases need no write, so `dispatch` stays **Blocked**. The cases do not call `display_widget`.
+
+**⚠ Conflict:** Salesforce's own guide says to "Set tool restrictions to keep the beta read-only", and its plugin configuration marks `discover`, `describe` and `dispatch` as "should be blocked" [G]. We follow that advice for `dispatch`; `display_widget` is Blocked because nothing here uses it. For `discover` and `describe` it conflicts with the wall test: **⚠ Unverified:** whether the model can find and form a read call through `dispatch_readonly` with both blocked. The choice made here **(Our recommendation)** is **Always allow** for both, because a wall test that fails for lack of a search route proves nothing about the wall, and both only look up what a call can do; the user's own Salesforce permissions still decide what a call returns ([E]). The Claude org Owner records this deviation from Salesforce's advice, with the date, in the engagement's connector plan. If the CRM admin wants them **Blocked**, set them Blocked, run the wall test, and keep the setting only if WT-05 passes.
+
+Two defences, not one: the Claude setting blocks write tools for the twin, and Salesforce itself should deny writes where the role allows it. **⚠ Unverified:** whether the hosted server can be limited to read at the Salesforce side (a read-only scope, or a read-only permission set for pilot users); confirm at setup. `mcp_api` is the only access scope [A] lists, besides `refresh_token`. Raising a tool to **Needs approval** is a level 2 decision made on scorecard evidence; see [Move to level 2](#move-to-level-2).
 
 ## 6. Add the connector in the Claude org
 
@@ -148,7 +156,18 @@ Checks (each user connected as in step 7, in their own Claude session):
 | 9.4 | Each user asks Claude to list opportunities | Each list contains only that user's own side |
 | 9.5 | Each user asks Claude to change a field on a visible record | Claude cannot: write tools are Blocked (step 5) |
 
-Record the date, both users, the records, and each result in the engagement's wall-test notes. The wall test must pass before the pilot starts. A single failure in 9.2 to 9.4 means stop and fix the cause (sharing rules, role hierarchy, or a shared identity somewhere), then repeat the whole table.
+Record the date, both users, the records, and each result in the engagement's wall-test notes. These five checks are a pre-check, run in the sandbox and then in production. The gate before the pilot is the full protocol, [wall-test-protocol.md](../../engagements/sample-pe/wall-test-protocol.md) (the worked example of the protocol, on invented records seeded in the live systems): no pilot user connects until every case in it passes. A single failure in 9.2 to 9.4 means stop and fix the cause (sharing rules, role hierarchy, or a shared identity somewhere), then repeat the whole table.
+
+## Move to level 2
+
+Level 2 lets the twin write to Salesforce with a person approving each write. Do this only after the pilot's scorecard supports it ([06](../../docs/compendium/06-autonomy.md)), and repeat the [wall-test protocol](../../engagements/sample-pe/wall-test-protocol.md) after any change to tool settings.
+
+1. **The tool that carries updates is `dispatch`.** It is the only write route in the five-tool list [G]; `dispatch_readonly` stays for reads. The drafting skill's [level-2 steps](../plugins/twin-pe-deal-team/skills/drafting-crm-updates/references/level-2-writes.md) assume this tool.
+2. **Set `dispatch` to Needs approval, and nothing else.** `discover`, `describe` and `dispatch_readonly` keep their step 5 settings and `display_widget` stays **Blocked**. Needs approval makes Claude ask the user before the tool runs, with the choices **Allow once** or **Always allow** ([H]). **⚠ Unverified:** whether a member can choose **Always allow** and so remove the prompt for themselves, and whether the Owner's setting for a custom connector stops that; confirm at setup (step 7 item 1 has the same open question).
+3. **What Needs approval allows:** one `dispatch` call the user has just seen and approved.
+4. **What it does not allow or limit:** it is a setting on the tool, not on the object, the record or the field. `dispatch` can run any Salesforce REST call, including sObject delete ([G]), so approving it does not confine the twin to the Opportunity or to the fields the skill drafted. The skill's rules (approved text only, one record, the marker) limit that; Salesforce itself limits it only through the signed-in user's own permissions.
+5. **The risk the customer accepts in writing.** Salesforce marks `dispatch` "should be blocked" [G]. Setting it to Needs approval goes against that advice. Before the change, the customer's CRM admin and Compliance sign a note that names the advice, the date, and who may approve writes, and the Claude org Owner keeps it in the engagement's connector plan.
+6. **Check the marker before the first real write.** Deploy and verify the marker field and permission sets as described in the [Salesforce marker README](../connectors/salesforce/README.md): the field is deployed, `Twin_Marker_Edit` is assigned to the users whose twin writes, and a test write produces a history row for `Last_Updated_By_Twin__c` beside the changed field. The README's report queries are the check; the skill fails closed when the marker is missing.
 
 ## 10. Hand over
 
@@ -157,9 +176,13 @@ Record the date, both users, the records, and each result in the engagement's wa
 ## Open items to verify (all marked unverified above)
 
 1. Salesforce editions and any extra licences for hosted MCP servers.
-2. Whether the live headless-360 server exposes the five tools in [G], and which write.
-3. Whether the External Client App accepts several callback URLs, and a port-less loopback entry for Claude Code.
-4. Whether Salesforce needs a client secret for the claude.ai route, and whether it supports CIMD or DCR.
-5. The Salesforce permission a user needs to use MCP servers and the External Client App.
-6. Whether read-only can be enforced on the Salesforce side.
-7. Where the IP restriction lives in Salesforce and whether `api.salesforce.com` needs a change.
+2. Whether the live headless-360 server exposes the five tools in [G], which write, and that `dispatch_readonly` cannot write.
+3. Whether the model can find and form a read call through `dispatch_readonly` with `discover` and `describe` Blocked (step 5).
+4. Whether the External Client App accepts several callback URLs, and a port-less loopback entry for Claude Code.
+5. Whether Salesforce needs a client secret for the claude.ai route, and whether it supports CIMD or DCR.
+6. Whether the claude.ai dialog shows an "Authorization server" field.
+7. How long a new External Client App takes to become available (the 30-minute figure comes from a third-party summary).
+8. The Salesforce permission a user needs to use MCP servers and the External Client App.
+9. Whether read-only can be enforced on the Salesforce side.
+10. Whether an Owner's tool permissions apply to a custom connector for every member, and whether a member can choose **Always allow** over Needs approval.
+11. Where the IP restriction lives in Salesforce and whether `api.salesforce.com` needs a change.

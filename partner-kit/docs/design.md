@@ -138,6 +138,7 @@ Both are JSON, because the repo's tools are standard-library Python (no YAML par
     "team": "Deal team",
     "headcount": 18, "pilot_users": 6,
     "works_in": ["claude-code", "desktop"],
+    "wanted_surfaces": [],
     "device": "managed"
   },
   "outcome": {"sponsor_goal": "", "scorecard_targets": [{"metric": "edit_rate_below_pct", "value": 30}]},
@@ -162,6 +163,8 @@ Both are JSON, because the repo's tools are standard-library Python (no YAML par
       "touches_money": false,
       "reads_untrusted_input": false,
       "examples": {"good": 2, "bad": 1, "where": ""},
+      "constraints": ["A reviewer checks every brief before it goes further."],
+      "wanted_change": "",
       "skill_owner": "",
       "priority": 1,
       "in_pilot": true
@@ -248,6 +251,8 @@ Client-facing: a consultant reads it to a role holder. Plain language, no Claude
 - `P1`–`P6`: the role, who they serve, what a good week looks like, tone they expect, things the twin must never do, who they escalate to.
 - `F1`–`F5` as in discovery, asked per task, extended with `F6` (who else sees or changes the output), `F7` (can it be undone; does it touch money), `F8` (does it read things written by outsiders: customer email, tickets, web pages), `F9` (would you want it to remember anything between sessions).
 - A closing section turns tasks into a feature list: group tasks under a capability the role holder names.
+
+A question may carry one **Also ask** line, a prompt read with it that collects a field the main question does not: F3 asks what the role holder would change about the task today (`tasks[].wanted_change`, with F5), and F4 asks for a rule or deadline the task must always keep (`tasks[].constraints`, with F7). P1 also fills `role.wanted_surfaces`.
 
 Every question lists the card field paths it fills. Every required card field in parts A1–A8 is reachable from a question or a default.
 

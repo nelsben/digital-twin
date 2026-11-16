@@ -302,11 +302,11 @@
     },
     "role.headcount": {
       "status": "answered",
-      "source": "interviews/2026-11-07-senior-csm.md#P1"
+      "source": "discovery#A3"
     },
     "role.pilot_users": {
       "status": "answered",
-      "source": "interviews/2026-11-07-senior-csm.md#P1"
+      "source": "discovery#A3"
     },
     "role.works_in": {
       "status": "answered",
@@ -318,7 +318,7 @@
     },
     "outcome.sponsor_goal": {
       "status": "answered",
-      "source": "interviews/2026-11-07-senior-csm.md#P3"
+      "source": "discovery#A1"
     },
     "voice.serves": {
       "status": "answered",
@@ -365,6 +365,10 @@
       "source": "interviews/2026-11-06-csm.md#F1"
     },
     "tasks.C1.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F1"
+    },
+    "tasks.C1.users": {
       "status": "answered",
       "source": "interviews/2026-11-06-csm.md#F1"
     },
@@ -420,6 +424,10 @@
       "status": "answered",
       "source": "interviews/2026-11-06-csm.md#F3"
     },
+    "tasks.C1.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F3"
+    },
     "tasks.C2.name": {
       "status": "answered",
       "source": "interviews/2026-11-07-senior-csm.md#F1"
@@ -429,6 +437,10 @@
       "source": "interviews/2026-11-07-senior-csm.md#F1"
     },
     "tasks.C2.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C2.users": {
       "status": "answered",
       "source": "interviews/2026-11-07-senior-csm.md#F1"
     },
@@ -488,6 +500,10 @@
       "status": "answered",
       "source": "interviews/2026-11-07-senior-csm.md#F3"
     },
+    "tasks.C2.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F3"
+    },
     "tasks.C3.name": {
       "status": "answered",
       "source": "interviews/2026-11-07-senior-csm.md#F1"
@@ -497,6 +513,10 @@
       "source": "interviews/2026-11-07-senior-csm.md#F1"
     },
     "tasks.C3.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C3.users": {
       "status": "answered",
       "source": "interviews/2026-11-07-senior-csm.md#F1"
     },
@@ -548,6 +568,10 @@
       "status": "answered",
       "source": "interviews/2026-11-07-senior-csm.md#F3"
     },
+    "tasks.C3.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F3"
+    },
     "tasks.C4.name": {
       "status": "answered",
       "source": "interviews/2026-11-06-csm.md#F1"
@@ -557,6 +581,10 @@
       "source": "interviews/2026-11-06-csm.md#F1"
     },
     "tasks.C4.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F1"
+    },
+    "tasks.C4.users": {
       "status": "answered",
       "source": "interviews/2026-11-06-csm.md#F1"
     },
@@ -612,6 +640,10 @@
       "status": "answered",
       "source": "interviews/2026-11-06-csm.md#F3"
     },
+    "tasks.C4.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F3"
+    },
     "tasks.C5.name": {
       "status": "answered",
       "source": "interviews/2026-11-07-senior-csm.md#F1"
@@ -621,6 +653,10 @@
       "source": "interviews/2026-11-07-senior-csm.md#F1"
     },
     "tasks.C5.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C5.users": {
       "status": "answered",
       "source": "interviews/2026-11-07-senior-csm.md#F1"
     },
@@ -669,6 +705,10 @@
       "source": "interviews/2026-11-07-senior-csm.md#F3"
     },
     "tasks.C5.examples.bad": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F3"
+    },
+    "tasks.C5.skill_owner": {
       "status": "answered",
       "source": "interviews/2026-11-07-senior-csm.md#F3"
     }

@@ -442,11 +442,11 @@
     },
     "role.headcount": {
       "status": "answered",
-      "source": "interviews/2026-11-10-partner.md#P1"
+      "source": "../../discovery.md#A3"
     },
     "role.pilot_users": {
       "status": "answered",
-      "source": "interviews/2026-11-10-partner.md#P1"
+      "source": "../../discovery.md#A3"
     },
     "role.works_in": {
       "status": "answered",
@@ -458,7 +458,7 @@
     },
     "outcome.sponsor_goal": {
       "status": "answered",
-      "source": "interviews/2026-11-10-partner.md#P3"
+      "source": "../../discovery.md#A1"
     },
     "voice.serves": {
       "status": "answered",
@@ -494,7 +494,7 @@
     },
     "memory.notes": {
       "status": "answered",
-      "source": "interviews/2026-11-10-partner.md#F9"
+      "source": "interviews/2026-11-12-associate.md#F9"
     },
     "tasks.T1.name": {
       "status": "answered",
@@ -505,6 +505,10 @@
       "source": "interviews/2026-11-12-associate.md#F1"
     },
     "tasks.T1.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T1.users": {
       "status": "answered",
       "source": "interviews/2026-11-12-associate.md#F1"
     },
@@ -568,6 +572,10 @@
       "owner": "Skill owners",
       "due": "2026-12-04"
     },
+    "tasks.T1.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F3"
+    },
     "tasks.T2.name": {
       "status": "answered",
       "source": "interviews/2026-11-11-principal.md#F1"
@@ -577,6 +585,10 @@
       "source": "interviews/2026-11-11-principal.md#F1"
     },
     "tasks.T2.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T2.users": {
       "status": "answered",
       "source": "interviews/2026-11-11-principal.md#F1"
     },
@@ -644,6 +656,10 @@
       "owner": "Skill owners",
       "due": "2026-12-04"
     },
+    "tasks.T2.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F3"
+    },
     "tasks.T3.name": {
       "status": "answered",
       "source": "interviews/2026-11-11-principal.md#F1"
@@ -653,6 +669,10 @@
       "source": "interviews/2026-11-11-principal.md#F1"
     },
     "tasks.T3.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T3.users": {
       "status": "answered",
       "source": "interviews/2026-11-11-principal.md#F1"
     },
@@ -788,6 +808,10 @@
       "owner": "Skill owners",
       "due": "2026-12-04"
     },
+    "tasks.T4.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F3"
+    },
     "tasks.T5.name": {
       "status": "answered",
       "source": "interviews/2026-11-12-associate.md#F1"
@@ -860,6 +884,10 @@
       "owner": "Skill owners",
       "due": "2026-12-04"
     },
+    "tasks.T5.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F3"
+    },
     "tasks.T6.name": {
       "status": "answered",
       "source": "interviews/2026-11-10-partner.md#F1"
@@ -927,6 +955,10 @@
       "source": "interviews/2026-11-10-partner.md#F3",
       "owner": "Skill owners",
       "due": "2026-12-04"
+    },
+    "tasks.T6.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F3"
     },
     "role.plugin_name": {
       "status": "assumed",

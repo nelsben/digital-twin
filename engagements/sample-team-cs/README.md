@@ -8,7 +8,7 @@ Example Software Co is an invented B2B software company of 60 people. It runs Cl
 
 The Team path. The [private-equity sample](../sample-pe/README.md) is Enterprise with ZDR, SCIM and managed devices; this one has none of those. It is the fixture that shows what a twin gets on Team with no device management ([compendium 13](../../docs/compendium/13-devices.md#team-plan-with-no-device-management), [15](../../docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management)), with the `b2b-software` industry pack and [compendium 18](../../docs/compendium/18-customer-success.md). The persona card validates at 100% and is complete; its expected levelling results are fixed in [tests/fixtures/twincard/expectations.json](../../tests/fixtures/twincard/expectations.json).
 
-Discovery for this customer was a single call with the IT and operations lead. Its answers went straight into the customer profile, so the profile's provenance names the discovery question ids from the [questionnaire](../../docs/playbook/02-discovery.md) (`discovery#D1`) and there is no separate discovery file.
+Discovery for this customer was a single call with the IT and operations lead. The sponsor, the VP Customer Success, joined the call for section A and stated the six-month goal: each customer success manager spends less time preparing for calls and writing follow-ups, and no renewal is missed for lack of warning. The team is 8 managers, with 4 in the pilot. Its answers went straight into the customer profile and the persona card, so their provenance names the discovery question ids from the [questionnaire](../../docs/playbook/02-discovery.md) (`discovery#D1`, `discovery#A1`) and there is no separate discovery file.
 
 | File | What it is | Status |
 |---|---|---|

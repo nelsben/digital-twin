@@ -1,0 +1,122 @@
+{
+  "note": "Test fixture, not a real run. Invented numbers in the shape of the `claude plugin eval` JSON result (code.claude.com/docs/en/plugin-evals, section JSON result); built from the page's field table, not from a captured run, used only by tests/test_twincard_build_record.py. Never copy it into an engagement as evidence.",
+  "schemaVersion": 1,
+  "partial": false,
+  "partialReason": null,
+  "aggregates": {
+    "overallScore": 1.0,
+    "casesPassed": 5,
+    "casesTotal": 5,
+    "meanDelta": 0.6
+  },
+  "cases": [
+    {
+      "name": "case-1",
+      "aggregates": {
+        "score": 1.0,
+        "delta": 0.5
+      },
+      "arms": {
+        "with": [
+          {
+            "score": 1.0,
+            "error": null
+          }
+        ],
+        "without": [
+          {
+            "score": 0.5,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "case-2",
+      "aggregates": {
+        "score": 1.0,
+        "delta": 0.75
+      },
+      "arms": {
+        "with": [
+          {
+            "score": 1.0,
+            "error": null
+          }
+        ],
+        "without": [
+          {
+            "score": 0.25,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "case-3",
+      "aggregates": {
+        "score": 1.0,
+        "delta": 0.5
+      },
+      "arms": {
+        "with": [
+          {
+            "score": 1.0,
+            "error": null
+          }
+        ],
+        "without": [
+          {
+            "score": 0.5,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "case-4",
+      "aggregates": {
+        "score": 1.0,
+        "delta": 0.75
+      },
+      "arms": {
+        "with": [
+          {
+            "score": 1.0,
+            "error": null
+          }
+        ],
+        "without": [
+          {
+            "score": 0.25,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "case-5",
+      "aggregates": {
+        "score": 1.0,
+        "delta": 0.5
+      },
+      "arms": {
+        "with": [
+          {
+            "score": 1.0,
+            "error": null
+          }
+        ],
+        "without": [
+          {
+            "score": 0.5,
+            "error": null
+          }
+        ]
+      }
+    }
+  ],
+  "costUsd": 0.0,
+  "durationSeconds": 0,
+  "claudeVersion": "0.0.0-test-fixture"
+}

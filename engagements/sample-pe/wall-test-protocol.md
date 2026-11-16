@@ -11,7 +11,7 @@ This is the test that proves the soft wall between the deal team and investor re
 | 1. The admins confirm the roles are separated, in writing | [Preconditions](#preconditions), P1 |
 | 2. A test user on each side tries to read the other side's records | [Cases](#test-cases) WT-01 to WT-34 |
 | 3. The test tries to get the twin to carry data across | Cases WT-35 to WT-46, with level 1 writes (WT-47 to WT-50) and Owner access (WT-51 to WT-53) |
-| 4. Every attempt is checked in the governance log and each source system's audit | [Evidence](#evidence), cases WT-E1 to WT-E8 |
+| 4. Every attempt is checked in the governance log and each source system's audit | [Evidence](#evidence), checks WT-E1 to WT-E8 (checks on the evidence, not cases, so they carry no actor or run mode) |
 | 5. Ngozi Brandvold reviews the result before she signs the walls | [Results and sign-off](#results-and-sign-off) |
 
 ## Who runs it
@@ -161,7 +161,7 @@ Evidence is metadata and synthetic tokens only. It goes to a restricted store th
 
 | ID | Check (outline step 4) | Pass rule |
 |---|---|---|
-| WT-E1 | Every Claude Code tool call in T has a governance-log line | Count of tool calls in T equals count of G lines for that `session_id` and window |
+| WT-E1 | Every Claude Code tool call in T has a governance-log line | Count of tool calls in T equals count of G lines for that `session_id` and window. A call refused by a permission setting is listed apart and may have no G line: **⚠ Unverified:** whether `PostToolUseFailure` fires for it |
 | WT-E2 | The log holds no content | A search of the whole log for `WALLTEST` and for every token on the seed sheet finds 0 hits |
 | WT-E3 | Which routes leave an id in the log: Salesforce by-id reads (WT-01), a SharePoint file read (WT-17), HubSpot (WT-25). Whether a SharePoint file read leaves an id is **to be checked here, not assumed** | Observation, not a fail: Yes or No is recorded for all three. For each No, the source audit is named as the only record of which item was read |
 | WT-E4 | Salesforce audit for WT-01 to WT-16, WT-29 to WT-34, WT-47, WT-50 and WT-53 | If SA is available: every blocked case shows the test user's calls and no other-side id returned; WT-47 and WT-50 show no update event on the record; WT-53 shows the Owner's calls. If not: recorded as not available, and Ngozi Brandvold is told the Salesforce half has no independent audit |

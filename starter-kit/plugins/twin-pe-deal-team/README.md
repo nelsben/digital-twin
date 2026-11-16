@@ -2,7 +2,7 @@
 
 The role twin for a private equity deal team: its skills and its persona (output style).
 
-Status: in progress (version 0.3.0). Two skills and the persona are written.
+Status: in progress (version 0.4.0). Two skills and the persona are written. The private-equity rules moved here from `twin-shared` in 0.4.0: never expand or guess a deal code name, and no web search or web fetch for material that may concern a deal. The persona and both skills state them.
 
 ## Skills
 

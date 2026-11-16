@@ -12,6 +12,7 @@ The starter kit is the set of parts we copy into a customer's repo to build a ro
 | [twin-shared](plugins/twin-shared/README.md) | The common plugin every role twin installs, for skills that are not role-specific |
 | [twin-pe-deal-team](plugins/twin-pe-deal-team/README.md) | The role twin for a private equity deal team: skills and output style |
 | [twin-governance](plugins/twin-governance/README.md) | Governance guardrails as hooks, including the metadata-only governance log |
+| [templates/role-plugin](templates/role-plugin/README.md) | The starting folder for one role plugin (one per role, never per person): manifest, README, empty skills and output styles, persona pointer, and the steps to add it to the marketplace |
 | [templates/skill](templates/skill/README.md) | The starting folder for every twin skill: `SKILL.md`, references and evals |
 | [templates/persona](templates/persona/README.md) | One persona source, shipped as an output style and a system prompt |
 | [settings](settings/README.md) | Managed-settings baselines, one per data class, for IT to deploy |
@@ -35,7 +36,7 @@ The phases are in [docs/playbook/01-engagement-model.md](../docs/playbook/01-eng
 ## Start a new customer
 
 1. Copy [engagements/sample-pe](../engagements/sample-pe/README.md) as the folder layout for `engagements/<customer>/`. Copy the structure, not the invented content.
-2. Fork or copy this kit's [marketplace](../.claude-plugin/marketplace.json) and `starter-kit/plugins/` into the customer's repo, and rename the role plugin.
+2. Fork or copy this kit's [marketplace](../.claude-plugin/marketplace.json) and `starter-kit/plugins/` into the customer's repo. Make one role plugin per role from [templates/role-plugin](templates/role-plugin/README.md).
 3. Fill in the persona from [templates/persona](templates/persona/README.md): `persona.md` first, then the output style and the system prompt.
 4. Copy [templates/skill](templates/skill/README.md) once per story, evals first, following [authoring-skills.md](docs/authoring-skills.md).
 5. Pick a [settings baseline](settings/README.md) per org, and replace `REPLACE-WITH-ORG-UUID` and `REPLACE-WITH-GITHUB-ORG`.
@@ -47,7 +48,7 @@ Compendium 16 ends with [six decisions](../docs/compendium/16-oob-skills-and-ref
 
 1. Scaffold and evaluate every skill with skill-creator.
 2. Seed the skill template from Anthropic's `template-skill`.
-3. Start each pilot role from the matching Anthropic role plugin, then customise it.
+3. Start each pilot role from the matching Anthropic role plugin, then customise it. Install Anthropic's plugins on your own unmanaged machine, not on a customer's managed device; see [Install skill-creator](docs/authoring-skills.md#install-skill-creator).
 4. Don't rebuild the document skills.
 5. Run one reviewed customer marketplace, and restrict other marketplaces through managed settings.
 6. Treat section 4 of compendium 16 as the only link list.
@@ -71,7 +72,7 @@ Run the tests from the repo root:
 python3 -m unittest discover -s tests
 ```
 
-Use skill-creator to author and evaluate skills ([authoring-skills.md](docs/authoring-skills.md) has the full loop):
+Use skill-creator to author and evaluate skills ([authoring-skills.md](docs/authoring-skills.md) has the full loop). Install it on your own unmanaged machine, not on a customer's managed device; why is in [Install skill-creator](docs/authoring-skills.md#install-skill-creator):
 
 ```
 /plugin install skill-creator@claude-plugins-official

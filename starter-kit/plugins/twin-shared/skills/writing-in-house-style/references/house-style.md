@@ -47,19 +47,13 @@ Give a person's full name the first time they appear, and the role if the reader
 
 Reason: first names are ambiguous in a firm with several people of the same name, and a guessed surname puts the wrong person on a record.
 
-## 7. Deal code names exactly as given
-
-Use a deal code name ("Project Larch", "Larch") exactly as the source gives it. Never expand it into a company name, never guess what it stands for, and never mix the code name with the real name in one text.
-
-Reason: code names exist to keep the target confidential. An expanded or guessed name can leak a deal or name the wrong company.
-
-## 8. Headings and tables only when they help
+## 7. Headings and tables only when they help
 
 A short message (a note, an email, a summary of a few lines) has no headings and no table. Use a heading when a text has several parts a reader will want to jump between, and a table when there are three or more items with the same attributes. A short list is fine for steps or parallel items.
 
 Reason: structure on a short text adds weight and hides the point. Structure on a long text is how readers find their part.
 
-## 9. No emoji
+## 8. No emoji
 
 Do not use emoji or emoticons, and keep exclamation marks to none, or at most one. When editing someone's text, remove them.
 
@@ -75,7 +69,6 @@ Before presenting a draft, check each line.
 - Every date is ISO 8601; ambiguous or vague dates are flagged.
 - Every fact from a system or document names its source; unaudited, management-provided, calculated and inferred items are labelled.
 - Each person has a full name on first mention, or the missing surname is noted.
-- Deal code names are exactly as given.
 - Headings and tables appear only where they help; a short text has none.
 - No emoji.
 - Nothing is stated that the material does not support.

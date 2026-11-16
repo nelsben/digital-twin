@@ -2,7 +2,9 @@
 
 The common plugin every role twin installs, holding skills that are not role-specific.
 
-Status: in progress (version 0.2.0). One skill is written (`writing-in-house-style`). The account-research skill, hooks and output styles are not written yet.
+Status: in progress (version 0.3.0). One skill is written (`writing-in-house-style`). The account-research skill, hooks and output styles are not written yet.
+
+The private-equity rules that were here (code names, no web lookups for sensitive material) moved to [twin-pe-deal-team](../twin-pe-deal-team/README.md) in 0.3.0. This plugin holds only rules every role can use.
 
 ## Skills
 

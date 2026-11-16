@@ -71,8 +71,12 @@ Sources: [Plugin security](https://code.claude.com/docs/en/plugins/security.md),
 
 ## Compliance limits
 
-- **Skills aren't eligible for ZDR** and aren't covered by a HIPAA BAA. HIPAA mode turns skills off in local Claude Code and Cowork.
-- **The audit log records sharing events, not skill contents.** API skill creates and deletes are logged only if the Compliance API is on.
+- **Skills used through the API or Managed Agents aren't eligible for ZDR or HIPAA** ([API data retention](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention), [Agent Skills overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview)). The only Managed Agents setup ZDR covers is a fully self-hosted one.
+- **Under the HIPAA configuration, Skills turns off** until an Owner turns it back on, and skills in Cowork and Claude Code are then "available but not covered under your BAA" ([Provisioning skills](https://support.claude.com/en/articles/13119606-provision-and-manage-skills-for-your-organization)).
+- ⚠ **Unverified:** whether local skills in Claude Code on a ZDR sign-in are covered by ZDR. The Claude Code ZDR page doesn't mention skills, so treat them as "available but not covered", as [10](10-sensitive-data.md) does for HIPAA.
+- **The audit log records sharing events, not skill contents** ([Provisioning skills](https://support.claude.com/en/articles/13119606-provision-and-manage-skills-for-your-organization)). API skill creates and deletes are logged only if the Compliance API is on, and nothing done while it is off can be recovered ([Skills guide](https://platform.claude.com/docs/en/build-with-claude/skills-guide)).
+
+Sources: [API data retention](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention), [Agent Skills overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview), [Provisioning skills](https://support.claude.com/en/articles/13119606-provision-and-manage-skills-for-your-organization), [Claude Code ZDR](https://code.claude.com/docs/en/zero-data-retention), [Skills guide](https://platform.claude.com/docs/en/build-with-claude/skills-guide).
 
 ## Measuring use
 

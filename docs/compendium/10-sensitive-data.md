@@ -42,13 +42,14 @@ Sources: [API data retention](https://platform.claude.com/docs/en/manage-claude/
 - **Enterprise apps:** chat, Cowork, artifacts and the Chrome extension.
 - **Analytics metadata.**
 
-**What ZDR turns off:** cloud sessions, Claude Tag, Remote Control and feedback.
+**What ZDR turns off:** cloud sessions, Claude Tag, Remote Control and feedback submission (`/feedback`, `/bug`, `/share`) ([Claude Code ZDR](https://code.claude.com/docs/en/zero-data-retention)).
 
 **What is still retained under ZDR:**
 
 - Content flagged for trust and safety review: up to **2 years**. Classifier scores: up to 7 years.
-- Anything a user sends with `/feedback`: 5 years.
 - Metrics and metadata.
+
+**Without ZDR,** transcripts a user shares with `/feedback`, `/bug` or `/share` are kept for **5 years** ([Data usage](https://code.claude.com/docs/en/data-usage)). Under ZDR those commands are off, so this doesn't apply.
 
 **Model choice:** Anthropic's most capable "Covered Models" tier **requires 30-day retention.** ZDR roles must use a model outside it.
 
@@ -102,8 +103,8 @@ Sources: [Data residency](https://platform.claude.com/docs/en/manage-claude/data
 |---|---|---|---|---|---|
 | **Internal** | Process docs, public account info | Team or Enterprise | Everything: chat, Cowork, Claude Code, Claude Tag, connectors, Managed Agents | Individual plans | Commercial terms; SSO; baseline managed settings |
 | **Confidential** | CRM data, customer contracts, financials | Enterprise (Team acceptable with a lower audit need) | Claude Code local, Cowork, vetted connectors; Claude Tag only in scoped private channels | Individual plans; unvetted connectors | Custom retention (otherwise local sessions are kept 6 years); IP allowlist; inference-hook data-loss prevention; managed deny rules plus sandbox; connector allowlist; telemetry and feedback off |
-| **Highly sensitive** (PE deal data, MNPI) | Target lists, deal models, LP data | **Separate Enterprise org with ZDR** | Claude Code locally on a ZDR sign-in, or the Agent SDK in a hardened container; fully self-hosted Managed Agents | Claude Tag, cloud sessions, Remote Control, hosted Managed Agents, API skills, code execution, Files, Batch, the API's MCP connector, **web search and fetch** (queries can reveal deal intent) | A model outside "Covered Models"; org lock via MDM; sandbox that fails closed; allowlists of reachable domains and file paths; scripts that return results, not raw records; redaction hooks; **your own audit log** (the Compliance API excludes ZDR); one org or deployment per deal team, as an information barrier |
-| **PHI / HIPAA** | Patient records | **Dedicated HIPAA org** (permanent) with a signed BAA | Claude Code CLI or Code tab under the HIPAA configuration; API with eligible features only | Connectors, IDE extensions, Claude Tag, skills, code execution, Files, Batch, MCP connector, web fetch, Managed Agents; Agent SDK until confirmed in writing | HIPAA managed settings; v2.1.285 or later; no gateway or custom base URL; no PHI in schemas, tool names, workspace names or CLAUDE.md; local transcripts purged within 30 days |
+| **Highly sensitive** (PE deal data, MNPI) | Target lists, deal models, LP data | **Separate Enterprise org with ZDR** | Claude Code locally on a ZDR sign-in; fully self-hosted Managed Agents. ⚠ **Unverified:** whether the Agent SDK is covered under HIPAA or ZDR. No page says so; don't use it until Anthropic confirms in writing | Claude Tag, cloud sessions, Remote Control, hosted Managed Agents, API skills, code execution, Files, Batch, the API's MCP connector, **web search and fetch** (queries can reveal deal intent) | A model outside "Covered Models"; org lock via MDM; sandbox that fails closed; allowlists of reachable domains and file paths; scripts that return results, not raw records; redaction hooks; **your own audit log** (the Compliance API excludes ZDR); one org or deployment per deal team, as an information barrier |
+| **PHI / HIPAA** | Patient records | **Dedicated HIPAA org** (permanent) with a signed BAA | Claude Code CLI or Code tab under the HIPAA configuration. **No hosted route** until Anthropic confirms one in writing | Connectors, IDE extensions, Claude Tag, skills, code execution, Files, Batch, MCP connector, web fetch, Managed Agents; the Agent SDK (⚠ **Unverified:** whether it is covered; see above) | HIPAA managed settings; v2.1.285 or later; no gateway or custom base URL; no PHI in schemas, tool names, workspace names or CLAUDE.md; local transcripts purged within 30 days |
 
 ## Design patterns that keep data out of the conversation
 
@@ -115,7 +116,7 @@ Sources: [Data residency](https://platform.claude.com/docs/en/manage-claude/data
 
 ## Questions to settle with compliance and legal
 
-- Will compliance accept **2-year retention of flagged content** and **5-year retention of feedback**, even under ZDR? If not, turn off feedback through managed settings.
+- Will compliance accept **2-year retention of flagged content**, even under ZDR? In orgs without ZDR, will it accept **5-year retention of `/feedback` transcripts**? If not, turn feedback off with `DISABLE_FEEDBACK_COMMAND=1` in managed settings ([Data usage](https://code.claude.com/docs/en/data-usage)).
 - With the Compliance API on, Anthropic keeps local sessions for **6 years**. Is that what your records and eDiscovery policies want? If not, set a custom retention period.
 - What is the **audit trail for ZDR roles,** since the Compliance API can't see them?
 - Are **local transcripts on laptops** in scope for legal hold and offboarding?

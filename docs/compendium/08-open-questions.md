@@ -4,12 +4,12 @@
 
 | # | Decision | Why it matters | Who decides |
 |---|---|---|---|
-| D1 | **Team or Enterprise plan on claude.ai?** | Group targeting, security scanning, usage analytics and the Compliance API are Enterprise-only | Admin / IT |
+| D1 | **Team or Enterprise plan on claude.ai?** | Group targeting, security scanning, the usage Analytics API and the Compliance API are Enterprise-only; Team has a usage dashboard ([09](09-plans-and-it-controls.md)) | Admin / IT |
 | D2 | **Who are the Owners**, and who gets the "Libraries" permission? | Only Owners and Primary Owners manage org skills; the Admin role isn't enough | Admin / IT |
-| D3 | **Does any role touch regulated data** (data needing ZDR, HIPAA, CMEK)? | Skills and Managed Agents aren't eligible; this changes the runtime choice | Security / legal |
+| D3 | **Does any role touch regulated data** (data needing ZDR, HIPAA, CMEK)? | Skills used through the API or Managed Agents aren't eligible, and the Agent SDK's cover is ⚠ Unverified; this changes the runtime choice ([10](10-sensitive-data.md)) | Security / legal |
 | D4 | **Direct Anthropic, or AWS / Google Cloud?** | Hosted features (Skills API, Managed Agents, Claude Tag) may not be offered through the cloud providers ⚠ Unverified | IT / procurement |
 | D5 | **Which systems are the source of truth for each role** (CRM, ticketing, ERP), and is there an MCP connector for each? | The twin can only reach systems that have a connector; a missing one means building or buying it | Each role's ops lead |
-| D6 | **What we measure** (time saved, adoption, quality) | Usage analytics need Enterprise; API-workspace skills have none | Sponsor |
+| D6 | **What we measure** (time saved, adoption, quality) | The usage Analytics API needs Enterprise, and API-workspace skills have no usage data. A Team customer can still measure: users and activity per plugin and skill over 30 days ([Plugin admin](https://claude.com/docs/plugins/admin)); the usage dashboard ([Pricing](https://claude.com/pricing)); the Claude Code analytics dashboard and its CSV export ([Claude Code analytics](https://code.claude.com/docs/en/analytics)); and our own evals and governance log ([15](15-governance-and-performance.md)) | Sponsor |
 | D7 | **Who writes skills, who reviews them, who owns evals** | Authors shouldn't review their own work; evals need re-running when models change | Program owner |
 | D8 | **Autonomy ceiling per role** | See [06](06-autonomy.md) | Each role's leader, with security |
 
@@ -20,7 +20,7 @@
 - **D4 (cloud route):** decided. We use Claude directly from Anthropic, and Anthropic-hosted agents. AWS and Google Cloud are parked for later.
 - **D5 (systems):** CRM, Google Sheets and Drive, SharePoint and shared drives, Slack and Teams. See [11](11-connectors.md).
 - **New, D9:** how many Claude orgs (one per data class), and who owns each.
-- **New, D10:** whether to accept retention exceptions under ZDR (flagged content kept 2 years, feedback kept 5 years), and the 6-year default for Compliance API sessions.
+- **New, D10:** whether to accept flagged content kept up to 2 years even under ZDR; in orgs without ZDR, `/feedback` transcripts kept 5 years (feedback is off under ZDR, see [10](10-sensitive-data.md)); and the 6-year default for Compliance API sessions.
 
 ### Status after the third round (2026-11-14)
 
@@ -43,12 +43,12 @@
 
 **Identity and access**
 
-1. Whose name is on each action, and does it change between a Slack channel and a DM? (In a channel, Claude Tag acts as a service account; in a DM, as the user.)
+1. Whose name is on each action, and does it change between a Slack channel and a DM? (In a channel or a group DM that includes Claude, Claude Tag acts as its own service account; work done with a user's own claude.ai connectors, after they allow it, is recorded under that user's name; in a one-to-one DM it runs as the user. [Tag identity](https://claude.com/docs/claude-tag/concepts/agent-identity.md))
 2. When an employee leaves, which twin jobs stop and which keep running?
    - Stop: personal scheduled tasks and DM routines.
    - Keep running: channel routines and anything they shared.
 3. Can one API key reach every user's stored credentials? With Managed Agents vaults, yes: any key with access to the workspace can. Plan workspaces with that in mind.
-4. Can we offer "sign in with claude.ai" in something we build? Not without Anthropic's approval.
+4. Can we offer "sign in with claude.ai" in something we build? Not without Anthropic's approval: "Unless previously approved, Anthropic does not allow third party developers to offer claude.ai login or rate limits for their products" ([Agent SDK](https://code.claude.com/docs/en/agent-sdk/overview.md)).
 
 **Skills lifecycle**
 

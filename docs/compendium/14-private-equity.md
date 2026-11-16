@@ -68,8 +68,8 @@ Build so that soft walls (B) can become hard walls (C) without rework:
 
 | Part | Choice |
 |---|---|
-| Orgs | Org 2 (Enterprise, ZDR) for people; org 3 (Platform, ZDR) for hosted agents ([12](12-orgs-and-ownership.md)) |
-| Surfaces | Claude Code or Desktop on managed devices; a hosted twin for unmanaged devices ([13](13-devices.md)); chat for work that isn't deal-specific |
+| Orgs | Org 2 (Enterprise, ZDR) for people; org 3 (Platform, ZDR) for hosted agents, on self-hosted Managed Agents ([12](12-orgs-and-ownership.md)). ⚠ **Unverified:** whether the Agent SDK is covered under HIPAA or ZDR. No page says so; get written confirmation from Anthropic before using it ([10](10-sensitive-data.md)) |
+| Surfaces | Highly sensitive deal work: Claude Code on a ZDR sign-in on a managed device, with no Desktop (ZDR doesn't cover chat or Cowork). A hosted twin for unmanaged devices ([13](13-devices.md)); chat for work that isn't deal-specific |
 | Connectors | Salesforce and HubSpot (per-user OAuth); SharePoint and Google Drive (per-user); no shared identities |
 | Autonomy | Level 1 (drafts) to start; nothing leaves the firm without a person approving it ([06](06-autonomy.md)) |
 | Data handling | Scripts return results, not records; redaction hooks for names of targets and LPs; web tools off ([10](10-sensitive-data.md)) |

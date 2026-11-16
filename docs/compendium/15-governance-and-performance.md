@@ -58,8 +58,16 @@ Points to cover in that discussion:
 - **Private-equity org:** 30-day custom retention for chat, as a starting point. Claude Code and hosted agents run under ZDR.
 - **Our governance log** is the long-term audit record. Set its retention with compliance.
 - **Keep in view:**
-  - Even under ZDR, flagged content can be kept for up to 2 years, and `/feedback` transcripts for 5 years.
+  - Even under ZDR, flagged content can be kept for up to 2 years ([Claude Code ZDR](https://code.claude.com/docs/en/zero-data-retention)). In orgs without ZDR, `/feedback` transcripts are kept 5 years; under ZDR feedback is off ([10](10-sensitive-data.md)).
   - The general org keeps Compliance API sessions for 6 years by default unless a custom period is set ([10](10-sensitive-data.md)). Set it to match policy.
+
+## Team plan with no device management
+
+A Team customer with no MDM runs its twin in claude.ai on the web ([13](13-devices.md#team-plan-with-no-device-management) lists what that surface gets). For governance this means:
+
+- **What we can record:** the usage dashboard and the per-plugin and per-skill Users and Activity counts over 30 days ([Pricing](https://claude.com/pricing), [Plugin admin](https://claude.com/docs/plugins/admin)); and source-system audit in the customer's own tools.
+- **What we can't:** there's no audit log and no Compliance API on Team ([Audit logs](https://support.claude.com/en/articles/9970975), [Pricing](https://claude.com/pricing)). The governance log above depends on a Claude Code hook in managed settings ([Hooks](https://code.claude.com/docs/en/hooks)), which doesn't exist in claude.ai on the web, and server-managed settings alone are "not a security boundary" ([Server-managed settings](https://code.claude.com/docs/en/server-managed-settings.md)).
+- **So the twin cannot meet a requirement to log every action.** (Our conclusion from the sources above.) Raise this in discovery. If the requirement stands, the customer needs Claude Code on MDM-managed devices with the managed hook ([13](13-devices.md)).
 
 ## Measuring performance
 

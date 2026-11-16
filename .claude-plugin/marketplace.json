@@ -8,7 +8,7 @@
     {
       "name": "twin-shared",
       "source": "./starter-kit/plugins/twin-shared",
-      "description": "Shared skills, such as house style and account research, that every role twin installs."
+      "description": "Shared skill for every role twin: writing in house style."
     },
     {
       "name": "twin-pe-deal-team",

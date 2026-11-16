@@ -13,17 +13,20 @@ KIT_DIR = ROOT / "starter-kit"
 PLUGINS_DIR = KIT_DIR / "plugins"
 MARKETPLACE = ROOT / ".claude-plugin" / "marketplace.json"
 
-# Limits for SKILL.md frontmatter, from the Agent Skills overview:
+# Limits for SKILL.md frontmatter. The name limits come from the Agent Skills overview:
 # https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview
+# The platform allows 1024 characters of description; the kit's own, stricter limit is 200
+# (starter-kit/docs/authoring-skills.md).
 SKILL_NAME_MAX_CHARS = 64
 SKILL_NAME_PATTERN = re.compile(r"^[a-z0-9-]+$")
 SKILL_NAME_RESERVED_WORDS = ("anthropic", "claude")
-SKILL_DESCRIPTION_MAX_CHARS = 1024
+SKILL_DESCRIPTION_MAX_CHARS = 200
 
-# Body size guidance, from the Agent Skills best practices:
-# https://docs.claude.com/en/docs/agents-and-tools/agent-skills/best-practices
-# ("Keep SKILL.md body under 500 lines"), so a body must have fewer lines than this.
-SKILL_BODY_MAX_LINES = 500
+# Body size: the platform guidance is under 500 lines
+# (https://docs.claude.com/en/docs/agents-and-tools/agent-skills/best-practices);
+# the kit's own, stricter limit is under 150 lines (starter-kit/docs/authoring-skills.md).
+# A body must have fewer lines than this.
+SKILL_BODY_MAX_LINES = 150
 
 # Cross-surface frontmatter keys: the portability rule in
 # docs/compendium/03-skills-authoring.md. A skill folder holding a file with the
@@ -240,6 +243,100 @@ class SkillStructureTest(unittest.TestCase):
                 self.assertEqual(problems, [], f"{rel}: " + "; ".join(problems))
 
 
+TEMPLATE_SKILL_DIR = KIT_DIR / "templates" / "skill" / "your-skill-name"
+
+
+def skill_dirs():
+    """Every skill folder under the plugins, plus the skill template."""
+    dirs = [p.parent for p in sorted(PLUGINS_DIR.rglob("SKILL.md"))] if PLUGINS_DIR.is_dir() else []
+    if TEMPLATE_SKILL_DIR.is_dir():
+        dirs.append(TEMPLATE_SKILL_DIR)
+    return dirs
+
+
+def eval_problems(skill_dir):
+    """Return problems with a skill folder's evals/evals.json and evals/trigger-evals.json.
+
+    The template's placeholder values meet every check (its skill_name equals its
+    folder name and its files lists are empty), so it needs no exception.
+    """
+    problems = []
+    loaded = {}
+    for name in ("evals.json", "trigger-evals.json"):
+        path = skill_dir / "evals" / name
+        if not path.is_file():
+            problems.append(f"evals/{name} is missing")
+            continue
+        try:
+            loaded[name] = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            problems.append(f"evals/{name} is not valid JSON: {exc}")
+
+    data = loaded.get("evals.json")
+    if data is not None:
+        if not isinstance(data, dict):
+            problems.append("evals/evals.json must hold a JSON object at the top level")
+        else:
+            if "skill_name" in data and data["skill_name"] != skill_dir.name:
+                problems.append(
+                    f"evals/evals.json skill_name {data['skill_name']!r} must equal "
+                    f"the folder name {skill_dir.name!r}"
+                )
+            cases = data.get("evals", [])
+            if not isinstance(cases, list):
+                problems.append("evals/evals.json 'evals' must be a list")
+                cases = []
+            for case in cases:
+                files = case.get("files", []) if isinstance(case, dict) else []
+                if not isinstance(files, list):
+                    problems.append(f"case {case.get('id')!r}: 'files' must be a list")
+                    continue
+                for rel in files:
+                    if not isinstance(rel, str) or not (skill_dir / rel).is_file():
+                        problems.append(f"case {case.get('id')!r}: file {rel!r} does not exist")
+
+    trigger = loaded.get("trigger-evals.json")
+    if trigger is not None and not isinstance(trigger, list):
+        problems.append("evals/trigger-evals.json must hold a JSON list")
+    return problems
+
+
+class SkillEvalFilesTest(unittest.TestCase):
+    def test_skill_dirs_found(self):
+        self.assertTrue(skill_dirs(), "no skill folders found")
+
+    def test_every_skill_has_valid_eval_files(self):
+        for folder in skill_dirs():
+            rel = folder.relative_to(ROOT)
+            with self.subTest(skill=str(rel)):
+                problems = eval_problems(folder)
+                self.assertEqual(problems, [], f"{rel}: " + "; ".join(problems))
+
+    def test_eval_checker_catches_problems(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            skill = Path(tmp) / "my-skill"
+            (skill / "evals").mkdir(parents=True)
+            self.assertEqual(len(eval_problems(skill)), 2)  # both files missing
+            (skill / "evals" / "trigger-evals.json").write_text("[", encoding="utf-8")
+            (skill / "evals" / "evals.json").write_text(
+                json.dumps({"skill_name": "other", "evals": [{"id": 1, "files": ["evals/files/x.md"]}]}),
+                encoding="utf-8",
+            )
+            text = "; ".join(eval_problems(skill))
+            self.assertIn("not valid JSON", text)
+            self.assertIn("must equal", text)
+            self.assertIn("does not exist", text)
+            (skill / "evals" / "files").mkdir()
+            (skill / "evals" / "files" / "x.md").write_text("x", encoding="utf-8")
+            (skill / "evals" / "trigger-evals.json").write_text("[]", encoding="utf-8")
+            (skill / "evals" / "evals.json").write_text(
+                json.dumps({"skill_name": "my-skill", "evals": [{"id": 1, "files": ["evals/files/x.md"]}]}),
+                encoding="utf-8",
+            )
+            self.assertEqual(eval_problems(skill), [])
+
+
 class SkillCheckerSelfTest(unittest.TestCase):
     """The checker itself, on synthetic input, since the kit may hold no skills yet."""
 
@@ -264,8 +361,10 @@ class SkillCheckerSelfTest(unittest.TestCase):
         self.assertTrue(skill_problems("other-folder", self.GOOD))
 
     def test_description_limits(self):
-        text = "---\nname: x\ndescription: " + "d" * 1025 + "\n---\nbody\n"
+        text = "---\nname: x\ndescription: " + "d" * (SKILL_DESCRIPTION_MAX_CHARS + 1) + "\n---\nbody\n"
         self.assertTrue(skill_problems("x", text))
+        ok = "---\nname: x\ndescription: " + "d" * SKILL_DESCRIPTION_MAX_CHARS + "\n---\nbody\n"
+        self.assertEqual(skill_problems("x", ok), [])
         self.assertTrue(skill_problems("x", "---\nname: x\ndescription:\n---\nbody\n"))
 
     def test_extra_keys_need_marker(self):

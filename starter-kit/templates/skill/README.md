@@ -50,5 +50,5 @@ characters, and no "anthropic" or "claude". In `evals/evals.json`, set
    skill needs Claude Code-only keys, see "CLAUDE_CODE_ONLY" in the guide.
 7. Run `python3 -m unittest discover -s tests`.
 
-The full step order, including how to run skill-creator's evals, is in
+Install skill-creator on your own unmanaged machine, because the settings baselines allow only the kit marketplace on managed devices (see "Install skill-creator" in the guide). The full step order, including how to run skill-creator's evals, is in
 [../../docs/authoring-skills.md](../../docs/authoring-skills.md).

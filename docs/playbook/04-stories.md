@@ -61,7 +61,7 @@ Plus: the skill triggers on <phrases>; no web tools (if MNPI); every write carri
 | Field | Value |
 |---|---|
 | Data class | Highly sensitive (private equity) |
-| Surface | Claude Code / Desktop on a managed device, in the private-equity ZDR org |
+| Surface | Claude Code on a ZDR sign-in, on a managed device (no Desktop), in the private-equity ZDR org |
 | Autonomy level | 1 (draft only) |
 | Connectors and identity | Salesforce (opportunity, account), per-user, read-only. SharePoint (deal folder), per-user, read-only. |
 | Wall impact | Soft: relies on Salesforce and SharePoint role-based access |

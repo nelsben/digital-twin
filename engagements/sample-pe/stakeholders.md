@@ -2,7 +2,7 @@
 
 > **Fictional customer, invented people.** Example Capital Partners and every name, title and person on this page are invented. Any resemblance to a real person is a coincidence. This is the worked example for [03 Stakeholders](../../docs/playbook/03-stakeholders.md). Copy the structure for a real customer, not the content.
 
-[Discovery](discovery.md) used roles instead of names and promised the named people here. This page names one person for every customer and partner role in the playbook, gives the engagement RACI, and says who signs each phase gate and how we keep in touch. Nothing here changes a discovery answer: the sponsor is the COO, the Director of IT is technical owner and Primary Owner, an IT administrator is the backup Owner, the RevOps manager is business owner, Compliance / legal owns C2 and C3, Security owns E6, and the source-system admins own G2.
+[Discovery](discovery.md) used roles instead of names and promised the named people here. This page names one person for every customer and partner role in the playbook, gives the engagement RACI, and says who signs each phase gate and how we keep in touch. Nothing here changes a discovery answer: the sponsor is the COO, the Director of IT is technical owner and Primary Owner, an IT administrator is the backup Owner, the RevOps manager is business owner, Compliance / legal owns C2 and C3, Security owns E6, and the source-system admins own E4 and G2.
 
 Later documents (design, backlog, sign-offs) should refer to people by role and name as written in the tables below.
 
@@ -18,8 +18,8 @@ Roles and responsibilities are those in [03 Stakeholders](../../docs/playbook/03
 | **Business owner** | Samir Castellanos | RevOps manager | Which deal-team tasks to automate, story priority, choosing the 6 pilot users, autonomy promotions (CRM writes to level 2 only on scorecard evidence), the monthly scorecard. | - |
 | **Compliance / legal** | Ngozi Brandvold | Chief Compliance Officer | Data classes, retention, information walls and the PHI question. Signs off on retention and walls. | C2: PHI exposure and BAA (due 2026-11-27); C3: retention and the ZDR exceptions (due 2026-12-04) |
 | **Security** | Rashida Kovalenko | CISO | Reviewing connectors and skills, the device policy, IP allowlisting, access controls on the governance log. | E6: allowlisting `160.79.104.0/21` (due 2026-11-27) |
-| **Source-system admins** (Salesforce) | Joaquin Lindahl | Salesforce administrator | External Client App and OAuth setup for Salesforce Hosted MCP, roles and sharing rules, field markers for twin edits. Confirms before the pilot that deal-team and investor-relations roles are fully separated (E4). | G2: Salesforce Event Monitoring and related logs (due 2026-11-27) |
-| **Source-system admins** (HubSpot) | Imani Petrov | HubSpot administrator | User permissions and teams on the investor-relations side of the wall. Confirms the same role boundary as the Salesforce admin (E4). | - |
+| **Source-system admins** (Salesforce) | Joaquin Lindahl | Salesforce administrator | External Client App and OAuth setup for Salesforce Hosted MCP, roles and sharing rules, field markers for twin edits. Confirms before the pilot that deal-team and investor-relations roles are fully separated (E4). | E4: written confirmation that deal-team and investor-relations roles are fully separated in Salesforce (due 2026-11-27); G2: Salesforce Event Monitoring and related logs (due 2026-11-27) |
+| **Source-system admins** (HubSpot) | Imani Petrov | HubSpot administrator | User permissions and teams on the investor-relations side of the wall. Confirms the same role boundary as the Salesforce admin (E4). | E4: written confirmation that the roles are fully separated in HubSpot (due 2026-11-27) |
 | **Source-system admins** (M365) | Hiroshi Delacroix | Microsoft 365 administrator | Tenant consent for the Microsoft 365 connector (a Global Admin must consent), SharePoint site and library permissions. | - |
 | **Skill owner** (company briefs, T1; call prep, T5) | Callum Nwosu | Associate, deal team | Content, examples and evals for the company-brief and call-prep skills; reviews changes. | F3: good and weak example briefs and a sample CRM update (due 2026-12-04, shared across skill owners) |
 | **Skill owner** (CRM update T2; CIM screening T4) | Beatriz Halloran | Principal, deal team | Content, examples and evals for the post-meeting CRM update and CIM-screening skills; reviews changes. | F3 (shared, as above) |
@@ -63,7 +63,7 @@ One row per phase gate in [01 Engagement model](../../docs/playbook/01-engagemen
 
 | Phase | Gate (what is signed off) | Signs for the customer (name, role) | Also required |
 |---|---|---|---|
-| **1. Discovery** | Discovery summary | Marguerite Oyelaran, COO (executive sponsor) | Every question answered or open with an owner; the 7 open items carry due dates (the last on 2026-12-04) |
+| **1. Discovery** | Discovery summary | Marguerite Oyelaran, COO (executive sponsor) | Every question answered or open with an owner; the 8 open items carry due dates (the last on 2026-12-04) |
 | **2. Design** | Design document and the prioritized backlog | Tomasz Hadjiev, Director of IT (technical owner), and Samir Castellanos, RevOps manager (business owner) | Ngozi Brandvold, CCO, signs off on retention and the walls (C2, C3 closed first) |
 | **3. Build** | Each story's acceptance criteria (its evals passing) | Samir Castellanos, RevOps manager (business owner) | The skill owner for that story confirms the evals reflect good work; Tomasz Hadjiev confirms connector and settings stories |
 | **4. Pilot** | Pilot scorecard | Samir Castellanos, RevOps manager (business owner) | Marguerite Oyelaran, COO, reviews the scorecard at steering |

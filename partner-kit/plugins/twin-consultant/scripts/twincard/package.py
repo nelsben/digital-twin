@@ -56,6 +56,35 @@ SECTIONS = (
     ("7. Check it worked and hand over",
      ("settings-verify", "governance-log-check", "source-audit", "wall-test")),
 )
+# The task-library templates deploy.md leaves out on purpose, each with its reason: work before, around or after
+# the deployment, not a step the admin takes in the customer's org. Every template is placed (SECTIONS or HANDOVER)
+# or matches one entry here, never both; a trailing * names a family. design.md 8a lists the same entries.
+EXCLUDED = (
+    ("collect-examples", "authoring: examples from real work, gathered before the skill is written"),
+    ("write-skill", "authoring: the skill itself, which build and the evals cover"),
+    ("write-evals", "authoring: the evals, whose result record takes as evals-passing evidence"),
+    ("trigger-evals", "authoring: the trigger evals, part of reaching evals-passing"),
+    ("second-review", "authoring: a second person's review, before evals-passing"),
+    ("success-check", "authoring: a success check written into the skill or runner"),
+    ("role-plugin-build", "authoring: the role plugin, built before package copies it"),
+    ("twin-marker-skill", "authoring: the skill sets the marker; the CRM field is a twin-marker-<crm> step in "
+                          "section 3"),
+    ("persona-*", "authoring: the persona voice, written into the role plugin before packaging"),
+    ("evidence-level-*", "evidence for a higher autonomy level, gathered after deployment"),
+    ("compliance-sign-off", "a sign-off before the story is built; deploy.md shows it as a gate on the story"),
+    ("confirm-unverified-decision", "a fact confirmed with Anthropic or the vendor before build, not a step in the org"),
+    ("blocker-*", "a blocker stops the build, so it is resolved before anything is packaged"),
+    ("warning-*", "a warning is resolved or accepted in planning; any setting it leads to is its own task"),
+    ("connector-inventory", "planning: the list the connector steps in section 3 come from"),
+    ("data-providers-decide", "a decision, recorded on the card"),
+    ("deliver-draft", "a decision on where the draft lands, agreed with the owner"),
+    ("missed-run-plan", "a plan for missed runs, agreed with the owner"),
+    ("runtime-none", "nothing is built for the task, so there is nothing to deploy"),
+    ("memory-policy", "a written policy, not a setting in the org"),
+    ("memory-on", "telling pilot users what memory keeps: training, not a setting"),
+    ("pilot-*", "the pilot's users, baseline, training and scorecard, run with the business"),
+    ("twin-marker-report", "a report on the marker in the CRM, after go-live"),
+)
 CHECK_ANCHORS = ("#check-it-worked", "#hand-over")
 HANDOVER = "owner-handover"
 SECTION_INTRO = {
@@ -81,6 +110,14 @@ PACKAGE_NEXT = ("Next: run the evals, record evals-passing for each artifact, th
 
 class PackageError(ValueError):
     """The customer folder cannot be packaged (exit 2)."""
+
+
+def excluded(template):
+    """The EXCLUDED reason deploy.md leaves this template out for, or None."""
+    for name, reason in EXCLUDED:
+        if template == name or (name.endswith("*") and template.startswith(name[:-1])):
+            return reason
+    return None
 
 
 def _rank(status):

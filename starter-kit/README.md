@@ -20,6 +20,7 @@ The starter kit is the set of parts we copy into a customer's repo to build a ro
 | [templates/pilot/memory-policy.md](templates/pilot/memory-policy.md) | What the twin may remember for one role and what it must not, with the sign-off |
 | [templates/pilot/pilot-training.md](templates/pilot/pilot-training.md) | The pilot users' training session and where they report a failure |
 | [runbooks/identity-devices-publishing.md](runbooks/identity-devices-publishing.md) | SCIM groups, the managed-settings rollout, and publishing the marketplace to the right groups |
+| [runbooks/claude-code-for-a-role.md](runbooks/claude-code-for-a-role.md) | Install Claude Code, sign in and check it for a role that does not use it yet |
 | [runbooks/salesforce-hosted-mcp.md](runbooks/salesforce-hosted-mcp.md) | Connect Salesforce through its hosted MCP server with per-user OAuth |
 | [runbooks/microsoft-365-connector.md](runbooks/microsoft-365-connector.md) | Connect Microsoft 365: tenant consent, a SharePoint access check, and Outlook mail and calendar |
 | [runbooks/hubspot-connector.md](runbooks/hubspot-connector.md) | Connect HubSpot to a role's twin |

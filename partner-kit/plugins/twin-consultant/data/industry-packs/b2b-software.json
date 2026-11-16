@@ -61,8 +61,8 @@
     {
       "system_kind": "crm",
       "product": "HubSpot",
-      "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
-      "identity": "Per user, via OAuth, within the user's HubSpot permissions.",
+      "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic); an Owner adds it on Team and Enterprise. Super Admins and users with App Marketplace access permissions can connect it without prior app approval; for all other users a Super Admin approves it first and, while approving, selects the data permissions it may reach and who in the account can install it. With HubSpot's Sensitive Data settings on, a Super Admin can grant the connector read-only access to Sensitive Data properties and engagements during installation or reauthentication, and the user also needs the matching CRM object or property-level permissions. HubSpot recommends setting write tools to Needs approval.",
+      "identity": "Per user, via OAuth: each user signs in with their own HubSpot account, within the user's HubSpot permissions.",
       "runbook": "starter-kit/runbooks/hubspot-connector.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": false
@@ -70,7 +70,7 @@
     {
       "system_kind": "documents",
       "product": "Google Drive",
-      "how": "The Google Drive directory connector, built and run by Google. An Owner adds it on Team and Enterprise. It reads and creates files.",
+      "how": "The Google Drive directory connector, built and run by Google; an Owner adds it on Team and Enterprise. It searches, reads and creates files; the help-center article adds sharing, moving and trashing files, and the listing names share_file and trash_file among its tools. (Our recommendation) set each of those tools to Blocked or Needs approval. Shared-drive support is unverified.",
       "identity": "Per user, via OAuth; each member connects their own Google account.",
       "runbook": "starter-kit/runbooks/google-workspace-connectors.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -79,25 +79,25 @@
     {
       "system_kind": "email-calendar",
       "product": "Gmail",
-      "how": "The Gmail directory connector. An Owner or Primary Owner enables it on Team and Enterprise. Read and search only: it can't draft, send or change mail.",
+      "how": "The Gmail directory connector; an Owner or Primary Owner enables it on Team and Enterprise. The sources conflict over its write tools: the help-center article and the listing name send, reply and forward tools, and the connector page says it only reads. Set every write tool to Blocked or Needs approval, and plan the task on reads until the Google Workspace runbook's write test shows the tools in the customer's org.",
       "identity": "Per user, via OAuth with the user's own Google account.",
       "runbook": "starter-kit/runbooks/google-workspace-connectors.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-      "unverified": false
+      "unverified": true
     },
     {
       "system_kind": "email-calendar",
       "product": "Google Calendar",
-      "how": "The Google Calendar directory connector. An Owner or Primary Owner enables it on Team and Enterprise. Read only: it can't create or change events.",
+      "how": "The Google Calendar directory connector; an Owner or Primary Owner enables it on Team and Enterprise. The sources conflict over its write tools: the help-center article and the listing name tools that create, update and delete events, and the connector page says it only reads. Set every write tool to Blocked or Needs approval, and plan the task on reads until the Google Workspace runbook's write test shows the tools in the customer's org.",
       "identity": "Per user, via OAuth with the user's own Google account.",
       "runbook": "starter-kit/runbooks/google-workspace-connectors.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-      "unverified": false
+      "unverified": true
     },
     {
       "system_kind": "messaging",
       "product": "Slack",
-      "how": "The Slack directory connector (Team and Enterprise; the Claude in Slack app installed first). An Owner enables it. Whether it can post is unconfirmed; the Slack MCP server can.",
+      "how": "The Slack directory connector (Team and Enterprise; the Claude in Slack app installed first); an Owner enables it. Its listing names slack_send_message, slack_create_canvas and slack_update_canvas beside its search and read tools, while its connector page documents only search. The Slack MCP server can send and schedule messages.",
       "identity": "Per user: each member connects their own account.",
       "runbook": "starter-kit/runbooks/slack-connector.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -106,8 +106,8 @@
     {
       "system_kind": "ticketing",
       "product": "Zendesk",
-      "how": "Zendesk's External AI connection (early access), https://<subdomain>.zendesk.com/mcp, added by an Owner as a custom connector. A Zendesk admin creates the connection and limits it to agent groups.",
-      "identity": "Per user, via OAuth: each user authorizes their own Zendesk account.",
+      "how": "Zendesk's External AI connection (early access), https://<subdomain>.zendesk.com/mcp, added by an Owner as a custom connector. A Zendesk admin creates the connection and limits it to agent groups. Zendesk's pages conflict over whether it asks a person before each change, so don't count on Zendesk asking, and set each write tool to Needs approval in Claude.",
+      "identity": "Per user, via OAuth: each user authorizes their own Zendesk account. Whether no call ever runs as a shared identity is unverified.",
       "runbook": "starter-kit/runbooks/zendesk-connector.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": true

@@ -61,4 +61,4 @@ In Claude terms, a twin is not one thing. It is a package of parts: a persona, s
 - **(Our recommendation):** our judgment, not Anthropic's wording.
 - **(Our reading):** our interpretation of a source that does not state the point outright.
 
-These four are the only marker forms. A page writes them with these spellings: the bold labels `**⚠ Conflict:**` and `**⚠ Unverified:**`, and `(Our recommendation)` or `(Our reading)`, which may be bold and may take a colon. A heading may also carry the recommendation label as part of its name.
+These four are the only marker forms. A page writes them with these spellings: the bold labels `**⚠ Conflict:**` and `**⚠ Unverified:**`, and `(Our recommendation)` or `(Our reading)`, which may be bold and may take a colon. The warning sign is used only in the two bold labels. Headings, and diagrams inside code fences, are exempt: a heading may carry the recommendation label as part of its name.

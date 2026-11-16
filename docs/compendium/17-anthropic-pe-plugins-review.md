@@ -63,7 +63,7 @@ Notes that apply to the whole plugin:
 
 1. The tool call's arguments go to the vendor's server: a company name, a ticker or a question. **⚠ Unverified:** whether a plugin's remote server is called from the laptop or from Anthropic. Compendium 11 says claude.ai connectors call from Anthropic's IP range, but no page we read says the same for a plugin's `.mcp.json` server in Claude Code.
 2. The vendor's answer enters the conversation and is sent to Anthropic. ZDR covers this only in Claude Code on a ZDR sign-in, not in Cowork or chat.
-3. The vendor keeps whatever its own terms allow. ⚠ Unverified for all 12 vendors: what they log or retain about queries. Anthropic doesn't audit any MCP server ([managed MCP](https://code.claude.com/docs/en/managed-mcp)).
+3. The vendor keeps whatever its own terms allow. **⚠ Unverified:** for all 12 vendors, what they log or retain about queries. Anthropic doesn't audit any MCP server ([managed MCP](https://code.claude.com/docs/en/managed-mcp)).
 
 **The MNPI exposure is the query itself.** Asking a vendor about a private company, or pulling comps for a public one, tells that vendor what the firm is looking at. For a live deal that is MNPI, whatever the vendor sends back. The `.mcp.json` gives only URLs and no sign-in details. The README says "MCP access may require a subscription or API key from the provider". **⚠ Unverified:** each vendor's identity model (per user or shared).
 
@@ -89,7 +89,7 @@ Notes that apply to the whole plugin:
 | Web search and fetch | `dcf-model`, `deal-sourcing`; EDGAR in `3-statement-model` | The search provider and every site fetched. Queries reveal deal intent | Search runs through Anthropic; the sites fetched are third parties | **No.** Already denied in `pe-zdr.managed-settings.json`; the steps are removed in our copy |
 | Gmail (read, search, draft) | `deal-sourcing` | Google | Third | **No.** Not in the connector plan. A mail draft plus outside content is a send route |
 | Slack (read) | `deal-sourcing` | Slack | Third | **No.** Not enabled for the deal team |
-| Office add-in tools (`mcp__office__*`) | `3-statement-model`, `dcf-model`, `comps-analysis`, `lbo-model`, `clean-data-xls`, `xlsx-author`, `pptx-author` | Anthropic, through the add-in | First | **No for MNPI** until ZDR coverage of the add-ins is confirmed (⚠ unverified) |
+| Office add-in tools (`mcp__office__*`) | `3-statement-model`, `dcf-model`, `comps-analysis`, `lbo-model`, `clean-data-xls`, `xlsx-author`, `pptx-author` | Anthropic, through the add-in | First | **No for MNPI** until ZDR coverage of the add-ins is confirmed (**⚠ Unverified:** ZDR coverage of the add-ins) |
 | `recalc.py` and LibreOffice; Python packages | `lbo-model`, `3-statement-model`, `dcf-model`; `xlsx-author`, `pptx-author` | Stay on the laptop | Local | **Yes.** IT installs them on managed devices |
 | Memory | `deal-screening` | In Claude Code, local memory files; in chat, Claude's memory, which isn't ZDR | First | **Adapt.** Fund criteria go in the skill's reference file instead |
 

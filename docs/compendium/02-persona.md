@@ -39,7 +39,7 @@ Keep the persona short. Put task procedures in skills, not in the persona: the p
 |---|---|---|
 | API, Agent SDK, Managed Agents | System prompt | You control it fully. |
 | Claude Code | **Output style** for role, tone and format, plus **CLAUDE.md** for facts that are always true (under 200 lines) | A custom output style drops Claude Code's coding instructions unless `keep-coding-instructions: true` is set. A plugin can force its style with `force-for-plugin`. Subagents don't inherit the style. ([Output styles](https://code.claude.com/docs/en/output-styles.md)) |
-| Claude.ai, Desktop | Project instructions; skills | ⚠ Unverified in this research: how a Project's instructions relate to an org plugin. Confirm before relying on it. |
+| Claude.ai, Desktop | Project instructions; skills | **⚠ Unverified:** how a Project's instructions relate to an org plugin (not confirmed in this research). Confirm before relying on it. |
 | Claude Tag (Slack) | Channel memory and workspace notes | Anyone in the channel can read and edit these. ([Tag memory](https://claude.com/docs/claude-tag/users/memory.md)) |
 
 **Treat the persona as an instruction, not a guarantee.** Anthropic says this directly about output styles. Hard limits belong in tool permissions and hooks ([06](06-autonomy.md)).

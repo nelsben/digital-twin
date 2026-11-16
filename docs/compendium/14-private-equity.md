@@ -28,7 +28,7 @@ Private equity is the primary use case. Some firms or teams need **information b
 |---|---|---|
 | **Shared-identity connectors** (service accounts, Claude Tag integration users, HubSpot private-app tokens) | The twin sees everything the service account can, so the wall is gone | **Per-user OAuth only.** Each person's Salesforce, HubSpot and SharePoint permissions then apply to their twin. |
 | **Skills that contain deal data** | Skills are shared across the org or a group | Skills hold **methods, never deal data**. Deal facts come from connectors at run time. |
-| **Projects, shared chats, artifacts** | They can be shared across teams | Turn off or limit sharing. ⚠ Per-group sharing controls are unverified: ask Anthropic. |
+| **Projects, shared chats, artifacts** | They can be shared across teams | Turn off or limit sharing. **⚠ Unverified:** per-group sharing controls; ask Anthropic. |
 | **Memory** | Claude.ai memory is per user, which is fine. Project memory is shared with the project's members. | One Project per deal team, with members from that team only |
 | **Hosted agents** | One agent serving several deal teams mixes their contexts | **One deployment per wall.** Anthropic recommends one self-hosted deployment per tenant or trust level ([Self-hosted Managed Agents](https://platform.claude.com/docs/en/managed-agents/self-hosted-data-and-access)). |
 | **Admins** | Org Owners can see across teams | Keep Owners few; separation of duties; our own audit |
@@ -37,9 +37,9 @@ Private equity is the primary use case. Some firms or teams need **information b
 ## Salesforce and HubSpot behind a wall
 
 - **Salesforce:** with per-user OAuth (through an External Client App), the twin acts as the user. Salesforce's own record sharing (roles, sharing rules, account and opportunity teams) should then decide what it sees.
-  - ⚠ Confirm with a test user on each side of the wall before relying on it.
-  - ⚠ Salesforce Hosted MCP may require Enterprise Edition or higher (from a secondary source).
-- **HubSpot:** `mcp.hubspot.com` uses per-user OAuth, so HubSpot's team and record permissions should apply. ⚠ Confirm the same way.
+  - Confirm with a test user on each side of the wall before relying on it.
+  - **⚠ Unverified:** Salesforce Hosted MCP may require Enterprise Edition or higher (from a secondary source).
+- **HubSpot:** `mcp.hubspot.com` uses per-user OAuth, so HubSpot's team and record permissions should apply. Confirm the same way.
 - **Avoid Claude Tag connections** to these systems for walled teams. They use an integration user (Salesforce) or a private-app token (HubSpot), and both bypass per-user permissions.
 
 Sources: [Salesforce on Desktop](https://claude.com/docs/third-party/claude-desktop/connectors-salesforce.md), [HubSpot MCP](https://developers.hubspot.com/docs/build-with-ai/remote-mcp-server), [Claude Tag connections](https://claude.com/docs/claude-tag/admins/connections/overview.md).
@@ -49,7 +49,7 @@ Sources: [Salesforce on Desktop](https://claude.com/docs/third-party/claude-desk
 | Design | How it works | Strength of the wall | Admin cost | When to use |
 |---|---|---|---|---|
 | **A. No walls** | One private-equity org; skills, Projects and hosted agents shared | Only what the source systems enforce | Low | Teams without barrier requirements; firm-wide work that isn't deal-specific |
-| **B. Soft walls** (our recommended starting point) | One private-equity org. The source systems enforce the walls, through per-user identity. Enterprise groups per team decide which plugins each sees. No shared identities. One Project per deal team. One hosted deployment per wall, as separate workspaces in the Platform org. | Relies on source-system permissions plus disciplined configuration | Medium | Most firms, especially where walls already exist in Salesforce and SharePoint |
+| **B. Soft walls**, the starting point (Our recommendation) | One private-equity org. The source systems enforce the walls, through per-user identity. Enterprise groups per team decide which plugins each sees. No shared identities. One Project per deal team. One hosted deployment per wall, as separate workspaces in the Platform org. | Relies on source-system permissions plus disciplined configuration | Medium | Most firms, especially where walls already exist in Salesforce and SharePoint |
 | **C. Hard walls** | A separate Claude org (and a separate hosted deployment) per walled team | Strongest: separate admin, retention and audit | High, and it grows with each wall | When a regulator or LP requires provable separation, or for MNPI on public-company deals |
 
 **Decided (2026-11-14):** start with **B, soft walls.** Salesforce, HubSpot and SharePoint already enforce walls through role-based access, in the usual Salesforce governance model. Hard walls (C) remain an upgrade path.

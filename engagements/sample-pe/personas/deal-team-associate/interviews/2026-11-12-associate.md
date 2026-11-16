@@ -16,7 +16,7 @@ Write what they said in their words. Questions are in [interview-guide.md](../..
 
 ### P1. Your role
 
-"I'm an associate on the deal team, one of 18 of us across partners, principals and associates. I work on an Intune laptop, and for anything on a live deal I'm in Claude Code on the firm's sign-in. Nothing deal-specific goes in chat."
+"I'm an associate on the deal team, one of 18 of us across partners, principals and associates. I work on an Intune laptop that IT manages, and for anything on a live deal I'm in Claude Code on the firm's sign-in. Nothing deal-specific goes in chat."
 
 ### P2. Who you serve
 
@@ -24,7 +24,7 @@ Write what they said in their words. Questions are in [interview-guide.md](../..
 
 ### P3. A good week
 
-"A good week is one where the briefs and screening notes are done by Wednesday, so I can spend the rest on the model and the diligence calls. The jobs I'd hand over: company briefs, call prep and first-pass CIM screening, and the memo drafting the partners ask for."
+"A good week is one where the briefs and screening notes are done by Wednesday, so I can spend the rest on the model and the diligence calls. The jobs I'd hand over: company briefs, the CRM update after a meeting, call prep and first-pass CIM screening, and the memo drafting the partners ask for."
 
 ### P4. How it should sound
 
@@ -44,15 +44,15 @@ Task id: T1    Task name: Prepare a one-page company brief
 
 #### F1. Your tasks
 
-"About four a week, around 90 minutes each. It's the biggest single chunk of my week. It's the first thing I'd want in the pilot."
+"About four a week, around 90 minutes each. About three of us on the team do it. It's the biggest single chunk of my week. It's the first thing I'd want in the pilot."
 
 #### F2. What goes in, what comes out
 
-"The deal record in Salesforce, then the prior memos and data-room files in SharePoint. Out comes one page for the deal team. It's all deal material, so highly sensitive."
+"The deal record in Salesforce, then the prior memos and data-room files in SharePoint; I only look at those. Out comes one page for the deal team. It's all deal material, so highly sensitive."
 
 #### F3. What good looks like
 
-"I'll share two past briefs, one good and one weak. Not collected yet."
+"I'll share two past briefs, one good and one weak. Not collected yet. Callum Nwosu is who I'd ask whether a brief is right."
 
 #### F4. If it goes wrong
 
@@ -76,7 +76,7 @@ Task id: T1    Task name: Prepare a one-page company brief
 
 #### F9. Remembering
 
-"I don't want it to remember things between briefs. Each one should start fresh from Salesforce and SharePoint."
+"I don't want it to remember things between briefs. Each one should start fresh from Salesforce and SharePoint. Nothing about one deal should be remembered into another."
 
 ## Task block
 
@@ -88,11 +88,11 @@ Task id: T4    Task name: Screen an inbound CIM or teaser
 
 #### F2. What goes in, what comes out
 
-"The document I upload, or one in SharePoint. If it came by email I save it to SharePoint first. Then Salesforce for whether we've spoken to the company before. Out comes a screening summary with a pursue-or-pass suggestion."
+"The document I upload, or one in SharePoint. If it came by email I save it to SharePoint first. Then Salesforce for whether we've spoken to the company before. I only look at all of that. Out comes a screening summary with a pursue-or-pass suggestion. It's deal material, so highly sensitive."
 
 #### F3. What good looks like
 
-"No examples yet for this one."
+"No examples yet for this one. Beatriz Halloran is who I'd ask whether a screening is right."
 
 #### F4. If it goes wrong
 
@@ -104,7 +104,7 @@ Task id: T4    Task name: Screen an inbound CIM or teaser
 
 #### F6. Who else sees it
 
-"The principal who decides whether we pursue."
+"The principal who decides whether we pursue. It stays inside the firm."
 
 #### F7. Undo and money
 
@@ -112,7 +112,7 @@ Task id: T4    Task name: Screen an inbound CIM or teaser
 
 #### F8. Things written by outsiders
 
-"The CIM is the seller's document, but it's saved to our SharePoint and we read it as a document, not as instructions."
+"No. The CIM is the seller's document, but it's saved to our SharePoint and we read it as a document, not as instructions."
 
 #### F9. Remembering
 
@@ -124,15 +124,15 @@ Task id: T5    Task name: Prepare for a management or expert call
 
 #### F1. Your tasks
 
-"About eight a month, 45 minutes each."
+"About eight a month, 45 minutes each. Not for the pilot."
 
 #### F2. What goes in, what comes out
 
-"Salesforce, SharePoint and the prior call notes in SharePoint. A briefing note for whoever is on the call."
+"Salesforce, SharePoint and the prior call notes in SharePoint; I only look at them. A briefing note for whoever is on the call. It's deal material, so highly sensitive."
 
 #### F3. What good looks like
 
-"No examples yet."
+"No examples yet. Callum Nwosu is who I'd ask whether a briefing note is right."
 
 #### F4. If it goes wrong
 
@@ -144,7 +144,7 @@ Task id: T5    Task name: Prepare for a management or expert call
 
 #### F6. Who else sees it
 
-"Only the caller."
+"Only the caller. It stays inside the firm."
 
 #### F7. Undo and money
 

@@ -24,7 +24,7 @@ Write what they said in their words. Questions are in [interview-guide.md](../..
 
 ### P3. A good week
 
-"Salesforce is up to date after every meeting, and the Monday pipeline view is right without anyone spending an hour on it. The twin should always show the record a fact came from, and say when something is missing."
+"Salesforce is up to date after every meeting, and the Monday pipeline view is right without anyone spending an hour on it. The twin should always show the record a fact came from, and say when something is missing. It should use the firm's one-page brief format for briefs."
 
 ### P4. How it should sound
 
@@ -44,19 +44,19 @@ Task id: T2    Task name: Update the CRM after a meeting
 
 #### F1. Your tasks
 
-"About ten a week for each of us, 15 minutes each. With the company brief, it's what I'd want first."
+"About ten a week for each of us, and all 18 of us on the deal team do it, 15 minutes each. With the company brief, it's what I'd want first in the pilot."
 
 #### F2. What goes in, what comes out
 
-"My meeting notes or the Teams transcript, and the Salesforce opportunity. The output is the activity log and the next-step fields on that opportunity. Deal data, so highly sensitive."
+"My meeting notes or the Teams transcript, and the Salesforce opportunity; I only look those up. The output is the activity log and the next-step fields on that opportunity. Deal data, so highly sensitive."
 
 #### F3. What good looks like
 
-"We'll share a sample CRM update. Not collected yet."
+"We'll share a sample CRM update. Not collected yet. Beatriz Halloran is who I'd ask whether an update is right."
 
 #### F4. If it goes wrong
 
-"Low to medium: stale or wrong pipeline data. Say medium."
+"Low to medium: stale or wrong pipeline data. Say medium. That's why writes start as drafts I approve."
 
 #### F5. What starts it
 
@@ -64,7 +64,7 @@ Task id: T2    Task name: Update the CRM after a meeting
 
 #### F6. Who else sees it
 
-"The deal team, in Salesforce."
+"The deal team, in Salesforce. All inside the firm."
 
 #### F7. Undo and money
 
@@ -84,11 +84,11 @@ Task id: T3    Task name: Weekly pipeline summary for the Monday deal meeting
 
 #### F1. Your tasks
 
-"Once a week, about an hour, before the Monday deal meeting. Not for the pilot."
+"Once a week, about an hour, before the Monday deal meeting. Not for the pilot. The whole deal team uses it, all 18 of us."
 
 #### F2. What goes in, what comes out
 
-"The Salesforce pipeline report. A summary posted to the deal team in Teams."
+"The Salesforce pipeline report, which I only look at. A summary posted to the deal team in Teams. It's deal data, so highly sensitive."
 
 #### F3. What good looks like
 
@@ -104,7 +104,7 @@ Task id: T3    Task name: Weekly pipeline summary for the Monday deal meeting
 
 #### F6. Who else sees it
 
-"The deal team, in the Teams channel."
+"The deal team, in the Teams channel. All inside the firm."
 
 #### F7. Undo and money
 

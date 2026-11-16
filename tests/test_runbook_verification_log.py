@@ -1,4 +1,5 @@
-"""Checks the verification-log sections for the four runtime runbooks (OPS-59).
+"""Checks the verification-log sections for the four runtime runbooks (OPS-59)
+and the four connector runbooks (OPS-60).
 
 For each file in VERIFIED_RUNBOOKS:
 
@@ -30,12 +31,29 @@ VERIFIED_RUNBOOKS = [
     "claude-tag-routine.md",
     "managed-agents.md",
     "agent-sdk-runner.md",
+    "hubspot-connector.md",
+    "google-workspace-connectors.md",
+    "slack-connector.md",
+    "zendesk-connector.md",
 ]
 
 STATES = ("Confirmed", "Corrected", "Unverified")
 MIN_ROWS = 15
 
-ACCEPTED_HOSTS = ("platform.claude.com", "code.claude.com", "support.claude.com")
+ACCEPTED_HOSTS = (
+    "platform.claude.com",
+    "code.claude.com",
+    "support.claude.com",
+    "knowledge.hubspot.com",
+    "developers.hubspot.com",
+    "support.google.com",
+    "knowledge.workspace.google.com",
+    "developers.google.com",
+    "docs.slack.dev",
+    "api.slack.com",
+    "support.zendesk.com",
+    "developer.zendesk.com",
+)
 ACCEPTED_GITHUB_ORGS = ("anthropics", "anthropic-ai", "modelcontextprotocol")
 
 NEW_SENTENCE = re.compile(
@@ -99,6 +117,8 @@ def accepted_url(url):
         return True
     if host == "claude.com":
         return parsed.path.startswith("/docs/") or parsed.path.startswith("/connectors")
+    if host == "slack.com":
+        return parsed.path.startswith("/help/")
     if host == "github.com":
         parts = [p for p in parsed.path.split("/") if p]
         return bool(parts) and parts[0] in ACCEPTED_GITHUB_ORGS

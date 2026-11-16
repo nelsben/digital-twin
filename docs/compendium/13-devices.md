@@ -54,7 +54,7 @@ Sources: [Claude Code ZDR](https://code.claude.com/docs/en/zero-data-retention) 
 For private-equity users on unmanaged devices:
 
 - Run the twin **on our infrastructure**: self-hosted Managed Agents, in the ZDR Platform org (org 3 in [12](12-orgs-and-ownership.md)). Self-hosted Managed Agents is the one Managed Agents setup that ZDR covers.
-- ⚠ **Unverified:** whether the Agent SDK is covered under HIPAA or ZDR. No page says so. Don't build this twin on it until Anthropic confirms in writing.
+- On the Agent SDK: it signs in with an API key, and the [HIPAA setup page](https://code.claude.com/docs/en/hipaa-setup.md) says a session on "A Claude Console API key or federation credentials" is not eligible for the HIPAA configuration ([10](10-sensitive-data.md#what-hipaa-covers)). **⚠ Unverified:** whether the Agent SDK is covered under ZDR. Don't build this twin on it until Anthropic confirms in writing.
 - Give it a **simple front end**: a web page behind SSO, or a Teams or Slack bot.
 - The device only displays results. Tools, files and credentials stay on our servers.
 
@@ -76,8 +76,8 @@ Some customers are on Team, have no MDM, and want a twin for a non-regulated rol
 
 **What it doesn't get:**
 
-- **Managed settings and hooks.** Both belong to Claude Code (hooks fire in the terminal, the IDE extensions, the Desktop app and cloud sessions; the page doesn't name claude.ai chat). Server-managed settings are on Team, but they configure Claude Code, and they are "a client-side control, not a security boundary" ([Server-managed settings](https://code.claude.com/docs/en/server-managed-settings.md), [Hooks](https://code.claude.com/docs/en/hooks)). Without MDM there is no managed settings file either (see the table above).
+- **Managed settings and hooks.** Both belong to Claude Code. The [hooks page](https://code.claude.com/docs/en/hooks) says "Claude Code fires the same hook events wherever it runs": sessions in the terminal, IDE extensions, the "Desktop app" and cloud sessions. Its "Desktop app" link goes to Claude Code's [Desktop quickstart](https://code.claude.com/docs/en/desktop-quickstart.md), which puts Claude Code "in the **Code** tab" of the desktop app: the Code tab, not a chat in Claude Desktop. In a self-hosted environment Claude Code also runs the hooks the operator seeded. (Our reading): no hook covers claude.ai chat, Cowork, Claude in Slack or Claude Tag, or Teams, because the hooks page names none of them ([15](15-governance-and-performance.md#one-governance-log-for-all-twins-our-recommendation)). Server-managed settings are on Team, but they configure Claude Code, and they are "a client-side control, not a security boundary" ([Server-managed settings](https://code.claude.com/docs/en/server-managed-settings.md), [Hooks](https://code.claude.com/docs/en/hooks)). Without MDM there is no managed settings file either (see the table above).
 - **The governance log** in [15](15-governance-and-performance.md), because it is a hook.
 - **An audit log or the Compliance API.** Both are Enterprise only ([Audit logs](https://support.claude.com/en/articles/9970975), [Pricing](https://claude.com/pricing)).
 
-**So such a twin cannot meet a requirement to log every action.** (Our conclusion from the sources above.) If the customer has that requirement, the twin needs Claude Code on MDM-managed devices with the governance hook locked in managed settings ([15](15-governance-and-performance.md)). Enterprise adds the audit log and the Compliance API, but neither is a log of each tool call. (Our recommendation.)
+**So such a twin cannot meet a requirement to log every action.** (Our reading) of the sources above. If the customer has that requirement, the twin needs Claude Code on MDM-managed devices with the governance hook locked in managed settings ([15](15-governance-and-performance.md)). Enterprise adds the audit log and the Compliance API, but neither is a log of each tool call. (Our recommendation)

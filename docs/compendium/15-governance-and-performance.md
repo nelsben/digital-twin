@@ -42,6 +42,12 @@ Source-system audit (Salesforce, HubSpot, M365) ─────────┘
 
 The hook lives in managed settings, so users can't remove it on managed devices. Hosted agents log on the server, so unmanaged devices are covered too ([13](13-devices.md)).
 
+**Where the hook fires.** The [hooks page](https://code.claude.com/docs/en/hooks) says "Claude Code fires the same hook events wherever it runs: sessions in the terminal, IDE extensions, the Desktop app, and cloud sessions". Its "Desktop app" link goes to Claude Code's [Desktop quickstart](https://code.claude.com/docs/en/desktop-quickstart.md), which puts Claude Code "in the **Code** tab" of the desktop app: the Code tab, not a chat in Claude Desktop. In a self-hosted environment Claude Code also runs the hooks the operator seeded from the runner host. (Our reading): the governance hook covers none of claude.ai chat, Cowork, Claude in Slack or Claude Tag, or Teams, because the hooks page names none of them.
+
+**A Claude Tag routine has no per-action log.** No hook covers it (above), and Claude Tag's audit page says "There is no per-action log of every task and who asked". Its trails are the **Activity** page (each routine's **Created by** on the Scheduled work tab, memory, and a best-effort network events export), each connected service's own audit log, and on Enterprise with the Compliance API, the session transcript with Claude's tool calls ([Claude Tag audit](https://claude.com/docs/claude-tag/admins/audit.md)).
+
+**Agent SDK sessions.** The Agent SDK loads plugins by path, and a plugin can carry hooks (`hooks/hooks.json`) with its skills, agents and MCP servers: "Load custom plugins to extend Claude Code with skills, agents, hooks, and MCP servers through the Agent SDK" ([Agent SDK plugins](https://code.claude.com/docs/en/agent-sdk/plugins.md)). (Our reading): an Agent SDK session that loads the twin's plugin by path brings the plugin's hooks with it, so the governance hook can travel in the plugin.
+
 ### Where the log lives: settle it with each customer
 
 **Decided (2026-11-14):** we don't prescribe the destination. It is a **discussion point with each customer**, and IT owns the tooling choice. The design above stays fixed: what gets recorded, metadata only for private equity, and one log for all twins. Only the destination changes.
@@ -67,7 +73,7 @@ A Team customer with no MDM runs its twin in claude.ai on the web ([13](13-devic
 
 - **What we can record:** the usage dashboard and the per-plugin and per-skill Users and Activity counts over 30 days ([Pricing](https://claude.com/pricing), [Plugin admin](https://claude.com/docs/plugins/admin)); and source-system audit in the customer's own tools.
 - **What we can't:** there's no audit log and no Compliance API on Team ([Audit logs](https://support.claude.com/en/articles/9970975), [Pricing](https://claude.com/pricing)). The governance log above depends on a Claude Code hook in managed settings ([Hooks](https://code.claude.com/docs/en/hooks)), which doesn't exist in claude.ai on the web, and server-managed settings alone are "not a security boundary" ([Server-managed settings](https://code.claude.com/docs/en/server-managed-settings.md)).
-- **So the twin cannot meet a requirement to log every action.** (Our conclusion from the sources above.) Raise this in discovery. If the requirement stands, the customer needs Claude Code on MDM-managed devices with the managed hook ([13](13-devices.md)).
+- **So the twin cannot meet a requirement to log every action.** (Our reading) of the sources above. Raise this in discovery. If the requirement stands, the customer needs Claude Code on MDM-managed devices with the managed hook ([13](13-devices.md)).
 
 ## Measuring performance
 

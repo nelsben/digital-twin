@@ -68,7 +68,7 @@ Build so that soft walls (B) can become hard walls (C) without rework:
 
 | Part | Choice |
 |---|---|
-| Orgs | Org 2 (Enterprise, ZDR) for people; org 3 (Platform, ZDR) for hosted agents, on self-hosted Managed Agents ([12](12-orgs-and-ownership.md)). ⚠ **Unverified:** whether the Agent SDK is covered under HIPAA or ZDR. No page says so; get written confirmation from Anthropic before using it ([10](10-sensitive-data.md)) |
+| Orgs | Org 2 (Enterprise, ZDR) for people; org 3 (Platform, ZDR) for hosted agents, on self-hosted Managed Agents ([12](12-orgs-and-ownership.md)). On HIPAA, the Agent SDK signs in with an API key, and the [HIPAA setup page](https://code.claude.com/docs/en/hipaa-setup.md) says a session on "A Claude Console API key or federation credentials" is not eligible for the HIPAA configuration ([10](10-sensitive-data.md#what-hipaa-covers)). **⚠ Unverified:** whether the Agent SDK is covered under ZDR; get written confirmation from Anthropic before using it |
 | Surfaces | Highly sensitive deal work: Claude Code on a ZDR sign-in on a managed device, with no Desktop (ZDR doesn't cover chat or Cowork). A hosted twin for unmanaged devices ([13](13-devices.md)); chat for work that isn't deal-specific |
 | Connectors | Salesforce and HubSpot (per-user OAuth); SharePoint and Google Drive (per-user); no shared identities |
 | Autonomy | Level 1 (drafts) to start; nothing leaves the firm without a person approving it ([06](06-autonomy.md)) |

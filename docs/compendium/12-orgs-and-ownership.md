@@ -20,13 +20,13 @@ The technical owner's duties:
 
 Sources: [Plugins admin](https://claude.com/docs/plugins/admin) (Plugins & skills is for Owners and Primary Owners; the Admin role doesn't include it), [Connectors](https://claude.com/docs/connectors/getting-started.md) (an Owner adds connectors on Team and Enterprise), [Pricing](https://claude.com/pricing) (SCIM, audit logs and the Compliance API on Enterprise), [Claude Code ZDR](https://code.claude.com/docs/en/zero-data-retention) (ZDR is enabled per org; a new org needs its own enablement).
 
-**Why this matters:** each extra org repeats all of that work: its own SSO app, settings, plugin publishing, connector setup, audit and offboarding. Orgs are easy to request and costly to run. So the goal is **as few orgs as the data rules allow** (our recommendation).
+**Why this matters:** each extra org repeats all of that work: its own SSO app, settings, plugin publishing, connector setup, audit and offboarding. Orgs are easy to request and costly to run. So the goal is **as few orgs as the data rules allow** (Our recommendation).
 
 ## Why more than one org
 
 Some settings apply to a whole org and conflict with each other:
 
-- **HIPAA readiness on the API is permanent** once it's turned on, and it blocks many features. ⚠ **Unverified:** whether the Enterprise HIPAA configuration can be turned off again; no page fetched says so.
+- **HIPAA readiness on the API is permanent** once it's turned on, and it blocks many features. **⚠ Unverified:** whether the Enterprise HIPAA configuration can be turned off again; no page fetched says so.
 - **ZDR** turns off Claude Tag, cloud sessions and artifacts in Claude Code.
 - **CMEK** turns off Claude in Slack (Claude Tag), Claude Code on the web and skill scanning.
 
@@ -42,7 +42,7 @@ A sales twin that uses Claude Tag and a private-equity twin that needs ZDR can't
 |---|---|---|---|---|---|
 | 1 | **General** | Claude Enterprise | Sales, CS and ops twins; internal and confidential data | SSO, SCIM, custom retention, Compliance API, Claude Tag allowed; connectors for Salesforce, HubSpot, Google, Microsoft 365 and Slack | Day 1 |
 | 2 | **Private equity** | Claude Enterprise **with ZDR** (CMEK optional) | Private-equity twins (the primary use case) | ZDR; no Claude Tag or cloud sessions; custom retention for chat (ZDR doesn't cover chat, see [14](14-private-equity.md)); org lock via device management; our own audit log | Day 1 |
-| 3 | **Build and hosted** | Claude Platform (API/Console) org **with ZDR** | Developing and evaluating skills (API skills aren't ZDR- or HIPAA-eligible, so develop them with non-sensitive data); hosted private-equity agents on self-hosted Managed Agents. ⚠ **Unverified:** whether the Agent SDK is covered under HIPAA or ZDR | Workspaces: `dev`, `staging`, `prod`; `inference_geo: us`; pinned skill versions ([Skills guide](https://platform.claude.com/docs/en/build-with-claude/skills-guide): pin a version for production) | Day 1 if a hosted twin is in phase 1 or 2; otherwise when the first hosted job arrives |
+| 3 | **Build and hosted** | Claude Platform (API/Console) org **with ZDR** | Developing and evaluating skills (API skills aren't ZDR- or HIPAA-eligible, so develop them with non-sensitive data); hosted private-equity agents on self-hosted Managed Agents. On HIPAA, the Agent SDK signs in with an API key, and the [HIPAA setup page](https://code.claude.com/docs/en/hipaa-setup.md) says a session on "A Claude Console API key or federation credentials" is not eligible for the HIPAA configuration ([10](10-sensitive-data.md#what-hipaa-covers)). **⚠ Unverified:** whether the Agent SDK is covered under ZDR | Workspaces: `dev`, `staging`, `prod`; `inference_geo: us`; pinned skill versions ([Skills guide](https://platform.claude.com/docs/en/build-with-claude/skills-guide): pin a version for production) | Day 1 if a hosted twin is in phase 1 or 2; otherwise when the first hosted job arrives |
 | 4 | **HIPAA** | Enterprise with the HIPAA configuration, or Platform with HIPAA readiness | Roles that handle PHI | Permanent; requires a BAA | **Only when a PHI role is actually in scope.** Don't create it early. |
 | +N | **Walled private equity** | Copy of org 2 | One per *hard* information barrier | Same as org 2 | Only if compliance requires provable separation ([14](14-private-equity.md)) |
 
@@ -56,13 +56,13 @@ A customer on **Team** whose twins handle only internal and confidential data (f
 
 | # | Org | Plan type | For | Key settings | When |
 |---|---|---|---|---|---|
-| 1T | **General (Team)** | Claude Team | Customer success and other non-regulated roles | SSO (⚠ **Conflict:** the docs disagree on SSO for Team, see [09](09-plans-and-it-controls.md)); Owner-added connectors with per-tool permissions; org-wide skills and plugins, shared to everyone (no group targeting); usage dashboard; server-managed settings for Claude Code, the same for every user; Claude Tag allowed | Day 1 |
+| 1T | **General (Team)** | Claude Team | Customer success and other non-regulated roles | SSO (**⚠ Conflict:** the docs disagree on SSO for Team, see [09](09-plans-and-it-controls.md)); Owner-added connectors with per-tool permissions; org-wide skills and plugins, shared to everyone (no group targeting); usage dashboard; server-managed settings for Claude Code, the same for every user; Claude Tag allowed | Day 1 |
 
 What Team lacks compared with org 1: SCIM, custom retention, audit logs, the Compliance API and group targeting are Enterprise only. If the customer must log every action, see [13](13-devices.md#team-plan-with-no-device-management).
 
 Sources: [Pricing](https://claude.com/pricing), [Plugin admin](https://claude.com/docs/plugins/admin), [Connectors](https://claude.com/docs/connectors/getting-started.md), [Server-managed settings](https://code.claude.com/docs/en/server-managed-settings.md), [Custom retention](https://support.claude.com/en/articles/10440198-custom-data-retention-controls-for-claude-enterprise), [Claude Tag](https://claude.com/docs/claude-tag/overview.md) (Team and Enterprise, public beta).
 
-⚠ **Ask Anthropic:**
+**Ask Anthropic:**
 
 - Can a Platform org and an Enterprise org share administration, or are they fully separate?
 - Can ZDR apply to part of an Enterprise org?

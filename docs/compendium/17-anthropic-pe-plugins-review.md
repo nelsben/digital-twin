@@ -4,7 +4,7 @@ Page [16](16-oob-skills-and-references.md) recommends starting the private-equit
 
 **What was reviewed.** Commit [`3e32c2287dcb637c184c01cc0ad82d6af7e9bb0f`](https://github.com/anthropics/financial-services/commit/3e32c2287dcb637c184c01cc0ad82d6af7e9bb0f) on `main` (2026-11-12), read on 2026-11-14 from a clone of the repo. Both plugins are at version `0.1.2` in their `plugin.json`. The last commit that touched either plugin folder is [`6056506`](https://github.com/anthropics/financial-services/commit/60565064557ca77b12f62aa7877f365d111c129d) (2026-10-28). The licence is Apache-2.0 ([LICENSE](https://github.com/anthropics/financial-services/blob/3e32c2287dcb637c184c01cc0ad82d6af7e9bb0f/LICENSE)). Every file link below is pinned to the reviewed commit.
 
-Verdicts use page 16's terms: **adopt** (use as shipped), **adapt** (change it, and we say what), **skip** (don't use, and we say why). All verdicts are (our recommendation).
+Verdicts use page 16's terms: **adopt** (use as shipped), **adapt** (change it, and we say what), **skip** (don't use, and we say why). All verdicts are (Our recommendation).
 
 ## The short answer
 
@@ -53,7 +53,7 @@ Verdicts use page 16's terms: **adopt** (use as shipped), **adapt** (change it, 
 
 Notes that apply to the whole plugin:
 
-- **Office add-in tools.** Several skills prefer `mcp__office__excel_*` or `mcp__office__powerpoint_*` when present. Those tools come from the Claude for Excel and PowerPoint add-ins, not from this plugin. ⚠ Unverified: whether the add-ins are covered by ZDR. Until confirmed, MNPI work stays in Claude Code and produces files.
+- **Office add-in tools.** Several skills prefer `mcp__office__excel_*` or `mcp__office__powerpoint_*` when present. Those tools come from the Claude for Excel and PowerPoint add-ins, not from this plugin. **⚠ Unverified:** whether the add-ins are covered by ZDR. Until confirmed, MNPI work stays in Claude Code and produces files.
 - **Descriptions are long.** Every skill description except `xlsx-author` and `pptx-author` is over 200 characters (they run 226 to 643). Compendium [03](03-skills-authoring.md) says to stay under 200 for now. Shorten them in our copy.
 - **⚠ Conflict:** the repo README says `financial-analysis` has "All 11 data connectors", but its `.mcp.json` lists 12. Box was added later ([#187](https://github.com/anthropics/financial-services/commit/120a31dcede4affa1d771cbf286a63ee331f92a4)). We go by the file.
 
@@ -61,11 +61,11 @@ Notes that apply to the whole plugin:
 
 **How a connector call flows in Claude Code** (from compendium [10](10-sensitive-data.md) and [11](11-connectors.md)):
 
-1. The tool call's arguments go to the vendor's server: a company name, a ticker or a question. ⚠ Unverified: whether a plugin's remote server is called from the laptop or from Anthropic. Compendium 11 says claude.ai connectors call from Anthropic's IP range, but no page we read says the same for a plugin's `.mcp.json` server in Claude Code.
+1. The tool call's arguments go to the vendor's server: a company name, a ticker or a question. **⚠ Unverified:** whether a plugin's remote server is called from the laptop or from Anthropic. Compendium 11 says claude.ai connectors call from Anthropic's IP range, but no page we read says the same for a plugin's `.mcp.json` server in Claude Code.
 2. The vendor's answer enters the conversation and is sent to Anthropic. ZDR covers this only in Claude Code on a ZDR sign-in, not in Cowork or chat.
 3. The vendor keeps whatever its own terms allow. ⚠ Unverified for all 12 vendors: what they log or retain about queries. Anthropic doesn't audit any MCP server ([managed MCP](https://code.claude.com/docs/en/managed-mcp)).
 
-**The MNPI exposure is the query itself.** Asking a vendor about a private company, or pulling comps for a public one, tells that vendor what the firm is looking at. For a live deal that is MNPI, whatever the vendor sends back. The `.mcp.json` gives only URLs and no sign-in details. The README says "MCP access may require a subscription or API key from the provider". ⚠ Unverified: each vendor's identity model (per user or shared).
+**The MNPI exposure is the query itself.** Asking a vendor about a private company, or pulling comps for a public one, tells that vendor what the firm is looking at. For a live deal that is MNPI, whatever the vendor sends back. The `.mcp.json` gives only URLs and no sign-in details. The README says "MCP access may require a subscription or API key from the provider". **⚠ Unverified:** each vendor's identity model (per user or shared).
 
 | Connector (from `.mcp.json`) | Who runs it, and what it holds | First or third party | MNPI exposure | In the private-equity ZDR org |
 |---|---|---|---|---|
@@ -82,7 +82,7 @@ Notes that apply to the whole plugin:
 | `egnyte` `https://mcp-server.egnyte.com/mcp` | Egnyte: document storage | Third | It holds the firm's own documents, so reads add no new party. The risk is what the twin can reach | **No** for this firm (it uses SharePoint). For a firm that keeps deal files there: acceptable after the compendium 11 review, per user and read-only |
 | `box` `https://mcp.box.com` | Box: document storage | Third | Same as Egnyte | Same as Egnyte |
 
-**Test before any data vendor is allowed (our recommendation).** All four must hold: the firm already subscribes; a data agreement covers query confidentiality and retention; sign-in is per user; and compliance accepts that the vendor sees what the firm looks up. Even then, the org can't tell which data class a session holds, so the reasoning that turns web search off org-wide applies here too (compendium [14](14-private-equity.md)). That is why none of them is in the pilot.
+**Test before any data vendor is allowed (Our recommendation).** All four must hold: the firm already subscribes; a data agreement covers query confidentiality and retention; sign-in is per user; and compliance accepts that the vendor sees what the firm looks up. Even then, the org can't tell which data class a session holds, so the reasoning that turns web search off org-wide applies here too (compendium [14](14-private-equity.md)). That is why none of them is in the pilot.
 
 | Other external tool a skill asks for | Used by | Where data goes | First or third party | In the private-equity ZDR org |
 |---|---|---|---|---|
@@ -119,7 +119,7 @@ So layering does not save work on the pilot. It saves work on the backlog, and i
 
 **Option B: one plugin entry with a `git-subdir` source and a `sha`.** This pins one folder of the upstream repo from inside `digital-twin-kit`. It keeps one marketplace and an exact commit, but it can't change files. Both plugins need changes, so it doesn't fit here.
 
-**Option C: vendor into `digital-twin-kit` (our recommendation).** Copy the two plugin folders at the reviewed commit into `starter-kit/plugins/`, make the changes in sections 1 and 2, and publish them from our one marketplace.
+**Option C: vendor into `digital-twin-kit` (Our recommendation).** Copy the two plugin folders at the reviewed commit into `starter-kit/plugins/`, make the changes in sections 1 and 2, and publish them from our one marketplace.
 
 - Record the upstream repo, path and full SHA in the copy, for example in an `UPSTREAM.md` beside `plugin.json`.
 - Keep the Apache-2.0 licence. Section 4(b) of the [licence](https://github.com/anthropics/financial-services/blob/3e32c2287dcb637c184c01cc0ad82d6af7e9bb0f/LICENSE) requires "prominent notices stating that You changed the files" on every modified file.

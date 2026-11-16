@@ -226,3 +226,24 @@ New sources for page 11's rows:
 Not found: https://claude.com/connectors/zendesk returned 404 on 2026-11-15, so a Claude directory listing for Zendesk is not confirmed.
 
 Re-fetched on 2026-11-15 to re-check rows: Connectors directory, Google Drive connector, Google Workspace MCP, Slack connector, Slack MCP, HubSpot remote MCP, MCP tunnels. Their URLs are listed above.
+
+## Compendium follow-ups (OPS-61, fetched 2026-11-16)
+- Google Workspace connectors (help center): https://support.claude.com/en/articles/10166901-use-google-workspace-connectors
+- Gmail connector listing: https://claude.com/connectors/gmail
+- Google Calendar connector listing: https://claude.com/connectors/google-calendar
+- Google Drive connector listing: https://claude.com/connectors/google-drive
+- Slack connector listing: https://claude.com/connectors/slack
+- Claude Tag, migrating from the earlier Claude in Slack app: https://claude.com/docs/claude-tag/admins/migrate-from-earlier.md
+- Claude Tag personal connectors: https://claude.com/docs/claude-tag/concepts/personal-connectors.md
+- Claude Tag skills repository: https://claude.com/docs/claude-tag/admins/skills-repo.md
+- Zendesk Bridge and external AI agents (early access): https://support.zendesk.com/hc/en-us/articles/11398710406554
+- Zendesk Bridge FAQ (early access): https://support.zendesk.com/hc/en-us/articles/11458059060250
+- Zendesk partner AI plugins: https://support.zendesk.com/hc/en-us/articles/11469397822746
+- Agent SDK plugins: https://code.claude.com/docs/en/agent-sdk/plugins.md
+- Self-hosted environment configuration (Claude Code): https://code.claude.com/docs/en/self-hosted-environments-configuration.md
+- Claude Code Desktop quickstart: https://code.claude.com/docs/en/desktop-quickstart.md
+- Self-hosted Managed Agents, differences from the hosted service: https://platform.claude.com/docs/en/managed-agents/self-hosted/differences
+
+Not found: https://claude.com/connectors/zendesk returned 404 on 2026-11-16 (it redirects to https://claude.com/marketplace/connectors/zendesk, which returns 404).
+
+Re-fetched on 2026-11-16 to re-check facts: Gmail, Google Calendar and Google Drive connector pages, Slack connector, Microsoft 365 connector, HubSpot connector for Claude, HubSpot remote MCP, Zendesk external AI agents, Claude Tag memory, proactivity and audit, HIPAA setup, hooks, scheduled tasks, Claude Code skills, Agent SDK overview, Managed Agents overview, skills, webhooks, scheduled deployments and self-hosted, server-managed settings. Their URLs are listed above.

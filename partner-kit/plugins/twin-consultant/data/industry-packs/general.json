@@ -195,8 +195,8 @@
     {
       "system_kind": "crm",
       "product": "HubSpot",
-      "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic), listed by HubSpot and marked Anthropic verified. On Team and Enterprise an Owner adds it. It creates and updates records but does not delete them, at most 10 records per bulk change. HubSpot recommends setting write tools to Needs approval.",
-      "identity": "Per user, via OAuth: each user sees only what their HubSpot permissions allow. A HubSpot Super Admin (or a user with App Marketplace access) approves the connector and sets which data it may reach.",
+      "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic), listed by HubSpot and marked Anthropic verified; on Team and Enterprise an Owner adds it. It creates and updates records but does not delete them, at most 10 records per bulk change, and HubSpot recommends setting write tools to Needs approval. With HubSpot's Sensitive Data settings on, a Super Admin can grant the connector read-only access to Sensitive Data properties and engagements during installation or reauthentication, and the user also needs the matching CRM object or property-level permissions.",
+      "identity": "Per user, via OAuth: each user signs in with their own HubSpot account and sees only what their HubSpot permissions allow. Super Admins and users with App Marketplace access permissions can connect it without prior app approval; for all other users a Super Admin approves it first and, while approving, selects the data permissions it may reach and who in the account can install it.",
       "runbook": "starter-kit/runbooks/hubspot-connector.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": false
@@ -213,7 +213,7 @@
     {
       "system_kind": "documents",
       "product": "Google Drive / Sheets",
-      "how": "The Google Drive directory connector, built and run by Google; an Owner adds it first on Team and Enterprise. It reads and creates files, with about a 10 MB export cap; shared-drive support is not confirmed. Google's Workspace MCP servers (developer preview) include a Sheets server that edits values and formulas.",
+      "how": "The Google Drive directory connector, built and run by Google; an Owner adds it first on Team and Enterprise. It searches, reads and creates files, with about a 10 MB export cap; the help-center article adds sharing, moving and trashing files, and the listing names share_file, trash_file, update_file and copy_file, so (our recommendation) set each of those tools to Blocked or Needs approval. Shared-drive support is unverified. Google's Workspace MCP servers (developer preview) include a Sheets server that edits values and formulas.",
       "identity": "Per user, via OAuth.",
       "runbook": "starter-kit/runbooks/google-workspace-connectors.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -238,9 +238,18 @@
       "unverified": false
     },
     {
+      "system_kind": "email-calendar",
+      "product": "Outlook",
+      "how": "Part of the Microsoft 365 connector from the Claude directory, on every Claude plan; on Team and Enterprise an Owner or Primary Owner adds it first, and only work or school accounts are supported. A work or school account reads by searching email threads and archived email, and sends mail and creates, updates and deletes calendar events only when administrators have turned write actions on. Whether write actions start off for a work account, whether reading calendar events needs them and whether Claude asks before each send are unverified. Section 6a of the Microsoft 365 runbook covers Outlook mail and calendar.",
+      "identity": "Per user, delegated: Claude can read or change only what the user's Microsoft 365 account can already read or change. A work or school account needs a Microsoft Entra Global Administrator to grant tenant consent.",
+      "runbook": "starter-kit/runbooks/microsoft-365-connector.md",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": true
+    },
+    {
       "system_kind": "messaging",
       "product": "Slack",
-      "how": "The Slack directory connector (Team and Enterprise; the Claude in Slack app installed first), which an Owner turns on. Its page documents only search of channels, DMs and files; whether it exposes send tools is Unverified. Slack's own MCP server (mcp.slack.com/mcp) can send and schedule messages.",
+      "how": "The Slack directory connector (Team and Enterprise; the Claude in Slack app installed first), which an Owner turns on. Its listing is headed \"Send messages, create canvases, and fetch Slack data\" and names slack_send_message, slack_create_canvas and slack_update_canvas beside its search and read tools; its connector page documents only search of channels, DMs and files. Slack's own MCP server (mcp.slack.com/mcp) can send and schedule messages.",
       "identity": "Directory connector: per user, each member connects their own account. Slack MCP: user tokens through OAuth with a client secret, and Slack admin approval.",
       "runbook": "starter-kit/runbooks/slack-connector.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -249,26 +258,26 @@
     {
       "system_kind": "email-calendar",
       "product": "Gmail",
-      "how": "The Gmail directory connector; on Team and Enterprise an Owner or Primary Owner enables it first. It reads and searches only: it can't create, send or change mail. Google's preview Gmail MCP server can make drafts.",
+      "how": "The Gmail directory connector; on Team and Enterprise an Owner or Primary Owner enables it first. The sources conflict over its write tools: the help-center article and the listing name send, reply, forward and draft tools, and the connector page says it only reads and searches email. Set every write tool to Blocked or Needs approval, and plan the task on reads until the Google Workspace runbook's write test shows the tools in the customer's org. Google's preview Gmail MCP server can make drafts.",
       "identity": "Per user, via OAuth with the user's own Google account; Gmail's own permissions apply.",
       "runbook": "starter-kit/runbooks/google-workspace-connectors.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-      "unverified": false
+      "unverified": true
     },
     {
       "system_kind": "email-calendar",
       "product": "Google Calendar",
-      "how": "The Google Calendar directory connector; on Team and Enterprise an Owner or Primary Owner enables it first. It reads only: it can't create or change events or send invitations.",
+      "how": "The Google Calendar directory connector; on Team and Enterprise an Owner or Primary Owner enables it first. The sources conflict over its write tools: the help-center article and the listing name tools that create, update and delete events and respond to invitations, and the connector page says it only reads the calendar. Set every write tool to Blocked or Needs approval, and plan the task on reads until the Google Workspace runbook's write test shows the tools in the customer's org.",
       "identity": "Per user, via OAuth with the user's own Google account.",
       "runbook": "starter-kit/runbooks/google-workspace-connectors.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-      "unverified": false
+      "unverified": true
     },
     {
       "system_kind": "ticketing",
       "product": "Zendesk",
-      "how": "Zendesk's External AI connection (early access programme), https://<subdomain>.zendesk.com/mcp, added by an Owner as a custom connector; a Claude directory listing is not confirmed. It creates and updates tickets, and the agent asks a person to confirm each change.",
-      "identity": "Per user, via OAuth: each user authorizes their own Zendesk account. A Zendesk admin creates the connection and limits it to admins or chosen agent groups.",
+      "how": "Zendesk's External AI connection (early access programme), https://<subdomain>.zendesk.com/mcp, added by an Owner as a custom connector; a Claude directory listing is not confirmed. It creates and updates tickets, applies macros and creates or updates triggers. Zendesk's pages conflict over whether it asks a person before each change, so don't count on Zendesk asking, and set each write tool to Needs approval in Claude.",
+      "identity": "Per user, via OAuth: each user authorizes their own Zendesk account. A Zendesk admin creates the connection and limits it to admins or chosen agent groups. Whether no call ever runs as a shared identity is unverified: Zendesk says an agent can also act for an anonymous user when consent is not required.",
       "runbook": "starter-kit/runbooks/zendesk-connector.md",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": true

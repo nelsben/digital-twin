@@ -1391,28 +1391,6 @@
       "owner_role": "solution-architect"
     },
     {
-      "id": "blocker-connector-cannot-write",
-      "title": "Resolve blocker connector-cannot-write: end the task in a draft a person sends",
-      "part": "A3",
-      "applies_to": "task-story",
-      "per": null,
-      "when": {
-        "codes": "connector-cannot-write"
-      },
-      "how": [
-        {
-          "text": "Check which action the connector cannot do.",
-          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
-        },
-        {
-          "text": "Change the task so it ends in a draft a person sends, and remove the write from the card.",
-          "link": "docs/playbook/04-stories.md#story-template"
-        }
-      ],
-      "done_when": "The card no longer asks the connector for that action and levelling no longer raises the blocker.",
-      "owner_role": "skill-owner"
-    },
-    {
       "id": "blocker-override-not-allowed",
       "title": "Resolve blocker override-not-allowed: remove the override of a decision that cannot be overridden",
       "part": "A9",
@@ -1755,25 +1733,29 @@
       "owner_role": "technical-owner"
     },
     {
-      "id": "warning-mail-read-only",
-      "title": "Resolve warning mail-read-only: end the email in a draft the person sends",
+      "id": "warning-mail-write-unconfirmed",
+      "title": "Resolve warning mail-write-unconfirmed: end in a draft, or run the write test first",
       "part": "A2",
       "applies_to": "task-story",
       "per": null,
       "when": {
-        "codes": "mail-read-only"
+        "codes": "mail-write-unconfirmed"
       },
       "how": [
         {
-          "text": "Note that the Gmail and Google Calendar connectors read only.",
-          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+          "text": "Write the skill so it ends in a draft the person sends or books (our recommendation), because the sources conflict over whether the Gmail and Google Calendar connectors can send or book.",
+          "link": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation"
         },
         {
-          "text": "Write the skill so it ends with a draft in the conversation that the person copies and sends.",
-          "link": "starter-kit/templates/skill/README.md#fill-it-in"
+          "text": "In the connector's Tool permissions, set every Gmail and Google Calendar write tool to Blocked or Needs approval.",
+          "link": "starter-kit/runbooks/google-workspace-connectors.md#steps"
+        },
+        {
+          "text": "Only if the customer wants the task to send or book: run the runbook's write test in the customer's org, and record the business owner's and the security owner's decision on whether the task may use the tool at Needs approval.",
+          "link": "starter-kit/runbooks/google-workspace-connectors.md#check-it-worked"
         }
       ],
-      "done_when": "The evals show the task ends in a draft and never tries to send.",
+      "done_when": "The evals show the task ends in a draft and never sends or books, unless the hand-over record holds a write test that showed the tool and the business owner's and the security owner's decision to use it at Needs approval.",
       "owner_role": "skill-engineer"
     },
     {

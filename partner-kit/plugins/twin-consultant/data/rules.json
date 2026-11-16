@@ -1338,22 +1338,6 @@
       "fix": "Allowlist Anthropic's IP range 160.79.104.0/21 at the edge, move the job to a runtime inside the network (Claude Code there, or a self-hosted deployment), or move to Enterprise for an MCP tunnel."
     },
     {
-      "id": "block-connector-cannot-write",
-      "decides": "blocker",
-      "when": {
-        "task.write_products": [
-          "Gmail",
-          "Google Calendar"
-        ]
-      },
-      "then": "connector-cannot-write",
-      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-      "unverified": false,
-      "basis": "compendium",
-      "reason": "The task writes to Gmail or Google Calendar, whose directory connectors read only: they cannot create, send or change mail or events.",
-      "fix": "End the task in a draft that a person sends, and remove the write from the card."
-    },
-    {
       "id": "warn-agent-sdk-cover-zdr-route",
       "decides": "warning",
       "when": {
@@ -1511,7 +1495,7 @@
       "fix": "Make the task's connectors read-only for people on unmanaged devices (set the write tools to Blocked), or have the customer accept the write in writing."
     },
     {
-      "id": "warn-mail-read-only",
+      "id": "warn-mail-write-unconfirmed",
       "decides": "warning",
       "when": {
         "task.write_products": [
@@ -1519,12 +1503,12 @@
           "Google Calendar"
         ]
       },
-      "then": "mail-read-only",
+      "then": "mail-write-unconfirmed",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-      "unverified": false,
-      "basis": "compendium",
-      "reason": "The task sends email or puts an event on a calendar through Gmail or Google Calendar, and both directory connectors read only, so the task ends in a draft a person sends.",
-      "fix": "Write the skill so it ends with a draft in the conversation that the person copies and sends, or adds to the calendar."
+      "unverified": true,
+      "basis": "our-recommendation",
+      "reason": "The task sends email or puts an event on a calendar through Gmail or Google Calendar, and the sources conflict over whether those connectors can write. Our recommendation: the plan does not count on their send or event tools, and the task ends in a draft a person sends or books.",
+      "fix": "End the task in a draft a person sends or books. Or run the write test in the Google Workspace runbook in the customer's org and, if it shows the tool, have the business owner and Security decide whether the task may use it at Needs approval."
     },
     {
       "id": "warn-private-network-allowlist",

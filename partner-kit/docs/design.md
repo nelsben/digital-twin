@@ -263,7 +263,7 @@ Every question lists the card field paths it fills. Every required card field in
 
 ## 7. Levelling (`data/rules.json`, `level.py`)
 
-Rules are data, not if-statements buried in code: `{"id", "decides", "when", "then", "cite", "unverified", "basis", "reason"}`, plus `fix` on a blocker or warning rule. `cite` is a compendium page path with an anchor that matches a heading on that page. `unverified: true` when the cited section marks the underlying fact ⚠ Unverified; it is carried into `levelled.json`, the backlog and the dashboard so nobody builds on an unconfirmed fact unknowingly. `basis` is `compendium` when the page states the result, or `our-recommendation` when the page gives the facts and the rule is our reading of them. The format is in 7.3.
+Rules are data, not if-statements buried in code: `{"id", "decides", "when", "then", "cite", "unverified", "basis", "reason"}`, plus `fix` on a blocker or warning rule. `cite` is a compendium page path with an anchor that matches a heading on that page. `unverified: true` when the cited section marks the underlying fact ⚠ Unverified or ⚠ Conflict; it is carried into `levelled.json`, the backlog and the dashboard so nobody builds on an unconfirmed fact unknowingly. `basis` is `compendium` when the page states the result, or `our-recommendation` when the page gives the facts and the rule is our reading of them. The format is in 7.3.
 
 What it decides, per task:
 
@@ -277,7 +277,7 @@ What it decides, per task:
 | `memory` | `memory`, `reads_untrusted_input`, `data_class` | compendium 02 |
 | `plan_fit` (`ok`, `ok-with-limits`, `needs-enterprise`, `not-supported`), with the reason | all of the above against `plan-fit.json` | compendium 09 |
 
-Per persona: the plugin name (`role.plugin_name`, else `twin-<persona-id>`), how it is distributed on this plan (group-targeted on Enterprise; to everyone on Team; installed by hand on a plan that cannot publish plugins), the settings baseline, the Anthropic plugins to start from (industry pack), and a list of **blockers** (a task that cannot be built as asked on this plan or data class) and **warnings**.
+Per persona: the plugin name (`role.plugin_name`, else `twin-<persona-id>`), how it is distributed on this plan (group-targeted on Enterprise; to everyone on Team; installed by hand on a plan that cannot publish plugins), the settings baseline, the Anthropic plugins to start from (industry pack), and a list of **blockers** (a task that cannot be built as asked on this plan or data class) and **warnings**. A blocker rests only on a settled fact, so where the compendium marks the fact ⚠ Conflict, as page 11 does for Gmail and Google Calendar write access, the rule raises a warning (`mail-write-unconfirmed`) instead of a blocker.
 
 Overrides on the card replace a rule's result and are shown as overridden, with the reason, everywhere.
 
@@ -306,7 +306,7 @@ Top level, `pack_version` 1:
 - `connector_defaults[]`: `{system_kind, product, how, identity, runbook}`. `system_kind` is a value of `systems[].kind` in the catalogue; `runbook` is a path under `starter-kit/runbooks/`, or `null`.
 - `compliance_defaults[]`: `{field, value, reason}`. `field` is a customer-profile path in `data/fields.json` and `value` has that field's catalogue type. A default is a starting answer: the profile's provenance for it is `default` until the customer confirms or overrides it.
 - `typical_tasks[]`: `{id, name, feature, trigger, data_class, inputs}`, and optionally `starts_from`. `trigger` and `data_class` use the catalogue's values for `tasks[].trigger` and `tasks[].data_class`; `inputs` is a list of system kinds. `starts_from` is the pack's suggestion for a card task that matches the typical task: names held to the card's rule ([4.2](#42-persona-card-cardjson)), checked by `pack_problems` at `typical_tasks[<i>].starts_from[<j>]`. A pack suggests a name only where the page it cites names that skill for that job: private-equity T4 `deal-screening`, T5 `dd-meeting-prep` and T6 `ic-memo` ([compendium 17](../../docs/compendium/17-anthropic-pe-plugins-review.md)), and b2b-software C3 and C4 `draft-response` and C5 `customer-escalation` ([compendium 18](../../docs/compendium/18-customer-success.md)). The consultant copies a suggestion onto the card only after agreeing with it.
-- Every entry in every list also carries `cite` and `unverified`. `cite` is a repo-relative path to a page under `docs/compendium/`, with an optional `#anchor` that matches a heading on that page, and the page is listed in `sources`. `unverified` is `true` when the cited page marks the fact Unverified or Not confirmed. A pack states nothing the cited page does not say; a value a task needs that the page does not give (for example its trigger) is the pack author's choice, listed in the pull request, not the page's.
+- Every entry in every list also carries `cite` and `unverified`. `cite` is a repo-relative path to a page under `docs/compendium/`, with an optional `#anchor` that matches a heading on that page, and the page is listed in `sources`. `unverified` is `true` when the cited page marks the fact Unverified, Not confirmed or in Conflict. A pack states nothing the cited page does not say; a value a task needs that the page does not give (for example its trigger) is the pack author's choice, listed in the pull request, not the page's.
 
 Fallback: when the customer's pack has no connector default for a system, levelling looks in the general pack, and the customer's pack wins when both have one; `general.json` holds one default per product row of compendium 11's table, and a product that an industry pack and the general pack both list has the same `runbook` in each. A pack product written as `A / B` (as page 11's rows are) matches a system as `A` and as `B`.
 
@@ -340,7 +340,6 @@ Blocker codes (the task cannot be built as asked on this plan or data class):
 - `unmanaged-device-no-access`: a highly sensitive or PHI task would run on an unmanaged device, which gets no direct access.
 - `phi-needs-hipaa-org`: PHI is in scope, and there is no dedicated HIPAA org with a signed BAA.
 - `phi-no-hosted-runtime`: a PHI task needs a hosted runtime, and none is covered for PHI.
-- `connector-cannot-write`: a task writes to a system whose connector cannot do that action.
 - `override-not-allowed`: a card override names `connectors` or `plan_fit`, which follow from the other decisions; the override is not applied.
 - `override-unknown-target`: a card override names a task or a decision that levelling does not have; the override is not applied.
 - `plugin-name-invalid`: `role.plugin_name` does not match `^twin-[a-z0-9-]+$`.
@@ -359,7 +358,7 @@ Warning codes (the task can be built, with a limit someone must see):
 - `team-no-audit-log`: Team has no audit log and no Compliance API.
 - `confidential-on-team`: confidential data on Team is acceptable only where the audit need is lower.
 - `unmanaged-connectors-read-only`: confidential data on an unmanaged device (or the unmanaged share of a mixed fleet) calls for read-only connectors, and the task writes.
-- `mail-read-only`: the task sends email or puts an event on a calendar through Gmail or Google Calendar, whose directory connectors read only, so it ends in a draft a person sends.
+- `mail-write-unconfirmed`: the task sends email or puts an event on a calendar through Gmail or Google Calendar, and the sources conflict over whether those connectors can write (⚠ Conflict, compendium 11), so (our recommendation) the plan does not count on their send or event tools and the task ends in a draft a person sends or books, unless the write test in the Google Workspace runbook shows the tool in the customer's org and the business owner and Security agree to use it at Needs approval.
 - `private-network-allowlist`: a system on a private network must be reachable from Anthropic's IP range, allowlisted at the edge.
 - `tag-private-channel-only`: Claude Tag on confidential data belongs only in scoped private channels.
 - `slack-directory-send-unverified`: whether the Slack directory connector can post is Unverified; post through Claude Tag or the Slack MCP server.

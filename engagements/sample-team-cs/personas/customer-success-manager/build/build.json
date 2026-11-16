@@ -1,0 +1,208 @@
+{
+  "build_version": 1,
+  "customer": "example-software-co",
+  "persona": "customer-success-manager",
+  "source": {
+    "levelled_sha256": "51517672180d82eb3337c6c8f7a0011c70b3062da2931cf9f551aaa9bfdd9df3",
+    "build_kinds_version": 1
+  },
+  "plugin": {
+    "name": "twin-customer-success-manager",
+    "files": [
+      {
+        "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/.claude-plugin/plugin.json",
+        "sha256": "a2e64c8ef01cb819a2dd9bf3eba88615bf358b2dd0850bafca672faf54ebd9f4"
+      },
+      {
+        "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/README.md",
+        "sha256": "b14a6d9335f8a50b487d988b9da2d6249ca4c7166dd30c3fb20305b8cfb1ce61"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "id": "C1",
+      "task": "Account brief before a customer call",
+      "kind": "skill",
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "unverified": false
+      },
+      "skill_name": "account-brief-before-a-customer-call",
+      "skill_name_derived": true,
+      "skill_location": "plugin",
+      "in_pilot": true,
+      "runbook": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups",
+      "files": [
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/account-brief-before-a-customer-call/SKILL.md",
+          "sha256": "93188529d1a2be472ae806e1ce6d279932eb0f4951076abec5347e1b6e724d72"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/account-brief-before-a-customer-call/evals/evals.json",
+          "sha256": "b43f351f42979590a3614bd1a51c1af9b2504e02169c63ded2cf2a7eb465d64b"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/account-brief-before-a-customer-call/evals/trigger-evals.json",
+          "sha256": "378fa0d6140258db448091cbba0a57efa8d48f80eeeb0e454a0d1594843f4b73"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/account-brief-before-a-customer-call/references/example-reference.md",
+          "sha256": "db1b22d1174b328182da3bb0bd566d28f53e1e985deeb12f05d4b2eb29cbab1e"
+        }
+      ],
+      "status": "scaffolded",
+      "reason": null
+    },
+    {
+      "id": "C2",
+      "task": "Weekly renewal-risk digest",
+      "kind": "tag-routine",
+      "runtime": {
+        "value": "claude-tag-routine",
+        "rule": "runtime-team-slack-tag-routine",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "unverified": false
+      },
+      "skill_name": "weekly-renewal-risk-digest",
+      "skill_name_derived": true,
+      "skill_location": "plugin",
+      "in_pilot": false,
+      "runbook": "starter-kit/runbooks/claude-tag-routine.md#steps",
+      "files": [
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/weekly-renewal-risk-digest/SKILL.md",
+          "sha256": "9bbff05f99718fb7020afbfc63bb586c42d39cc3a096a6cfef9c2b2bda1c0c7b"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/weekly-renewal-risk-digest/evals/evals.json",
+          "sha256": "3ffb968799b38df7884ca39f7a0ad22276df321c1b51c804d42e10bac20d9c2d"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/weekly-renewal-risk-digest/evals/trigger-evals.json",
+          "sha256": "b54b3fac4a3fea957b750ecb6edd8a90a043dedd55851afbb5ef9a30800ed3a0"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/weekly-renewal-risk-digest/references/example-reference.md",
+          "sha256": "db1b22d1174b328182da3bb0bd566d28f53e1e985deeb12f05d4b2eb29cbab1e"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/routines/C2/routine.md",
+          "sha256": "c3d61a6f067c00736f4299cab0bdd92612ebe7414b6b6aeafd15cc65af98c54b"
+        }
+      ],
+      "status": "scaffolded",
+      "reason": null
+    },
+    {
+      "id": "C3",
+      "task": "Renewal quote email to the customer",
+      "kind": "skill",
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "unverified": false
+      },
+      "skill_name": "renewal-quote-email-to-the-customer",
+      "skill_name_derived": true,
+      "skill_location": "plugin",
+      "in_pilot": false,
+      "runbook": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups",
+      "files": [
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/renewal-quote-email-to-the-customer/SKILL.md",
+          "sha256": "793af47c3b82b70f4f89261ca24a64cd5726c6cbeeeafc730c5f397ad1da6f83"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/renewal-quote-email-to-the-customer/evals/evals.json",
+          "sha256": "84a0b1f2dc28e81c8be823835bef5cf7aa561c4b16e75306099ff103dcb455d7"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/renewal-quote-email-to-the-customer/evals/trigger-evals.json",
+          "sha256": "c4416bfb16053671dd78064ab0b5bf95c4ccb4d75e7fffd2c7876400144eb5db"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/renewal-quote-email-to-the-customer/references/example-reference.md",
+          "sha256": "db1b22d1174b328182da3bb0bd566d28f53e1e985deeb12f05d4b2eb29cbab1e"
+        }
+      ],
+      "status": "scaffolded",
+      "reason": null
+    },
+    {
+      "id": "C4",
+      "task": "Follow-up email after a customer call, and a call note in HubSpot",
+      "kind": "skill",
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "unverified": false
+      },
+      "skill_name": "follow-up-email-after-a-customer-call-and-a-call-note-in-hubspot",
+      "skill_name_derived": true,
+      "skill_location": "plugin",
+      "in_pilot": true,
+      "runbook": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups",
+      "files": [
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/follow-up-email-after-a-customer-call-and-a-call-note-in-hubspot/SKILL.md",
+          "sha256": "1c7113cd00ab83569fd3b45f883c86f3c1f613de93196c60aa75d1a486f682e0"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/follow-up-email-after-a-customer-call-and-a-call-note-in-hubspot/evals/evals.json",
+          "sha256": "d17b6ec746b82aacb92bf31e77358a2ab1fcff71751ce53d6ed3c9bbff72b22e"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/follow-up-email-after-a-customer-call-and-a-call-note-in-hubspot/evals/trigger-evals.json",
+          "sha256": "5bf7d7c17489df6172096934b2e62d797d83497f76657fb9fab28d3a264774a4"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/follow-up-email-after-a-customer-call-and-a-call-note-in-hubspot/references/example-reference.md",
+          "sha256": "db1b22d1174b328182da3bb0bd566d28f53e1e985deeb12f05d4b2eb29cbab1e"
+        }
+      ],
+      "status": "scaffolded",
+      "reason": null
+    },
+    {
+      "id": "C5",
+      "task": "Open-ticket summary when a ticket is escalated",
+      "kind": "skill",
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "unverified": false
+      },
+      "skill_name": "open-ticket-summary-when-a-ticket-is-escalated",
+      "skill_name_derived": true,
+      "skill_location": "plugin",
+      "in_pilot": false,
+      "runbook": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups",
+      "files": [
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/open-ticket-summary-when-a-ticket-is-escalated/SKILL.md",
+          "sha256": "54494b0184eb3a4948af19572b37ca5b146ea5367308d5c7cd1df174a373206d"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/open-ticket-summary-when-a-ticket-is-escalated/evals/evals.json",
+          "sha256": "ca4e46a80deff48f4fcdb60d9f0a915364d5c563f66261f80fd95063067f6be0"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/open-ticket-summary-when-a-ticket-is-escalated/evals/trigger-evals.json",
+          "sha256": "1bf0c6a2e0164fec08c2f20de48ca22d3263b63696efc29bd147e2d0da5dc676"
+        },
+        {
+          "path": "engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/open-ticket-summary-when-a-ticket-is-escalated/references/example-reference.md",
+          "sha256": "db1b22d1174b328182da3bb0bd566d28f53e1e985deeb12f05d4b2eb29cbab1e"
+        }
+      ],
+      "status": "scaffolded",
+      "reason": null
+    }
+  ]
+}

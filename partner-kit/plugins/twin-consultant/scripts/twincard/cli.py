@@ -8,6 +8,7 @@
     python3 .../cli.py backlog --json <persona-dir> [--plan-out FILE]
     python3 .../cli.py dashboard <persona-dir> [--date YYYY-MM-DD]   # writes dashboard.html
     python3 .../cli.py all <persona-dir> [--date YYYY-MM-DD]   # validate, level, backlog, dashboard
+    python3 .../cli.py build <persona-dir> [--all-tasks]   # scaffolds <persona-dir>/build/ (design 8a)
 
 Runs from any working directory. Exit codes: 0 on success; 1 when validation
 fails (level, backlog and dashboard then write nothing), when levelled.json is
@@ -24,6 +25,10 @@ real YYYY-MM-DD date. A usage error or refusal is one line on stderr ending
 document on stdout.
 The all command runs the four in order and stops only when validation fails (nothing is
 written, exit 1); a levelling blocker still writes every file and exits 1.
+The build command is not part of all. It writes nothing and exits 1 when validation fails,
+levelled.json is missing or stale, or levelling reports a blocker; it exits 2, writing nothing,
+when data/build-kinds.json or build/build.json cannot be read or is not in its shape, or
+build.json gives an unknown status. A file a person has changed is kept and listed on stderr.
 """
 
 import argparse
@@ -37,6 +42,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from twincard import backlog as backlog_mod  # noqa: E402
+from twincard import build as build_mod  # noqa: E402
 from twincard import dashboard as dashboard_mod  # noqa: E402
 from twincard import fields as fields_mod  # noqa: E402
 from twincard import packs as packs_mod  # noqa: E402
@@ -92,6 +98,11 @@ def build_parser():
     everything.add_argument("persona_dir", help="the persona folder that holds card.json")
     everything.add_argument("--date", metavar="YYYY-MM-DD",
                             help="the generated date shown on the dashboard (default: today)")
+    scaffold = commands.add_parser(
+        "build", help="scaffold each task's skill and runtime wrapper under build/ from card.json and levelled.json")
+    scaffold.add_argument("persona_dir", help="the persona folder that holds card.json and levelled.json")
+    scaffold.add_argument("--all-tasks", action="store_true",
+                          help="build every task, not only the pilot tasks (in_pilot true)")
     return parser
 
 
@@ -271,11 +282,31 @@ def run_all(args, persona_dir):
     return EXIT_INVALID if blocked else EXIT_OK
 
 
+def run_build(args, persona_dir):
+    result = build_mod.write_build(str(persona_dir), args.all_tasks)
+    if not result["ok"]:
+        if result["validation"] and result["validation"]["errors"]:
+            print(format_text(result["validation"]))
+        print(result["error"])
+        return EXIT_INVALID
+    for path in result["kept"]:
+        sys.stderr.write("kept: %s (a person changed it, so build left it as it is)\n" % path)
+    for item in result["manifest"]["artifacts"]:
+        print("%s: %s, runtime %s, skill %s%s: %s" % (
+            item["id"], item["kind"], item["runtime"]["value"], item["skill_name"],
+            " (derived)" if item["skill_name_derived"] else "", item["status"]))
+    print("Wrote %s: %d artifact(s); %d file(s) written, %d kept." % (
+        Path(persona_dir) / build_mod.BUILD_DIR / build_mod.MANIFEST, len(result["manifest"]["artifacts"]),
+        len(result["written"]), len(result["kept"])))
+    return EXIT_OK
+
+
 OUTPUTS = {
     "level": (LEVELLED_FILE,),
     "backlog": (backlog_mod.BACKLOG_JSON, backlog_mod.BACKLOG_MD),
     "dashboard": (dashboard_mod.DASHBOARD_FILE,),
     "all": (LEVELLED_FILE, backlog_mod.BACKLOG_JSON, backlog_mod.BACKLOG_MD, dashboard_mod.DASHBOARD_FILE),
+    "build": (),
 }
 
 
@@ -332,6 +363,10 @@ def run(args):
         check_writable(persona_dir / name)
     if getattr(args, "plan_out", None):
         check_writable(args.plan_out)
+    if args.command == "build":
+        folder = persona_dir / build_mod.BUILD_DIR
+        check_writable(folder / build_mod.MANIFEST if folder.is_dir() else folder)
+        return run_build(args, persona_dir)
     if args.command == "backlog":
         return run_backlog(args, persona_dir)
     if args.command == "dashboard":
@@ -345,9 +380,10 @@ def main(argv=None):
     args = build_parser().parse_args(argv)
     try:
         return run(args)
-    except (Refusal, backlog_mod.UsageError, dashboard_mod.UsageError) as exc:
+    except (Refusal, backlog_mod.UsageError, dashboard_mod.UsageError, build_mod.UsageError) as exc:
         line = _sentence(exc) if "Next:" in str(exc) else "%s. Next: run the command again with a usable value" % _sentence(exc)
-    except (LevelError, backlog_mod.BacklogError, packs_mod.PackError, fields_mod.CatalogueError) as exc:
+    except (LevelError, backlog_mod.BacklogError, packs_mod.PackError, fields_mod.CatalogueError,
+            build_mod.BuildError) as exc:
         line = data_error_line(exc)
     except OSError as exc:
         where = exc.filename or "a file"

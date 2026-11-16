@@ -41,7 +41,7 @@ FEEDS = (
     {"rule:" + d for d in RULE_DECISIONS}
     | {"backlog:" + level for level in BACKLOG_LEVELS}
     | {"dashboard:" + s for s in DASHBOARD_SECTIONS}
-    | {"voice"}
+    | {"voice", "build"}
 )
 PARTS = {"A%d" % n for n in range(1, 10)} | {"context"}
 

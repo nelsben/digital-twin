@@ -1,0 +1,248 @@
+{
+  "build_version": 1,
+  "customer": "example-capital-partners",
+  "persona": "deal-team-associate",
+  "source": {
+    "levelled_sha256": "cadbfe6b988fe9f8cf3883cc9266f18d7f30591f5a2e20baa0ee8cff98c6e3d1",
+    "build_kinds_version": 1
+  },
+  "plugin": {
+    "name": "twin-pe-deal-team",
+    "files": [
+      {
+        "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/.claude-plugin/plugin.json",
+        "sha256": "294b329454550be39683dad4b798544ede959a82c3b3d1312365012018136674"
+      },
+      {
+        "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/README.md",
+        "sha256": "4c75436d3f6e83715bd71382a2582fbf1307e6587f60ad5657fc5bb894775799"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "id": "T1",
+      "task": "Prepare a one-page company brief",
+      "kind": "skill",
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "unverified": false
+      },
+      "skill_name": "preparing-company-briefs",
+      "skill_name_derived": false,
+      "skill_location": "plugin",
+      "in_pilot": true,
+      "runbook": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups",
+      "files": [
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/preparing-company-briefs/SKILL.md",
+          "sha256": "36269ab3a06905f6c3996d83d657006804acf1c5849c7ce6709184195eb2e939"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/preparing-company-briefs/evals/evals.json",
+          "sha256": "def803ca1c43101d22b32ea24127b84d230645f5493df89e865c3c5a21c5d4fb"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/preparing-company-briefs/evals/trigger-evals.json",
+          "sha256": "4e2efefe92f970403bbdf6a22265346fa8e9f8e22ab7a68ab379b3002828a0a0"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/preparing-company-briefs/references/example-reference.md",
+          "sha256": "db1b22d1174b328182da3bb0bd566d28f53e1e985deeb12f05d4b2eb29cbab1e"
+        }
+      ],
+      "status": "scaffolded",
+      "reason": null
+    },
+    {
+      "id": "T2",
+      "task": "Update the CRM after a meeting",
+      "kind": "skill",
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "unverified": false
+      },
+      "skill_name": "drafting-crm-updates",
+      "skill_name_derived": false,
+      "skill_location": "plugin",
+      "in_pilot": true,
+      "runbook": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups",
+      "files": [
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/drafting-crm-updates/SKILL.md",
+          "sha256": "a31bdfc1afb610f1f603ca9bacbd9b63c56c3bb2c3befcec8824bb2fc3949595"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/drafting-crm-updates/evals/evals.json",
+          "sha256": "ced7c03a9454f89e4151e83003b57e209a7bf566cd53455d287d03f5de13d210"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/drafting-crm-updates/evals/trigger-evals.json",
+          "sha256": "a6a0085f456f8dcc3647545c824fe37452ba940dae2b2f25376e42dd0d431f67"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/drafting-crm-updates/references/example-reference.md",
+          "sha256": "db1b22d1174b328182da3bb0bd566d28f53e1e985deeb12f05d4b2eb29cbab1e"
+        }
+      ],
+      "status": "scaffolded",
+      "reason": null
+    },
+    {
+      "id": "T3",
+      "task": "Weekly pipeline summary for the Monday deal meeting",
+      "kind": "agent-bundle",
+      "runtime": {
+        "value": "managed-agents-self-hosted",
+        "rule": "runtime-zdr-self-hosted",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "unverified": false
+      },
+      "skill_name": "weekly-pipeline-summary-for-the-monday-deal-meeting",
+      "skill_name_derived": true,
+      "skill_location": "skills",
+      "in_pilot": false,
+      "runbook": "starter-kit/runbooks/managed-agents.md#self-hosted",
+      "files": [
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/skills/weekly-pipeline-summary-for-the-monday-deal-meeting/SKILL.md",
+          "sha256": "dbf1a8146406fffd5f2f35879ec8d6ac189d7486ac8669a63cf419f2b2a25c8d"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/skills/weekly-pipeline-summary-for-the-monday-deal-meeting/evals/evals.json",
+          "sha256": "b4d92b71f163ec3ab08f251f19c7c8c4430744cfe2eeb28f62a248c51130a59d"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/skills/weekly-pipeline-summary-for-the-monday-deal-meeting/evals/trigger-evals.json",
+          "sha256": "718253f748c6f80b497d70e29a820afa78d4de254d88375ed68cefc1d7c9907c"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/skills/weekly-pipeline-summary-for-the-monday-deal-meeting/references/example-reference.md",
+          "sha256": "db1b22d1174b328182da3bb0bd566d28f53e1e985deeb12f05d4b2eb29cbab1e"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/agents/T3/agent.json",
+          "sha256": "7679fb4406cb710108d2c6ebadbcc07cc0a4dbf50e0cd4e36ef841e5415eb7ff"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/agents/T3/environment.json",
+          "sha256": "bf9d06b9f37b71d071c8277a60e77e22be727b356bddfda0c646cd209a469163"
+        }
+      ],
+      "status": "scaffolded",
+      "reason": null
+    },
+    {
+      "id": "T4",
+      "task": "Screen an inbound CIM or teaser",
+      "kind": "skill",
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "unverified": false
+      },
+      "skill_name": "screen-an-inbound-cim-or-teaser",
+      "skill_name_derived": true,
+      "skill_location": "plugin",
+      "in_pilot": false,
+      "runbook": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups",
+      "files": [
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/screen-an-inbound-cim-or-teaser/SKILL.md",
+          "sha256": "66474f7dd58f5f92f5580d131a16e6f284830443e4c19ec6a883a9640394d152"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/screen-an-inbound-cim-or-teaser/evals/evals.json",
+          "sha256": "f199e96cb3853570f230d95b91fdb2e8c4e420a8df538259c3e3829eec3d361a"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/screen-an-inbound-cim-or-teaser/evals/trigger-evals.json",
+          "sha256": "c218b78394d58c2f863e613029ce6395ec3e9d7cbb560e6ca1eaa96b8e733e67"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/screen-an-inbound-cim-or-teaser/references/example-reference.md",
+          "sha256": "db1b22d1174b328182da3bb0bd566d28f53e1e985deeb12f05d4b2eb29cbab1e"
+        }
+      ],
+      "status": "scaffolded",
+      "reason": null
+    },
+    {
+      "id": "T5",
+      "task": "Prepare for a management or expert call",
+      "kind": "skill",
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "unverified": false
+      },
+      "skill_name": "prepare-for-a-management-or-expert-call",
+      "skill_name_derived": true,
+      "skill_location": "plugin",
+      "in_pilot": false,
+      "runbook": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups",
+      "files": [
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/prepare-for-a-management-or-expert-call/SKILL.md",
+          "sha256": "c22be82d80be16c60d3a9383229a8df0d61647683cf950bd78356c7dd7a2c97f"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/prepare-for-a-management-or-expert-call/evals/evals.json",
+          "sha256": "54de9e3720e3b14ab2a1ef5f134912e6ec9ec959c1ede0cc5e3881d749a5c3a5"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/prepare-for-a-management-or-expert-call/evals/trigger-evals.json",
+          "sha256": "6f0f20767469b67301f2806a1ed642f7cf2366f63fd4852aea983fd01e0afb35"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/prepare-for-a-management-or-expert-call/references/example-reference.md",
+          "sha256": "db1b22d1174b328182da3bb0bd566d28f53e1e985deeb12f05d4b2eb29cbab1e"
+        }
+      ],
+      "status": "scaffolded",
+      "reason": null
+    },
+    {
+      "id": "T6",
+      "task": "Draft a section of an investment committee memo from diligence notes",
+      "kind": "skill",
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "unverified": false
+      },
+      "skill_name": "draft-a-section-of-an-investment-committee-memo-from-diligence-n",
+      "skill_name_derived": true,
+      "skill_location": "plugin",
+      "in_pilot": false,
+      "runbook": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups",
+      "files": [
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/draft-a-section-of-an-investment-committee-memo-from-diligence-n/SKILL.md",
+          "sha256": "62b3ce9eef4360f11ea22b4b666609f0cbca6f7ff00cf35aae88cc44a28354d3"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/draft-a-section-of-an-investment-committee-memo-from-diligence-n/evals/evals.json",
+          "sha256": "675768f7b41ba252f8593affc1ad2bb493619483b2f34ede41ade31116430c93"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/draft-a-section-of-an-investment-committee-memo-from-diligence-n/evals/trigger-evals.json",
+          "sha256": "bb52e57122af643f971a1435a732140c425eb7b454e4a75b5f4d2def59b46d41"
+        },
+        {
+          "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/draft-a-section-of-an-investment-committee-memo-from-diligence-n/references/example-reference.md",
+          "sha256": "db1b22d1174b328182da3bb0bd566d28f53e1e985deeb12f05d4b2eb29cbab1e"
+        }
+      ],
+      "status": "scaffolded",
+      "reason": null
+    }
+  ]
+}

@@ -26,12 +26,14 @@ The consultant plugin for the persona-card workflow. Design of record: [partner-
 | [templates/interview-guide.md](templates/interview-guide.md) | Plain-language role interview: questions P1 to P6 and F1 to F9, each with the card fields it fills |
 | [templates/interview-notes.md](templates/interview-notes.md) | Notes template with one slot per question, saved under the persona's `interviews/` folder |
 | [data/fields.json](data/fields.json) | The field catalogue: type, values, required flag, the questions that ask for each field, and what reads it |
-| [scripts/twincard/](scripts/twincard/) | Standard-library Python 3.9+: `fields.py` loads the catalogue, `validate.py` checks both records, `packs.py` loads and checks industry packs, `level.py` levels a card by rule, `backlog.py` builds the backlog from the levelled card, `dashboard.py` renders the dashboard page, `cli.py` is the command line |
+| [scripts/twincard/](scripts/twincard/) | Standard-library Python 3.9+: `fields.py` loads the catalogue, `validate.py` checks both records, `packs.py` loads and checks industry packs, `level.py` levels a card by rule, `backlog.py` builds the backlog from the levelled card, `dashboard.py` renders the dashboard page, `build.py` scaffolds each task's skill and runtime wrapper, `cli.py` is the command line |
 | [data/rules.json](data/rules.json) | The levelling rules: each decides one thing, from facts on the card and profile, and cites the compendium section it comes from; the format is in [design section 7.3](../../docs/design.md) |
 | [data/plan-fit.json](data/plan-fit.json) | What each capability the twin relies on is on Team, Enterprise and individual plans, and what Team loses, with its compendium cite |
 | [data/industry-packs/](data/industry-packs/) | One JSON file per industry; the format is in [design section 7.1](../../docs/design.md) |
 | [data/task-library.json](data/task-library.json) | The backlog's task templates: each has an anatomy part, the story it applies to, a `when` condition in the rules language, numbered `how` steps that link the kit template, runbook or compendium page to use, `done_when` and an owner role; the format is in [design section 8](../../docs/design.md#8-backlog-backlogpy-datatask-libraryjson) |
 | [skills/](skills/) | The four consultant skills, one per step of the flow below: `preparing-role-interviews`, `filling-persona-cards`, `planning-a-twin` and `building-twin-stories` |
+| [data/build-kinds.json](data/build-kinds.json) | What each runtime is built as: its artifact kind, where its skill lives, the runbook it follows and the files it scaffolds; the format is in [design section 8a](../../docs/design.md#8a-build) |
+| [templates/build/](templates/build/) | Byte-for-byte copies of the starter-kit skill template and role-plugin manifest that `build` reads |
 | [scripts/twincard/backlog.py](scripts/twincard/backlog.py) | Builds `backlog.json` and `backlog.md` from `card.json`, `levelled.json` and the task library, keeping each task's status across runs |
 
 ## Validate
@@ -122,6 +124,21 @@ python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py all <persona
 - **`--date`** goes to the dashboard step only and defaults to today. Run twice with the same date and the same card, it changes no file, and a task's `status` in `backlog.json` is kept.
 
 The two worked examples under [engagements/](../../../engagements/README.md) are checked end to end by `tests/test_twincard_end_to_end.py`: `all --date 2026-11-15` on a copy of each gives the committed files byte for byte.
+
+## Build
+
+```
+python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py build <persona-dir> [--all-tasks]
+```
+
+`build` scaffolds what each task is built as under `<persona-dir>/build/`, from `card.json` and a current `levelled.json`: the role plugin's `plugin.json` and README, each task's skill folder from the starter template (`SKILL.md`, `evals/`, `references/`), and its runtime's wrapper (an agent and environment definition, a Claude Tag routine sheet, a scheduled-task sheet or an Agent SDK runner README), with `build/build.json` listing each artifact, its runtime with rule and cite, its files with their hashes, and its status. It builds the pilot tasks; `--all-tasks` adds the rest. It is not part of `all`.
+
+- **It fills only what the records state** and keeps every `FILL IN` a person must decide; each seeded line names the field it came from. A task's skill name is `tasks[].skill_name`, or derived from the task name when that is empty.
+- **It never overwrites a person's edit.** A file whose hash is not the one `build.json` records is kept and listed on stderr as `kept:`. A second run on the same inputs changes no file.
+- **Status.** `scaffolded` while any file of the artifact holds `FILL IN`, then `drafted`; a person records `evals-passing`, `packaged`, `deployed` and `verified` in `build.json`, and `build` keeps them. A task with runtime `none` is `not-built`.
+- **Exit codes.** 0 on success; 1, writing nothing, when validation fails, `levelled.json` is missing or out of date, or levelling reports a blocker; 2 for a usage error, a missing folder or `card.json`, an output that cannot be written, `data/build-kinds.json` or `build/build.json` that cannot be read or is not in its shape, or an unknown status in `build.json`.
+
+Design: [section 8a](../../docs/design.md#8a-build). Tests: `tests/test_twincard_build.py`.
 
 ## Industry packs
 

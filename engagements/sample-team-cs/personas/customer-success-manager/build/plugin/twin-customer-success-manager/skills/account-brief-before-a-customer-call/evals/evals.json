@@ -1,0 +1,46 @@
+{
+  "skill_name": "account-brief-before-a-customer-call",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "FILL IN: a normal case. A realistic request, worded the way the skill owner would type it, with real detail (names, dates, file names). Take it from real example 1.",
+      "expected_output": "FILL IN: what a good result contains, in plain words.",
+      "files": [],
+      "expectations": [
+        "FILL IN: a checkable statement, such as 'The output has a section for open items'",
+        "FILL IN: 'Each item links to its source record'"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "FILL IN: a normal case. A realistic request, worded the way the skill owner would type it, with real detail (names, dates, file names). Take it from real example 2.",
+      "expected_output": "FILL IN: what a good result contains, in plain words.",
+      "files": [],
+      "expectations": [
+        "FILL IN: a checkable statement, such as 'The output has a section for open items'",
+        "FILL IN: 'Each item links to its source record'"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "FILL IN: a missing-data case. The same kind of request, but with a required input absent or empty (for example the account name is not given, or the source folder is empty). Take it from real example 3.",
+      "expected_output": "FILL IN: the skill names what is missing and asks the user for it. It does not invent values.",
+      "files": [],
+      "expectations": [
+        "The response states which required input is missing",
+        "The response asks the user to supply it",
+        "The response contains no figure or fact that is not in the inputs"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "FILL IN: a should-not-trigger case. A near miss that shares words with the skill's task but needs something else (for example a question about the same system that is not the task). Take it from real example 4, or from a request the owner says is often confused with this task.",
+      "expected_output": "FILL IN: Claude answers the request directly and does not follow this skill's steps or output format.",
+      "files": [],
+      "expectations": [
+        "The skill was not invoked",
+        "The response does not use the skill's output format"
+      ]
+    }
+  ]
+}

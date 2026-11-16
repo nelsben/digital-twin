@@ -1,0 +1,10 @@
+{
+  "name": "twin-pe-deal-team-t3-env",
+  "config": {
+    "type": "FILL IN: the environment type the self-hosted server takes",
+    "networking": {
+      "type": "limited",
+      "allowed_hosts": []
+    }
+  }
+}

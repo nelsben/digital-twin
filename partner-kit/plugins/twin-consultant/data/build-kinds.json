@@ -1,0 +1,158 @@
+{
+  "build_kinds_version": 1,
+  "source": "partner-kit/docs/design.md#8a-build",
+  "kinds": [
+    {
+      "runtime": "client-skill",
+      "kind": "skill",
+      "what": "A skill in the role plugin, which the marketplace publishes to the role's people.",
+      "runbook": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups",
+      "skill_location": "plugin",
+      "skill_location_basis": {
+        "link": "partner-kit/docs/design.md#8a-build",
+        "quote": null,
+        "note": "A client skill reaches its users in the role plugin, which the marketplace publishes."
+      },
+      "wrapper": null,
+      "inputs": [],
+      "scaffolds": [
+        "build/plugin/<plugin_name>/skills/<skill-name>/"
+      ],
+      "reason": null
+    },
+    {
+      "runtime": "claude-code-scheduled-task",
+      "kind": "scheduled-task",
+      "what": "A plugin skill plus a scheduled-task definition: a fill-in sheet of the runbook's inputs.",
+      "runbook": "starter-kit/runbooks/claude-code-scheduled-task.md#steps",
+      "skill_location": "plugin",
+      "skill_location_basis": {
+        "link": "partner-kit/docs/design.md#8a-build",
+        "quote": null,
+        "note": "The skill is kept in the role plugin; the runbook's step 2 commits a copy to the repository's .claude/skills/ folder."
+      },
+      "wrapper": "scheduled",
+      "inputs": [
+        "Runs as:",
+        "Autonomy level:",
+        "Data class:",
+        "Connectors:",
+        "Schedule or trigger:",
+        "Memory:",
+        "Skill:"
+      ],
+      "scaffolds": [
+        "build/plugin/<plugin_name>/skills/<skill-name>/",
+        "build/scheduled/<task-id>/task.md"
+      ],
+      "reason": null
+    },
+    {
+      "runtime": "claude-tag-routine",
+      "kind": "tag-routine",
+      "what": "A skill plus a Claude Tag routine definition: a fill-in sheet of the runbook's inputs.",
+      "runbook": "starter-kit/runbooks/claude-tag-routine.md#steps",
+      "skill_location": "plugin",
+      "skill_location_basis": {
+        "link": "starter-kit/runbooks/claude-tag-routine.md#inputs-you-need",
+        "quote": "**Skill:** the name of the skill that holds the task's instructions and the plugin that carries it. ([G])",
+        "note": "Step 8 of the runbook attaches the skill's plugin where the task runs, so the skill goes in the role plugin."
+      },
+      "wrapper": "routine",
+      "inputs": [
+        "Runs as:",
+        "Autonomy level:",
+        "Data class:",
+        "Connectors:",
+        "Schedule or trigger:",
+        "Memory:",
+        "Skill:"
+      ],
+      "scaffolds": [
+        "build/plugin/<plugin_name>/skills/<skill-name>/",
+        "build/routines/<task-id>/routine.md"
+      ],
+      "reason": null
+    },
+    {
+      "runtime": "managed-agents",
+      "kind": "agent-bundle",
+      "what": "An agent bundle: the agent definition, the environment definition and the skill, uploaded as a zip.",
+      "runbook": "starter-kit/runbooks/managed-agents.md#steps",
+      "skill_location": "skills",
+      "skill_location_basis": {
+        "link": "starter-kit/runbooks/managed-agents.md#inputs-you-need",
+        "quote": "**The skill that holds the task's instructions.** Its folder, already evaluated, ready to upload as a zip.",
+        "note": "The skill is uploaded to the API on its own, not loaded from the org's plugins."
+      },
+      "wrapper": "agent",
+      "inputs": [],
+      "scaffolds": [
+        "build/skills/<skill-name>/",
+        "build/agents/<task-id>/agent.json",
+        "build/agents/<task-id>/environment.json"
+      ],
+      "reason": null
+    },
+    {
+      "runtime": "managed-agents-self-hosted",
+      "kind": "agent-bundle",
+      "what": "An agent bundle for the customer's own Managed Agents server: the agent definition, the environment definition and the skill.",
+      "runbook": "starter-kit/runbooks/managed-agents.md#self-hosted",
+      "skill_location": "skills",
+      "skill_location_basis": {
+        "link": "starter-kit/runbooks/managed-agents.md#inputs-you-need",
+        "quote": "**The skill that holds the task's instructions.** Its folder, already evaluated, ready to upload as a zip.",
+        "note": "The self-hosted server takes the same API calls, so the skill is uploaded on its own."
+      },
+      "wrapper": "agent",
+      "inputs": [],
+      "scaffolds": [
+        "build/skills/<skill-name>/",
+        "build/agents/<task-id>/agent.json",
+        "build/agents/<task-id>/environment.json"
+      ],
+      "reason": null
+    },
+    {
+      "runtime": "agent-sdk",
+      "kind": "sdk-runner",
+      "what": "A runner scaffold (a README of the runbook's inputs) plus the skill the runner loads from its working directory.",
+      "runbook": "starter-kit/runbooks/agent-sdk-runner.md#steps",
+      "skill_location": "skills",
+      "skill_location_basis": {
+        "link": "starter-kit/runbooks/agent-sdk-runner.md#build-the-runner",
+        "quote": "2. Put the task's skill in `.claude/skills/` in the working directory and load it.",
+        "note": "The runner loads the skill from its own working directory, not from the org's plugins."
+      },
+      "wrapper": "sdk",
+      "inputs": [
+        "Who it runs as.",
+        "Autonomy level and ceiling.",
+        "Data class and retention.",
+        "Connectors and each tool's permission.",
+        "What starts a run.",
+        "Memory on or off.",
+        "The persona's system-prompt form.",
+        "The skill that holds the task's instructions."
+      ],
+      "scaffolds": [
+        "build/skills/<skill-name>/",
+        "build/sdk/<task-id>/README.md"
+      ],
+      "reason": null
+    },
+    {
+      "runtime": "none",
+      "kind": "none",
+      "what": "Nothing is built.",
+      "runbook": null,
+      "skill_location": null,
+      "skill_location_basis": null,
+      "wrapper": null,
+      "inputs": [],
+      "scaffolds": [],
+      "reason": "Levelling allows no runtime for this task (design 7.2), so there is nothing to build until a decision or an override changes that."
+    }
+  ]
+}

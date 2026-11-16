@@ -21,7 +21,7 @@ Tooling for us, the partner, to run the persona-card workflow: interview notes b
 | Path | What it is |
 |---|---|
 | [docs/design.md](docs/design.md) | The design of the whole workflow: records, field catalogue, levelling, backlog, dashboard |
-| [plugins/twin-consultant/](plugins/twin-consultant/README.md) | The consultant plugin: record templates, the interview guide, the field catalogue, industry packs, levelling rules and plan fit, the task library, the `validate`, `level`, `backlog`, `dashboard` and `all` commands, and four skills |
+| [plugins/twin-consultant/](plugins/twin-consultant/README.md) | The consultant plugin: record templates, the interview guide, the field catalogue, industry packs, levelling rules and plan fit, the task library, the `validate`, `level`, `backlog`, `dashboard`, `all` and `build` commands, and four skills |
 | [engagements/](../engagements/README.md) | The two worked examples, both fictional: `sample-pe` (Enterprise, ZDR) and `sample-team-cs` (Team) |
 
 ## Run the workflow
@@ -30,6 +30,6 @@ Tooling for us, the partner, to run the persona-card workflow: interview notes b
 python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py all <persona-dir>
 ```
 
-`<persona-dir>` holds `card.json`; the customer profile is read from `../../customer-profile.json`. `all` validates the card, then writes `levelled.json`, `backlog.json`, `backlog.md` and `dashboard.html` next to it. The other commands, the exit codes and the four skills are in the [plugin README](plugins/twin-consultant/README.md). The playbook walks the steps in order: [05 The persona-card workflow](../docs/playbook/05-persona-card-workflow.md).
+`<persona-dir>` holds `card.json`; the customer profile is read from `../../customer-profile.json`. `all` validates the card, then writes `levelled.json`, `backlog.json`, `backlog.md` and `dashboard.html` next to it. Then `python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py build <persona-dir>` scaffolds each pilot task's skill and runtime wrapper under `build/` (`--all-tasks` for every task); it never overwrites a file a person has changed. The other commands, the exit codes and the four skills are in the [plugin README](plugins/twin-consultant/README.md). The playbook walks the steps in order: [05 The persona-card workflow](../docs/playbook/05-persona-card-workflow.md).
 
 The skills' evals are written and have not been run yet.

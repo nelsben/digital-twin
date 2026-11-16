@@ -3,8 +3,8 @@
   "customer": "example-capital-partners",
   "persona": "deal-team-associate",
   "source": {
-    "card_sha256": "d27a6436df21e62950f581a361a7ec1b8d79337d2a46c6a32b4c3be9811b573c",
-    "levelled_sha256": "8eabb0b2c7a41da3963e7ac85ff356341b2d467a4a26e1742dd9eb13fc4810a0",
+    "card_sha256": "971d5d87691e1a0647cf08a7e4d67ab5e2f64e1c10bc0d3cf5e9ac8c6d82937f",
+    "levelled_sha256": "cadbfe6b988fe9f8cf3883cc9266f18d7f30591f5a2e20baa0ee8cff98c6e3d1",
     "library_version": 1
   },
   "unnamed_roles": [

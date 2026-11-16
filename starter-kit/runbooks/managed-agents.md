@@ -19,7 +19,7 @@ Roles use the names in [03-stakeholders](../../docs/playbook/03-stakeholders.md)
 
 How sources are marked: each numbered step ends with the pages it came from, such as ([B], [C]). **⚠ Unverified:** (the compendium's marker) means no page we read confirmed the sentence; confirm it at set-up, then replace the mark with the page you checked. Where a compendium page already states a fact, this runbook links it and does not repeat it. Managed Agents is in beta ([A]), so re-read the pages before each engagement.
 
-Checked 2026-11-16 by the author against the pages listed. Not yet independently verified: verification-log.md has no rows for this runbook.
+Checked 2026-11-16 by the author against the pages listed. Every claim was checked again on 2026-11-16 by a second reader; the results are in the [verification log](verification-log.md).
 
 Pages used:
 
@@ -43,6 +43,7 @@ Pages used:
 - [R] [Choosing an agent environment](https://platform.claude.com/docs/en/managed-agents/choosing-an-environment)
 - [S] [Budgets](https://platform.claude.com/docs/en/managed-agents/budgets)
 - [T] [Session observability](https://platform.claude.com/docs/en/managed-agents/session-observability)
+- [U] [Tools](https://platform.claude.com/docs/en/managed-agents/tools)
 
 ## Inputs you need
 
@@ -71,7 +72,7 @@ The engagement has already decided these for the task. Do not start without all 
 
 1. Create the environment with limited networking and list only the hosts the task needs. A create request that omits `networking` gets `unrestricted`, so always set it. ([F])
    ```bash
-   curl -fsSL https://api.anthropic.com/v1/environments \
+   curl -fsS https://api.anthropic.com/v1/environments \
      -H "x-api-key: $ANTHROPIC_API_KEY" \
      -H "anthropic-version: 2026-10-21" \
      -H "anthropic-beta: managed-agents-2026-04-01" \
@@ -95,12 +96,12 @@ The engagement has already decided these for the task. Do not start without all 
      -H "content-type: application/json" \
      -d '{"name": "Coding Assistant","model": "claude-opus-5-5","system": "You are a helpful coding agent.","tools": [{"type": "agent_toolset_20260401"}]}'
    ```
-   Sample from [B]. Replace the name, model and `system`; add the skill as `"skills": [{"type": "custom", "skill_id": "skill_01AbCdEfGhIjKlMnOpQrStUv", "version": "latest"}]` ([E]). (Our recommendation) Give the skill a fixed `version` instead of `"latest"` so a skill edit cannot change a running task; **⚠ Unverified:** [E] shows `"latest"` only; confirm that a numbered version is accepted.
+   Sample from [B]. Replace the name, model and `system`; add the skill as `"skills": [{"type": "custom", "skill_id": "skill_01AbCdEfGhIjKlMnOpQrStUv", "version": "latest"}]` ([E]). (Our recommendation) Give the skill a fixed `version` instead of `"latest"` so a skill edit cannot change a running task; `version` pins a specific version or uses `latest` ([E]).
 4. Switch off every built-in tool the task does not need. The agent toolset defaults to `always_allow`, so an unlisted tool runs without asking. ([C], [B])
    ```json
    {"type": "agent_toolset_20260401","default_config": { "enabled": false },"configs": [{ "name": "bash", "enabled": true },{ "name": "read", "enabled": true }]}
    ```
-   Sample from [B]; list only the tools the task uses.
+   Sample from [U], cut to two tools; list only the tools the task uses.
 5. Add each MCP server in `mcp_servers` and a matching `{"type": "mcp_toolset", "mcp_server_name": "github"}` in `tools`; to allow only some tools, set `"default_config": { "enabled": false }` and enable them one by one in `configs`. Do not put credentials here; they come from the vault (step 8). ([D])
 6. Hold each tool at the task's autonomy level with a permission policy; the policies are `always_allow`, `always_ask` and `auto`, so level 1 means the write tool is switched off with `"enabled": false`. ([C], [D])
    - Level 0 or 1: read tools enabled; write tools `"enabled": false`.
@@ -142,7 +143,7 @@ The engagement has already decided these for the task. Do not start without all 
       -H "anthropic-beta: managed-agents-2026-04-01" -H "content-type: application/json" \
       -d '{"agent": "'"$AGENT_ID"'","environment_id": "'"$ENVIRONMENT_ID"'","vault_ids": ["'"$VAULT_ID"'"],"title": "..."}'
     ```
-    Body from [H]; add `"initial_events": [{"type": "user.message","content": [{"type": "text","text": "..."}]}]` and `"budget": {"type": "limit","max_list_cost": {"amount": "125", "currency": "USD"}}` ([H]). A session that reaches its budget pauses ([S], [L]).
+    Body from [G]; add `"initial_events": [{"type": "user.message","content": [{"type": "text","text": "..."}]}]` and `"budget": {"type": "limit","max_list_cost": {"amount": "125", "currency": "USD"}}` ([H]). A session that reaches its budget pauses ([S], [L]).
 13. Scheduled deployment. Create it with the agent, environment, one initial `user.message` and a `schedule` of type `cron` with an `expression` and a `timezone`. Add `vault_ids` and a `budget`; the budget caps each run, not the total. ([K])
     ```bash
     curl --fail-with-body -sS "https://api.anthropic.com/v1/deployments?beta=true" \
@@ -152,7 +153,7 @@ The engagement has already decided these for the task. Do not start without all 
     ```
     Sample from [K]. A deployment runs one version of its agent and keeps it when the agent changes; to move it, update the deployment with the agent ID again. Actual start times shift by up to 15 percent of the interval (at least 5 seconds, at most 9 minutes). Missed triggers are not backfilled. Avoid 1 to 3 AM local time. ([K]) Check the next fire times in `schedule.upcoming_runs_at` ([K]).
 14. Event. Anthropic offers no event trigger for sessions in the pages we read, so we build a small receiver. It (a) accepts the source system's event over HTTPS and verifies its signature, (b) writes the source event's own ID into our dedupe store with a unique key before doing anything else, (c) if that key already exists, answers 2xx and stops, (d) otherwise calls `POST /v1/sessions` with a `user.message` that carries only the record ID, (e) stores the returned session ID next to the event ID, and (f) deletes the dedupe row if the call failed so a retry can run. ([H], [L]) **⚠ Unverified:** whether session creation accepts an idempotency key; no page we read shows one, so the dedupe store is ours. Keep the message free of record content on private-equity work ([15](../../docs/compendium/15-governance-and-performance.md#one-governance-log-for-all-twins-our-recommendation)).
-15. Make the repeat rule hold under a retry. The source system may send one event twice, and Anthropic's own webhooks retry up to three times with the same `event.id`; dedupe on it ([L]). Add a nightly reconciliation that lists the day's source events and sessions and starts the ones that are missing; a webhook event emitted while no endpoint subscribes to its type is never delivered later, and [06](../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level) says something has to reconcile. ([L])
+15. Make the repeat rule hold under a retry. The source system may send one event twice, and Anthropic's own webhooks make up to three delivery attempts with the same `event.id`; dedupe on it ([L]). Add a nightly reconciliation that lists the day's source events and sessions and starts the ones that are missing; a webhook event emitted while no endpoint subscribes to its type is never delivered later, and [06](../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level) says something has to reconcile. ([L])
 
 ### Log, versions and limits
 

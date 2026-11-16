@@ -25,9 +25,10 @@ HEADINGS = [
     "What can go wrong",
 ]
 
-CHECKED_SENTENCE = (
-    "Checked 2026-11-16 by the author against the pages listed. "
-    "Not yet independently verified: verification-log.md has no rows for this runbook."
+CHECKED_SENTENCE = re.compile(
+    r"Checked 2026-11-16 by the author against the pages listed\. "
+    r"Every claim was checked again on \d{4}-\d{2}-\d{2} by a second reader; "
+    r"the results are in the \[verification log\]\(verification-log\.md\)\."
 )
 
 UNVERIFIED = "**⚠ Unverified:**"
@@ -146,7 +147,7 @@ class RunbookChecks(unittest.TestCase):
     def test_checked_sentence_present(self):
         for path, text in self.each():
             body = " ".join(sections(text).get("Read this first", []))
-            self.assertIn(CHECKED_SENTENCE, " ".join(body.split()))
+            self.assertRegex(" ".join(body.split()), CHECKED_SENTENCE)
 
     def test_role_table_ends_what_this_is(self):
         for path, text in self.each():

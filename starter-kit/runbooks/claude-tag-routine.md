@@ -22,7 +22,7 @@ Roles use the names in [03-stakeholders](../../docs/playbook/03-stakeholders.md)
 
 How sources are marked: each numbered step and each product fact ends with the pages it came from, as tags like ([A], [B]) that the list below defines. **⚠ Unverified:** (the compendium's marker) means the pages we read did not confirm it; the item says what would confirm it. Confirm each one at setup, then replace the mark with the page you checked. Menu paths, setting names, limits and commands are copied from the pages as read on 2026-11-16.
 
-Checked 2026-11-16 by the author against the pages listed. Not yet independently verified: verification-log.md has no rows for this runbook.
+Checked 2026-11-16 by the author against the pages listed. Every claim was checked again on 2026-11-16 by a second reader; the results are in the [verification log](verification-log.md).
 
 Pages used:
 
@@ -51,7 +51,7 @@ The engagement has already decided these for the task. The steps consume them; i
 - **Data class:** the class and what follows from it: which surfaces are allowed and what retention applies, per the matrix in [10](../../docs/compendium/10-sensitive-data.md). Claude Tag is not available to an organization with Zero Data Retention, customer-managed encryption keys or the HIPAA configuration. ([A], [N])
 - **Connectors:** each connector or MCP server the task uses and, for each, the service account and whether it may read or write. ([G])
 - **Schedule or trigger:** the cadence and time zone, or the channels and topic to watch, or the one pull request to follow, and the channel where results post. ([B])
-- **Memory:** on or off for the channel. Memory is per channel and anyone in the channel can read and change it. ([E])
+- **Memory:** on or off for the channel. Memory is per channel and anyone in the channel can read and change it; from a public channel Claude can also save workspace notes, which it reads in every channel, private ones included. ([E])
 - **Skill:** the name of the skill that holds the task's instructions and the plugin that carries it. ([G])
 
 ## Before you start

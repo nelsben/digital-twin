@@ -26,12 +26,12 @@ The consultant plugin for the persona-card workflow. Design of record: [partner-
 | [templates/interview-guide.md](templates/interview-guide.md) | Plain-language role interview: questions P1 to P6 and F1 to F9, each with the card fields it fills |
 | [templates/interview-notes.md](templates/interview-notes.md) | Notes template with one slot per question, saved under the persona's `interviews/` folder |
 | [data/fields.json](data/fields.json) | The field catalogue: type, values, required flag, the questions that ask for each field, and what reads it |
-| [scripts/twincard/](scripts/twincard/) | Standard-library Python 3.9+: `fields.py` loads the catalogue, `validate.py` checks both records, `packs.py` loads and checks industry packs, `level.py` levels a card by rule, `backlog.py` builds the backlog from the levelled card, `dashboard.py` renders the dashboard page, `build.py` scaffolds each task's skill and runtime wrapper, `cli.py` is the command line |
+| [scripts/twincard/](scripts/twincard/) | Standard-library Python 3.9+: `fields.py` loads the catalogue, `validate.py` checks both records, `packs.py` loads and checks industry packs, `level.py` levels a card by rule, `backlog.py` builds the backlog from the levelled card, `dashboard.py` renders the dashboard page, `build.py` scaffolds each task's skill and runtime wrapper and holds `check` and `record`, `cli.py` is the command line |
 | [data/rules.json](data/rules.json) | The levelling rules: each decides one thing, from facts on the card and profile, and cites the compendium section it comes from; the format is in [design section 7.3](../../docs/design.md) |
 | [data/plan-fit.json](data/plan-fit.json) | What each capability the twin relies on is on Team, Enterprise and individual plans, and what Team loses, with its compendium cite |
 | [data/industry-packs/](data/industry-packs/) | One JSON file per industry; the format is in [design section 7.1](../../docs/design.md) |
 | [data/task-library.json](data/task-library.json) | The backlog's task templates: each has an anatomy part, the story it applies to, a `when` condition in the rules language, numbered `how` steps that link the kit template, runbook or compendium page to use, `done_when` and an owner role; the format is in [design section 8](../../docs/design.md#8-backlog-backlogpy-datatask-libraryjson) |
-| [skills/](skills/) | The four consultant skills, one per step of the flow below: `preparing-role-interviews`, `filling-persona-cards`, `planning-a-twin` and `building-twin-stories` |
+| [skills/](skills/) | The five consultant skills, one per step of the flow below: `preparing-role-interviews`, `filling-persona-cards`, `planning-a-twin`, `building-twin-stories` and `building-twin-artifacts` |
 | [data/build-kinds.json](data/build-kinds.json) | What each runtime is built as: its artifact kind, where its skill lives, the runbook it follows and the files it scaffolds; the format is in [design section 8a](../../docs/design.md#8a-build) |
 | [templates/build/](templates/build/) | Byte-for-byte copies of the starter-kit skill template and role-plugin manifest that `build` reads |
 | [scripts/twincard/backlog.py](scripts/twincard/backlog.py) | Builds `backlog.json` and `backlog.md` from `card.json`, `levelled.json` and the task library, keeping each task's status across runs |
@@ -135,10 +135,23 @@ python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py build <perso
 
 - **It fills only what the records state** and keeps every `FILL IN` a person must decide; each seeded line names the field it came from. A task's skill name is `tasks[].skill_name`, or derived from the task name when that is empty.
 - **It never overwrites a person's edit.** A file whose hash is not the one `build.json` records is kept and listed on stderr as `kept:`. A second run on the same inputs changes no file.
-- **Status.** `scaffolded` while any file of the artifact holds `FILL IN`, then `drafted`; a person records `evals-passing`, `packaged`, `deployed` and `verified` in `build.json`, and `build` keeps them. A task with runtime `none` is `not-built`.
+- **Status.** `scaffolded` while any file of the artifact holds `FILL IN`, then `drafted`; `record` (below) sets `evals-passing`, and the package command (OPS-76) will set `packaged`, `deployed` and `verified`. `build` keeps a recorded status and each artifact's `history`. A task with runtime `none` is `not-built`.
 - **Exit codes.** 0 on success; 1, writing nothing, when validation fails, `levelled.json` is missing or out of date, or levelling reports a blocker; 2 for a usage error, a missing folder or `card.json`, an output that cannot be written, `data/build-kinds.json` or `build/build.json` that cannot be read or is not in its shape, or an unknown status in `build.json`.
 
 Design: [section 8a](../../docs/design.md#8a-build). Tests: `tests/test_twincard_build.py`.
+
+## Check and record
+
+```
+python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py check <persona-dir> [<artifact-id>]
+python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py record <persona-dir> <artifact-id> --status evals-passing --evidence <file> --by <name> [--pass-mark <percent> --approved-by <name>]
+```
+
+`check` runs deterministic checks on each artifact in `build/build.json` and writes nothing: no `FILL IN` left; for a skill, frontmatter of `name` and `description` only, the name equal to its folder and within the name rule, a description under 200 characters, a body under 500 lines, every linked file present one level deep, `evals/evals.json` in skill-creator's shape with at least 3 cases, `trigger-evals.json` with a true and a false entry, and every levelled system in the Inputs table; for an agent bundle, both files parse, `model` and `system` are set, networking is limited and the named skill exists. One line per problem, naming the file and ending `Next: ...`; exit 0 with no problems, else 1.
+
+`record` moves one artifact one status at a time, never backwards, and writes nothing on a refusal (exit 1). It sets only `evals-passing`, from `drafted`, when `check` passes and the evidence under `build/evidence/<artifact-id>/` is skill-creator's `benchmark.json` or the `claude plugin eval` JSON result, with a without-skill baseline and a with-skill pass rate at or above the pass mark (100% unless `--pass-mark` and `--approved-by` say otherwise). Each move is appended to the artifact's `history` in `build.json`. Never write or invent an eval result: real examples and eval runs stay in the customer's environment, and the fictional samples stay at `drafted`. The skill `building-twin-artifacts` walks the consultant through it.
+
+Design: [section 8a, check and record](../../docs/design.md#check-and-record). Tests: `tests/test_twincard_build_record.py`.
 
 ## Industry packs
 
@@ -161,7 +174,7 @@ packs.pack_problems(pack)   # [{"path", "message", "fix"}], empty when the pack 
 
 ## The flow, from interview to dashboard
 
-Four skills carry one role from its interviews to a dashboard. Each takes what the step before it left behind. The design is in [partner-kit/docs/design.md](../../docs/design.md).
+Five skills carry one role from its interviews to built, tested artifacts. Each takes what the step before it left behind. The design is in [partner-kit/docs/design.md](../../docs/design.md).
 
 | Step | Skill | Takes | Leaves behind | Runs |
 |---|---|---|---|---|
@@ -169,5 +182,6 @@ Four skills carry one role from its interviews to a dashboard. Each takes what t
 | 2. Fill the card | [filling-persona-cards](skills/filling-persona-cards/) | The interview notes and the customer profile (it starts one when there is none) | `card.json`, each answer with its source, and an open question for each answer still missing | `validate` |
 | 3. Plan the twin | [planning-a-twin](skills/planning-a-twin/) | A card that validates, and the consultant's overrides, each with a value, a reason and an approver | `levelled.json`, `backlog.json`, `backlog.md` and `dashboard.html`, and a report of blockers, unverified facts, undecided decisions, warnings by code and open questions | `all`, again after any change |
 | 4. Build the stories | [building-twin-stories](skills/building-twin-stories/) | A backlog that is not out of date | The twin's work in the customer's delivery repo, task statuses kept true in `backlog.json`, and a refreshed `backlog.md` and `dashboard.html` | `backlog`, then `dashboard`, after each status change |
+| 5. Build the artifacts | [building-twin-artifacts](skills/building-twin-artifacts/) | A current `build/` folder, the card's counted examples (kept by the customer) and the task's owner | Each pilot artifact's eval cases and `SKILL.md` (and, for a hosted agent, `agent.json`'s system prompt), checked, and an `evals-passing` status recorded from the eval tool's own output | `build`, `check`, then `record` |
 
-Each skill's evals are in its `evals/` folder and were written before its `SKILL.md`. The evals of `planning-a-twin` and `building-twin-stories` are written and have not been run.
+Each skill's evals are in its `evals/` folder and were written before its `SKILL.md`. The evals of `planning-a-twin`, `building-twin-stories` and `building-twin-artifacts` are written and have not been run.

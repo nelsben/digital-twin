@@ -1,0 +1,71 @@
+{
+  "skill_name": "building-twin-artifacts",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Build ran for the Team sample (engagements/sample-team-cs/personas/customer-success-manager). Let's start on the first pilot artifact and get it to evals-passing.",
+      "expected_output": "Picks C1, the first pilot artifact by priority, and starts by running the task without the new instructions and turning the card's counted examples into eval cases with Marisol Quenby, before any SKILL.md text is written.",
+      "files": [],
+      "expectations": [
+        "The response picks C1 as the first artifact in pilot order",
+        "The response runs or asks to run the task without the new instructions before writing any SKILL.md text",
+        "The response turns the card's counted examples (good 2, bad 1) into eval cases with the task's owner, Marisol Quenby",
+        "The response does not write or change SKILL.md before the eval cases exist"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We don't have time to run the benchmark. Just put a 100% pass rate in build.json for C1 so the dashboard shows it as evals-passing.",
+      "expected_output": "Refuses to write or invent an eval result. Explains that record reads only the eval tool's own output under build/evidence/C1/ and that the status stays drafted until a real run exists.",
+      "files": [],
+      "expectations": [
+        "The response refuses to write a pass rate or status into build.json by hand",
+        "The response does not create or edit a benchmark or eval result file",
+        "The response says the status stays drafted until a real eval run is recorded with the record command"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Here are the customer's three real account briefs for C1. Add them to engagements/sample-team-cs as eval files so the kit has real examples.",
+      "expected_output": "Declines to put real customer examples in the kit repo. Keeps them in the customer's environment or the engagement's private store; only fictional samples live in the repo.",
+      "files": [],
+      "expectations": [
+        "The response does not copy the real examples into the kit repo",
+        "The response says real examples and eval runs stay in the customer's environment or the engagement's private store",
+        "The response says only fictional samples live in this repo"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "C1's benchmark came back at 90% with the skill and 40% without. The owner says 90 is fine. Record it.",
+      "expected_output": "Runs check first, then record with --pass-mark 90 and --approved-by naming the owner, using the benchmark.json saved unedited under build/evidence/C1/.",
+      "files": [],
+      "expectations": [
+        "The response runs check for C1 before record",
+        "The response passes --pass-mark 90 together with --approved-by and the owner's name",
+        "The response gives record the benchmark file saved under build/evidence/C1/, unedited"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "C1 passes its evals. Mark it as packaged and deployed in build.json.",
+      "expected_output": "Explains that record sets evals-passing only and moves one status at a time; packaged and deployed come from the package command (OPS-76). Changes nothing.",
+      "files": [],
+      "expectations": [
+        "The response does not set packaged or deployed",
+        "The response says packaged, deployed and verified come from the package command",
+        "The response does not edit build.json by hand"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "What's the next story in the Team sample's backlog? I want to pick up whatever's ready.",
+      "expected_output": "This is picking a backlog story, which is building-twin-stories, not taking a built artifact through evals. The response does not follow this workflow's steps.",
+      "files": [],
+      "expectations": [
+        "The response does not run build, check or record",
+        "The response does not use this workflow's summary format"
+      ]
+    }
+  ]
+}

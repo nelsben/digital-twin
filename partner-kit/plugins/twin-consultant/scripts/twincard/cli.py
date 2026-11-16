@@ -9,6 +9,9 @@
     python3 .../cli.py dashboard <persona-dir> [--date YYYY-MM-DD]   # writes dashboard.html
     python3 .../cli.py all <persona-dir> [--date YYYY-MM-DD]   # validate, level, backlog, dashboard
     python3 .../cli.py build <persona-dir> [--all-tasks]   # scaffolds <persona-dir>/build/ (design 8a)
+    python3 .../cli.py check <persona-dir> [<artifact-id>]   # checks each built artifact; writes nothing
+    python3 .../cli.py record <persona-dir> <artifact-id> --status evals-passing --evidence FILE --by NAME
+                              [--pass-mark PERCENT --approved-by NAME]   # updates build/build.json
 
 Runs from any working directory. Exit codes: 0 on success; 1 when validation
 fails (level, backlog and dashboard then write nothing), when levelled.json is
@@ -29,6 +32,11 @@ The build command is not part of all. It writes nothing and exits 1 when validat
 levelled.json is missing or stale, or levelling reports a blocker; it exits 2, writing nothing,
 when data/build-kinds.json or build/build.json cannot be read or is not in its shape, or
 build.json gives an unknown status. A file a person has changed is kept and listed on stderr.
+check prints one line per problem, naming the file and ending "Next: ...", then a summary line; it
+exits 0 when there are no problems and 1 otherwise (also when levelled.json is missing or stale).
+record exits 0 when it moved the status, 1 on a refusal (one line on stdout ending "Next: ...",
+nothing written), and 2 when build.json is missing or unusable, the artifact id is unknown or an
+argument is not usable. Neither is part of all.
 """
 
 import argparse
@@ -103,7 +111,33 @@ def build_parser():
     scaffold.add_argument("persona_dir", help="the persona folder that holds card.json and levelled.json")
     scaffold.add_argument("--all-tasks", action="store_true",
                           help="build every task, not only the pilot tasks (in_pilot true)")
+    checking = commands.add_parser(
+        "check", help="run the deterministic checks on each artifact in build/build.json; writes nothing")
+    checking.add_argument("persona_dir", help="the persona folder that holds card.json and build/build.json")
+    checking.add_argument("artifact_id", nargs="?", help="one task id to check (default: every artifact)")
+    recording = commands.add_parser(
+        "record", help="move one artifact one status up on eval evidence (drafted to evals-passing)")
+    recording.add_argument("persona_dir", help="the persona folder that holds card.json and build/build.json")
+    recording.add_argument("artifact_id", help="the task id of the artifact")
+    recording.add_argument("--status", required=True, choices=build_mod.STATUSES, help="the status to move to")
+    recording.add_argument("--evidence", required=True, metavar="FILE",
+                           help="skill-creator's benchmark.json or the `claude plugin eval` JSON result, "
+                                "saved under build/evidence/<artifact-id>/")
+    recording.add_argument("--by", required=True, metavar="NAME", help="who is recording the result")
+    recording.add_argument("--pass-mark", type=pass_mark, default=100.0, metavar="PERCENT",
+                           help="the with-skill pass rate needed, in percent (default 100)")
+    recording.add_argument("--approved-by", metavar="NAME", help="who accepted a pass mark below 100")
     return parser
+
+
+def pass_mark(text):
+    try:
+        value = float(text)
+    except ValueError:
+        value = None
+    if value is None or not 0 < value <= 100:
+        raise argparse.ArgumentTypeError("--pass-mark must be a percent above 0 and at most 100, not %s" % text)
+    return value
 
 
 def format_line(item):
@@ -301,12 +335,40 @@ def run_build(args, persona_dir):
     return EXIT_OK
 
 
+def run_check(args, persona_dir):
+    result = build_mod.check(str(persona_dir), args.artifact_id)
+    if result["error"]:
+        print(result["error"])
+        return EXIT_INVALID
+    for path, message, fix in result["problems"]:
+        print("%s: %s. Next: %s." % (path, message, _sentence(fix)))
+    for tid in result["skipped"]:
+        print("%s: not-built, nothing to check." % tid)
+    print("check: %d problem(s) in %d artifact(s) checked." % (len(result["problems"]), len(result["checked"])))
+    return EXIT_OK if result["ok"] else EXIT_INVALID
+
+
+def run_record(args, persona_dir):
+    try:
+        entry = build_mod.record(str(persona_dir), args.artifact_id, args.status, args.evidence, args.by,
+                                 args.pass_mark, args.approved_by)
+    except build_mod.Refused as exc:
+        print("record refused: %s." % _sentence(exc))
+        return EXIT_INVALID
+    print("%s: %s, recorded by %s from %s: with-skill pass rate %s, without-skill baseline %s, pass mark %s%%%s." % (
+        args.artifact_id, entry["status"], entry["by"], entry["evidence"], entry["pass_rate"], entry["baseline_rate"],
+        entry["pass_mark"], ", approved by %s" % entry["approved_by"] if entry["approved_by"] else ""))
+    return EXIT_OK
+
+
 OUTPUTS = {
     "level": (LEVELLED_FILE,),
     "backlog": (backlog_mod.BACKLOG_JSON, backlog_mod.BACKLOG_MD),
     "dashboard": (dashboard_mod.DASHBOARD_FILE,),
     "all": (LEVELLED_FILE, backlog_mod.BACKLOG_JSON, backlog_mod.BACKLOG_MD, dashboard_mod.DASHBOARD_FILE),
     "build": (),
+    "check": (),
+    "record": (),
 }
 
 
@@ -367,6 +429,13 @@ def run(args):
         folder = persona_dir / build_mod.BUILD_DIR
         check_writable(folder / build_mod.MANIFEST if folder.is_dir() else folder)
         return run_build(args, persona_dir)
+    if args.command == "check":
+        return run_check(args, persona_dir)
+    if args.command == "record":
+        manifest = persona_dir / build_mod.BUILD_DIR / build_mod.MANIFEST
+        if manifest.is_file():
+            check_writable(manifest)
+        return run_record(args, persona_dir)
     if args.command == "backlog":
         return run_backlog(args, persona_dir)
     if args.command == "dashboard":

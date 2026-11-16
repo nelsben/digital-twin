@@ -10,11 +10,18 @@
 | [backlog.json](deal-team-associate/backlog.json) | The generated backlog: epic, features, stories, tasks and their status | A command generates it; a person edits only a task's `status` |
 | [backlog.md](deal-team-associate/backlog.md) | The same backlog, readable | A command generates it |
 | [dashboard.html](deal-team-associate/dashboard.html) | One self-contained status page for the persona | A command generates it |
+| [build/](deal-team-associate/build/build.json) | The scaffold of each task's skill and runtime wrapper, with `build.json` listing them; every file still holds `FILL IN` markers | The build command scaffolds it; a person fills it in, and build never overwrites their edits |
 
 Regenerate the four generated files with:
 
 ```
 python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py all engagements/sample-pe/personas/deal-team-associate --date 2026-11-15
+```
+
+Then scaffold every task (not only the pilot) with:
+
+```
+python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py build engagements/sample-pe/personas/deal-team-associate --all-tasks
 ```
 
 The hand-written [backlog.md](../backlog.md) came first and is kept as the worked design record; the generated [backlog.md](deal-team-associate/backlog.md) is what the workflow produces from the card. See the [plugin README](../../../partner-kit/plugins/twin-consultant/README.md#all) for the command.

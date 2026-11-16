@@ -115,6 +115,7 @@
         "where": ""
       },
       "skill_owner": "Callum Nwosu",
+      "skill_name": "preparing-company-briefs",
       "priority": 1,
       "in_pilot": true
     },
@@ -170,6 +171,7 @@
         "where": ""
       },
       "skill_owner": "Beatriz Halloran",
+      "skill_name": "drafting-crm-updates",
       "priority": 2,
       "in_pilot": true
     },

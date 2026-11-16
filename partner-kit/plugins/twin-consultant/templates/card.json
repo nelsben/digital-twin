@@ -84,6 +84,7 @@
       },
       "skill_owner": "",
       "starts_from": [],
+      "skill_name": "",
       "priority": null,
       "in_pilot": null
     }

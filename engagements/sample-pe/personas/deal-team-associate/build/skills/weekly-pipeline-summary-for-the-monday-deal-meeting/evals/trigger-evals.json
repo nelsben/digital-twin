@@ -1,0 +1,6 @@
+[
+  {"query": "FILL IN: a normal case, as a real user would type it (this matches case 1 in evals.json). Seeded from card tasks.T3.trigger (schedule-team) and tasks.T3.output.what (Pipeline summary).", "should_trigger": true},
+  {"query": "FILL IN: the same intent, shorter or more casual, with a typo or an abbreviation. Seeded from card tasks.T3.trigger (schedule-team) and tasks.T3.output.what (Pipeline summary).", "should_trigger": true},
+  {"query": "FILL IN: the should-not-trigger near miss (this matches case 3 in evals.json)", "should_trigger": false},
+  {"query": "FILL IN: a second near miss that shares keywords with the skill but needs a different tool", "should_trigger": false}
+]

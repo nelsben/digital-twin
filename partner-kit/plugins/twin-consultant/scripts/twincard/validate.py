@@ -732,6 +732,50 @@ def _check_overrides(card, catalogue, report):
             seen[key] = index
 
 
+SKILL_NAME_MAX = 64
+SKILL_NAME_CHARS = re.compile(r"^[a-z0-9-]+$")
+SKILL_NAME_RESERVED = ("anthropic", "claude")
+SKILL_NAME_RULE = "docs/compendium/03-skills-authoring.md#frontmatter-write-for-every-surface"
+
+
+def skill_name_problem(name):
+    """What breaks compendium 03's rule for a skill name, or None: 64 characters at most, lowercase letters,
+    numbers and hyphens, with no "anthropic" or "claude"."""
+    if len(name) > SKILL_NAME_MAX:
+        return "is %d characters long; a skill name has %d at most" % (len(name), SKILL_NAME_MAX)
+    if not SKILL_NAME_CHARS.match(name):
+        return "has characters other than lowercase letters, numbers and hyphens"
+    for word in SKILL_NAME_RESERVED:
+        if word in name:
+            return "contains the reserved word %s" % word
+    return None
+
+
+def _check_skill_names(card, report):
+    """A task's skill_name, when set, follows compendium 03's name rule and is not another task's."""
+    tasks = card.get("tasks") if isinstance(card, dict) else None
+    if not isinstance(tasks, list):
+        return
+    seen = {}
+    for position, task in enumerate(tasks):
+        if not isinstance(task, dict) or not isinstance(task.get("skill_name"), str) or task["skill_name"] == "":
+            continue
+        tid = task.get("id")
+        label = tid if isinstance(tid, str) and tid else "[%d]" % position
+        path = ("tasks.%s" % label if not label.startswith("[") else "tasks" + label) + ".skill_name"
+        name = task["skill_name"]
+        problem = skill_name_problem(name)
+        if problem:
+            report.error("card", path, "task %s's skill_name %r %s (%s)" % (label, name, problem, SKILL_NAME_RULE),
+                         "Write it in lowercase letters, numbers and hyphens, at most %d characters, without "
+                         "\"anthropic\" or \"claude\", or leave it empty for build to derive it" % SKILL_NAME_MAX)
+        elif name in seen:
+            report.error("card", path, "task %s's skill_name %r is task %s's skill_name too" % (label, name, seen[name]),
+                         "Give each task its own skill name, or leave one empty for build to derive it")
+        else:
+            seen[name] = label
+
+
 def _check_tasks(card, report):
     """A card needs a tasks list with at least one task."""
     tasks = card.get("tasks", _MISSING)
@@ -810,6 +854,7 @@ def validate(persona_dir, catalogue=None):
     _check_retention_cover(profile, report)
     _check_industry(profile, report)
     _check_starts_from(card, profile, report)
+    _check_skill_names(card, report)
 
     satisfied = sum(1 for _, _, done in required if done)
     total = len(required)

@@ -44,15 +44,17 @@ partner-kit/
     skills/<skill-name>/SKILL.md (+ evals/, references/)
     scripts/                               # twincard package: one module per pipeline step
       twincard/__init__.py
-      twincard/fields.py      validate.py   level.py   backlog.py   dashboard.py   cli.py
+      twincard/fields.py      validate.py   level.py   backlog.py   dashboard.py   build.py   cli.py
     data/
       fields.json                          # the field catalogue (section 5)
       rules.json                           # levelling rules (section 7)
       plan-fit.json                        # Team vs Enterprise per capability
       task-library.json                    # implementation task templates per anatomy part (section 8)
+      build-kinds.json                     # the artifact kind each runtime is built as (section 8a)
       industry-packs/<industry>.json
     templates/
       card.json  customer-profile.json  discovery.md  interview-guide.md  interview-notes.md
+      build/                               # byte-for-byte copies of the starter-kit skill and role-plugin templates build reads (8a)
 ```
 
 A plugin is copied to a cache when installed, so **everything the scripts read sits inside the plugin folder**. Scripts find data relative to their own file, never by repo path.
@@ -67,6 +69,11 @@ engagements/<customer>/
     interviews/<yyyy-mm-dd>-<who>.md       # notes or transcript
     card.json
     levelled.json   backlog.json   backlog.md   dashboard.html     # generated; never hand-edited
+    build/                                 # scaffolded by build (8a); a person fills in its files, build never overwrites their edits
+      build.json                           # the build manifest
+      plugin/<plugin_name>/                # the role plugin: .claude-plugin/plugin.json, README.md, skills/<skill-name>/
+      skills/<skill-name>/                 # skills for hosted agents and Agent SDK runners
+      agents/<task-id>/  routines/<task-id>/  scheduled/<task-id>/  sdk/<task-id>/   # each runtime's wrapper
 ```
 
 CLI (one entry point, run from anywhere):
@@ -79,6 +86,7 @@ python3 .../cli.py backlog   <persona-dir>     # writes backlog.json, backlog.md
 python3 .../cli.py backlog   <persona-dir> --json --plan-out plan.json   # also prints backlog.json and writes the tracker plan
 python3 .../cli.py dashboard <persona-dir> [--date YYYY-MM-DD]   # writes dashboard.html; the date shown defaults to today
 python3 .../cli.py all       <persona-dir>     # the four in order; stops only when validation fails; a levelling blocker still writes every file and exits 1
+python3 .../cli.py build     <persona-dir> [--all-tasks]   # scaffolds build/ for the pilot tasks (all tasks with --all-tasks); not part of all
 ```
 
 `<persona-dir>` holds `card.json`; the customer profile is found at `../../customer-profile.json`. Exit code 0 on success; 1 when validation fails (`level`, `backlog` and `dashboard` then write nothing), when `levelled.json` is missing or out of date (`backlog` and `dashboard` write nothing and say to run `level`; sections 8 and 9 say how "out of date" is decided), when `backlog.json` is missing or out of date (`dashboard` writes nothing and says to run `backlog`), or when levelling reports a blocker (`level` still writes `levelled.json`, `backlog` still writes both backlog files and `dashboard` still writes the page, so the blocker can be read); 2 on a usage error, a missing persona folder (for `level`, `backlog`, `dashboard` and `all`, a folder with no `card.json`), an output that cannot be written (checked for every file the command writes, `--plan-out` included, before anything is written), a kit data file that is missing, is not JSON or is not in its shape (`rules.json`, `plan-fit.json`, `task-library.json`, `fields.json`, an industry pack), a `backlog.json` that is not JSON or not in its shape, an unknown status in `backlog.json` (`backlog` and `dashboard` give the same message), or a `--date` that is not a real calendar date. Validation errors name the field path and end `Next: <fix>`. A usage error or refusal is one line on stderr, naming the file at fault and ending `Next: <what to do>`, never a traceback. `level` validates first. With `--json`, `level` and `backlog` print exactly one JSON document on stdout: `levelled.json` or `backlog.json` on success, and on a refusal (validation errors, a stale `levelled.json`, a data-file fault) `validate`'s result with `ok: false` and an `error` line added (`errors` is empty when validation passed); human-readable lines such as `Blocked:` go to stderr.
@@ -237,7 +245,7 @@ One entry per field of both records:
 - `default`: `null`, or `{"value": ..., "source": "<compendium or playbook page>"}`.
 - `asked_by`: discovery question ids (A1 to G4 in `docs/playbook/02-discovery.md`) or interview-guide question ids (section 6). Every field has at least one, or a `default` with a source link.
 - `feeds`: the levelling rules, backlog generators or dashboard panels that read it. **Every field has at least one.** A field nothing reads is deleted.
-- `feeds` vocabulary: `rule:<decision>` with decision one of `runtime`, `identity`, `autonomy`, `data_controls`, `connectors`, `memory`, `plan_fit`; `backlog:<level>` with level one of `epic`, `feature`, `story`, `task`; `dashboard:<section>` with section one of `header`, `anatomy`, `features`, `blockers`, `backlog`, `open_questions`, `provenance`; and `voice` (the persona voice file).
+- `feeds` vocabulary: `rule:<decision>` with decision one of `runtime`, `identity`, `autonomy`, `data_controls`, `connectors`, `memory`, `plan_fit`; `backlog:<level>` with level one of `epic`, `feature`, `story`, `task`; `dashboard:<section>` with section one of `header`, `anatomy`, `features`, `blockers`, `backlog`, `open_questions`, `provenance`; `voice` (the persona voice file); and `build` (the build command, [8a](#8a-build)).
 - `part`: the anatomy part it belongs to (A1 persona, A2 skills, A3 connectors, A4 runtime, A5 identity, A6 memory, A7 guardrails, A8 evaluation, A9 distribution and governance) or `context`.
 - Tests enforce both rules and that the templates, the validator and the catalogue agree.
 
@@ -247,6 +255,7 @@ Rules `validate` applies to both records beyond the entries:
 - **Versions.** `card_version` and `profile_version` must be the integer in `record_versions`; `true` and `1.0` are errors. Adding fields does not change a version: OPS-53 added `compliance.zdr_cover`, `role.wanted_surfaces`, `tasks[].constraints` and `tasks[].wanted_change`, and OPS-56 added `tasks[].story_want` and `tasks[].story_benefit`; the record versions stay 1, and no migration is written (a record without `compliance.zdr_cover` fails validation until the field is filled in).
 - **Retention against ZDR cover.** `compliance.retention` `zdr` with `compliance.zdr_cover` `none` is an error and with `planned` a warning, both at `compliance.retention` (4.1).
 - **Numbers.** An `integer` or `number` field must be finite and not negative, unless the catalogue's `lower_bounds` gives the field (`record:path`) another least value.
+- **Skill names.** A task's `skill_name`, when set, must follow compendium 03's rule ([03](../../docs/compendium/03-skills-authoring.md#frontmatter-write-for-every-surface)): 64 characters at most, lowercase letters, numbers and hyphens, with no "anthropic" or "claude"; and no two tasks may share one. The error is at `tasks.<id>.skill_name`, names the task and ends `Next: ...`. An empty or absent `skill_name` is not an error: `build` derives one ([8a](#8a-build)).
 - **Tasks.** A card needs a `tasks` list with at least one task: a missing, non-list or empty `tasks` is the error `card:tasks: a card needs at least one task`.
 - **Overrides.** Each `overrides[].value` must fit its decision's vocabulary in the catalogue's `override_values`, the 7.2 values, matched exactly: `runtime` one of the seven runtimes; `identity` `user`, `service-account` or `api-key-vault`; `autonomy.start` and `autonomy.ceiling` an integer from 0 to 4 (a boolean is not an integer); `memory` `on` or `off`; `data_controls` an object with at least one of `settings_baseline` (`general`, `confidential`, `pe-zdr`, `hipaa` or `null`), `web_tools` (`on` or `off`), `surfaces` (a list of `role.works_in` values) and `retention` (a `compliance.retention` value). The error is at `overrides[<i>].value` (or `.value.<part>`) and lists the allowed values. `reason` and `approved_by` are required non-empty strings. The same task and decision overridden twice is an error naming both positions. An override of `connectors` or `plan_fit`, or of a decision levelling does not have, still validates; levelling reports it (7.3).
 
@@ -531,7 +540,60 @@ Some work stays engagement-specific: the backlog never generates it, and the con
 - **Keeping connectors out of chosen surfaces for a group** (for example out of chat and Cowork): a spike in `backlog.md` until the compendium confirms the setting.
 - **A hosted front end for users on unmanaged devices**: a Scale-phase story in `backlog.md`.
 - **A connector for a later team** (a system only a team that joins later uses): a Scale-phase task in `backlog.md`, after any spike it waits for.
-- **Concrete eval cases** (the prompt, the expected result and the pass mark for each real example): the story cards in `backlog.md`, then the skill's `evals/` folder in the role plugin. The generated backlog gives one acceptance line per counted example, not the case itself.
+- **Concrete eval cases** (the prompt, the expected result and the pass mark for each real example): the story cards in `backlog.md`, then the skill's `evals/` folder in the role plugin. The generated backlog gives one acceptance line per counted example, not the case itself, and `build` ([8a](#8a-build)) scaffolds the `evals/` files with one `FILL IN` case per counted example but never writes a case's prompt, expected result or pass mark.
+
+## 8a. Build
+
+`cli.py build <persona-dir> [--all-tasks]` scaffolds what each task is built as, under `<persona-dir>/build/`, from `card.json` and `levelled.json`. By default it builds the pilot tasks (`in_pilot` true); `--all-tasks` adds the rest. It is a separate command: `all` keeps its four steps. The build never re-decides a runtime: each artifact records `levelled.json`'s runtime value with that decision's rule and cite.
+
+### Kinds
+
+`data/build-kinds.json` maps every runtime in [7.2](#72-decision-values) to an artifact kind, the runbook it follows and the files it scaffolds. A test fails if a runtime in 7.2, in `override_values` or in a rule of `rules.json` has no entry, and checks each runbook link and its anchor.
+
+| Runtime | Kind | Skill folder | Wrapper | Runbook |
+|---|---|---|---|---|
+| `client-skill` | `skill` | `plugin/<plugin_name>/skills/<skill-name>/` | none | [identity, devices and publishing, step 6](../../starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups) |
+| `claude-code-scheduled-task` | `scheduled-task` | `plugin/<plugin_name>/skills/<skill-name>/` | `scheduled/<task-id>/task.md` | [Claude Code scheduled task](../../starter-kit/runbooks/claude-code-scheduled-task.md#steps) |
+| `claude-tag-routine` | `tag-routine` | `plugin/<plugin_name>/skills/<skill-name>/` | `routines/<task-id>/routine.md` | [Claude Tag routine](../../starter-kit/runbooks/claude-tag-routine.md#steps) |
+| `managed-agents` | `agent-bundle` | `skills/<skill-name>/` | `agents/<task-id>/agent.json`, `environment.json` | [Managed Agents](../../starter-kit/runbooks/managed-agents.md#steps) |
+| `managed-agents-self-hosted` | `agent-bundle` | `skills/<skill-name>/` | `agents/<task-id>/agent.json`, `environment.json` | [Managed Agents, self-hosted](../../starter-kit/runbooks/managed-agents.md#self-hosted) |
+| `agent-sdk` | `sdk-runner` | `skills/<skill-name>/` | `sdk/<task-id>/README.md` | [Agent SDK runner](../../starter-kit/runbooks/agent-sdk-runner.md#steps) |
+| `none` | `none` | nothing is built | none | none: the entry gives the reason |
+
+### Where a skill lives
+
+Client-skill and scheduled-task skills go in the role plugin. Hosted, Agent SDK and Claude Tag routine skills go in `build/skills/`, unless the matching runbook says the runtime loads skills from the org's plugins; then the skill goes in the plugin. The Claude Tag runbook does: its input is "**Skill:** the name of the skill that holds the task's instructions and the plugin that carries it." and its step 8 attaches the skill's plugin, so Claude Tag routine skills go in the plugin. Managed Agents uploads the skill's folder as a zip, and an Agent SDK runner loads it from its working directory, so theirs go in `build/skills/`. Each entry's `skill_location_basis` quotes the runbook line, and a test checks the quote is in the runbook.
+
+### Skill names
+
+A task's skill folder and frontmatter `name` is `tasks[].skill_name` when the card sets it ([5](#5-field-catalogue-datafieldsjson) says what `validate` checks). When it is empty, `build` derives one from the task name: lower case, each run of other characters becomes one hyphen, "anthropic" and "claude" are removed, `task-<id>` if nothing is left, cut to 64 characters. A derived name that is already taken, by a card's own name first and then by an earlier task, gets `-2`, `-3` and so on in task order, cut so the whole stays within 64. `build.json` records whether each name was derived.
+
+### What it writes
+
+- The role plugin: `plugin/<plugin_name>/.claude-plugin/plugin.json` in the starter template's shape with `name` set to `persona_plan.plugin_name`, and a `README.md` listing the plugin's skills and their tasks.
+- Per task, the skill folder from the starter template: `SKILL.md`, `evals/evals.json`, `evals/trigger-evals.json` and `references/example-reference.md`.
+- Per kind, its wrapper. `agent.json` names the skill by reference, leaves `model` and `system` as `FILL IN`, turns the built-in toolset off by default and lists one MCP server per connector with its URL left as `FILL IN`; `environment.json` limits networking with `allowed_hosts: []`. `routine.md`, `task.md` and the SDK `README.md` are fill-in sheets of their runbook's "Inputs you need", one line per bold label (a test checks the labels match the runbook).
+- `build.json`, the manifest.
+
+The templates it reads are byte-for-byte copies of the starter-kit's, in the plugin's `templates/build/` (a plugin is copied to a cache when installed, section 3); a test checks each copy equals its source. The starting points a task's `starts_from` names are linked, not copied.
+
+**Seeding.** `SKILL.md` keeps every `FILL IN` where a person must decide, and fills only what the records state, each seeded line naming the field it came from: the frontmatter `name`; a draft description from the task's output and trigger, still marked `FILL IN`; Purpose from `story_want` and `story_benefit`; one Inputs row per levelled tool the task uses (system, use, permission, the task's `data_class`), with the server and tool names left as `FILL IN`; one "Start from <name>" line per `starts_from` entry, with its cite; and the example counts. `evals.json` follows skill-creator's schema, with one `FILL IN` case per counted good example, then the template's missing-data and should-not-trigger cases, never fewer than three. `trigger-evals.json` has two `should_trigger: true` entries seeded from the trigger and two `FILL IN` `should_trigger: false` entries. Nothing is invented: no prompt, expected output or model.
+
+**No secrets.** No file build writes holds a key, token, password, org id, tenant id or instance URL; a credential appears only as an environment variable's name, such as `$ANTHROPIC_API_KEY`. Connectors' `how` text is not copied, since it can hold a URL. A test scans both samples' build folders for `sk-ant-`, `xox`, a Salesforce org id and any `https://` host other than the docs and vendor-docs hosts the runbooks cite.
+
+### The manifest and statuses
+
+`build/build.json`: `build_version` 1, `customer`, `persona`, `source` (`levelled_sha256`, the hash of `levelled.json`'s text as `backlog` computes it, and `build_kinds_version`), `plugin` (its name and files) and `artifacts`, one per task in card order. Each artifact has `id` (the task id), `task`, `kind`, `runtime` (`value`, `rule`, `cite`, `unverified`), `skill_name`, `skill_name_derived`, `skill_location` (`plugin`, `skills` or `null`), `in_pilot`, `runbook`, `files` (each a repo-relative `path` and the `sha256` the scaffold wrote), `status` and `reason` (why nothing is built, for `none`). There is no timestamp, so the same inputs give the same bytes. A task not selected on this run keeps the artifact an earlier run recorded.
+
+Statuses, in order: `scaffolded`, `drafted`, `evals-passing`, `packaged`, `deployed`, `verified`, plus `not-built` for runtime `none`. `build` computes only the first two: `drafted` when no file of the artifact still contains `FILL IN`, else `scaffolded`. A person records the later ones in `build.json`, and `build` never lowers a recorded status above `drafted`.
+
+### Never overwrite
+
+A missing file is written. A file whose hash equals the recorded hash may be rewritten. A file a person has changed is kept, listed on stderr as `kept: <path>`, and its recorded hash stays the one the scaffold wrote. A file no longer planned is never deleted. A second run on unchanged inputs is byte-identical.
+
+### Refusals and exit codes
+
+Exit 1, nothing written, a `Next:` line: validation fails; `levelled.json` is missing or stale (the same test `backlog` uses, 8); or `levelled.json` reports a blocker. Exit 2, as in section 3: a usage error, a missing persona folder or one with no `card.json`, an output that cannot be written, `build-kinds.json` missing, not JSON or not in its shape, a `build.json` that is not JSON or not in its shape, or an unknown status in it.
 
 ## 9. Dashboard (`dashboard.py`)
 
@@ -580,6 +642,7 @@ Fields the page does not show. Every field in `data/fields.json` whose `feeds` n
 - `tasks[].inputs[].access`, `tasks[].writes[].system`, `tasks[].writes[].objects` and `tasks[].writes[].action`: the levelled connectors and tools they decide are shown instead (system, access, identity and permission), and the story's fields table carries what the backlog makes of them.
 - `tasks[].reversible`, `tasks[].touches_money` and `tasks[].reads_untrusted_input`: inputs to the autonomy and memory rules; the page shows the decisions and their reasons.
 - `network.can_allowlist_anthropic_ips`: an input to the connector rules; it reaches the page only as the warning or task it raises.
+- `tasks[].skill_name`: it names the skill `build` scaffolds; `build/build.json` and the build folder show it ([8a](#8a-build)).
 - `tasks[].starts_from`: shown in each story's starting points, but its feed stays `backlog:task` because the starting points are read from the backlog, not the card.
 
 Data attributes, for tests and tools that read the page: `data-section` on each section; `data-part="A1"`…`"A9"` on each panel; `data-decision="<task id>.<decision>"` on each feature-list decision cell, with decision one of `runtime`, `identity`, `autonomy.start`, `autonomy.ceiling`, `data_controls`, `memory`, `plan_fit`, `connectors` (and `persona.plugin_name`, `persona.distribution`, `persona.settings_baseline` in the header); `data-code` and `data-about` on each blocker and warning in the Blockers and warnings section only; `data-unverified="true"` on exactly the decision cells and blocker or warning entries that rest on an unverified fact (a data-controls or connectors cell is unverified when any part of it is); `data-field` on the header's `customer`, `role`, `plan`, `sponsor-goal`, `targets`, `completeness`, `complete`, `complete-reasons`, `blocker-count`, `warning-count`, `unverified-count`, `ready-count`, `unnamed-roles`, `paths-note` and `sponsor-line`, and on the backlog's `story-count`; `data-owner` on each owner; `data-blocked="blocker"`, `"spike"` or `"sign-off"` (with `data-id`) on each What is blocked entry; `data-provider` on each A3 provider row; `data-override` on each override row; `data-story` on each story, `data-story-part` on its parts (`statement`, `target`, `ready`, `delivery`, `fields`, `starting-points`, `acceptance`, `gates`, `providers`, `tasks`) and `data-task` on each task's rows; and `data-provenance="<record>:<path>"` on each provenance row.

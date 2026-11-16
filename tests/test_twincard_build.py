@@ -598,7 +598,8 @@ class RefusalTests(unittest.TestCase):
 
     def test_blocker(self):
         def change(card):
-            card["overrides"] = runtime_overrides(("C9", "client-skill"))
+            card["overrides"] = [{"task": "C1", "decision": "plan_fit", "value": "ok",
+                                  "reason": "Invented reason for a test.", "approved_by": "Test approver"}]
         with Copy(CS, change) as persona:
             self.assertTrue(load(persona / "levelled.json")["blockers"])
             self.check_nothing_written(persona, build(persona))

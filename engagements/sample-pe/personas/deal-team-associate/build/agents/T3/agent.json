@@ -1,0 +1,47 @@
+{
+  "name": "twin-pe-deal-team-t3",
+  "model": "FILL IN",
+  "system": "FILL IN: the persona's system-prompt form, from the persona template in compendium 02.",
+  "tools": [
+    {
+      "type": "agent_toolset_20260401",
+      "default_config": {
+        "enabled": false
+      },
+      "configs": []
+    },
+    {
+      "type": "mcp_toolset",
+      "mcp_server_name": "salesforce",
+      "default_config": {
+        "enabled": false
+      },
+      "configs": []
+    },
+    {
+      "type": "mcp_toolset",
+      "mcp_server_name": "teams",
+      "default_config": {
+        "enabled": false
+      },
+      "configs": []
+    }
+  ],
+  "mcp_servers": [
+    {
+      "name": "salesforce",
+      "url": "FILL IN: the MCP server's URL (runbook step 5)"
+    },
+    {
+      "name": "teams",
+      "url": "FILL IN: the MCP server's URL (runbook step 5)"
+    }
+  ],
+  "skills": [
+    {
+      "type": "custom",
+      "skill_id": "FILL IN: the skill_ id returned when build/skills/weekly-pipeline-summary-for-the-monday-deal-meeting/ is uploaded (runbook step 2)",
+      "version": "FILL IN"
+    }
+  ]
+}

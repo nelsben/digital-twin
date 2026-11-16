@@ -83,8 +83,9 @@ question ids whose answers may fill it. Design of record:
   the consultant who; do not pick one. The same holds when the "No" comes
   with a caveat that names documents written outside the company ("No,
   apart from the target's data-room files"): `true`, `assumed`, and the
-  caveat is quoted, in the interviewee's words, in an open question for
-  that owner (`blocks` `[]`) so they confirm it.
+  caveat is quoted, in the interviewee's words, in the follow-up to that
+  owner (the report's "Still open or assumed" line for the field) or in an
+  open question for them (`blocks` `[]`), so they confirm it.
 - `tasks[].reversible`: a split answer under question F7 ("the draft can be
   thrown away, the sent email cannot") is `open` unless the notes say which
   part the twin does. When they say the twin only drafts, it is `true`.
@@ -168,6 +169,9 @@ assumed, with the owner the consultant named:
 "tasks.T1.reads_untrusted_input": {"status": "assumed",
   "source": "interviews/2026-11-12-associate.md#F8", "owner": "Eleanor Osei-Whitcombe"}
 ```
+
+The report's line for it quotes the associate's caveat about the data-room
+files, so the owner sees what to confirm.
 
 A pack default, as a general example (task D1 stands for any card task). It
 applies only when the notes are silent on the data class:

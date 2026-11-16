@@ -105,11 +105,14 @@ def _join(prefix, name):
     return prefix + "." + name if prefix else name
 
 
-def _instances(data, entry, keys, report, record):
+def _instances(data, entry, keys, duplicates, report, record):
     """Return [(instance_path, value)] for one catalogue entry.
 
     Checks the containers on the way: objects must be objects, lists must be
-    lists of objects, keyed list entries must carry a unique key.
+    lists of objects, and keyed list entries must carry a unique key. Lists
+    whose key is null are positional; an exact duplicate entry in one of the
+    lists named in duplicates_warn is a warning. A missing key is reported by
+    the key-field check in _check_record.
     """
     out = []
     segments = entry["path"].split(".")
@@ -134,7 +137,9 @@ def _instances(data, entry, keys, report, record):
                              "Make %s a list of objects, or an empty list" % inst_path)
                 return
             key = keys.get(cat_path)
+            compare = duplicates.get(cat_path)
             seen = set()
+            seen_entries = set()
             for position, element in enumerate(child):
                 if not isinstance(element, dict):
                     report.error(record, "%s[%d]" % (inst_path, position), "is not an object",
@@ -142,9 +147,6 @@ def _instances(data, entry, keys, report, record):
                     continue
                 label = element.get(key) if key else None
                 if key and not (isinstance(label, str) and label):
-                    report.error(record, "%s[%d].%s" % (inst_path, position, key),
-                                 "has no %s" % key,
-                                 "Give this entry a unique %s; provenance and links use it" % key)
                     label = None
                 elif key and label in seen:
                     report.error(record, "%s.%s.%s" % (inst_path, label, key),
@@ -156,6 +158,13 @@ def _instances(data, entry, keys, report, record):
                     element_path = "%s.%s" % (inst_path, label)
                 else:
                     element_path = "%s[%d]" % (inst_path, position)
+                if compare:
+                    signature = json.dumps([element.get(name) for name in compare], sort_keys=True)
+                    if signature in seen_entries:
+                        report.warning(record, element_path,
+                                       "repeats an earlier entry of %s (same %s)" % (inst_path, ", ".join(compare)),
+                                       "Delete the duplicate entry, or change what it reads or writes")
+                    seen_entries.add(signature)
                 walk(element, index + 1, cat_path + "[]", element_path)
         else:
             if not isinstance(child, dict):
@@ -231,13 +240,24 @@ def _check_record(data, record, catalogue, report):
     provenance = _check_envelope(data, record, catalogue, report)
     rules = catalogue["provenance"]
     keys = catalogue["keys"].get(record, {})
+    duplicates = catalogue.get("duplicates_warn", {}).get(record, {})
     required = []
     values = {}
     known_paths = set()
     for entry in _fields.fields_for(record, catalogue):
-        for path, value in _instances(data, entry, keys, report, record):
+        for path, value in _instances(data, entry, keys, duplicates, report, record):
             known_paths.add(path)
             values.setdefault(entry["path"], []).append((path, value))
+            if entry["key"]:
+                # A key field names or links an entry: always required, no provenance,
+                # not counted in completeness. A key list may be empty.
+                if value is _MISSING or value is None or value == "":
+                    report.error(record, path, "is a key and has no value",
+                                 "Set %s; ids and links between entries depend on it" % path)
+                elif not _type_ok(entry, value):
+                    report.error(record, path, "should be %s; got %r" % (_expected(entry), value),
+                                 "Change it to %s" % _expected(entry))
+                continue
             prov = provenance.get(path)
             prov_status = prov.get("status") if isinstance(prov, dict) else None
             if entry["required"]:
@@ -268,8 +288,7 @@ def _resolve_targets(target, values_by_record):
 
 
 def _check_references(catalogue, values_by_record, report):
-    keys = catalogue["keys"].get("card", {})
-    key_paths = {list_path + "[]." + key for list_path, key in keys.items() if key}
+    key_paths = {entry["path"] for entry in _fields.fields_for("card", catalogue) if entry["key"]}
     for ref in catalogue["references"]["card"]:
         target_record = ref["must_be"].split(":", 1)[0] if ":" in ref["must_be"] else "card"
         if target_record not in values_by_record:
@@ -294,7 +313,8 @@ def _check_references(catalogue, values_by_record, report):
 
 
 def _check_cross_record(card, profile, profile_path, report):
-    if card is not None and profile is not None and card.get("customer") != profile.get("customer"):
+    if card is not None and profile is not None and not _is_unset(card.get("customer", _MISSING)) \
+            and not _is_unset(profile.get("customer", _MISSING)) and card.get("customer") != profile.get("customer"):
         report.error("card", "customer", "is %r but the customer profile's customer is %r"
                      % (card.get("customer"), profile.get("customer")),
                      "Set card.customer to the profile's customer id")

@@ -62,7 +62,7 @@
     {
       "id": 3,
       "prompt": "I changed the CSM card in engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager: C4 now also sends the follow-up email from Gmail itself (tasks.C4.writes[1] is a gmail send, from the CSM's answer to F7). Re-plan it and tell me what that does.",
-      "expected_output": "Claude runs all; levelling reports the blocker connector-cannot-write about C4 and all four files are still written. Claude explains the blocker in one plain sentence with its cite, and gives the ways out the design allows: correct the card if the answer was wrong, or change the task so it ends in a draft a person sends and remove the write. It says an override cannot clear it, because the connectors decision cannot be overridden, and changes nothing itself.",
+      "expected_output": "Claude runs all; it exits 0 with no blocker, and levelling raises warning mail-write-unconfirmed about C4 and all four files are written. Claude explains in one plain sentence that the sources conflict over whether the Gmail connector can send, so the plan does not count on its send tool, with the warning's cite, and gives the two ways out the warning names: end the task in a draft the manager sends, or run the write test in the Google Workspace runbook and have the business owner and Security decide whether the task may send at Needs approval. It changes nothing itself.",
       "files": [
         "evals/files/engagements/sample-team-cs-c4-gmail-send/customer-profile.json",
         "evals/files/engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager/card.json",
@@ -72,14 +72,14 @@
         "evals/files/engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager/interviews/2026-11-10-team-lead.md"
       ],
       "expectations": [
-        "The all command was run and exited 1 because of a blocker, and the reply says levelled.json, backlog.json, backlog.md and dashboard.html were still written (it does not treat the exit as a validation failure)",
-        "The reply names the blocker connector-cannot-write about C4 and says in one plain sentence that the Gmail connector only reads, so it cannot send mail",
-        "The reply cites docs/compendium/11-connectors.md#what-exists-for-our-systems for the blocker",
-        "As ways out, the reply offers correcting the card if the answer was wrong (the card's own tasks.C4.output.what says the manager sends the email) and changing the task so it ends in a draft a person sends, with tasks.C4.writes[1] removed",
-        "The reply says an override cannot clear this blocker, because the connectors decision cannot be overridden (code override-not-allowed), and no override is written",
-        "card.json is byte-identical to the file given: Claude changed nothing without the consultant's choice",
-        "In the backlog.json the run wrote, S-C4 is gated by the blocker connector-cannot-write",
-        "The reply ends with 1 blocker, 23 warnings and 1 open question, says the plan is not complete, and does not send the consultant on to building while the blocker stands"
+        "The all command was run and exited 0, and the reply says levelled.json, backlog.json, backlog.md and dashboard.html were written",
+        "The reply says there are no blockers, names the warning mail-write-unconfirmed about C4 and says in one plain sentence that the sources conflict over whether the Gmail connector can send, so the plan does not count on its send tool",
+        "The reply cites docs/compendium/11-connectors.md#what-exists-for-our-systems for the warning and lists it under what rests on an unverified fact",
+        "As ways out, the reply offers ending the task in a draft the manager sends (the card's own tasks.C4.output.what says the manager sends the email) or running the write test in the Google Workspace runbook, after which the business owner and Security decide whether the task may use the send tool at Needs approval",
+        "The reply says the gmail send tool is Blocked at C4's start level 1, and that warning untrusted-input-with-send means a person approves each send if it ever opens",
+        "card.json is byte-identical to the file given: Claude changed nothing without the consultant's choice, and no override is written",
+        "In the backlog.json the run wrote, S-C4 is not gated and has a task for warning mail-write-unconfirmed",
+        "The reply ends with 0 blockers, 23 warnings and 1 open question and says the plan is complete"
       ]
     },
     {

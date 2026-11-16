@@ -44,7 +44,7 @@ its tasks, owners and steps). Task templates: `${CLAUDE_PLUGIN_ROOT}/data/task-l
    priority, lowest number first; then stories in the pilot with no priority
    (the foundation stories, in backlog order); then the rest by priority.
    Skip a story that is done, any story whose `gated_by` lists anything
-   (such as blocker `connector-cannot-write`, an open question with its
+   (such as blocker `private-network-unreachable`, an open question with its
    `spike`, or a compliance `sign-off`) and any story whose `ready` is not all
    met. For each in-pilot story you skip, name what gates it or the unmet
    check, and its owner (from the card's open question). Show the pick (format

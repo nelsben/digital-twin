@@ -3,8 +3,8 @@
   "customer": "example-software-co",
   "persona": "customer-success-manager",
   "source": {
-    "card_sha256": "d0dbd2c679d4ab2cfcdcf34e348f3cc418bbb292e0471ee1ff3a71692c7c810a",
-    "levelled_sha256": "7895b5435debc9daad0fb5006e24e039c6c6966fb3d560edacdb1f34e571b584",
+    "card_sha256": "d1ea72cd65ac0607dae9edffdc75db1ee499860a3991b46e1083c560ca7abf12",
+    "levelled_sha256": "f6f74b0cad6e9c4b22fef8d8f238450c84863136f0c750bf2bc5bcefa73c367c",
     "library_version": 1
   },
   "unnamed_roles": [
@@ -511,11 +511,11 @@
               "data_class": "confidential",
               "surface": "client-skill; surfaces: claude-ai",
               "autonomy": "1 to 2",
-              "connectors_and_identity": "google-drive: user identity, read, always-allow; hubspot: user identity, write, blocked; gmail: user identity, write, blocked",
+              "connectors_and_identity": "google-drive: user identity, read, always-allow; hubspot: user identity, write, blocked",
               "wall_impact": "none",
               "inputs": "google-drive (call notes or transcript)",
               "output_and_audience": "Draft follow-up email, which the manager sends, and a call note on the HubSpot record, external; to a draft in the conversation; the HubSpot company record",
-              "delivery": "A person sends or files it: the twin produces a draft, hubspot-create and gmail-send are Blocked at the starting level, and they open at level 2.",
+              "delivery": "A person sends or files it: the twin produces a draft, hubspot-create is Blocked at the starting level, and it opens at level 2.",
               "skill_owner": "Marisol Quenby",
               "baseline": "6 per week x 25 minutes each x 8 users",
               "constraints": [
@@ -547,17 +547,11 @@
               },
               {
                 "check": "connectors",
-                "met": false,
-                "note": "gmail is named by blocker connector-cannot-write."
+                "met": true,
+                "note": "Every system the task uses has a decided connector: google-drive and hubspot."
               }
             ],
-            "gated_by": [
-              {
-                "kind": "blocker",
-                "id": "connector-cannot-write",
-                "text": "The task writes to Gmail or Google Calendar, whose directory connectors read only: they cannot create, send or change mail or events."
-              }
-            ],
+            "gated_by": [],
             "tasks": [
               {
                 "id": "S-C4.collect-examples",
@@ -821,35 +815,6 @@
                 "status": "todo"
               },
               {
-                "id": "S-C4.connect-kit-runbook.gmail",
-                "template": "connect-kit-runbook",
-                "title": "Connect it by following the kit's runbook for this connector (gmail)",
-                "part": "A3",
-                "how": [
-                  {
-                    "text": "Check the runbook's prerequisites, including who must approve the connector.",
-                    "link": "starter-kit/runbooks/google-workspace-connectors.md#before-you-start"
-                  },
-                  {
-                    "text": "Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say.",
-                    "link": "starter-kit/runbooks/google-workspace-connectors.md#steps"
-                  },
-                  {
-                    "text": "Run the runbook's checks with a pilot user before the task is built.",
-                    "link": "starter-kit/runbooks/google-workspace-connectors.md#check-it-worked"
-                  },
-                  {
-                    "text": "Record the hand-over the runbook asks for in the customer's folder.",
-                    "link": "starter-kit/runbooks/google-workspace-connectors.md#hand-over"
-                  }
-                ],
-                "done_when": "A pilot user has connected with the planned identity, each tool is set as the story's tool tasks say, and the runbook's checks pass.",
-                "owner_role": "integration-engineer",
-                "owner_name": null,
-                "acting_owner": null,
-                "status": "todo"
-              },
-              {
                 "id": "S-C4.tool-always-allow.google-drive-read",
                 "template": "tool-always-allow",
                 "title": "Set the connector tool to Always allow, as the levelled tools list says (google-drive-read)",
@@ -874,27 +839,6 @@
                 "id": "S-C4.tool-blocked.hubspot-create",
                 "template": "tool-blocked",
                 "title": "Set the connector tool to Blocked, as the levelled tools list says (hubspot-create)",
-                "part": "A7",
-                "how": [
-                  {
-                    "text": "Open the connector's page in the Claude org and find the tool.",
-                    "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
-                  },
-                  {
-                    "text": "Set the tool to Blocked, or leave it out of the role plugin, and record the change.",
-                    "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
-                  }
-                ],
-                "done_when": "The tool is Blocked in the Claude org, as levelled.json says, and the twin cannot call it.",
-                "owner_role": "technical-owner",
-                "owner_name": "Teodor Amsel (IT and operations lead)",
-                "acting_owner": null,
-                "status": "todo"
-              },
-              {
-                "id": "S-C4.tool-blocked.gmail-send",
-                "template": "tool-blocked",
-                "title": "Set the connector tool to Blocked, as the levelled tools list says (gmail-send)",
                 "part": "A7",
                 "how": [
                   {
@@ -1059,27 +1003,6 @@
                 "status": "todo"
               },
               {
-                "id": "S-C4.blocker-connector-cannot-write",
-                "template": "blocker-connector-cannot-write",
-                "title": "Resolve blocker connector-cannot-write: end the task in a draft a person sends",
-                "part": "A3",
-                "how": [
-                  {
-                    "text": "Check which action the connector cannot do.",
-                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
-                  },
-                  {
-                    "text": "Change the task so it ends in a draft a person sends, and remove the write from the card.",
-                    "link": "docs/playbook/04-stories.md#story-template"
-                  }
-                ],
-                "done_when": "The card no longer asks the connector for that action and levelling no longer raises the blocker.",
-                "owner_role": "skill-owner",
-                "owner_name": "Marisol Quenby",
-                "acting_owner": null,
-                "status": "todo"
-              },
-              {
                 "id": "S-C4.warning-unmanaged-connectors-read-only",
                 "template": "warning-unmanaged-connectors-read-only",
                 "title": "Resolve warning unmanaged-connectors-read-only: make the connectors read-only on an unmanaged device",
@@ -1099,52 +1022,6 @@
                   }
                 ],
                 "done_when": "The write tools are Blocked at the starting level, and the customer's written acceptance is recorded before any of them opens for people on unmanaged devices.",
-                "owner_role": "technical-owner",
-                "owner_name": "Teodor Amsel (IT and operations lead)",
-                "acting_owner": null,
-                "status": "todo"
-              },
-              {
-                "id": "S-C4.warning-mail-read-only",
-                "template": "warning-mail-read-only",
-                "title": "Resolve warning mail-read-only: end the email in a draft the person sends",
-                "part": "A2",
-                "how": [
-                  {
-                    "text": "Note that the Gmail and Google Calendar connectors read only.",
-                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
-                  },
-                  {
-                    "text": "Write the skill so it ends with a draft in the conversation that the person copies and sends.",
-                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
-                  }
-                ],
-                "done_when": "The evals show the task ends in a draft and never tries to send.",
-                "owner_role": "skill-engineer",
-                "owner_name": null,
-                "acting_owner": null,
-                "status": "todo"
-              },
-              {
-                "id": "S-C4.warning-untrusted-input-with-send",
-                "template": "warning-untrusted-input-with-send",
-                "title": "Resolve warning untrusted-input-with-send: keep the send tool Blocked now, and approved by a person once it opens",
-                "part": "A7",
-                "how": [
-                  {
-                    "text": "Note that the task reads untrusted content and can send it out.",
-                    "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
-                  },
-                  {
-                    "text": "Leave the send tool Blocked at the starting level, as its tool task sets it.",
-                    "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
-                  },
-                  {
-                    "text": "When the task moves up a level, set the send tool to Needs approval, never Always allow, and keep the task at level 2 or below; on a Claude Tag routine this applies only if the routine route is not used.",
-                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
-                  }
-                ],
-                "done_when": "The send tool is Blocked at the starting level, never Always allow, and the task's ceiling is level 2 or below.",
                 "owner_role": "technical-owner",
                 "owner_name": "Teodor Amsel (IT and operations lead)",
                 "acting_owner": null,
@@ -2992,6 +2869,52 @@
                 "done_when": "Compliance has signed off the data policy for every data class the role holds.",
                 "owner_role": "compliance",
                 "owner_name": "Pieter Achterberg (Finance and legal lead)",
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-guardrails-and-settings.retention-and-feedback-settings",
+                "template": "retention-and-feedback-settings",
+                "title": "Set the org's retention period and its feedback and training-data settings to the data policy",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Read the retention the data policy sets for chat, Claude Code and the governance log.",
+                    "link": "docs/compendium/15-governance-and-performance.md#retention-decided"
+                  },
+                  {
+                    "text": "Settle with compliance whether /feedback transcripts may be kept 5 years and local sessions 6 years; if not, turn feedback off with DISABLE_FEEDBACK_COMMAND=1 in managed settings and set a custom retention period.",
+                    "link": "docs/compendium/10-sensitive-data.md#questions-to-settle-with-compliance-and-legal"
+                  },
+                  {
+                    "text": "Set the retention period (custom retention is Enterprise only, at least 30 days) and the feedback and training-data settings in the org, and record each value in the customer's engagement folder.",
+                    "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
+                  }
+                ],
+                "done_when": "The org's retention period and its feedback and training-data settings match the data policy, and each value is recorded in the customer's engagement folder.",
+                "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-guardrails-and-settings.spend-limits",
+                "template": "spend-limits",
+                "title": "Set the org's spend limits and name who watches them",
+                "part": "A9",
+                "how": [
+                  {
+                    "text": "Set the org's spend limit, and on Enterprise a per-user limit for the role's users.",
+                    "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
+                  },
+                  {
+                    "text": "Name who watches spend and the usage alerts, and record the limits and that person in the customer's engagement folder.",
+                    "link": "docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often"
+                  }
+                ],
+                "done_when": "The org's spend limit, and on Enterprise the per-user limits, are set and recorded, and a named person watches them.",
+                "owner_role": "technical-owner",
+                "owner_name": "IT and operations lead",
                 "acting_owner": null,
                 "status": "todo"
               }

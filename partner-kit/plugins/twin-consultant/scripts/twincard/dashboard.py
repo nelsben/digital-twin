@@ -14,8 +14,11 @@ date) does the same and writes <persona_dir>/dashboard.html:
 
 The page is a rendering only: every value comes from card.json, the customer profile, levelled.json,
 backlog.json or the completeness figures from validate. It has no JavaScript and makes no external
-request; cites are shown as text. The generated date is the only date the renderer adds, so the same
-inputs and the same date give the same bytes. Design of record: partner-kit/docs/design.md, section 9.
+request; every path and cite is shown in full as text, never as a link. The top of the page is for a
+sponsor (goal, targets, owners, what is blocked) and needs nothing opened; the backlog is for an engineer,
+with every pilot story that is not done open. The generated date is the only date the renderer adds, so
+the same inputs and the same date give the same bytes. Design of record: partner-kit/docs/design.md,
+section 9.
 """
 
 import datetime
@@ -33,16 +36,19 @@ from . import validate as _validate
 
 DASHBOARD_FILE = "dashboard.html"
 
-# The seven sections, in order: (data-section, id).
+# The nine sections, in order: (data-section, id).
 SECTIONS = (
     ("Header", "header"),
+    ("What is blocked", "what-is-blocked"),
     ("Anatomy grid", "anatomy-grid"),
     ("Feature list", "feature-list"),
     ("Blockers and warnings", "blockers-and-warnings"),
+    ("Overrides", "overrides"),
     ("Backlog", "backlog"),
     ("Open questions", "open-questions"),
     ("Where each answer came from", "where-each-answer-came-from"),
 )
+SECTION_IDS = dict(SECTIONS)
 
 # The anatomy panels: which decisions and fields sit in which panel (design section 9). Each item is
 # rendered by the function of the same name in PANEL_ITEMS below.
@@ -50,7 +56,7 @@ PANELS = (
     ("A1", "Persona", ("persona.plugin_name", "role.team", "voice.serves", "voice.tone", "voice.never",
                        "voice.escalate_to")),
     ("A2", "Skills", ("tasks.client_skills", "tasks.skill_owner", "persona.starting_points")),
-    ("A3", "Connectors", ("tools", "systems")),
+    ("A3", "Connectors", ("tools", "systems", "data_providers")),
     ("A4", "Runtime", ("tasks.runtime", "role.works_in", "role.wanted_surfaces",
                        "runtime_preferences.self_hosting_required")),
     ("A5", "Identity", ("tasks.identity", "connectors.identity", "identity.sign_in")),
@@ -74,7 +80,13 @@ PROVENANCE_STATUSES = ("answered", "default", "assumed", "open")
 STATUS_WORDS = {"todo": "[ ] todo", "in-progress": "[~] in progress", "done": "[x] done"}
 DATE_PATTERN = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}\Z")
 DATE_NEXT = "Next: give the date as YYYY-MM-DD, for example 2026-11-15."
-NULL_IS_A_VALUE = ("settings_baseline",)
+OWNERS = (("sponsor", "Sponsor"), ("technical_owner", "Technical owner"), ("business_owner", "Business owner"),
+          ("backup_owner", "Backup owner"), ("compliance", "Compliance"))
+PATHS_NOTE = "Paths are relative to the delivery repository."
+DRAFTED_TEXT = "(statement drafted by the kit: confirm the wording)"
+NO_PROVIDERS = "The industry pack lists no data providers."
+PROVIDER_COLUMNS = ("Name", "Kind", "Access", "Note", "Source")
+TASK_COLUMNS = ("Task", "Title", "Part", "Owner", "Status")
 
 
 class DashboardError(ValueError):
@@ -195,9 +207,17 @@ def field_counts(card, profile, catalogue):
     return counts
 
 
+def backlog_stories(backlog):
+    return [story for feature in backlog["epic"]["features"] for story in feature["stories"]]
+
+
 def backlog_tasks(backlog):
-    return [task for feature in backlog["epic"]["features"] for story in feature["stories"]
-            for task in story["tasks"]]
+    return [task for story in backlog_stories(backlog) for task in story["tasks"]]
+
+
+def is_open(story):
+    """A story is shown open when it is in the pilot and not done."""
+    return bool(story.get("in_pilot")) and story.get("status") != "done"
 
 
 def summary(inputs):
@@ -209,12 +229,16 @@ def summary(inputs):
     blocking = [q for q in card.get("open_questions") or [] if set(q.get("blocks") or []) & set(pilot)]
     missing = done["required"] - done["satisfied"]
     complete = done["percent"] == 100 and not blocking and not levelled["blockers"]
+    told = _backlog._task_stories(backlog)
+    stories = backlog_stories(backlog)
     return {
         "percent": done["percent"], "satisfied": done["satisfied"], "required": done["required"],
         "missing": missing, "pilot_tasks": len(pilot), "blocking_questions": len(blocking),
         "blockers": len(levelled["blockers"]), "warnings": len(levelled["warnings"]),
         "tasks_done": sum(1 for t in tasks if t["status"] == "done"), "tasks_total": len(tasks),
         "complete": complete,
+        "stories_ready": sum(1 for s in told if _backlog._is_ready(s)), "task_stories": len(told),
+        "stories_open": sum(1 for s in stories if is_open(s)), "stories_total": len(stories),
     }
 
 
@@ -224,30 +248,26 @@ def esc(value):
     return html.escape("" if value is None else str(value), quote=True)
 
 
-def fmt(value, null="none"):
-    """A value as plain text: lists joined, booleans as yes or no, None as the given word."""
-    if value is None or value == "":
+def fmt(value, null="not given"):
+    """A value as plain text: lists joined, booleans as yes or no, None (or an empty list) as the given word."""
+    if value is None or value == "" or value == []:
         return null
     if isinstance(value, bool):
         return "yes" if value else "no"
     if isinstance(value, list):
-        return ", ".join(fmt(v) for v in value) if value else "none"
+        return ", ".join(fmt(v) for v in value)
     if isinstance(value, float) and value.is_integer():
         return str(int(value))
     return str(value)
 
 
 def cite_text(cite):
-    """A cite as text: the page file name and its anchor, never a link."""
-    if not cite:
-        return ""
-    path, _, anchor = str(cite).partition("#")
-    name = path.rstrip("/").split("/")[-1] or path
-    return name + ("#" + anchor if anchor else "")
+    """A cite or a how link as text: its full path, relative to the delivery repository, and its anchor."""
+    return str(cite) if cite else ""
 
 
 def source_text(source):
-    """A provenance source as text: each of its sources ('; ' between them) as cite_text gives it."""
+    """A provenance source as text: each of its sources, '; ' between them, as the record has them."""
     return _validate.SOURCE_SEPARATOR.join(cite_text(one) for one in _validate.split_sources(source))
 
 
@@ -280,14 +300,34 @@ def grouped(pairs):
 def counted(pairs, null="undecided"):
     rows = grouped(pairs)
     if not rows:
-        return "none"
+        return "no tasks"
     return "; ".join("%s: %s (%s)" % (esc(fmt(value, null)), plural(len(ids), "task"), esc(", ".join(ids)))
                      for value, ids in rows)
 
 
 def decision_value(name, decision):
-    null = "none" if name.split(".")[-1] in NULL_IS_A_VALUE else "undecided"
-    return fmt(decision.get("value"), null)
+    """A decision's value; a null decision is 'undecided' (never 'none', which the plan uses for a decided none)."""
+    return fmt(decision.get("value"), "undecided")
+
+
+def decision_text(decision):
+    """A decision's value, or 'undecided' with its reason when the plan left it null."""
+    if decision.get("value") is None:
+        reason = " ".join(str(decision.get("reason") or "").split())
+        return "undecided (%s)" % reason if reason else "undecided"
+    return fmt(decision.get("value"))
+
+
+def md_cell(value):
+    """A field value as backlog.md's field table has it: lists joined with '; ', one line, '|' as '/'."""
+    value = "; ".join(value) if isinstance(value, list) else value
+    return _backlog._cell(value).replace("&lt;", "<")
+
+
+def table(head, rows, attrs=""):
+    """A table with header cells, in a wrapper that scrolls on a narrow screen and wraps in print."""
+    return ('<div class="scroll"><table%s><thead><tr>%s</tr></thead><tbody>%s</tbody></table></div>'
+            % (attrs, "".join('<th scope="col">%s</th>' % esc(h) for h in head), "".join(rows)))
 
 
 # --- Decisions --------------------------------------------------------------------------------------------
@@ -314,13 +354,25 @@ def is_unverified(name, got):
     return any(d.get("unverified") for _, d in parts_of(name, got))
 
 
+def unverified_decisions(ctx):
+    """How many decisions rest on an unverified fact: persona decisions, task decision cells, tool permissions."""
+    levelled = ctx["levelled"]
+    count = sum(1 for name in PERSONA_DECISIONS if levelled["persona_plan"][name].get("unverified"))
+    for t in ctx["tasks"]:
+        lt = levelled["tasks"].get(t.get("id"))
+        if lt is not None:
+            count += sum(1 for name in TASK_DECISIONS if is_unverified(name, task_decision(lt, name)))
+    count += sum(1 for tool in levelled.get("tools") or [] if tool["permission"].get("unverified"))
+    return count
+
+
 def override_text(decision, label=None):
     ov = decision.get("overridden")
     if not ov:
         return ""
     result = ov.get("rule_result")
     if isinstance(result, dict):
-        result = "; ".join("%s %s" % (k.replace("_", " "), fmt(v)) for k, v in result.items())
+        result = "; ".join("%s %s" % (k.replace("_", " "), fmt(v, "undecided")) for k, v in result.items())
     return ('<p class="ovr">%s%s. The rule\'s result: %s. Reason: %s Approved by: %s.</p>'
             % (OVERRIDDEN_TAG, " (%s)" % esc(label) if label else "", esc(fmt(result, "undecided")),
                esc(ov.get("reason")), esc(fmt(ov.get("approved_by"), "not recorded"))))
@@ -395,11 +447,17 @@ def decision_cell(tid, name, got, products):
     return "".join(out)
 
 
-# --- Sections ---------------------------------------------------------------------------------------------
+# --- Header -----------------------------------------------------------------------------------------------
 
-def section_open(index):
-    name, sid = SECTIONS[index]
-    return '<section data-section="%s" id="%s">' % (esc(name), esc(sid))
+def section_open(name):
+    return '<section data-section="%s" id="%s">' % (esc(name), esc(SECTION_IDS[name]))
+
+
+def _targets_text(card):
+    targets = [t for t in (card.get("outcome") or {}).get("scorecard_targets") or [] if isinstance(t, dict)]
+    if not targets:
+        return "Targets not set"
+    return "; ".join("%s: %s" % (fmt(t.get("metric")), fmt(t.get("value"))) for t in targets)
 
 
 def render_header(ctx, date):
@@ -409,7 +467,7 @@ def render_header(ctx, date):
     owners = profile.get("owners") or {}
     outcome = card.get("outcome") or {}
     plan_d = levelled["persona_plan"]
-    out = [section_open(0), "<h1>%s</h1>" % esc(ctx["title"])]
+    out = [section_open("Header"), "<h1>%s</h1>" % esc(ctx["title"])]
     sub = [esc(profile.get("display_name") or profile.get("customer"))]
     if profile.get("fictional") is True:
         sub.append('<span class="tag">Fictional sample</span>')
@@ -434,33 +492,45 @@ def render_header(ctx, date):
         pack_name = _packs.load_pack(pack).get("name")
     except Exception:  # an unknown pack is a validation error; show the id alone
         pack_name = None
+    role_text = esc(role.get("name"))
+    if role.get("team"):
+        role_text += "; team: %s" % esc(role.get("team"))
+    role_text += "; persona card <code>%s</code>" % esc(card.get("id"))
+    accounts = plan.get("individual_accounts_on_domain")
     rows = [
-        ("Role", "%s; team: %s" % (esc(role.get("name")), esc(role.get("team"))) if role.get("team")
-         else esc(role.get("name"))),
-        ("Customer", esc(profile.get("display_name"))),
-        ("Plan tier", "%s, %s seats" % (esc(plan.get("tier")), esc(fmt(plan.get("seats"), "unknown")))),
-        ("Industry pack", "%s%s" % (esc(pack), " (%s)" % esc(pack_name) if pack_name else "")),
-        ("Pilot users", "%s of %s in the role" % (esc(fmt(role.get("pilot_users"), "unknown")),
-                                                  esc(fmt(role.get("headcount"), "unknown")))),
+        ("Customer", '<span data-field="customer">%s (customer id <code>%s</code>)</span>' % (
+            esc(profile.get("display_name")), esc(card.get("customer") or profile.get("customer")))),
+        ("Role", '<span data-field="role">%s</span>' % role_text),
+        ("Plan", '<span data-field="plan">%s, %s seats; individual accounts on the domain: %s</span>' % (
+            esc(plan.get("tier")), esc(fmt(plan.get("seats"), "unknown")), esc(fmt(accounts, "not given")))),
+        ("Sponsor goal", '<span data-field="sponsor-goal">%s</span>' % esc(
+            " ".join(str(outcome.get("sponsor_goal") or "not given").split()))),
+        ("Targets", '<span data-field="targets">%s</span>' % esc(_targets_text(card))),
         ("Completeness", '<span data-field="completeness">%d%%</span> (%d of %d required fields answered or '
                          'default)' % (s["percent"], s["satisfied"], s["required"])),
         ("Status", status),
+        ("Counts", 'Blockers: <span data-field="blocker-count">%d</span>. Warnings: <span data-field="warning-count">'
+                   '%d</span>. Unverified decisions: <span data-field="unverified-count">%d</span>.' % (
+                       s["blockers"], s["warnings"], unverified_decisions(ctx))),
+        ("Stories", '<span data-field="ready-count">Stories ready to build: %d of %d</span>' % (
+            s["stories_ready"], s["task_stories"])),
+        ("Owners", '<ul class="plain">%s</ul>' % "".join(
+            '<li data-owner="%s">%s: %s</li>' % (key, label, esc(fmt(owners.get(key), "not named")))
+            for key, label in OWNERS)),
+        ("No named person", '<span data-field="unnamed-roles">%s</span>' % esc(_backlog._unnamed_line(ctx["backlog"]))),
+        ("Industry pack", "%s%s" % (esc(pack), " (%s)" % esc(pack_name) if pack_name else "")),
+        ("Pilot users", "%s of %s in the role" % (esc(fmt(role.get("pilot_users"), "unknown")),
+                                                  esc(fmt(role.get("headcount"), "unknown")))),
     ]
     for name, label in (("plugin_name", "Role plugin"), ("distribution", "Distribution"),
                         ("settings_baseline", "Settings baseline")):
         d = plan_d[name]
-        attrs = ' data-decision="persona.%s"' % name
-        value = '<span%s>%s</span>' % (attrs, esc(decision_value(name, d)))
+        value = '<span data-decision="persona.%s">%s</span>' % (name, esc(decision_text(d)))
         if d.get("unverified"):
             value += " " + UNVERIFIED_TAG
         rows.append((label, value + override_text(d)))
-    rows += [
-        ("Sponsor goal", esc(fmt(outcome.get("sponsor_goal"), "not given"))),
-        ("Owners", "; ".join("%s: %s" % (label, esc(fmt(owners.get(key), "not named")))
-                             for key, label in (("sponsor", "sponsor"), ("technical_owner", "technical owner"),
-                                                ("business_owner", "business owner")))),
-    ]
     out.append('<dl class="facts">%s</dl>' % "".join("<dt>%s</dt><dd>%s</dd>" % (k, v) for k, v in rows))
+    out.append('<p class="note" data-field="paths-note">%s</p>' % esc(PATHS_NOTE))
     out.append('<p class="generated">Generated %s by the dashboard command from card.json, customer-profile.json, '
                'levelled.json and backlog.json. Never edit it by hand.</p>' % esc(date))
     out.append("</section>")
@@ -472,6 +542,55 @@ def render_contents():
     return '<nav aria-label="Contents"><p class="toc-title">Contents</p><ol class="toc">%s</ol></nav>' % links
 
 
+# --- What is blocked --------------------------------------------------------------------------------------
+
+def _end(text):
+    text = " ".join(str(text or "").split())
+    return text if text.endswith((".", "?", "!")) else text + "."
+
+
+def render_blocked(ctx):
+    levelled, backlog = ctx["levelled"], ctx["backlog"]
+    out = [section_open("What is blocked"), "<h2>What is blocked</h2>",
+           '<p class="note">Everything that stops a story being built: blockers in the plan, open spikes, and '
+           'stories waiting on a compliance sign-off.</p>', "<h3>Blockers</h3>"]
+    blockers = levelled["blockers"]
+    if blockers:
+        out.append('<ul class="plain">%s</ul>' % "".join(
+            '<li data-blocked="blocker" data-id="%s:%s">Blocker <code>%s</code> about %s: %s</li>' % (
+                esc(b["code"]), esc(b["about"]), esc(b["code"]), esc(_about_label(ctx, b["about"])[6:]),
+                esc(b.get("message"))) for b in blockers))
+    else:
+        out.append("<p>No blockers.</p>")
+    out.append("<h3>Spikes</h3>")
+    spikes = [sp for sp in backlog.get("spikes") or [] if sp.get("status") != "done"]
+    if spikes:
+        out.append('<ul class="plain">%s</ul>' % "".join(
+            '<li data-blocked="spike" data-id="%s">%s Spike <code>%s</code>: %s Owner: %s. Due: %s. Blocks: %s.</li>'
+            % (esc(sp["id"]), esc(STATUS_WORDS.get(sp.get("status"), sp.get("status"))), esc(sp["id"]),
+               esc(_end(sp.get("question"))), esc(fmt(sp.get("owner"), "not named")),
+               esc(fmt(sp.get("due"), "not set")), esc(", ".join(sp.get("blocks") or []) or "no story"))
+            for sp in spikes))
+    else:
+        out.append("<p>No open spikes.</p>")
+    out.append("<h3>Waiting on a compliance sign-off</h3>")
+    waiting = [(st, g) for st in backlog_stories(backlog) for g in (st.get("gated_by") or [])[:]
+               if g.get("kind") == "sign-off"]
+    seen, items = set(), []
+    for st, g in waiting:
+        if st["id"] in seen:
+            continue
+        seen.add(st["id"])
+        items.append('<li data-blocked="sign-off" data-id="%s"><code>%s</code> %s: %s</li>' % (
+            esc(st["id"]), esc(st["id"]), esc(st.get("title")), esc(g.get("text"))))
+    out.append('<ul class="plain">%s</ul>' % "".join(items) if items
+               else "<p>No story is waiting on a compliance sign-off.</p>")
+    out.append("</section>")
+    return "\n".join(out)
+
+
+# --- Anatomy grid -----------------------------------------------------------------------------------------
+
 def _task_pairs(ctx, getter):
     return [(t["id"], getter(t["id"], t)) for t in ctx["tasks"] if t.get("id") in ctx["levelled"]["tasks"]]
 
@@ -480,42 +599,52 @@ def _lt(ctx, tid):
     return ctx["levelled"]["tasks"][tid]
 
 
+def _persona_decision(ctx, name):
+    d = ctx["levelled"]["persona_plan"][name]
+    text = esc(decision_text(d))
+    if d.get("cite"):
+        text += " " + cite(d["cite"])
+    if d.get("unverified"):
+        text += " " + UNVERIFIED_TAG
+    return text
+
+
 def _item_plugin_name(ctx):
-    d = ctx["levelled"]["persona_plan"]["plugin_name"]
-    return "Role plugin", esc(decision_value("plugin_name", d))
+    return "Role plugin", _persona_decision(ctx, "plugin_name")
 
 
 def _item_role_team(ctx):
     role = ctx["card"].get("role") or {}
-    return "Team", "%s; %s of %s people in the pilot" % (esc(role.get("team")), esc(fmt(role.get("pilot_users"))),
-                                                         esc(fmt(role.get("headcount"))))
+    return "Team", "%s; %s of %s people in the pilot" % (
+        esc(fmt(role.get("team"))), esc(fmt(role.get("pilot_users"), "unknown")),
+        esc(fmt(role.get("headcount"), "unknown")))
 
 
 def _voice(key, label):
     def item(ctx):
-        return label, esc(fmt((ctx["card"].get("voice") or {}).get(key), "not given"))
+        return label, esc(fmt((ctx["card"].get("voice") or {}).get(key)))
     return item
 
 
 def _item_client_skills(ctx):
     pairs = _task_pairs(ctx, lambda tid, t: _lt(ctx, tid)["runtime"]["value"])
     ids = [tid for tid, v in pairs if v == "client-skill"]
-    return "Client skills", "%s (%s)" % (plural(len(ids), "task"), esc(", ".join(ids) or "none"))
+    return "Client skills", "%s (%s)" % (plural(len(ids), "task"), esc(", ".join(ids) or "no task"))
 
 
 def _item_skill_owner(ctx):
     return "Skill owners", "; ".join("%s %s" % (esc(t["id"]), esc(fmt(t.get("skill_owner"), "not named")))
-                                     for t in ctx["tasks"]) or "none"
+                                     for t in ctx["tasks"]) or "no tasks"
 
 
 def _item_starting_points(ctx):
     points = ctx["levelled"]["persona_plan"].get("starting_points") or []
     if not points:
-        return "Starting points", "none in the industry pack"
+        return "Starting points", "The industry pack lists no starting points."
     items = []
     for p in points:
-        text = "%s <strong>%s</strong> (%s), %s" % (esc(p.get("kind")), esc(p.get("name")), esc(p.get("where")),
-                                                    esc(p.get("use")))
+        text = "%s <strong>%s</strong> (%s), %s %s" % (esc(p.get("kind")), esc(p.get("name")), esc(p.get("where")),
+                                                       esc(p.get("use")), cite(p.get("cite")))
         if p.get("unverified"):
             text += " " + UNVERIFIED_TAG
         items.append("<li>%s</li>" % text)
@@ -544,12 +673,34 @@ def _item_tools(ctx):
 def _item_systems(ctx):
     items = []
     for system in ctx["profile"].get("systems") or []:
-        text = "<strong>%s</strong> (%s): %s, %s; access model: %s%s" % (
-            esc(system.get("id")), esc(system.get("product")), esc(system.get("kind")),
-            esc(fmt(system.get("edition"), "edition not given")), esc(fmt(system.get("access_model"), "not given")),
-            "; on a private network" if system.get("private_network") else "")
+        text = "<strong>%s</strong> (%s): %s, %s; access model: %s; private network: %s" % (
+            esc(system.get("id")), esc(system.get("product")), esc(fmt(system.get("kind"))),
+            esc(fmt(system.get("edition"), "edition not given")), esc(fmt(system.get("access_model"))),
+            esc(fmt(system.get("private_network"), "not given")))
         items.append("<li>%s</li>" % text)
-    return "Systems", '<ul class="plain">%s</ul>' % "".join(items) if items else "none"
+    return "Systems", '<ul class="plain">%s</ul>' % "".join(items) if items else "No systems in the profile."
+
+
+def provider_rows(providers, marked):
+    """One table row per data provider; marked rows carry data-provider (the A3 panel's table only)."""
+    rows = []
+    for p in providers:
+        source = "<code>%s</code>" % esc(cite_text(p.get("cite"))) if p.get("cite") else "not given"
+        if p.get("unverified"):
+            source += " " + UNVERIFIED_TAG
+        rows.append("<tr%s><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % (
+            ' data-provider="%s"' % esc(p.get("name")) if marked else "", esc(p.get("name")), esc(fmt(p.get("kind"))),
+            esc(fmt(p.get("access"))), esc(fmt(p.get("note"))), source))
+    return rows
+
+
+def _item_data_providers(ctx):
+    providers = _backlog.data_providers_of(ctx["levelled"])
+    if not providers:
+        return "Data providers", esc(NO_PROVIDERS)
+    return "Data providers", '<p>%s</p>%s' % (esc(_backlog.PROVIDERS_HEADING),
+                                               table(PROVIDER_COLUMNS, provider_rows(providers, True),
+                                                     ' class="providers"'))
 
 
 def _item_runtime(ctx):
@@ -573,7 +724,7 @@ def _item_wanted_surfaces(ctx):
 
 def _item_self_hosting(ctx):
     value = (ctx["profile"].get("runtime_preferences") or {}).get("self_hosting_required")
-    return "Self-hosting required", esc(fmt(value, "not given"))
+    return "Self-hosting required", esc(fmt(value))
 
 
 def _item_identity(ctx):
@@ -586,20 +737,19 @@ def _item_connector_identity(ctx):
         for c in _lt(ctx, t["id"])["connectors"]:
             pairs.append(("%s %s" % (t["id"], c.get("system")), c.get("identity")))
     rows = grouped(pairs)
-    return "Connector identities", "; ".join("%s: %s" % (esc(fmt(v)), plural(len(ids), "connector"))
+    return "Connector identities", "; ".join("%s: %s" % (esc(fmt(v, "undecided")), plural(len(ids), "connector"))
                                              for v, ids in rows) or "none"
 
 
 def _item_sign_in(ctx):
     identity = ctx["profile"].get("identity") or {}
-    return "Sign-in", "%s; SSO %s; SCIM %s" % (esc(fmt(identity.get("idp"), "not given")),
+    return "Sign-in", "%s; SSO %s; SCIM %s" % (esc(fmt(identity.get("idp"))),
                                                esc(fmt(identity.get("sso"), "unknown")),
                                                esc(fmt(identity.get("scim"), "unknown")))
 
 
 def _item_memory_wanted(ctx):
-    return "Role wants personal memory", esc(fmt((ctx["card"].get("memory") or {}).get("personal_memory_wanted"),
-                                                 "not given"))
+    return "Role wants personal memory", esc(fmt((ctx["card"].get("memory") or {}).get("personal_memory_wanted")))
 
 
 def _item_task_memory(ctx):
@@ -608,12 +758,11 @@ def _item_task_memory(ctx):
 
 
 def _item_memory_notes(ctx):
-    return "Notes", esc(fmt((ctx["card"].get("memory") or {}).get("notes"), "none"))
+    return "Notes", esc(fmt((ctx["card"].get("memory") or {}).get("notes")))
 
 
 def _item_baseline(ctx):
-    d = ctx["levelled"]["persona_plan"]["settings_baseline"]
-    return "Settings baseline", esc(decision_value("settings_baseline", d))
+    return "Settings baseline", _persona_decision(ctx, "settings_baseline")
 
 
 def _item_web_tools(ctx):
@@ -640,58 +789,59 @@ def _item_autonomy(ctx):
 
 
 def _item_data_class(ctx):
-    return "Data classes", counted([(t["id"], t.get("data_class")) for t in ctx["tasks"]])
+    return "Data classes", counted([(t["id"], t.get("data_class")) for t in ctx["tasks"]], "not given")
 
 
 def _item_devices(ctx):
     devices = ctx["profile"].get("devices") or {}
     role = ctx["card"].get("role") or {}
     return "Devices", "role device %s; MDM %s; managed: %s; unmanaged: %s" % (
-        esc(fmt(role.get("device"), "not given")), esc(fmt(devices.get("mdm"), "not given")),
-        esc(fmt(devices.get("managed_share"), "not given")), esc(fmt(devices.get("unmanaged_users"), "not given")))
+        esc(fmt(role.get("device"))), esc(fmt(devices.get("mdm"))),
+        esc(fmt(devices.get("managed_share"))), esc(fmt(devices.get("unmanaged_users"))))
 
 
 def _item_compliance(ctx):
     c = ctx["profile"].get("compliance") or {}
-    return "Compliance", "retention %s; walls %s; PHI %s; BAA %s; MNPI %s" % (
-        esc(fmt(c.get("retention"), "not given")), esc(fmt(c.get("walls"), "not given")),
-        esc(fmt(c.get("phi"), "unknown")), esc(fmt(c.get("baa"), "unknown")), esc(fmt(c.get("mnpi"), "unknown")))
+    return "Compliance", "data classes %s; retention %s; ZDR cover %s; walls %s; PHI %s; BAA %s; MNPI %s" % (
+        esc(fmt(c.get("data_classes"))), esc(fmt(c.get("retention"))), esc(fmt(c.get("zdr_cover"))),
+        esc(fmt(c.get("walls"))), esc(fmt(c.get("phi"), "unknown")), esc(fmt(c.get("baa"), "unknown")),
+        esc(fmt(c.get("mnpi"), "unknown")))
 
 
 def _item_examples(ctx):
     bits = []
     for t in ctx["tasks"]:
         ex = t.get("examples") or {}
-        bits.append("%s %s good, %s bad" % (esc(t["id"]), esc(fmt(ex.get("good"), "not yet")),
-                                            esc(fmt(ex.get("bad"), "not yet"))))
-    return "Examples per task", "; ".join(bits) or "none"
+        where = " ".join(str(ex.get("where") or "").split())
+        bits.append("%s %s good, %s bad%s" % (esc(t["id"]), esc(fmt(ex.get("good"), "not yet")),
+                                              esc(fmt(ex.get("bad"), "not yet")),
+                                              " (from %s)" % esc(where) if where else ""))
+    return "Examples per task", "; ".join(bits) or "no tasks"
 
 
 def _item_scorecard(ctx):
-    targets = (ctx["card"].get("outcome") or {}).get("scorecard_targets") or []
-    return "Scorecard targets", "; ".join("%s %s" % (esc(t.get("metric")), esc(fmt(t.get("value"))))
-                                          for t in targets) or "none yet"
+    return "Scorecard targets", esc(_targets_text(ctx["card"]))
 
 
 def _item_distribution(ctx):
-    d = ctx["levelled"]["persona_plan"]["distribution"]
-    return "Distribution", esc(decision_value("distribution", d))
+    return "Distribution", _persona_decision(ctx, "distribution")
 
 
 def _item_governance_log(ctx):
     value = None
-    for feature in ctx["backlog"]["epic"]["features"]:
-        for story in feature["stories"]:
-            if value is None and "governance_log" in (story.get("fields") or {}):
-                value = story["fields"]["governance_log"]
-    return "Governance log", esc(fmt(value, "not given"))
+    for story in backlog_stories(ctx["backlog"]):
+        if story["id"] == "S-governance-log":
+            value = (story.get("fields") or {}).get("governance_log")
+    return "Governance log", esc(fmt(value))
 
 
 def _item_governance_profile(ctx):
     g = ctx["profile"].get("governance") or {}
-    return "Governance", "log destination: %s; action log required: %s; source audit: %s; spend owner: %s" % (
-        esc(fmt(g.get("log_destination"), "not given")), esc(fmt(g.get("action_log_required"), "not given")),
-        esc(fmt(g.get("existing_source_audit"), "not given")), esc(fmt(g.get("spend_owner"), "not given")))
+    return "Governance", ("log destination: %s; action log required: %s; source audit: %s; spend owner: %s; "
+                          "spend limits: %s" % (
+                              esc(fmt(g.get("log_destination"))), esc(fmt(g.get("action_log_required"))),
+                              esc(fmt(g.get("existing_source_audit"))), esc(fmt(g.get("spend_owner"))),
+                              esc(fmt(g.get("spend_limits")))))
 
 
 def _item_plan_fit(ctx):
@@ -717,6 +867,7 @@ PANEL_ITEMS = {
     "persona.starting_points": _item_starting_points,
     "tools": _item_tools,
     "systems": _item_systems,
+    "data_providers": _item_data_providers,
     "tasks.runtime": _item_runtime,
     "role.works_in": _item_works_in,
     "role.wanted_surfaces": _item_wanted_surfaces,
@@ -745,7 +896,7 @@ PANEL_ITEMS = {
 def render_anatomy(ctx):
     counts = ctx["field_counts"]
     tasks = backlog_tasks(ctx["backlog"])
-    out = [section_open(1), "<h2>Anatomy grid</h2>",
+    out = [section_open("Anatomy grid"), "<h2>Anatomy grid</h2>",
            '<p class="note">Each panel shows the decisions for one part of the twin, its required fields that are '
            'answered or default (card and customer profile), and its backlog tasks that are done.</p>',
            '<div class="grid">']
@@ -766,9 +917,11 @@ def render_anatomy(ctx):
     return "\n".join(out)
 
 
+# --- Feature list -----------------------------------------------------------------------------------------
+
 def render_features(ctx):
     card, levelled = ctx["card"], ctx["levelled"]
-    out = [section_open(2), "<h2>Feature list</h2>"]
+    out = [section_open("Feature list"), "<h2>Feature list</h2>"]
     features = list(card.get("features") or [])
     known = set(f.get("id") for f in features)
     orphans = [t for t in ctx["tasks"] if t.get("feature") not in known]
@@ -777,7 +930,9 @@ def render_features(ctx):
     for feature in features:
         tasks = [t for t in ctx["tasks"] if (t.get("feature") == feature.get("id")) or
                  (feature.get("id") is None and t in orphans)]
-        out.append('<div class="feature"><h3>%s</h3>' % esc(feature.get("name") or feature.get("id")))
+        out.append('<div class="feature"><h3>%s%s</h3>' % (
+            esc(feature.get("name") or feature.get("id")),
+            ' <code>%s</code>' % esc(feature["id"]) if feature.get("id") else ""))
         if feature.get("why"):
             out.append('<p class="note">%s</p>' % esc(feature["why"]))
         if not tasks:
@@ -790,7 +945,7 @@ def render_features(ctx):
             facts = ('<p class="task-facts">%s. Priority %s. Trigger %s. Data class %s. %s per week x %s minutes '
                      'each x %s users. Cost of a mistake: %s%s.</p>' % (
                          "In pilot" if task.get("in_pilot") else "Later",
-                         esc(fmt(task.get("priority"))), esc(fmt(task.get("trigger"))),
+                         esc(fmt(task.get("priority"), "not set")), esc(fmt(task.get("trigger"))),
                          esc(fmt(task.get("data_class"))), esc(fmt(task.get("frequency_per_week"), "unknown")),
                          esc(fmt(task.get("minutes_each"), "unknown")), esc(fmt(task.get("users"), "unknown")),
                          esc(fmt(cost.get("level"), "unknown")),
@@ -834,6 +989,8 @@ def _interview_notes(task):
                 % (esc(tid), esc(wanted.strip())))
     return out
 
+
+# --- Blockers and warnings --------------------------------------------------------------------------------
 
 def _about_order(ctx, items):
     order = ["persona"] + [t.get("id") for t in ctx["tasks"]]
@@ -906,9 +1063,8 @@ def unverified_items(ctx):
 def render_blockers(ctx):
     levelled = ctx["levelled"]
     owner = ((ctx["profile"].get("owners") or {}).get("compliance"))
-    out = [section_open(3), "<h2>Blockers and warnings</h2>"]
-    if owner:
-        out.append('<p class="note">Compliance owner: %s.</p>' % esc(owner))
+    out = [section_open("Blockers and warnings"), "<h2>Blockers and warnings</h2>"]
+    out.append('<p class="note">Compliance owner: %s.</p>' % esc(fmt(owner, "not named")))
     out.append("<h3>Blockers</h3>")
     out.append(_code_list(ctx, levelled["blockers"], "blocker") if levelled["blockers"]
                else "<p>No blockers. Every task can be built as asked on this plan and data class.</p>")
@@ -923,6 +1079,33 @@ def render_blockers(ctx):
     return "\n".join(out)
 
 
+# --- Overrides --------------------------------------------------------------------------------------------
+
+def _override_value(value):
+    if isinstance(value, dict):
+        return "; ".join("%s %s" % (str(k).replace("_", " "), fmt(v, "undecided")) for k, v in value.items())
+    return fmt(value, "undecided")
+
+
+def render_overrides(ctx):
+    overrides = [o for o in ctx["card"].get("overrides") or [] if isinstance(o, dict)]
+    out = [section_open("Overrides"), "<h2>Overrides</h2>",
+           '<p class="note">Decisions the card sets by hand over the rule\'s result, with the reason and who '
+           'approved it. The feature list marks each one Overridden.</p>']
+    if not overrides:
+        out.append("<p>No overrides.</p>")
+    else:
+        rows = ['<tr data-override="%s.%s"><td><code>%s</code></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>'
+                % (esc(o.get("task")), esc(o.get("decision")), esc(o.get("task")), esc(o.get("decision")),
+                   esc(_override_value(o.get("value"))), esc(o.get("reason")),
+                   esc(fmt(o.get("approved_by"), "not recorded"))) for o in overrides]
+        out.append(table(("Task", "Decision", "Value", "Reason", "Approved by"), rows))
+    out.append("</section>")
+    return "\n".join(out)
+
+
+# --- Backlog ----------------------------------------------------------------------------------------------
+
 def _done_of(tasks):
     return "%d of %d tasks done" % (sum(1 for t in tasks if t["status"] == "done"), len(tasks))
 
@@ -931,64 +1114,117 @@ def _status(status):
     return '<span class="status">%s</span>' % esc(STATUS_WORDS.get(status, status))
 
 
-def _backlog_task(task):
+def _task_group(task):
+    """One backlog task as a table body: the facts row, the done-when row and the numbered how steps."""
     steps = []
     for step in task.get("how") or []:
-        text = esc(step.get("text"))
+        text = esc(" ".join(str(step.get("text") or "").split()))
         if step.get("link"):
             text += " <code>%s</code>" % esc(cite_text(step["link"]))
         steps.append("<li>%s</li>" % text)
-    return ('<li><details><summary>%s <code>%s</code> %s <span class="owner">owner: %s</span></summary>'
-            '<ol>%s</ol><p>Done when: %s</p></details></li>' % (
-                _status(task["status"]), esc(task["id"]), esc(task.get("title")), esc(task.get("owner_role")),
-                "".join(steps), esc(task.get("done_when"))))
+    return ('<tbody data-task="%s"><tr><th scope="row"><code>%s</code></th><td>%s</td><td>%s</td><td>%s</td>'
+            '<td>%s</td></tr><tr><th scope="row">Done when</th><td colspan="4">%s</td></tr>'
+            '<tr><th scope="row">Steps</th><td colspan="4"><ol>%s</ol></td></tr></tbody>' % (
+                esc(task["id"]), esc(task["id"]), esc(task.get("title")), esc(task.get("part")),
+                esc(_backlog._owner(task)), _status(task["status"]), esc(task.get("done_when")), "".join(steps)))
 
 
-def _story(story):
+def _starting_points(story, ctx):
+    card_task = ctx["task_by_id"].get(story["id"][2:]) or {}
+    points = _backlog.starting_points_of(card_task, ctx["levelled"])
+    if not points:
+        return '<p data-story-part="starting-points">Starts from: the card names no starting point.</p>'
+    items = []
+    for p in points:
+        text = "%s <strong>%s</strong> (%s): %s %s" % (
+            esc(p.get("kind")), esc(p.get("name")), esc(p.get("where")),
+            esc(_backlog._first_sentence(p.get("note") or "")), cite(p.get("cite")))
+        if p.get("unverified"):
+            text += " " + UNVERIFIED_TAG
+        items.append("<li>%s</li>" % text)
+    return '<div data-story-part="starting-points"><p>Starts from:</p><ul class="plain">%s</ul></div>' % "".join(items)
+
+
+def _story(story, ctx):
+    told = "ready" in story
+    summary_text = "Part %s. %s. Priority %s. %s" % (
+        story.get("part"), "In pilot" if story.get("in_pilot") else "Later",
+        fmt(story.get("priority"), "not set"), _done_of(story["tasks"]))
+    out = ['<details class="story" data-story="%s"%s><summary>%s <code>%s</code> %s <span class="owner">(%s)</span>'
+           '</summary>' % (esc(story["id"]), " open" if is_open(story) else "", _status(story["status"]),
+                           esc(story["id"]), esc(story.get("title")), esc(summary_text))]
+    statement = esc(" ".join(str(story.get("statement") or "").split()))
+    if story.get("statement_source") == "drafted":
+        statement += ' <span class="note">%s</span>' % esc(DRAFTED_TEXT)
+    out.append('<p data-story-part="statement" class="statement">%s</p>' % statement)
+    fields = story.get("fields") or {}
+    if told:
+        out.append('<p data-story-part="target">%s</p>' % esc(" ".join(story["target"]["text"].split())))
+        unmet = [c for c in story["ready"] if not c["met"]]
+        out.append('<div data-story-part="ready"><p>Ready to build: %s</p>%s</div>' % (
+            "yes" if _backlog._is_ready(story) else "no",
+            '<ul class="plain">%s</ul>' % "".join("<li><code>%s</code>: %s</li>" % (esc(c["check"]), esc(c["note"]))
+                                                for c in unmet) if unmet else ""))
+        out.append('<p data-story-part="delivery">Delivery: %s</p>' % esc(fmt(fields.get("delivery"))))
+    rows = ['<tr><th scope="row">%s</th><td>%s</td></tr>' % (esc(key.replace("_", " ").capitalize()),
+                                                               esc(md_cell(value)))
+            for key, value in fields.items()]
+    out.append(table(("Field", "Value"), rows, ' data-story-part="fields" class="fields"'))
+    if told:
+        out.append(_starting_points(story, ctx))
+    out.append('<p>Acceptance criteria:</p><ol data-story-part="acceptance">%s</ol>' % "".join(
+        "<li>%s</li>" % esc(a) for a in story.get("acceptance") or []))
     gates = story.get("gated_by") or []
-    gate_text = ('<ul class="plain">%s</ul>' % "".join(
-        "<li>%s <code>%s</code>: %s</li>" % (esc(g.get("kind")), esc(g.get("id")), esc(g.get("text"))) for g in gates)
-        if gates else "nothing")
-    return ('<details><summary>%s <code>%s</code> %s <span class="owner">(%s)</span></summary>'
-            '<p>%s</p><p>Part %s. %s. Priority %s.</p><div class="gates">Gated by: %s</div>'
-            '<ul class="tasks">%s</ul></details>' % (
-                _status(story["status"]), esc(story["id"]), esc(story.get("title")), esc(_done_of(story["tasks"])),
-                esc(story.get("statement")), esc(story.get("part")), "In pilot" if story.get("in_pilot") else "Later",
-                esc(fmt(story.get("priority"))), gate_text, "".join(_backlog_task(t) for t in story["tasks"])))
+    out.append('<div data-story-part="gates">%s</div>' % (
+        '<p>Gated by:</p><ul class="plain">%s</ul>' % "".join(
+            "<li>%s <code>%s</code>: %s%s</li>" % (esc(g.get("kind")), esc(g.get("id")), esc(g.get("text")),
+                                                   " (spike <code>%s</code>)" % esc(g["spike"]) if g.get("spike")
+                                                   else "") for g in gates)
+        if gates else "<p>Nothing gates this story.</p>"))
+    if story.get("data_providers"):
+        out.append('<div data-story-part="providers"><p>%s:</p>%s</div>' % (
+            esc(_backlog.PROVIDERS_HEADING), table(PROVIDER_COLUMNS, provider_rows(story["data_providers"], False))))
+    out.append('<div class="scroll"><table data-story-part="tasks" class="tasks"><thead><tr>%s</tr></thead>%s'
+               '</table></div>' % ("".join('<th scope="col">%s</th>' % c for c in TASK_COLUMNS),
+                                   "".join(_task_group(t) for t in story["tasks"])))
+    out.append("</details>")
+    return "".join(out)
 
 
 def render_backlog(ctx):
     backlog = ctx["backlog"]
     epic = backlog["epic"]
-    out = [section_open(4), "<h2>Backlog</h2>",
+    s = ctx["summary"]
+    out = [section_open("Backlog"), "<h2>Backlog</h2>",
            '<p class="note">Status words: [ ] todo, [~] in progress, [x] done. To change a status, edit backlog.json '
-           'and run the backlog and dashboard commands again.</p>']
-    out.append('<details class="epic" open><summary>%s <code>%s</code> %s <span class="owner">(%s)</span></summary>'
-               % (_status(epic["status"]), esc(epic["id"]), esc(epic.get("title")), esc(_done_of(backlog_tasks(backlog)))))
+           'and run the backlog and dashboard commands again.</p>',
+           '<h3>%s <code>%s</code> %s <span class="owner">(%s)</span></h3>' % (
+               _status(epic["status"]), esc(epic["id"]), esc(epic.get("title")), esc(_done_of(backlog_tasks(backlog)))),
+           '<p data-field="story-count">Stories shown open: %d. Stories closed: %d. A story is open when it is in '
+           'the pilot and not done.</p>' % (s["stories_open"], s["stories_total"] - s["stories_open"])]
     for feature in epic["features"]:
-        tasks = [t for s in feature["stories"] for t in s["tasks"]]
-        out.append('<details class="feature-bl"><summary>%s <code>%s</code> %s <span class="owner">(%s; %s)</span>'
-                   '</summary>' % (_status(feature["status"]), esc(feature["id"]), esc(feature.get("title")),
-                                   esc(plural(len(feature["stories"]), "story", "stories")), esc(_done_of(tasks))))
-        out.append("".join(_story(s) for s in feature["stories"]))
-        out.append("</details>")
-    out.append("</details>")
+        tasks = [t for st in feature["stories"] for t in st["tasks"]]
+        out.append('<h4>%s <code>%s</code> %s <span class="owner">(%s; %s)</span></h4>' % (
+            _status(feature["status"]), esc(feature["id"]), esc(feature.get("title")),
+            esc(plural(len(feature["stories"]), "story", "stories")), esc(_done_of(tasks))))
+        out.append("".join(_story(st, ctx) for st in feature["stories"]))
+    out.append("<h3>Retired</h3>")
     retired = backlog.get("retired") or []
-    if retired:
-        out.append("<h3>Retired</h3>")
-        out.append('<ul class="plain">%s</ul>' % "".join(
-            "<li>%s <code>%s</code> %s</li>" % (_status(r.get("status")), esc(r.get("id")), esc(r.get("title")))
-            for r in retired))
+    out.append('<ul class="plain">%s</ul>' % "".join(
+        "<li>%s <code>%s</code> %s</li>" % (_status(r.get("status")), esc(r.get("id")), esc(r.get("title")))
+        for r in retired) if retired else "<p>Nothing retired.</p>")
     out.append("</section>")
     return "\n".join(out)
 
+
+# --- Open questions ---------------------------------------------------------------------------------------
 
 def render_questions(ctx):
     pilot = set(t.get("id") for t in ctx["tasks"] if t.get("in_pilot"))
     questions = list(ctx["card"].get("open_questions") or [])
     first = [q for q in questions if set(q.get("blocks") or []) & pilot]
     rest = [q for q in questions if q not in first]
-    out = [section_open(5), "<h2>Open questions</h2>"]
+    out = [section_open("Open questions"), "<h2>Open questions</h2>"]
     if not questions:
         out.append("<p>No open questions.</p>")
     else:
@@ -1007,9 +1243,11 @@ def render_questions(ctx):
     return "\n".join(out)
 
 
+# --- Where each answer came from --------------------------------------------------------------------------
+
 def render_provenance(ctx):
     records = (("card", ctx["card"]), ("profile", ctx["profile"]))
-    out = [section_open(6), "<h2>Where each answer came from</h2>",
+    out = [section_open("Where each answer came from"), "<h2>Where each answer came from</h2>",
            '<p class="note">Fields with a provenance entry, by status. Answered: a person said it. Default: taken '
            'from a named default. Assumed: the consultant\'s guess, to be confirmed. Open: no answer yet.</p>']
     rows = []
@@ -1040,6 +1278,20 @@ def render_provenance(ctx):
                        if one.startswith("interviews/")))
     out.append('<ul class="plain">%s</ul>' % "".join("<li><code>%s</code></li>" % esc(f) for f in files)
                if files else "<p>The card cites no interview file.</p>")
+    entries = [(record, path, p) for record, data in records for path, p in (data.get("provenance") or {}).items()
+               if isinstance(p, dict)]
+    rows = []
+    for record, path, p in entries:
+        sources = _validate.split_sources(p.get("source"))
+        rows.append('<tr data-provenance="%s:%s"><td>%s</td><td><code>%s</code></td><td>%s</td><td>%s</td><td>%s</td>'
+                    '<td>%s</td></tr>' % (
+                        record, esc(path), record, esc(path), esc(p.get("status")),
+                        "; ".join("<code>%s</code>" % esc(one) for one in sources) or "not given",
+                        esc(fmt(p.get("owner"), "not named")), esc(fmt(p.get("due"), "not set"))))
+    out.append('<details class="sources"><summary>Where each answer came from: every provenance entry (%d)</summary>'
+               '<p class="note">A card source is relative to the persona folder and a profile source to the customer '
+               'folder, as the records write them.</p>%s</details>' % (
+                   len(entries), table(("Record", "Field", "Status", "Source", "Owner", "Due"), rows)))
     out.append("</section>")
     return "\n".join(out)
 
@@ -1057,10 +1309,11 @@ main{max-width:1120px;margin:0 auto;padding:12px 16px 32px}
 h1{font-size:22px;margin:8px 0 2px}
 h2{font-size:18px;margin:24px 0 8px;padding-top:8px;border-top:2px solid var(--line)}
 h3{font-size:15px;margin:14px 0 6px}
+h4{font-size:14px;margin:12px 0 4px}
 p,li,dd,td,th,summary{overflow-wrap:anywhere}
 p{margin:4px 0}
 a{color:var(--link)}
-code{font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--code);padding:0 3px;border-radius:3px}
+code{font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--code);padding:0 3px;border-radius:3px;overflow-wrap:anywhere}
 .sub,.note,.generated,.cite,.owner,.group{color:var(--muted)}
 .lead{font-weight:600}
 .tag{display:inline-block;border:1px solid currentColor;border-radius:3px;padding:0 4px;font-size:12px;margin:0 2px}
@@ -1085,13 +1338,16 @@ dd{margin:0;min-width:0}
 table{border-collapse:collapse;width:100%}
 th,td{border-top:1px solid var(--line);padding:4px 6px;text-align:left;vertical-align:top}
 .decisions th{width:9em;font-weight:600}
+.fields th[scope="row"]{width:14em}
 ul,ol{margin:4px 0;padding-left:20px}
-ul.plain,ul.codes,ul.why,ul.questions,ul.unverified,ul.tasks{padding-left:16px}
+ul.plain,ul.codes,ul.why,ul.questions,ul.unverified{padding-left:16px}
 details{margin:2px 0}
-details details{margin-left:12px}
+details.story{border:1px solid var(--line);border-radius:4px;padding:4px 8px;margin:6px 0}
+details.story>summary{font-weight:600}
+.statement{font-style:italic}
 summary{cursor:pointer}
 @media (max-width:480px){dl{grid-template-columns:minmax(0,1fr)}.decisions th{width:auto}.decisions tr,.decisions th,.decisions td{display:block}.decisions th{border-top:1px solid var(--line);padding-bottom:0}.decisions td{border-top:0}}
-@media print{nav{display:none}details>*{display:block}details:not([open])>*{display:block}details::details-content{display:block;content-visibility:visible}summary{list-style:none}body{background:#ffffff;color:#000000}}
+@media print{details>*{display:block}details:not([open])>*{display:block}details::details-content{display:block;content-visibility:visible}summary{list-style:none}body{background:#ffffff;color:#000000}.scroll{overflow:visible;max-width:none}table{table-layout:fixed}code{white-space:pre-wrap}details.story{break-inside:avoid;page-break-inside:avoid}}
 """.strip()
 
 
@@ -1100,9 +1356,11 @@ def build_page(inputs, date):
     profile = inputs["profile"]
     role = (card.get("role") or {}).get("name") or card.get("id") or "Persona"
     ctx = dict(inputs)
+    tasks = [t for t in card.get("tasks") or [] if isinstance(t, dict)]
     ctx.update({
         "title": "%s twin" % role,
-        "tasks": [t for t in card.get("tasks") or [] if isinstance(t, dict)],
+        "tasks": tasks,
+        "task_by_id": dict((t.get("id"), t) for t in tasks),
         "products": dict((s.get("id"), s.get("product")) for s in profile.get("systems") or []
                          if isinstance(s, dict)),
         "summary": summary(inputs),
@@ -1120,10 +1378,12 @@ def build_page(inputs, date):
         "<body>",
         "<main>",
         render_header(ctx, date),
+        render_blocked(ctx),
         render_contents(),
         render_anatomy(ctx),
         render_features(ctx),
         render_blockers(ctx),
+        render_overrides(ctx),
         render_backlog(ctx),
         render_questions(ctx),
         render_provenance(ctx),

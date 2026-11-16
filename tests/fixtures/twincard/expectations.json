@@ -540,9 +540,11 @@
       "dashboard": {
         "sections": [
           "Header",
+          "What is blocked",
           "Anatomy grid",
           "Feature list",
           "Blockers and warnings",
+          "Overrides",
           "Backlog",
           "Open questions",
           "Where each answer came from"
@@ -1110,9 +1112,11 @@
       "dashboard": {
         "sections": [
           "Header",
+          "What is blocked",
           "Anatomy grid",
           "Feature list",
           "Blockers and warnings",
+          "Overrides",
           "Backlog",
           "Open questions",
           "Where each answer came from"

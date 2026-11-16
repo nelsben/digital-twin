@@ -37,9 +37,9 @@ Done when: the card validates and every open field has an owner and a date, as t
    - undecided decisions, which a person at the customer must make;
    - warnings, grouped by code;
    - open questions.
-3. **Record overrides.** An override changes a rule's result. Write one only when you have the value, the reason and the name of the person at the customer who approved it. The dashboard shows it as Overridden, with all three.
+3. **Record overrides.** An override changes a rule's result. Write one only when you have the value, the reason and the name of the person at the customer who approved it. The dashboard shows it as Overridden, with all three, and lists every override in its Overrides section.
 4. **Run `all` again** after every change to the card, the profile or an override, and read what moved.
-5. **Take the dashboard and the design to the sponsor.** The technical and business owners approve, as the phase table says.
+5. **Take the dashboard and the design to the sponsor.** The top of the dashboard is written for the sponsor: the goal, the targets, the owners and what is blocked, with nothing to open. The technical and business owners approve, as the phase table says.
 
 ## Phase 3: Build
 
@@ -71,7 +71,7 @@ The two samples under [engagements/](../../engagements/README.md#the-samples) sh
 ## What a rule decides, and what a person decides
 
 - **By rule:** per task, the runtime, the identity, the autonomy start and ceiling, the data controls, the connectors, memory and plan fit; per persona, the distribution and the settings baseline; and the blockers and warnings. Each result names the rule and the compendium page behind it. The same card gives the same files.
-- **By a person:** every answer in an interview. Every override. Every decision the dashboard shows as undecided. Whether a blocker is met by changing the task, correcting an answer or moving the customer to another plan. Every sign-off, and every promotion in autonomy.
+- **By a person:** every answer in an interview. Every override. Every decision the dashboard shows as undecided (it uses the same word as `backlog.md`). Whether a blocker is met by changing the task, correcting an answer or moving the customer to another plan. Every sign-off, and every promotion in autonomy.
 
 Nobody proposes an override only to make a blocker go away. Offer the ways out and let the consultant and the customer choose.
 

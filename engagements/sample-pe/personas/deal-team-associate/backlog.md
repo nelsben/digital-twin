@@ -2,7 +2,7 @@
 
 Generated from card.json and levelled.json by `python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py backlog engagements/sample-pe/personas/deal-team-associate`; never edit it by hand. To mark a task, change only its status in backlog.json, then run the command again.
 
-Status: todo. 5 features, 13 stories, 119 tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done.
+Status: todo. 5 features, 13 stories, 129 tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done.
 
 ## F-pre-meeting-preparation: Pre-meeting preparation
 
@@ -119,6 +119,10 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
   2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
   3. Record the answer with its source and level the card again. See [docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss](../../../../docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss).
   - Done when: The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.
+- [ ] **S-T1.warning-zdr-org-not-confirmed** Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR (owner: compliance, part A7)
+  1. Explain that highly sensitive data needs a separate Enterprise org with ZDR. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
+  2. Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  - Done when: The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.
 
 ### S-T5: Prepare for a management or expert call
 
@@ -225,6 +229,10 @@ Part A2. In pilot: no. Priority: 4. Status: todo.
   2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
   3. Record the answer with its source and level the card again. See [docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss](../../../../docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss).
   - Done when: The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.
+- [ ] **S-T5.warning-zdr-org-not-confirmed** Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR (owner: compliance, part A7)
+  1. Explain that highly sensitive data needs a separate Enterprise org with ZDR. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
+  2. Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  - Done when: The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.
 
 ## F-pipeline-upkeep-and-reporting: Pipeline upkeep and reporting
 
@@ -358,6 +366,10 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
   2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
   3. Record the answer with its source and level the card again. See [docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss](../../../../docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss).
   - Done when: The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.
+- [ ] **S-T2.warning-zdr-org-not-confirmed** Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR (owner: compliance, part A7)
+  1. Explain that highly sensitive data needs a separate Enterprise org with ZDR. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
+  2. Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  - Done when: The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.
 
 ### S-T3: Weekly pipeline summary for the Monday deal meeting
 
@@ -480,6 +492,10 @@ Part A4. In pilot: no. Priority: 6. Status: todo.
   1. Check which retention or HIPAA cover the task needs. See [docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation](../../../../docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation).
   2. Ask Anthropic to confirm the Agent SDK's cover in writing, and use the confirmed route until then. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
   - Done when: The task uses a route the pages confirm, or Anthropic's written confirmation is recorded with its source.
+- [ ] **S-T3.warning-zdr-org-not-confirmed** Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR (owner: compliance, part A7)
+  1. Explain that highly sensitive data needs a separate Enterprise org with ZDR. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
+  2. Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  - Done when: The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.
 
 ## F-deal-screening: Deal screening
 
@@ -495,7 +511,7 @@ Part A2. In pilot: no. Priority: 3. Status: todo.
 |---|---|
 | Data class | highly-sensitive |
 | Surface | client-skill; surfaces: claude-code |
-| Autonomy | 1 to undecided |
+| Autonomy | 1 to 3 |
 | Connectors and identity | sharepoint: user identity, read, always-allow; salesforce: user identity, read, always-allow |
 | Wall impact | soft |
 | Inputs | sharepoint (the CIM or teaser (an emailed document is saved to SharePoint first)); salesforce (prior contact with the company) |
@@ -564,6 +580,15 @@ Part A2. In pilot: no. Priority: 3. Status: todo.
   1. Open the connector's page in the Claude org and find the tool. See [docs/compendium/06-autonomy.md#how-a-level-is-enforced](../../../../docs/compendium/06-autonomy.md#how-a-level-is-enforced).
   2. Set the tool to Always allow and record the change. See [docs/compendium/06-autonomy.md#the-ladder-our-recommendation](../../../../docs/compendium/06-autonomy.md#the-ladder-our-recommendation).
   - Done when: The tool is set to Always allow in the Claude org, as levelled.json says.
+- [ ] **S-T4.evidence-level-2** Gather the evidence to move the task up to level 2, act with approval (owner: business-owner, part A8)
+  1. Show the evals pass reliably at the current level. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
+  2. Bring a month of scorecard results, with the edit rate, to the business owner. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
+  - Done when: The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.
+- [ ] **S-T4.evidence-level-3** Gather the evidence to move the task up to level 3, act within an allowlist (owner: business-owner, part A8)
+  1. Confirm every allowlisted action can be undone or stays internal. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
+  2. Show a stable eval pass rate, a low edit rate and few rejections at level 2. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
+  3. List the tools to set to Always allow and keep every other tool on Needs approval. See [docs/compendium/06-autonomy.md#the-ladder-our-recommendation](../../../../docs/compendium/06-autonomy.md#the-ladder-our-recommendation).
+  - Done when: The business owner has approved the allowlist on scorecard evidence, and only those tools are Always allow.
 - [ ] **S-T4.wall-test** Test the information wall with two users on either side before the pilot (owner: compliance, part A7)
   1. List what the wall must keep apart in each system the task reads. See [docs/compendium/14-private-equity.md#what-a-wall-has-to-guarantee](../../../../docs/compendium/14-private-equity.md#what-a-wall-has-to-guarantee).
   2. Run the task as a user on each side of the wall and check neither sees the other side's records. See [docs/compendium/14-private-equity.md#where-a-twin-can-leak-across-a-wall](../../../../docs/compendium/14-private-equity.md#where-a-twin-can-leak-across-a-wall).
@@ -582,10 +607,14 @@ Part A2. In pilot: no. Priority: 3. Status: todo.
   2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
   3. Record the answer with its source and level the card again. See [docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss](../../../../docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss).
   - Done when: The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.
-- [ ] **S-T4.warning-decision-undecided** Resolve warning decision-undecided: decide what the compendium leaves undecided (owner: business-owner, part A9)
-  1. Read which decision is undecided and why in levelled.json. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
-  2. Decide it with the customer and record the answer as an override on the card, then level again. See [partner-kit/docs/design.md#72-decision-values](../../../../partner-kit/docs/design.md#72-decision-values).
-  - Done when: The decision has a value on the card, with a reason and an approver, and the warning is gone.
+- [ ] **S-T4.warning-high-cost-ceiling-unconfirmed** Resolve warning high-cost-ceiling-unconfirmed: confirm the ceiling of a task whose mistakes cost a lot (owner: business-owner, part A9)
+  1. Read which cap applied and why in levelled.json, and note that page 06 has no rule for the cost of a mistake. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
+  2. Confirm the cap with the customer, or record a lower ceiling as an override on the card, then level again. See [partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson](../../../../partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson).
+  - Done when: The customer has confirmed the ceiling, or a lower ceiling is on the card as an override with a reason and an approver.
+- [ ] **S-T4.warning-zdr-org-not-confirmed** Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR (owner: compliance, part A7)
+  1. Explain that highly sensitive data needs a separate Enterprise org with ZDR. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
+  2. Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  - Done when: The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.
 
 ## F-investment-committee-drafting: Investment committee drafting
 
@@ -601,7 +630,7 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
 |---|---|
 | Data class | highly-sensitive |
 | Surface | client-skill; surfaces: claude-code |
-| Autonomy | 1 to undecided |
+| Autonomy | 1 to 3 |
 | Connectors and identity | sharepoint: user identity, read, always-allow |
 | Wall impact | soft |
 | Inputs | sharepoint (diligence notes and data-room files) |
@@ -661,6 +690,15 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
   1. Open the connector's page in the Claude org and find the tool. See [docs/compendium/06-autonomy.md#how-a-level-is-enforced](../../../../docs/compendium/06-autonomy.md#how-a-level-is-enforced).
   2. Set the tool to Always allow and record the change. See [docs/compendium/06-autonomy.md#the-ladder-our-recommendation](../../../../docs/compendium/06-autonomy.md#the-ladder-our-recommendation).
   - Done when: The tool is set to Always allow in the Claude org, as levelled.json says.
+- [ ] **S-T6.evidence-level-2** Gather the evidence to move the task up to level 2, act with approval (owner: business-owner, part A8)
+  1. Show the evals pass reliably at the current level. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
+  2. Bring a month of scorecard results, with the edit rate, to the business owner. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
+  - Done when: The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.
+- [ ] **S-T6.evidence-level-3** Gather the evidence to move the task up to level 3, act within an allowlist (owner: business-owner, part A8)
+  1. Confirm every allowlisted action can be undone or stays internal. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
+  2. Show a stable eval pass rate, a low edit rate and few rejections at level 2. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
+  3. List the tools to set to Always allow and keep every other tool on Needs approval. See [docs/compendium/06-autonomy.md#the-ladder-our-recommendation](../../../../docs/compendium/06-autonomy.md#the-ladder-our-recommendation).
+  - Done when: The business owner has approved the allowlist on scorecard evidence, and only those tools are Always allow.
 - [ ] **S-T6.wall-test** Test the information wall with two users on either side before the pilot (owner: compliance, part A7)
   1. List what the wall must keep apart in each system the task reads. See [docs/compendium/14-private-equity.md#what-a-wall-has-to-guarantee](../../../../docs/compendium/14-private-equity.md#what-a-wall-has-to-guarantee).
   2. Run the task as a user on each side of the wall and check neither sees the other side's records. See [docs/compendium/14-private-equity.md#where-a-twin-can-leak-across-a-wall](../../../../docs/compendium/14-private-equity.md#where-a-twin-can-leak-across-a-wall).
@@ -674,10 +712,14 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
   1. Check the task's surfaces and connectors are all in the ZDR org. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
   2. Record which features the ZDR org lacks that the task might expect. See [docs/compendium/12-orgs-and-ownership.md#recommended-starting-point](../../../../docs/compendium/12-orgs-and-ownership.md#recommended-starting-point).
   - Done when: Compliance has confirmed the task runs only in the ZDR org.
-- [ ] **S-T6.warning-decision-undecided** Resolve warning decision-undecided: decide what the compendium leaves undecided (owner: business-owner, part A9)
-  1. Read which decision is undecided and why in levelled.json. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
-  2. Decide it with the customer and record the answer as an override on the card, then level again. See [partner-kit/docs/design.md#72-decision-values](../../../../partner-kit/docs/design.md#72-decision-values).
-  - Done when: The decision has a value on the card, with a reason and an approver, and the warning is gone.
+- [ ] **S-T6.warning-high-cost-ceiling-unconfirmed** Resolve warning high-cost-ceiling-unconfirmed: confirm the ceiling of a task whose mistakes cost a lot (owner: business-owner, part A9)
+  1. Read which cap applied and why in levelled.json, and note that page 06 has no rule for the cost of a mistake. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
+  2. Confirm the cap with the customer, or record a lower ceiling as an override on the card, then level again. See [partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson](../../../../partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson).
+  - Done when: The customer has confirmed the ceiling, or a lower ceiling is on the card as an override with a reason and an approver.
+- [ ] **S-T6.warning-zdr-org-not-confirmed** Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR (owner: compliance, part A7)
+  1. Explain that highly sensitive data needs a separate Enterprise org with ZDR. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
+  2. Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  - Done when: The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.
 
 ## F-twin-foundation: Twin foundation
 

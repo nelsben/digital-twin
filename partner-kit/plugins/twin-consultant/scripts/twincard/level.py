@@ -84,7 +84,9 @@ CAPABILITY_PREFIX = "capability."
 
 # Codes the engine raises itself (the rest come from rules). Each is listed in design section 7.2.
 ENGINE_CODES = ("decision-undecided", "override-applied", "field-open",
-                "override-not-allowed", "override-unknown-target", "plugin-name-invalid")
+                "override-not-allowed", "override-unknown-target", "plugin-name-invalid",
+                "high-cost-ceiling-unconfirmed")
+HIGH_COST_FACT = "task.cost_of_mistake.level"
 DESIGN_CITE = "partner-kit/docs/design.md#7-levelling-datarulesjson-levelpy"
 DESIGN_VALUES_CITE = "partner-kit/docs/design.md#72-decision-values"
 DESIGN_PROVENANCE_CITE = "partner-kit/docs/design.md#43-provenance-and-completeness"
@@ -105,6 +107,15 @@ class Open(object):
 
     def __repr__(self):
         return "Open(%s:%s)" % (self.record, self.path)
+
+
+class Empty(object):
+    """A rule's 'then' names a fact that is null or absent here: the rule hit, but has no value to give."""
+
+    __slots__ = ("fact",)
+
+    def __init__(self, fact):
+        self.fact = fact
 
 
 class FactOpen(Exception):
@@ -512,6 +523,8 @@ class _Run(object):
             self.by_decision.setdefault(rule["decides"], []).append(rule)
         self.known = None
         self.open = {}
+        # The undecided rule a real value outranked in the last strictest decision, or None.
+        self.last_outranked = None
 
     def note_open(self, about, exc, what):
         key = (about, exc.value.record, exc.value.path)
@@ -526,19 +539,25 @@ class _Run(object):
             "Get the answer from %s, record it with its source, and level again." % owner)
 
     def _then(self, rule, facts):
+        """The rule's value: a literal, or a fact's value. An open fact raises FactOpen; a null or
+        absent fact gives Empty, which counts as 'undecided' (design 7.3)."""
         then = rule["then"]
         if isinstance(then, dict):
-            value = facts[then["fact"]]
-            return None if isinstance(value, Open) else value
+            value = facts.get(then["fact"])
+            if isinstance(value, Open):
+                raise FactOpen(then["fact"], value)
+            return Empty(then["fact"]) if value is None else value
         return then
 
     def decide(self, name, facts, about):
         """Return (decision, undecided) for one decision, combining the matching rules."""
         spec = self.rules["decisions"][name]
         hits = []
+        self.last_outranked = None
         for rule in self.by_decision.get(name, []):
             try:
                 hit = matches(rule["when"], facts, self.known)
+                value = self._then(rule, facts) if hit else None
             except FactOpen as exc:
                 self.note_open(about, exc, name)
                 return _decision(None, rule["id"], rule["cite"],
@@ -547,7 +566,6 @@ class _Run(object):
             if not hit:
                 continue
             self.fired.add(rule["id"])
-            value = self._then(rule, facts)
             if spec["combine"] == "first":
                 hits = [(rule, value)]
                 break
@@ -558,13 +576,22 @@ class _Run(object):
                              "Undecided: no rule in rules.json covers this case, so a person must decide it.",
                              False, "our-recommendation"), True
         if spec["combine"] == "strictest":
-            undecided = [hit for hit in hits if hit[1] == UNDECIDED]
-            if undecided:
-                hits = undecided[:1]
-            else:
+            # Real values win over 'undecided': the strictest real value decides, and the undecided
+            # rule it outranked is kept for the engine's warnings. 'undecided' alone stays undecided.
+            undecided = [hit for hit in hits if _is_undecided(hit[1])]
+            real = [hit for hit in hits if not _is_undecided(hit[1])]
+            if real:
                 order = spec.get("order")
-                hits = [min(hits, key=lambda hit: order.index(hit[1]) if order else hit[1])]
+                hits = [min(real, key=lambda hit: order.index(hit[1]) if order else hit[1])]
+                self.last_outranked = undecided[0][0] if undecided else None
+            else:
+                hits = undecided[:1]
         rule, value = hits[0]
+        if isinstance(value, Empty):
+            return _decision(None, rule["id"], rule["cite"],
+                             "Undecided: rule %s takes %s from the fact %s, which is empty here, so a person "
+                             "must decide it." % (rule["id"], name, value.fact),
+                             rule["unverified"], rule["basis"]), True
         if value == UNDECIDED:
             return _decision(None, rule["id"], rule["cite"], rule["reason"], rule["unverified"], rule["basis"]), True
         return _decision(value, rule["id"], rule["cite"], rule["reason"], rule["unverified"], rule["basis"]), False
@@ -586,6 +613,10 @@ class _Run(object):
                     out.append((rule, _item(rule["then"], about, rule["cite"], rule["unverified"],
                                             rule["reason"], rule["fix"])))
         return out
+
+
+def _is_undecided(value):
+    return isinstance(value, Empty) or value == UNDECIDED
 
 
 def override_problems(overrides, task_ids):
@@ -644,6 +675,8 @@ def _level_tasks(run, card, profile, pack, persona, overrides, shared):
                     decision = _apply_override(decision, value if sub is None else value[sub], override)
                     state["overrides"].append((target, decision))
                     undecided = False
+            if name == "autonomy.ceiling":
+                state["ceiling_outranked"] = run.last_outranked
             if undecided:
                 state["undecided"].append(decision)
             state["decisions"][name] = decision
@@ -821,6 +854,18 @@ def level(persona_dir, fired=None, rules=None, plan_fit=None, catalogue=None):
                 % (target, json.dumps(decision["value"]), json.dumps(ov["rule_result"]), ov["reason"],
                    ov["approved_by"]),
                 "Check the override still holds whenever the card changes; remove it to return to the rule."))
+        ceiling = state["decisions"]["autonomy.ceiling"]
+        outranked = state.get("ceiling_outranked")
+        if (outranked is not None and ceiling["overridden"] is None
+                and state["facts"].get(HIGH_COST_FACT) == "high"):
+            warnings.append(_item(
+                "high-cost-ceiling-unconfirmed", tid, outranked["cite"], ceiling["unverified"],
+                "The cost of a mistake is high, and page 06 has no rule for cost, so rule %s leaves the "
+                "ceiling to a person. The cap that applies instead is level %s, from rule %s, the strictest "
+                "of the other rules: %s A person confirms this cap, or lowers it with an override on the card."
+                % (outranked["id"], ceiling["value"], ceiling["rule"], ceiling["reason"]),
+                "Confirm level %s with the customer, or record a lower ceiling as an override on the card."
+                % ceiling["value"]))
         found = run.codes("task", state["facts"], tid)
         raised.extend(found)
         # An overridden decision that an Unverified rule now warns about rests on that fact too.

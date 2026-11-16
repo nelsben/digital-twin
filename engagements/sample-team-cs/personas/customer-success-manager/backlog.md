@@ -2,7 +2,7 @@
 
 Generated from card.json and levelled.json by `python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py backlog engagements/sample-team-cs/personas/customer-success-manager`; never edit it by hand. To mark a task, change only its status in backlog.json, then run the command again.
 
-Status: todo. 4 features, 12 stories, 100 tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done.
+Status: todo. 4 features, 12 stories, 103 tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done.
 
 ## F-call-preparation-and-follow-up: Call preparation and follow-up
 
@@ -98,6 +98,10 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
   2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
   3. Record the answer with its source and level the card again. See [docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss](../../../../docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss).
   - Done when: The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.
+- [ ] **S-C1.warning-confidential-standard-retention** Resolve warning confidential-standard-retention: set custom retention or record the customer's acceptance (owner: compliance, part A7)
+  1. Explain that page 10 requires custom retention for confidential data, otherwise local sessions are kept 6 years. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
+  2. On Enterprise, set custom retention; on Team, record that the customer accepts standard retention. See [docs/compendium/10-sensitive-data.md#other-controls](../../../../docs/compendium/10-sensitive-data.md#other-controls).
+  - Done when: Custom retention is set, or the customer's acceptance of standard retention is recorded.
 
 ### S-C4: Follow-up email after a customer call, and a call note in HubSpot
 
@@ -197,14 +201,14 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
   2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
   3. Record the answer with its source and level the card again. See [docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss](../../../../docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss).
   - Done when: The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.
-- [ ] **S-C4.warning-unmanaged-connectors-read-only** Resolve warning unmanaged-connectors-read-only: limit the write on an unmanaged device (owner: technical-owner, part A7)
+- [ ] **S-C4.warning-unmanaged-connectors-read-only** Resolve warning unmanaged-connectors-read-only: make the connectors read-only on an unmanaged device (owner: technical-owner, part A7)
   1. Explain why confidential data on an unmanaged device calls for read-only connectors. See [docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation](../../../../docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation).
-  2. Set the write tool to Needs approval at most, or get the customer's written acceptance of the write. See [docs/compendium/06-autonomy.md#how-a-level-is-enforced](../../../../docs/compendium/06-autonomy.md#how-a-level-is-enforced).
-  - Done when: The write tool is Needs approval or Blocked, or the customer's written acceptance is recorded.
-- [ ] **S-C4.warning-mail-read-only** Resolve warning mail-read-only: end the email in a draft the person sends (owner: skill-engineer, part A2)
-  1. Note that the mail connector reads only. See [docs/compendium/11-connectors.md#what-exists-for-our-systems](../../../../docs/compendium/11-connectors.md#what-exists-for-our-systems).
-  2. Write the skill so it ends with a draft in the conversation that the person copies and sends. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
-  - Done when: The evals show the task ends in a draft and never tries to send.
+  2. Set the task's write tools to Blocked for people on unmanaged devices so the connectors are read-only, or get the customer's written acceptance of the write. See [docs/compendium/06-autonomy.md#how-a-level-is-enforced](../../../../docs/compendium/06-autonomy.md#how-a-level-is-enforced).
+  - Done when: The write tools are Blocked for people on unmanaged devices, or the customer's written acceptance is recorded.
+- [ ] **S-C4.warning-confidential-standard-retention** Resolve warning confidential-standard-retention: set custom retention or record the customer's acceptance (owner: compliance, part A7)
+  1. Explain that page 10 requires custom retention for confidential data, otherwise local sessions are kept 6 years. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
+  2. On Enterprise, set custom retention; on Team, record that the customer accepts standard retention. See [docs/compendium/10-sensitive-data.md#other-controls](../../../../docs/compendium/10-sensitive-data.md#other-controls).
+  - Done when: Custom retention is set, or the customer's acceptance of standard retention is recorded.
 
 ## F-renewals: Renewals
 
@@ -325,10 +329,15 @@ Part A4. In pilot: no. Priority: 3. Status: todo.
   1. Note that the task reads untrusted content and can send it out. See [docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it](../../../../docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it).
   2. Set the send tool to Needs approval and keep the task at level 2 or below. See [docs/compendium/06-autonomy.md#how-a-level-is-enforced](../../../../docs/compendium/06-autonomy.md#how-a-level-is-enforced).
   - Done when: The send tool is Needs approval and the task's ceiling is level 2 or below.
-- [ ] **S-C2.warning-memory-poisoning-risk** Resolve warning memory-poisoning-risk: keep memory off for the task that reads untrusted input (owner: solution-architect, part A6)
-  1. Explain how untrusted input can poison memory. See [docs/compendium/02-persona.md#memory](../../../../docs/compendium/02-persona.md#memory).
-  2. Keep role knowledge in reviewed skills and let only controlled steps write memory. See [docs/compendium/02-persona.md#memory](../../../../docs/compendium/02-persona.md#memory).
-  - Done when: Memory stays off for the task and its role knowledge lives in reviewed skills.
+- [ ] **S-C2.warning-memory-poisoning-risk** Resolve warning memory-poisoning-risk: keep memory writes to controlled steps for the task that reads untrusted input (owner: solution-architect, part A6)
+  1. Explain how untrusted input can poison memory, and that memory on claude.ai is one org-wide switch. See [docs/compendium/02-persona.md#memory](../../../../docs/compendium/02-persona.md#memory).
+  2. Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it. See [docs/compendium/02-persona.md#memory](../../../../docs/compendium/02-persona.md#memory).
+  3. If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide. See [docs/compendium/09-plans-and-it-controls.md#feature-matrix](../../../../docs/compendium/09-plans-and-it-controls.md#feature-matrix).
+  - Done when: The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.
+- [ ] **S-C2.warning-confidential-standard-retention** Resolve warning confidential-standard-retention: set custom retention or record the customer's acceptance (owner: compliance, part A7)
+  1. Explain that page 10 requires custom retention for confidential data, otherwise local sessions are kept 6 years. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
+  2. On Enterprise, set custom retention; on Team, record that the customer accepts standard retention. See [docs/compendium/10-sensitive-data.md#other-controls](../../../../docs/compendium/10-sensitive-data.md#other-controls).
+  - Done when: Custom retention is set, or the customer's acceptance of standard retention is recorded.
 
 ### S-C3: Renewal quote email to the customer
 
@@ -401,10 +410,10 @@ Part A2. In pilot: no. Priority: 4. Status: todo.
   1. Show the evals pass reliably at the current level. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
   2. Bring a month of scorecard results, with the edit rate, to the business owner. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
   - Done when: The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.
-- [ ] **S-C3.warning-mail-read-only** Resolve warning mail-read-only: end the email in a draft the person sends (owner: skill-engineer, part A2)
-  1. Note that the mail connector reads only. See [docs/compendium/11-connectors.md#what-exists-for-our-systems](../../../../docs/compendium/11-connectors.md#what-exists-for-our-systems).
-  2. Write the skill so it ends with a draft in the conversation that the person copies and sends. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
-  - Done when: The evals show the task ends in a draft and never tries to send.
+- [ ] **S-C3.warning-confidential-standard-retention** Resolve warning confidential-standard-retention: set custom retention or record the customer's acceptance (owner: compliance, part A7)
+  1. Explain that page 10 requires custom retention for confidential data, otherwise local sessions are kept 6 years. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
+  2. On Enterprise, set custom retention; on Team, record that the customer accepts standard retention. See [docs/compendium/10-sensitive-data.md#other-controls](../../../../docs/compendium/10-sensitive-data.md#other-controls).
+  - Done when: Custom retention is set, or the customer's acceptance of standard retention is recorded.
 
 ## F-escalations: Escalations
 
@@ -501,10 +510,11 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
   2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
   3. Record the answer with its source and level the card again. See [docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss](../../../../docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss).
   - Done when: The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.
-- [ ] **S-C5.warning-memory-poisoning-risk** Resolve warning memory-poisoning-risk: keep memory off for the task that reads untrusted input (owner: solution-architect, part A6)
-  1. Explain how untrusted input can poison memory. See [docs/compendium/02-persona.md#memory](../../../../docs/compendium/02-persona.md#memory).
-  2. Keep role knowledge in reviewed skills and let only controlled steps write memory. See [docs/compendium/02-persona.md#memory](../../../../docs/compendium/02-persona.md#memory).
-  - Done when: Memory stays off for the task and its role knowledge lives in reviewed skills.
+- [ ] **S-C5.warning-memory-poisoning-risk** Resolve warning memory-poisoning-risk: keep memory writes to controlled steps for the task that reads untrusted input (owner: solution-architect, part A6)
+  1. Explain how untrusted input can poison memory, and that memory on claude.ai is one org-wide switch. See [docs/compendium/02-persona.md#memory](../../../../docs/compendium/02-persona.md#memory).
+  2. Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it. See [docs/compendium/02-persona.md#memory](../../../../docs/compendium/02-persona.md#memory).
+  3. If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide. See [docs/compendium/09-plans-and-it-controls.md#feature-matrix](../../../../docs/compendium/09-plans-and-it-controls.md#feature-matrix).
+  - Done when: The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.
 - [ ] **S-C5.warning-event-source-unverified** Resolve warning event-source-unverified: confirm what would start the task on its event (owner: solution-architect, part A4)
   1. Ask Anthropic and the vendor what can fire the event. See [docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation](../../../../docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation).
   2. Let a person start the task until the event source is confirmed, then level again. See [partner-kit/docs/design.md#72-decision-values](../../../../partner-kit/docs/design.md#72-decision-values).
@@ -513,6 +523,10 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
   1. Ask the vendor about the connector's plan support and per-user checks. See [docs/compendium/11-connectors.md#what-exists-for-our-systems](../../../../docs/compendium/11-connectors.md#what-exists-for-our-systems).
   2. Record the answer with its source before the build. See [docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it](../../../../docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it).
   - Done when: The vendor's answer is recorded with its source.
+- [ ] **S-C5.warning-confidential-standard-retention** Resolve warning confidential-standard-retention: set custom retention or record the customer's acceptance (owner: compliance, part A7)
+  1. Explain that page 10 requires custom retention for confidential data, otherwise local sessions are kept 6 years. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
+  2. On Enterprise, set custom retention; on Team, record that the customer accepts standard retention. See [docs/compendium/10-sensitive-data.md#other-controls](../../../../docs/compendium/10-sensitive-data.md#other-controls).
+  - Done when: Custom retention is set, or the customer's acceptance of standard retention is recorded.
 
 ## F-twin-foundation: Twin foundation
 
@@ -584,10 +598,10 @@ Part A3. In pilot: yes. Priority: none. Status: todo.
 
 **Tasks:**
 
-- [ ] **S-connectors-and-identity.warning-hubspot-super-admin-approval** Resolve warning hubspot-super-admin-approval: book the HubSpot Super Admin's approval (owner: source-system-admin, part A3)
-  1. Name the customer's HubSpot Super Admin in the profile's owners. See [docs/compendium/11-connectors.md#what-exists-for-our-systems](../../../../docs/compendium/11-connectors.md#what-exists-for-our-systems).
+- [ ] **S-connectors-and-identity.warning-hubspot-super-admin-approval** Resolve warning hubspot-super-admin-approval: book the HubSpot approval (owner: source-system-admin, part A3)
+  1. Name the customer's HubSpot Super Admin, or a user with App Marketplace access, in the profile's owners. See [docs/compendium/11-connectors.md#what-exists-for-our-systems](../../../../docs/compendium/11-connectors.md#what-exists-for-our-systems).
   2. Book the approval alongside the Claude Owner's. See [starter-kit/runbooks/identity-devices-publishing.md#getting-people-in-and-setting-roles](../../../../starter-kit/runbooks/identity-devices-publishing.md#getting-people-in-and-setting-roles).
-  - Done when: The HubSpot Super Admin has approved the connector.
+  - Done when: A HubSpot Super Admin, or a user with App Marketplace access, has approved the connector.
 - [ ] **S-connectors-and-identity.identity-team-members** Invite the role's users and set their roles by hand (owner: technical-owner, part A5)
   1. Invite each user of the role to the organisation. See [starter-kit/runbooks/identity-devices-publishing.md#getting-people-in-and-setting-roles](../../../../starter-kit/runbooks/identity-devices-publishing.md#getting-people-in-and-setting-roles).
   2. Record who is in the role, since the plan has no group to hold them. See [starter-kit/runbooks/identity-devices-publishing.md#team-plan-no-scim-no-group-targeting](../../../../starter-kit/runbooks/identity-devices-publishing.md#team-plan-no-scim-no-group-targeting).

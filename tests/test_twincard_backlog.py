@@ -173,8 +173,40 @@ def inject_unknown_target(persona):
     path.write_text(L.render(levelled), encoding="utf-8")
 
 
+def profile_value(key, value):
+    def change(profile, card):
+        profile[key] = value
+    return change
+
+
+def profile_section(section_name, key, value):
+    def change(profile, card):
+        profile[section_name][key] = value
+    return change
+
+
+def role_device(value):
+    def change(profile, card):
+        card["role"]["device"] = value
+    return change
+
+
+def team_inside_network_only(profile, card):
+    """No IP allowlist, and C1 (a client skill) reads the private usage database."""
+    profile["network"]["can_allowlist_anthropic_ips"] = False
+    inputs = task(card, "C1")["inputs"]
+    inputs.append({"system": "usage-db", "objects": "usage aggregates", "access": "read"})
+    card["provenance"]["tasks.C1.inputs[%d].access" % (len(inputs) - 1)] = {
+        "status": "answered", "source": "interviews/2026-11-06-csm.md#F7"}
+
+
 # Local scenarios for templates that neither fixture nor any expectations variant reaches.
 LOCAL_SCENARIOS = [
+    ("pe with the b2b-software pack (empty baseline fact)", PE, profile_value("industry", "b2b-software"), None),
+    ("pe T1 schedule-own", PE, set_task("T1", trigger="schedule-own"), None),
+    ("team no allowlist, C1 reads usage-db", TEAM, team_inside_network_only, None),
+    ("pe mixed devices", PE, role_device("mixed"), None),
+    ("team custom-30-day retention", TEAM, profile_section("compliance", "retention", "custom-30-day"), None),
     ("team C1 schedule-own", TEAM, set_task("C1", trigger="schedule-own"), None),
     ("team C2 writes HubSpot (managed-agents)", TEAM, team_c2_writes_hubspot, None),
     ("team C4 starts at level 2", TEAM, override("C4", "autonomy.start", 2), None),
@@ -464,7 +496,7 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(story["statement"],
                          "As a Deal-team associate, I want my twin to screen an inbound CIM or teaser so that I get "
                          "the screening summary with a pursue-or-pass suggestion.")
-        self.assertEqual(story["fields"]["autonomy"], "1 to undecided")
+        self.assertEqual(story["fields"]["autonomy"], "1 to 3")
         self.assertEqual(story["fields"]["data_class"], "highly-sensitive")
         self.assertIn("Plus: no web tools are used.", story["acceptance"])
         self.assertIn("Plus: each tool call reaches the governance log.", story["acceptance"])

@@ -268,12 +268,18 @@ class FixturePageTests(unittest.TestCase):
                     self.assertEqual(page.decisions[key]["section"], "Feature list", key)
 
     def test_null_ceiling_shows_undecided(self):
-        _, page = self.pages["pe"]
-        levelled = load_json(ROOT / fixtures()["pe"]["persona_dir"] / "levelled.json")
-        nulls = [tid for tid, t in levelled["tasks"].items() if t["autonomy"]["ceiling"]["value"] is None]
-        self.assertTrue(nulls)
-        for tid in nulls:
-            self.assertIn("undecided", page.text("decision:%s.autonomy.ceiling" % tid), tid)
+        # Every trigger now has a ceiling rule with a level, so neither fixture has a null ceiling.
+        # A null ceiling is still possible (a rule whose fact is empty), so set one by hand and rebuild.
+        with tempfile.TemporaryDirectory() as tmp:
+            work = Copy("pe", tmp).regenerate()
+            path = work.persona / "levelled.json"
+            levelled = load_json(path)
+            levelled["tasks"]["T4"]["autonomy"]["ceiling"]["value"] = None
+            path.write_text(json.dumps(levelled, indent=2), encoding="utf-8")
+            proc = run_cli("backlog", str(work.persona))
+            self.assertIn(proc.returncode, (0, 1), proc.stdout + proc.stderr)
+            page = Page(self.dash.render(str(work.persona), DATE))
+        self.assertIn("undecided", page.text("decision:T4.autonomy.ceiling"))
 
     def test_header(self):
         for fid, fixture in fixtures().items():

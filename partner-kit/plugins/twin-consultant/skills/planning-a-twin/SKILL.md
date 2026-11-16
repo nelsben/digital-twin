@@ -116,7 +116,7 @@ one line for each retired item).
 ### Undecided: a person decides, recorded as an override
 - T4 autonomy.ceiling: <what the page lacks>
 ### Warnings, by code
-- mail-read-only (C3, C4): <message> Next: <fix>
+- memory-poisoning-risk (C2, C5): <message> Next: <fix>
 ### Open questions
 - OQ-1 (blocks C5): <question> Owner: <owner>. Due: <date or none>.
 

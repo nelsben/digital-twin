@@ -1369,7 +1369,7 @@
     },
     {
       "id": "warning-unmanaged-connectors-read-only",
-      "title": "Resolve warning unmanaged-connectors-read-only: limit the write on an unmanaged device",
+      "title": "Resolve warning unmanaged-connectors-read-only: make the connectors read-only on an unmanaged device",
       "part": "A7",
       "applies_to": "task-story",
       "per": null,
@@ -1382,11 +1382,11 @@
           "link": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation"
         },
         {
-          "text": "Set the write tool to Needs approval at most, or get the customer's written acceptance of the write.",
+          "text": "Set the task's write tools to Blocked for people on unmanaged devices so the connectors are read-only, or get the customer's written acceptance of the write.",
           "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
         }
       ],
-      "done_when": "The write tool is Needs approval or Blocked, or the customer's written acceptance is recorded.",
+      "done_when": "The write tools are Blocked for people on unmanaged devices, or the customer's written acceptance is recorded.",
       "owner_role": "technical-owner"
     },
     {
@@ -1400,7 +1400,7 @@
       },
       "how": [
         {
-          "text": "Note that the mail connector reads only.",
+          "text": "Note that the Gmail and Google Calendar connectors read only.",
           "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
         },
         {
@@ -1501,7 +1501,7 @@
     },
     {
       "id": "warning-memory-poisoning-risk",
-      "title": "Resolve warning memory-poisoning-risk: keep memory off for the task that reads untrusted input",
+      "title": "Resolve warning memory-poisoning-risk: keep memory writes to controlled steps for the task that reads untrusted input",
       "part": "A6",
       "applies_to": "task-story",
       "per": null,
@@ -1510,15 +1510,19 @@
       },
       "how": [
         {
-          "text": "Explain how untrusted input can poison memory.",
+          "text": "Explain how untrusted input can poison memory, and that memory on claude.ai is one org-wide switch.",
           "link": "docs/compendium/02-persona.md#memory"
         },
         {
-          "text": "Keep role knowledge in reviewed skills and let only controlled steps write memory.",
+          "text": "Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it.",
           "link": "docs/compendium/02-persona.md#memory"
+        },
+        {
+          "text": "If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide.",
+          "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
         }
       ],
-      "done_when": "Memory stays off for the task and its role knowledge lives in reviewed skills.",
+      "done_when": "The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.",
       "owner_role": "solution-architect"
     },
     {
@@ -1567,7 +1571,7 @@
     },
     {
       "id": "warning-hubspot-super-admin-approval",
-      "title": "Resolve warning hubspot-super-admin-approval: book the HubSpot Super Admin's approval",
+      "title": "Resolve warning hubspot-super-admin-approval: book the HubSpot approval",
       "part": "A3",
       "applies_to": "S-connectors-and-identity",
       "per": null,
@@ -1576,7 +1580,7 @@
       },
       "how": [
         {
-          "text": "Name the customer's HubSpot Super Admin in the profile's owners.",
+          "text": "Name the customer's HubSpot Super Admin, or a user with App Marketplace access, in the profile's owners.",
           "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
         },
         {
@@ -1584,8 +1588,162 @@
           "link": "starter-kit/runbooks/identity-devices-publishing.md#getting-people-in-and-setting-roles"
         }
       ],
-      "done_when": "The HubSpot Super Admin has approved the connector.",
+      "done_when": "A HubSpot Super Admin, or a user with App Marketplace access, has approved the connector.",
       "owner_role": "source-system-admin"
+    },
+    {
+      "id": "warning-high-cost-ceiling-unconfirmed",
+      "title": "Resolve warning high-cost-ceiling-unconfirmed: confirm the ceiling of a task whose mistakes cost a lot",
+      "part": "A9",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "high-cost-ceiling-unconfirmed"
+      },
+      "how": [
+        {
+          "text": "Read which cap applied and why in levelled.json, and note that page 06 has no rule for the cost of a mistake.",
+          "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+        },
+        {
+          "text": "Confirm the cap with the customer, or record a lower ceiling as an override on the card, then level again.",
+          "link": "partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson"
+        }
+      ],
+      "done_when": "The customer has confirmed the ceiling, or a lower ceiling is on the card as an override with a reason and an approver.",
+      "owner_role": "business-owner"
+    },
+    {
+      "id": "warning-scheduled-task-own-environment-only",
+      "title": "Resolve warning scheduled-task-own-environment-only: run the scheduled task in the customer's own environment",
+      "part": "A4",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "scheduled-task-own-environment-only"
+      },
+      "how": [
+        {
+          "text": "Explain that ZDR and the HIPAA configuration turn cloud sessions off.",
+          "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+        },
+        {
+          "text": "Set the scheduled task up in the customer's own environment on a managed device, not in Anthropic's cloud.",
+          "link": "docs/compendium/05-decision-matrix.md#the-options"
+        }
+      ],
+      "done_when": "The scheduled task runs in the customer's own environment on a managed device, and the build says so.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "warning-zdr-org-not-confirmed",
+      "title": "Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "zdr-org-not-confirmed"
+      },
+      "how": [
+        {
+          "text": "Explain that highly sensitive data needs a separate Enterprise org with ZDR.",
+          "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+        },
+        {
+          "text": "Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again.",
+          "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+        }
+      ],
+      "done_when": "The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.",
+      "owner_role": "compliance"
+    },
+    {
+      "id": "warning-private-network-inside-only",
+      "title": "Resolve warning private-network-inside-only: run the task in Claude Code inside the network",
+      "part": "A3",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "private-network-inside-only"
+      },
+      "how": [
+        {
+          "text": "Explain that with no allowlisting and no MCP tunnel only Claude Code inside the network reaches the system.",
+          "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
+        },
+        {
+          "text": "Build the task for Claude Code on a device inside the network with a local MCP server for the system, or agree an allowlist or a tunnel instead.",
+          "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+        }
+      ],
+      "done_when": "The task reaches the private system from Claude Code inside the network, or by an agreed allowlist or tunnel.",
+      "owner_role": "integration-engineer"
+    },
+    {
+      "id": "warning-unmanaged-share-no-access",
+      "title": "Resolve warning unmanaged-share-no-access: give the people on unmanaged devices a way in",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "unmanaged-share-no-access"
+      },
+      "how": [
+        {
+          "text": "Explain that the people on unmanaged devices get no direct access to this data class.",
+          "link": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation"
+        },
+        {
+          "text": "Agree with the customer to give them managed devices, or plan a hosted twin their device only displays.",
+          "link": "docs/compendium/13-devices.md#a-hosted-twin-for-unmanaged-devices-our-recommendation"
+        }
+      ],
+      "done_when": "Every person in the role has a managed device or a hosted twin, and the plan says which.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "warning-confidential-standard-retention",
+      "title": "Resolve warning confidential-standard-retention: set custom retention or record the customer's acceptance",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "confidential-standard-retention"
+      },
+      "how": [
+        {
+          "text": "Explain that page 10 requires custom retention for confidential data, otherwise local sessions are kept 6 years.",
+          "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+        },
+        {
+          "text": "On Enterprise, set custom retention; on Team, record that the customer accepts standard retention.",
+          "link": "docs/compendium/10-sensitive-data.md#other-controls"
+        }
+      ],
+      "done_when": "Custom retention is set, or the customer's acceptance of standard retention is recorded.",
+      "owner_role": "compliance"
+    },
+    {
+      "id": "warning-retention-not-covered",
+      "title": "Resolve warning retention-not-covered: agree the retention custom retention does not reach",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "retention-not-covered"
+      },
+      "how": [
+        {
+          "text": "Explain that custom retention does not cover Claude Tag or Managed Agents.",
+          "link": "docs/compendium/10-sensitive-data.md#other-controls"
+        },
+        {
+          "text": "Agree the task's retention with the customer, or move it to a runtime custom retention covers.",
+          "link": "docs/compendium/05-decision-matrix.md#the-options"
+        }
+      ],
+      "done_when": "The customer has agreed the task's retention, or the task runs where custom retention applies.",
+      "owner_role": "compliance"
     },
     {
       "id": "persona-fill",

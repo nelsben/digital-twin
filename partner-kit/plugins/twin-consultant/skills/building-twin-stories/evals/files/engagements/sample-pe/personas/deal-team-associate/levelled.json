@@ -30,8 +30,8 @@
     "settings_baseline": {
       "value": "pe-zdr",
       "rule": "persona-baseline-highly-sensitive-pack",
-      "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-      "reason": "Highly sensitive work runs on a ZDR sign-in with the industry pack's settings baseline.",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "reason": "Highly sensitive work needs the controls page 10 requires for it (org lock via MDM, a sandbox that fails closed, allowlists, redaction hooks), and the industry pack's settings baseline is where we keep them; our choice. A pack with no baseline leaves this undecided.",
       "unverified": false,
       "basis": "our-recommendation",
       "overridden": null
@@ -269,8 +269,8 @@
       "identity": {
         "value": "user",
         "rule": "identity-client-user",
-        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "cite": "docs/compendium/05-decision-matrix.md#the-options",
+        "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
         "unverified": false,
         "basis": "compendium",
         "overridden": null
@@ -289,7 +289,7 @@
           "value": 3,
           "rule": "ceiling-person-started",
           "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-          "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+          "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
           "unverified": false,
           "basis": "compendium",
           "overridden": null
@@ -299,8 +299,8 @@
         "settings_baseline": {
           "value": "pe-zdr",
           "rule": "baseline-highly-sensitive-pack",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "Highly sensitive work runs on a ZDR sign-in with the industry pack's settings baseline.",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Highly sensitive work needs the controls page 10 requires for it (org lock via MDM, a sandbox that fails closed, allowlists, redaction hooks), and the industry pack's settings baseline is where we keep them; our choice. A pack with no baseline leaves this undecided.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -320,7 +320,7 @@
           ],
           "rule": "surfaces-sensitive-managed-claude-code",
           "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
-          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop.",
+          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop. On a mixed fleet this is the managed share's surface; the unmanaged share gets no direct access.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -361,16 +361,16 @@
         "value": "off",
         "rule": "memory-off-not-wanted",
         "cite": "docs/compendium/02-persona.md#memory",
-        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off. Memory on claude.ai is one org-wide switch, so this is what we recommend for the org; our choice.",
         "unverified": false,
-        "basis": "compendium",
+        "basis": "our-recommendation",
         "overridden": null
       },
       "plan_fit": {
-        "value": "ok",
+        "value": "ok-with-limits",
         "rule": "plan-fit-highly-sensitive-zdr-org",
         "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
-        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR (qualified orgs, Claude Code only); confirm the customer has one.",
         "unverified": false,
         "basis": "our-recommendation",
         "overridden": null
@@ -389,8 +389,8 @@
       "identity": {
         "value": "user",
         "rule": "identity-client-user",
-        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "cite": "docs/compendium/05-decision-matrix.md#the-options",
+        "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
         "unverified": false,
         "basis": "compendium",
         "overridden": null
@@ -409,7 +409,7 @@
           "value": 3,
           "rule": "ceiling-person-started",
           "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-          "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+          "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
           "unverified": false,
           "basis": "compendium",
           "overridden": null
@@ -419,8 +419,8 @@
         "settings_baseline": {
           "value": "pe-zdr",
           "rule": "baseline-highly-sensitive-pack",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "Highly sensitive work runs on a ZDR sign-in with the industry pack's settings baseline.",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Highly sensitive work needs the controls page 10 requires for it (org lock via MDM, a sandbox that fails closed, allowlists, redaction hooks), and the industry pack's settings baseline is where we keep them; our choice. A pack with no baseline leaves this undecided.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -440,7 +440,7 @@
           ],
           "rule": "surfaces-sensitive-managed-claude-code",
           "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
-          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop.",
+          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop. On a mixed fleet this is the managed share's surface; the unmanaged share gets no direct access.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -481,16 +481,16 @@
         "value": "off",
         "rule": "memory-off-not-wanted",
         "cite": "docs/compendium/02-persona.md#memory",
-        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off. Memory on claude.ai is one org-wide switch, so this is what we recommend for the org; our choice.",
         "unverified": false,
-        "basis": "compendium",
+        "basis": "our-recommendation",
         "overridden": null
       },
       "plan_fit": {
-        "value": "ok",
+        "value": "ok-with-limits",
         "rule": "plan-fit-highly-sensitive-zdr-org",
         "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
-        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR (qualified orgs, Claude Code only); confirm the customer has one.",
         "unverified": false,
         "basis": "our-recommendation",
         "overridden": null
@@ -501,7 +501,7 @@
         "value": "managed-agents-self-hosted",
         "rule": "runtime-zdr-self-hosted",
         "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
-        "reason": "A scheduled job wired into systems that needs ZDR cannot use hosted Managed Agents, which is not ZDR-eligible, so it runs on a fully self-hosted Managed Agents deployment, the page's ZDR route.",
+        "reason": "A scheduled job wired into systems that needs ZDR cannot use hosted Managed Agents, which is not ZDR-eligible, so it runs on a fully self-hosted Managed Agents deployment, one of the page's two ZDR routes (the other is the Messages API with eligible features).",
         "unverified": false,
         "basis": "our-recommendation",
         "overridden": null
@@ -509,10 +509,10 @@
       "identity": {
         "value": "api-key-vault",
         "rule": "identity-hosted-vault",
-        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
-        "reason": "Work that runs with nobody present holds its credentials in a vault (an API key plus a vault), not in a user's sign-in.",
+        "cite": "docs/compendium/05-decision-matrix.md#the-options",
+        "reason": "Managed Agents acts with an API key plus a per-user vault of credentials, not a user's sign-in.",
         "unverified": false,
-        "basis": "our-recommendation",
+        "basis": "compendium",
         "overridden": null
       },
       "autonomy": {
@@ -529,7 +529,7 @@
           "value": 4,
           "rule": "ceiling-unattended",
           "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-          "reason": "The task is internal and reversible and runs without a person, so it may rise to unattended level 4 once evals support it.",
+          "reason": "No rule on page 06 caps this task lower, so it may rise to unattended level 4 once evals support it.",
           "unverified": false,
           "basis": "compendium",
           "overridden": null
@@ -539,8 +539,8 @@
         "settings_baseline": {
           "value": null,
           "rule": "baseline-hosted-none",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "A hosted runtime has no client surface and no managed settings file.",
+          "cite": "docs/compendium/13-devices.md#what-mdm-is",
+          "reason": "A managed settings file is read by Claude Code on a device, and a hosted runtime runs on no user's device, so there is no settings baseline to set; our reading of page 13.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -557,8 +557,8 @@
         "surfaces": {
           "value": [],
           "rule": "surfaces-hosted-none",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "A hosted runtime has no client surface.",
+          "cite": "docs/compendium/13-devices.md#a-hosted-twin-for-unmanaged-devices-our-recommendation",
+          "reason": "A hosted runtime runs on no user's device, so no Claude client surface is allowed for it. Any front end page 13 names (a web page behind SSO, or a Teams or Slack bot) is ours to build; our reading.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -599,16 +599,16 @@
         "value": "off",
         "rule": "memory-off-not-wanted",
         "cite": "docs/compendium/02-persona.md#memory",
-        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off. Memory on claude.ai is one org-wide switch, so this is what we recommend for the org; our choice.",
         "unverified": false,
-        "basis": "compendium",
+        "basis": "our-recommendation",
         "overridden": null
       },
       "plan_fit": {
         "value": "ok-with-limits",
         "rule": "plan-fit-self-hosted-platform-org",
         "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-        "reason": "The self-hosted Managed Agents deployment needs a Platform org with ZDR besides the people's org.",
+        "reason": "A self-hosted Managed Agents deployment runs from a Platform (API) org besides the people's org, as page 14's org plan does for private equity; we apply that plan here, our choice.",
         "unverified": false,
         "basis": "our-recommendation",
         "overridden": null
@@ -627,128 +627,8 @@
       "identity": {
         "value": "user",
         "rule": "identity-client-user",
-        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
-        "unverified": false,
-        "basis": "compendium",
-        "overridden": null
-      },
-      "autonomy": {
-        "start": {
-          "value": 1,
-          "rule": "autonomy-start-draft",
-          "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
-          "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
-          "unverified": false,
-          "basis": "compendium",
-          "overridden": null
-        },
-        "ceiling": {
-          "value": null,
-          "rule": "ceiling-high-cost-undecided",
-          "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-          "reason": "Undecided: page 06 sets the ceiling from audience, reversibility, money, deletes and trigger, but has no rule for a high cost of a mistake, so a person must decide it.",
-          "unverified": false,
-          "basis": "compendium",
-          "overridden": null
-        }
-      },
-      "data_controls": {
-        "settings_baseline": {
-          "value": "pe-zdr",
-          "rule": "baseline-highly-sensitive-pack",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "Highly sensitive work runs on a ZDR sign-in with the industry pack's settings baseline.",
-          "unverified": false,
-          "basis": "our-recommendation",
-          "overridden": null
-        },
-        "web_tools": {
-          "value": "off",
-          "rule": "web-tools-off-sensitive",
-          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
-          "reason": "Web search and fetch are not allowed for this data class: queries can reveal intent.",
-          "unverified": false,
-          "basis": "our-recommendation",
-          "overridden": null
-        },
-        "surfaces": {
-          "value": [
-            "claude-code"
-          ],
-          "rule": "surfaces-sensitive-managed-claude-code",
-          "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
-          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop.",
-          "unverified": false,
-          "basis": "our-recommendation",
-          "overridden": null
-        },
-        "retention": {
-          "value": "zdr",
-          "rule": "retention-highly-sensitive-zdr",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "Highly sensitive deal work keeps zero data retention.",
-          "unverified": false,
-          "basis": "our-recommendation",
-          "overridden": null
-        }
-      },
-      "connectors": [
-        {
-          "system": "sharepoint",
-          "access": "read",
-          "identity": "user",
-          "how": "The Microsoft 365 connector from the Claude directory; a Global Admin must consent for the tenant. Read by default; admins can turn on writes.",
-          "runbook": "starter-kit/runbooks/microsoft-365-connector.md",
-          "permission": "always-allow",
-          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-          "unverified": false
-        },
-        {
-          "system": "salesforce",
-          "access": "read",
-          "identity": "user",
-          "how": "Salesforce Hosted MCP Server, with OAuth through an External Client App. Do not use a Claude Tag connection for walled teams.",
-          "runbook": "starter-kit/runbooks/salesforce-hosted-mcp.md",
-          "permission": "always-allow",
-          "cite": "docs/compendium/14-private-equity.md#salesforce-and-hubspot-behind-a-wall",
-          "unverified": true
-        }
-      ],
-      "memory": {
-        "value": "off",
-        "rule": "memory-off-not-wanted",
-        "cite": "docs/compendium/02-persona.md#memory",
-        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
-        "unverified": false,
-        "basis": "compendium",
-        "overridden": null
-      },
-      "plan_fit": {
-        "value": "ok",
-        "rule": "plan-fit-highly-sensitive-zdr-org",
-        "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
-        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
-        "unverified": false,
-        "basis": "our-recommendation",
-        "overridden": null
-      }
-    },
-    "T5": {
-      "runtime": {
-        "value": "client-skill",
-        "rule": "runtime-person-client-skill",
-        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
-        "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
-        "unverified": false,
-        "basis": "our-recommendation",
-        "overridden": null
-      },
-      "identity": {
-        "value": "user",
-        "rule": "identity-client-user",
-        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "cite": "docs/compendium/05-decision-matrix.md#the-options",
+        "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
         "unverified": false,
         "basis": "compendium",
         "overridden": null
@@ -767,7 +647,7 @@
           "value": 3,
           "rule": "ceiling-person-started",
           "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-          "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+          "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
           "unverified": false,
           "basis": "compendium",
           "overridden": null
@@ -777,8 +657,8 @@
         "settings_baseline": {
           "value": "pe-zdr",
           "rule": "baseline-highly-sensitive-pack",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "Highly sensitive work runs on a ZDR sign-in with the industry pack's settings baseline.",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Highly sensitive work needs the controls page 10 requires for it (org lock via MDM, a sandbox that fails closed, allowlists, redaction hooks), and the industry pack's settings baseline is where we keep them; our choice. A pack with no baseline leaves this undecided.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -798,7 +678,127 @@
           ],
           "rule": "surfaces-sensitive-managed-claude-code",
           "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
-          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop.",
+          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop. On a mixed fleet this is the managed share's surface; the unmanaged share gets no direct access.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "retention": {
+          "value": "zdr",
+          "rule": "retention-highly-sensitive-zdr",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "Highly sensitive deal work keeps zero data retention.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        }
+      },
+      "connectors": [
+        {
+          "system": "sharepoint",
+          "access": "read",
+          "identity": "user",
+          "how": "The Microsoft 365 connector from the Claude directory; a Global Admin must consent for the tenant. Read by default; admins can turn on writes.",
+          "runbook": "starter-kit/runbooks/microsoft-365-connector.md",
+          "permission": "always-allow",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        },
+        {
+          "system": "salesforce",
+          "access": "read",
+          "identity": "user",
+          "how": "Salesforce Hosted MCP Server, with OAuth through an External Client App. Do not use a Claude Tag connection for walled teams.",
+          "runbook": "starter-kit/runbooks/salesforce-hosted-mcp.md",
+          "permission": "always-allow",
+          "cite": "docs/compendium/14-private-equity.md#salesforce-and-hubspot-behind-a-wall",
+          "unverified": true
+        }
+      ],
+      "memory": {
+        "value": "off",
+        "rule": "memory-off-not-wanted",
+        "cite": "docs/compendium/02-persona.md#memory",
+        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off. Memory on claude.ai is one org-wide switch, so this is what we recommend for the org; our choice.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "plan_fit": {
+        "value": "ok-with-limits",
+        "rule": "plan-fit-highly-sensitive-zdr-org",
+        "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR (qualified orgs, Claude Code only); confirm the customer has one.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      }
+    },
+    "T5": {
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "identity": {
+        "value": "user",
+        "rule": "identity-client-user",
+        "cite": "docs/compendium/05-decision-matrix.md#the-options",
+        "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "autonomy": {
+        "start": {
+          "value": 1,
+          "rule": "autonomy-start-draft",
+          "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+          "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "ceiling": {
+          "value": 3,
+          "rule": "ceiling-person-started",
+          "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+          "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "data_controls": {
+        "settings_baseline": {
+          "value": "pe-zdr",
+          "rule": "baseline-highly-sensitive-pack",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Highly sensitive work needs the controls page 10 requires for it (org lock via MDM, a sandbox that fails closed, allowlists, redaction hooks), and the industry pack's settings baseline is where we keep them; our choice. A pack with no baseline leaves this undecided.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "web_tools": {
+          "value": "off",
+          "rule": "web-tools-off-sensitive",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Web search and fetch are not allowed for this data class: queries can reveal intent.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "surfaces": {
+          "value": [
+            "claude-code"
+          ],
+          "rule": "surfaces-sensitive-managed-claude-code",
+          "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop. On a mixed fleet this is the managed share's surface; the unmanaged share gets no direct access.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -839,16 +839,16 @@
         "value": "off",
         "rule": "memory-off-not-wanted",
         "cite": "docs/compendium/02-persona.md#memory",
-        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off. Memory on claude.ai is one org-wide switch, so this is what we recommend for the org; our choice.",
         "unverified": false,
-        "basis": "compendium",
+        "basis": "our-recommendation",
         "overridden": null
       },
       "plan_fit": {
-        "value": "ok",
+        "value": "ok-with-limits",
         "rule": "plan-fit-highly-sensitive-zdr-org",
         "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
-        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR (qualified orgs, Claude Code only); confirm the customer has one.",
         "unverified": false,
         "basis": "our-recommendation",
         "overridden": null
@@ -867,8 +867,8 @@
       "identity": {
         "value": "user",
         "rule": "identity-client-user",
-        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "cite": "docs/compendium/05-decision-matrix.md#the-options",
+        "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
         "unverified": false,
         "basis": "compendium",
         "overridden": null
@@ -884,10 +884,10 @@
           "overridden": null
         },
         "ceiling": {
-          "value": null,
-          "rule": "ceiling-high-cost-undecided",
+          "value": 3,
+          "rule": "ceiling-person-started",
           "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-          "reason": "Undecided: page 06 sets the ceiling from audience, reversibility, money, deletes and trigger, but has no rule for a high cost of a mistake, so a person must decide it.",
+          "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
           "unverified": false,
           "basis": "compendium",
           "overridden": null
@@ -897,8 +897,8 @@
         "settings_baseline": {
           "value": "pe-zdr",
           "rule": "baseline-highly-sensitive-pack",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "Highly sensitive work runs on a ZDR sign-in with the industry pack's settings baseline.",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Highly sensitive work needs the controls page 10 requires for it (org lock via MDM, a sandbox that fails closed, allowlists, redaction hooks), and the industry pack's settings baseline is where we keep them; our choice. A pack with no baseline leaves this undecided.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -918,7 +918,7 @@
           ],
           "rule": "surfaces-sensitive-managed-claude-code",
           "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
-          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop.",
+          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop. On a mixed fleet this is the managed share's surface; the unmanaged share gets no direct access.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -949,16 +949,16 @@
         "value": "off",
         "rule": "memory-off-not-wanted",
         "cite": "docs/compendium/02-persona.md#memory",
-        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off. Memory on claude.ai is one org-wide switch, so this is what we recommend for the org; our choice.",
         "unverified": false,
-        "basis": "compendium",
+        "basis": "our-recommendation",
         "overridden": null
       },
       "plan_fit": {
-        "value": "ok",
+        "value": "ok-with-limits",
         "rule": "plan-fit-highly-sensitive-zdr-org",
         "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
-        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR (qualified orgs, Claude Code only); confirm the customer has one.",
         "unverified": false,
         "basis": "our-recommendation",
         "overridden": null
@@ -989,7 +989,7 @@
         "T1": "always-allow",
         "T2": "always-allow",
         "T3": "always-allow",
-        "T4": null,
+        "T4": "always-allow",
         "T5": "always-allow"
       }
     },
@@ -1013,9 +1013,9 @@
       },
       "wanted": {
         "T1": "always-allow",
-        "T4": null,
+        "T4": "always-allow",
         "T5": "always-allow",
-        "T6": null
+        "T6": "always-allow"
       }
     },
     {
@@ -1079,6 +1079,22 @@
   "blockers": [],
   "warnings": [
     {
+      "code": "zdr-org-not-confirmed",
+      "about": "T1",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's retention is not zdr, so it does not show one.",
+      "fix": "Confirm with the customer that a separate Enterprise org with ZDR holds this work and record it in the profile, or lower the task's data class with the customer's compliance owner."
+    },
+    {
+      "code": "zdr-org-not-confirmed",
+      "about": "T2",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's retention is not zdr, so it does not show one.",
+      "fix": "Confirm with the customer that a separate Enterprise org with ZDR holds this work and record it in the profile, or lower the task's data class with the customer's compliance owner."
+    },
+    {
       "code": "agent-sdk-cover-unverified",
       "about": "T3",
       "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
@@ -1087,20 +1103,52 @@
       "fix": "Keep the Agent SDK out of this task until Anthropic confirms its ZDR cover in writing."
     },
     {
-      "code": "decision-undecided",
+      "code": "zdr-org-not-confirmed",
+      "about": "T3",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's retention is not zdr, so it does not show one.",
+      "fix": "Confirm with the customer that a separate Enterprise org with ZDR holds this work and record it in the profile, or lower the task's data class with the customer's compliance owner."
+    },
+    {
+      "code": "high-cost-ceiling-unconfirmed",
       "about": "T4",
       "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
       "unverified": false,
-      "message": "Undecided: page 06 sets the ceiling from audience, reversibility, money, deletes and trigger, but has no rule for a high cost of a mistake, so a person must decide it.",
-      "fix": "Decide it with the customer and record the answer as an override on the card."
+      "message": "The cost of a mistake is high, and page 06 has no rule for cost, so rule ceiling-high-cost-undecided leaves the ceiling to a person. The cap that applies instead is level 3, from rule ceiling-person-started, the strictest of the other rules: No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4. A person confirms this cap, or lowers it with an override on the card.",
+      "fix": "Confirm level 3 with the customer, or record a lower ceiling as an override on the card."
     },
     {
-      "code": "decision-undecided",
+      "code": "zdr-org-not-confirmed",
+      "about": "T4",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's retention is not zdr, so it does not show one.",
+      "fix": "Confirm with the customer that a separate Enterprise org with ZDR holds this work and record it in the profile, or lower the task's data class with the customer's compliance owner."
+    },
+    {
+      "code": "zdr-org-not-confirmed",
+      "about": "T5",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's retention is not zdr, so it does not show one.",
+      "fix": "Confirm with the customer that a separate Enterprise org with ZDR holds this work and record it in the profile, or lower the task's data class with the customer's compliance owner."
+    },
+    {
+      "code": "high-cost-ceiling-unconfirmed",
       "about": "T6",
       "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
       "unverified": false,
-      "message": "Undecided: page 06 sets the ceiling from audience, reversibility, money, deletes and trigger, but has no rule for a high cost of a mistake, so a person must decide it.",
-      "fix": "Decide it with the customer and record the answer as an override on the card."
+      "message": "The cost of a mistake is high, and page 06 has no rule for cost, so rule ceiling-high-cost-undecided leaves the ceiling to a person. The cap that applies instead is level 3, from rule ceiling-person-started, the strictest of the other rules: No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4. A person confirms this cap, or lowers it with an override on the card.",
+      "fix": "Confirm level 3 with the customer, or record a lower ceiling as an override on the card."
+    },
+    {
+      "code": "zdr-org-not-confirmed",
+      "about": "T6",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's retention is not zdr, so it does not show one.",
+      "fix": "Confirm with the customer that a separate Enterprise org with ZDR holds this work and record it in the profile, or lower the task's data class with the customer's compliance owner."
     }
   ],
   "complete": false

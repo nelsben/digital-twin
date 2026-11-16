@@ -4,7 +4,7 @@
   "persona": "deal-team-associate",
   "source": {
     "card_sha256": "d8a71ec821ba8eb07e153bd18cfad08e6c95e6a7c5cc8d34f6e1ba70ab1915af",
-    "levelled_sha256": "e42d572327880861195ec05667a4a54c644f19790666fc1f28857a473876680a",
+    "levelled_sha256": "462a6b7a4c4a276bae5b880c1c0e7af5b492c2e3c47ac140f5394bd179f9c079",
     "library_version": 1
   },
   "epic": {
@@ -421,6 +421,25 @@
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
                 "owner_role": "solution-architect",
                 "status": "todo"
+              },
+              {
+                "id": "S-T1.warning-zdr-org-not-confirmed",
+                "template": "warning-zdr-org-not-confirmed",
+                "title": "Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Explain that highly sensitive data needs a separate Enterprise org with ZDR.",
+                    "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+                  },
+                  {
+                    "text": "Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  }
+                ],
+                "done_when": "The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.",
+                "owner_role": "compliance",
+                "status": "todo"
               }
             ]
           },
@@ -796,6 +815,25 @@
                 ],
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
                 "owner_role": "solution-architect",
+                "status": "todo"
+              },
+              {
+                "id": "S-T5.warning-zdr-org-not-confirmed",
+                "template": "warning-zdr-org-not-confirmed",
+                "title": "Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Explain that highly sensitive data needs a separate Enterprise org with ZDR.",
+                    "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+                  },
+                  {
+                    "text": "Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  }
+                ],
+                "done_when": "The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.",
+                "owner_role": "compliance",
                 "status": "todo"
               }
             ]
@@ -1288,6 +1326,25 @@
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
                 "owner_role": "solution-architect",
                 "status": "todo"
+              },
+              {
+                "id": "S-T2.warning-zdr-org-not-confirmed",
+                "template": "warning-zdr-org-not-confirmed",
+                "title": "Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Explain that highly sensitive data needs a separate Enterprise org with ZDR.",
+                    "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+                  },
+                  {
+                    "text": "Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  }
+                ],
+                "done_when": "The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.",
+                "owner_role": "compliance",
+                "status": "todo"
               }
             ]
           },
@@ -1739,6 +1796,25 @@
                 "done_when": "The task uses a route the pages confirm, or Anthropic's written confirmation is recorded with its source.",
                 "owner_role": "solution-architect",
                 "status": "todo"
+              },
+              {
+                "id": "S-T3.warning-zdr-org-not-confirmed",
+                "template": "warning-zdr-org-not-confirmed",
+                "title": "Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Explain that highly sensitive data needs a separate Enterprise org with ZDR.",
+                    "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+                  },
+                  {
+                    "text": "Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  }
+                ],
+                "done_when": "The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.",
+                "owner_role": "compliance",
+                "status": "todo"
               }
             ]
           }
@@ -1761,7 +1837,7 @@
             "fields": {
               "data_class": "highly-sensitive",
               "surface": "client-skill; surfaces: claude-code",
-              "autonomy": "1 to undecided",
+              "autonomy": "1 to 3",
               "connectors_and_identity": "sharepoint: user identity, read, always-allow; salesforce: user identity, read, always-allow",
               "wall_impact": "soft",
               "inputs": "sharepoint (the CIM or teaser (an emailed document is saved to SharePoint first)); salesforce (prior contact with the company)",
@@ -2004,6 +2080,48 @@
                 "status": "todo"
               },
               {
+                "id": "S-T4.evidence-level-2",
+                "template": "evidence-level-2",
+                "title": "Gather the evidence to move the task up to level 2, act with approval",
+                "part": "A8",
+                "how": [
+                  {
+                    "text": "Show the evals pass reliably at the current level.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+                  },
+                  {
+                    "text": "Bring a month of scorecard results, with the edit rate, to the business owner.",
+                    "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
+                  }
+                ],
+                "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
+                "owner_role": "business-owner",
+                "status": "todo"
+              },
+              {
+                "id": "S-T4.evidence-level-3",
+                "template": "evidence-level-3",
+                "title": "Gather the evidence to move the task up to level 3, act within an allowlist",
+                "part": "A8",
+                "how": [
+                  {
+                    "text": "Confirm every allowlisted action can be undone or stays internal.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+                  },
+                  {
+                    "text": "Show a stable eval pass rate, a low edit rate and few rejections at level 2.",
+                    "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
+                  },
+                  {
+                    "text": "List the tools to set to Always allow and keep every other tool on Needs approval.",
+                    "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+                  }
+                ],
+                "done_when": "The business owner has approved the allowlist on scorecard evidence, and only those tools are Always allow.",
+                "owner_role": "business-owner",
+                "status": "todo"
+              },
+              {
                 "id": "S-T4.wall-test",
                 "template": "wall-test",
                 "title": "Test the information wall with two users on either side before the pilot",
@@ -2088,22 +2206,41 @@
                 "status": "todo"
               },
               {
-                "id": "S-T4.warning-decision-undecided",
-                "template": "warning-decision-undecided",
-                "title": "Resolve warning decision-undecided: decide what the compendium leaves undecided",
+                "id": "S-T4.warning-high-cost-ceiling-unconfirmed",
+                "template": "warning-high-cost-ceiling-unconfirmed",
+                "title": "Resolve warning high-cost-ceiling-unconfirmed: confirm the ceiling of a task whose mistakes cost a lot",
                 "part": "A9",
                 "how": [
                   {
-                    "text": "Read which decision is undecided and why in levelled.json.",
+                    "text": "Read which cap applied and why in levelled.json, and note that page 06 has no rule for the cost of a mistake.",
                     "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
                   },
                   {
-                    "text": "Decide it with the customer and record the answer as an override on the card, then level again.",
-                    "link": "partner-kit/docs/design.md#72-decision-values"
+                    "text": "Confirm the cap with the customer, or record a lower ceiling as an override on the card, then level again.",
+                    "link": "partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson"
                   }
                 ],
-                "done_when": "The decision has a value on the card, with a reason and an approver, and the warning is gone.",
+                "done_when": "The customer has confirmed the ceiling, or a lower ceiling is on the card as an override with a reason and an approver.",
                 "owner_role": "business-owner",
+                "status": "todo"
+              },
+              {
+                "id": "S-T4.warning-zdr-org-not-confirmed",
+                "template": "warning-zdr-org-not-confirmed",
+                "title": "Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Explain that highly sensitive data needs a separate Enterprise org with ZDR.",
+                    "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+                  },
+                  {
+                    "text": "Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  }
+                ],
+                "done_when": "The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.",
+                "owner_role": "compliance",
                 "status": "todo"
               }
             ]
@@ -2127,7 +2264,7 @@
             "fields": {
               "data_class": "highly-sensitive",
               "surface": "client-skill; surfaces: claude-code",
-              "autonomy": "1 to undecided",
+              "autonomy": "1 to 3",
               "connectors_and_identity": "sharepoint: user identity, read, always-allow",
               "wall_impact": "soft",
               "inputs": "sharepoint (diligence notes and data-room files)",
@@ -2328,6 +2465,48 @@
                 "status": "todo"
               },
               {
+                "id": "S-T6.evidence-level-2",
+                "template": "evidence-level-2",
+                "title": "Gather the evidence to move the task up to level 2, act with approval",
+                "part": "A8",
+                "how": [
+                  {
+                    "text": "Show the evals pass reliably at the current level.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+                  },
+                  {
+                    "text": "Bring a month of scorecard results, with the edit rate, to the business owner.",
+                    "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
+                  }
+                ],
+                "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
+                "owner_role": "business-owner",
+                "status": "todo"
+              },
+              {
+                "id": "S-T6.evidence-level-3",
+                "template": "evidence-level-3",
+                "title": "Gather the evidence to move the task up to level 3, act within an allowlist",
+                "part": "A8",
+                "how": [
+                  {
+                    "text": "Confirm every allowlisted action can be undone or stays internal.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+                  },
+                  {
+                    "text": "Show a stable eval pass rate, a low edit rate and few rejections at level 2.",
+                    "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
+                  },
+                  {
+                    "text": "List the tools to set to Always allow and keep every other tool on Needs approval.",
+                    "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+                  }
+                ],
+                "done_when": "The business owner has approved the allowlist on scorecard evidence, and only those tools are Always allow.",
+                "owner_role": "business-owner",
+                "status": "todo"
+              },
+              {
                 "id": "S-T6.wall-test",
                 "template": "wall-test",
                 "title": "Test the information wall with two users on either side before the pilot",
@@ -2389,22 +2568,41 @@
                 "status": "todo"
               },
               {
-                "id": "S-T6.warning-decision-undecided",
-                "template": "warning-decision-undecided",
-                "title": "Resolve warning decision-undecided: decide what the compendium leaves undecided",
+                "id": "S-T6.warning-high-cost-ceiling-unconfirmed",
+                "template": "warning-high-cost-ceiling-unconfirmed",
+                "title": "Resolve warning high-cost-ceiling-unconfirmed: confirm the ceiling of a task whose mistakes cost a lot",
                 "part": "A9",
                 "how": [
                   {
-                    "text": "Read which decision is undecided and why in levelled.json.",
+                    "text": "Read which cap applied and why in levelled.json, and note that page 06 has no rule for the cost of a mistake.",
                     "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
                   },
                   {
-                    "text": "Decide it with the customer and record the answer as an override on the card, then level again.",
-                    "link": "partner-kit/docs/design.md#72-decision-values"
+                    "text": "Confirm the cap with the customer, or record a lower ceiling as an override on the card, then level again.",
+                    "link": "partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson"
                   }
                 ],
-                "done_when": "The decision has a value on the card, with a reason and an approver, and the warning is gone.",
+                "done_when": "The customer has confirmed the ceiling, or a lower ceiling is on the card as an override with a reason and an approver.",
                 "owner_role": "business-owner",
+                "status": "todo"
+              },
+              {
+                "id": "S-T6.warning-zdr-org-not-confirmed",
+                "template": "warning-zdr-org-not-confirmed",
+                "title": "Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Explain that highly sensitive data needs a separate Enterprise org with ZDR.",
+                    "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+                  },
+                  {
+                    "text": "Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again.",
+                    "link": "docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt"
+                  }
+                ],
+                "done_when": "The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.",
+                "owner_role": "compliance",
                 "status": "todo"
               }
             ]

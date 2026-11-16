@@ -1,0 +1,14 @@
+{
+  "name": "example-software-co-twins-draft",
+  "description": "DRAFT, not evaluated: Role twins for Example Software Co.",
+  "owner": {
+    "name": "Example Software Co"
+  },
+  "plugins": [
+    {
+      "name": "twin-customer-success-manager",
+      "source": "./plugins/twin-customer-success-manager",
+      "description": "DRAFT, not evaluated: FILL IN: one sentence on the role this twin serves and what its skills and output style do."
+    }
+  ]
+}

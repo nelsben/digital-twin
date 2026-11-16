@@ -653,9 +653,27 @@ DESCRIPTION_MAX = 200
 BODY_MAX = 500
 EVALS_MIN = 3
 ORDER = STATUSES[:6]
-RECORDABLE = ("evals-passing",)
-PACKAGE_NEXT = ("package the role with the package command (OPS-76 adds it); record sets evals-passing only, and "
-                "the package command sets packaged, deployed and verified")
+RECORDABLE = ("evals-passing", "deployed", "verified")
+PACKAGE_NEXT = ("run the package command on the customer folder, which sets packaged; record sets evals-passing, "
+                "deployed and verified")
+NOTE_STATUSES = ("deployed", "verified")
+NOTE_WHAT = {
+    "deployed": "where the admin published or created it (the surface, and the group or channel)",
+    "verified": "the result of the runbook's check-it-worked step",
+}
+# What a deployed or verified note must not hold. Credentials live in the customer's secret store; a note
+# names an environment variable or a placeholder such as <agent-id>, never the value.
+SECRET_PATTERNS = (
+    ("an Anthropic key", re.compile(r"sk-ant-")),
+    ("a Slack token", re.compile(r"xox")),
+    ("a Salesforce org id", re.compile(r"(?i)\borg(?:[ _-]?id)?\W{1,3}(?=[A-Za-z0-9]*\d)[A-Za-z0-9]{15}(?:[A-Za-z0-9]{3})?\b")),
+    ("a Salesforce org id", re.compile(r"\b00D[A-Za-z0-9]{12}(?:[A-Za-z0-9]{3})?\b")),
+    ("a password", re.compile(r"(?i)\bpass(?:word|wd)\s*[:=]\s*\S+")),
+    ("a key, token or secret value", re.compile(r"(?i)\b(?:api[ _-]?key|token|secret|client[ _-]?secret)\s*[:=]\s*[^\s$<]")),
+    ("a tenant or object id", re.compile(r"\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b")),
+    ("an agent, environment, session or vault id", re.compile(r"\b(?:agent|env|environment|session|sesn|vault|vlt)_[A-Za-z0-9]{12,}\b")),
+    ("an instance URL", re.compile(r"(?i)\bhttps?://")),
+)
 LINK = re.compile(r"\[[^\]]*\]\(\s*<?([^)\s>]+)>?(?:\s+\"[^\"]*\")?\s*\)")
 FENCE = re.compile(r"^\s*(```|~~~)")
 
@@ -1067,8 +1085,12 @@ def record(persona_dir, tid, status, evidence, by, pass_mark=100.0, approved_by=
     if ORDER.index(status) < ORDER.index(current):
         raise Refused("%s is %s; record never moves a status backwards to %s. Next: leave it, or rebuild the "
                       "artifact from a new card if it must start again" % (tid, current, status))
-    if status in ORDER[3:]:
-        raise Refused("record does not set %s. Next: %s" % (status, PACKAGE_NEXT))
+    if status == "packaged":
+        raise Refused("record does not set packaged; only the package command does. Next: %s" % PACKAGE_NEXT)
+    if status in NOTE_STATUSES and ORDER.index(current) < ORDER.index("packaged"):
+        raise Refused("%s is %s; record sets %s only after the package command has set packaged. Next: %s"
+                      % (tid, current, status, "record evals-passing, then run the package command on the customer "
+                         "folder" if current != "evals-passing" else "run the package command on the customer folder"))
     if ORDER.index(status) > ORDER.index(current) + 1:
         raise Refused("%s is %s; record moves one status at a time, so the next is %s, not %s. Next: %s"
                       % (tid, current, ORDER[ORDER.index(current) + 1], status,
@@ -1077,6 +1099,10 @@ def record(persona_dir, tid, status, evidence, by, pass_mark=100.0, approved_by=
     if status == "drafted":
         raise Refused("build sets drafted, not record. Next: replace every FILL IN in %s's files, then run build"
                       % tid)
+    if status in NOTE_STATUSES:
+        entry = _note_entry(persona_dir, tid, status, evidence, by)
+        write_status(persona_dir, manifest, tid, status, entry)
+        return entry
     if pass_mark < 100 and not (isinstance(approved_by, str) and approved_by.strip()):
         raise Refused("a pass mark of %s%% is below 100%% and needs --approved-by, the person who accepted it. Next: "
                       "add --approved-by <name>, or record at 100%%" % _number(pass_mark))
@@ -1106,6 +1132,39 @@ def record(persona_dir, tid, status, evidence, by, pass_mark=100.0, approved_by=
     entry = {"status": status, "by": by.strip(), "evidence": shown, "pass_rate": round(rate, 4),
              "baseline_rate": round(baseline, 4), "pass_mark": _number(pass_mark),
              "approved_by": approved_by.strip() if isinstance(approved_by, str) and approved_by.strip() else None}
+    write_status(persona_dir, manifest, tid, status, entry)
+    return entry
+
+
+def secret_findings(text):
+    """The names of the SECRET_PATTERNS found in text; empty when there is none."""
+    found = []
+    for name, pattern in SECRET_PATTERNS:
+        if pattern.search(text) and name not in found:
+            found.append(name)
+    return found
+
+
+def _note_entry(persona_dir, tid, status, evidence, by):
+    """The history entry for deployed or verified, from a text note; Refused when the note will not do."""
+    path, shown = _evidence_path(persona_dir, tid, evidence)
+    try:
+        text = path.read_bytes().decode("utf-8")
+    except UnicodeDecodeError:
+        raise Refused("the evidence %s is not UTF-8 text. Next: write the note as plain text" % shown)
+    if not text.strip():
+        raise Refused("the evidence %s is empty. Next: write in it %s, then record again" % (shown, NOTE_WHAT[status]))
+    found = secret_findings(text)
+    if found:
+        raise Refused("the evidence %s holds what looks like a secret or an identifier (%s). Next: remove it; "
+                      "credentials stay in the customer's secret store, and a note names an environment variable "
+                      "or a placeholder such as <agent-id>" % (shown, ", ".join(found)))
+    return {"status": status, "by": by.strip(), "evidence": shown, "pass_rate": None, "baseline_rate": None,
+            "pass_mark": None, "approved_by": None}
+
+
+def write_status(persona_dir, manifest, tid, status, entry):
+    """Write build.json with artifact tid at status and entry appended to its history (record and package)."""
     artifacts = []
     for old in manifest["artifacts"]:
         if old["id"] != tid:
@@ -1123,4 +1182,3 @@ def record(persona_dir, tid, status, evidence, by, pass_mark=100.0, approved_by=
     manifest["artifacts"] = artifacts
     target = Path(persona_dir) / BUILD_DIR / MANIFEST
     target.write_bytes((json.dumps(manifest, indent=2, ensure_ascii=False) + "\n").encode("utf-8"))
-    return entry

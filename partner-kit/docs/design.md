@@ -44,7 +44,7 @@ partner-kit/
     skills/<skill-name>/SKILL.md (+ evals/, references/)
     scripts/                               # twincard package: one module per pipeline step
       twincard/__init__.py
-      twincard/fields.py      validate.py   level.py   backlog.py   dashboard.py   build.py   cli.py
+      twincard/fields.py      validate.py   level.py   backlog.py   dashboard.py   build.py   package.py   cli.py
     data/
       fields.json                          # the field catalogue (section 5)
       rules.json                           # levelling rules (section 7)
@@ -74,6 +74,12 @@ engagements/<customer>/
       plugin/<plugin_name>/                # the role plugin: .claude-plugin/plugin.json, README.md, skills/<skill-name>/
       skills/<skill-name>/                 # skills for hosted agents and Agent SDK runners
       agents/<task-id>/  routines/<task-id>/  scheduled/<task-id>/  sdk/<task-id>/   # each runtime's wrapper
+      evidence/<task-id>/                  # the customer's copy only: eval output and deployed or verified notes record reads (8a)
+  build/                                   # written by package (8a); never hand-edited
+    deploy.md                              # the deploy checklist: the backlogs' deployment tasks in deployment order
+    marketplace/                           # the customer marketplace: .claude-plugin/marketplace.json, plugins/<plugin_name>/
+    bundles/<persona-id>/<task-id>/        # each agent, routine, scheduled-task and SDK wrapper, its skill folder beside it
+    marketplace-draft/  bundles-draft/     # package --include-drafts: drafted artifacts too, every plugin description "DRAFT, not evaluated:"
 ```
 
 CLI (one entry point, run from anywhere):
@@ -87,6 +93,9 @@ python3 .../cli.py backlog   <persona-dir> --json --plan-out plan.json   # also 
 python3 .../cli.py dashboard <persona-dir> [--date YYYY-MM-DD]   # writes dashboard.html; the date shown defaults to today
 python3 .../cli.py all       <persona-dir>     # the four in order; stops only when validation fails; a levelling blocker still writes every file and exits 1
 python3 .../cli.py build     <persona-dir> [--all-tasks]   # scaffolds build/ for the pilot tasks (all tasks with --all-tasks); not part of all
+python3 .../cli.py check     <persona-dir> [<artifact-id>]   # the deterministic checks on each built artifact; writes nothing
+python3 .../cli.py record    <persona-dir> <artifact-id> --status <s> --evidence <file> --by <name>   # one status up in build/build.json
+python3 .../cli.py package   <customer-dir> [--include-drafts]   # writes <customer-dir>/build/: marketplace, bundles, deploy.md
 ```
 
 `<persona-dir>` holds `card.json`; the customer profile is found at `../../customer-profile.json`. Exit code 0 on success; 1 when validation fails (`level`, `backlog` and `dashboard` then write nothing), when `levelled.json` is missing or out of date (`backlog` and `dashboard` write nothing and say to run `level`; sections 8 and 9 say how "out of date" is decided), when `backlog.json` is missing or out of date (`dashboard` writes nothing and says to run `backlog`), or when levelling reports a blocker (`level` still writes `levelled.json`, `backlog` still writes both backlog files and `dashboard` still writes the page, so the blocker can be read); 2 on a usage error, a missing persona folder (for `level`, `backlog`, `dashboard` and `all`, a folder with no `card.json`), an output that cannot be written (checked for every file the command writes, `--plan-out` included, before anything is written), a kit data file that is missing, is not JSON or is not in its shape (`rules.json`, `plan-fit.json`, `task-library.json`, `fields.json`, an industry pack), a `backlog.json` that is not JSON or not in its shape, an unknown status in `backlog.json` (`backlog` and `dashboard` give the same message), or a `--date` that is not a real calendar date. Validation errors name the field path and end `Next: <fix>`. A usage error or refusal is one line on stderr, naming the file at fault and ending `Next: <what to do>`, never a traceback. `level` validates first. With `--json`, `level` and `backlog` print exactly one JSON document on stdout: `levelled.json` or `backlog.json` on success, and on a refusal (validation errors, a stale `levelled.json`, a data-file fault) `validate`'s result with `ok: false` and an `error` line added (`errors` is empty when validation passed); human-readable lines such as `Blocked:` go to stderr.
@@ -583,9 +592,9 @@ The templates it reads are byte-for-byte copies of the starter-kit's, in the plu
 
 ### The manifest and statuses
 
-`build/build.json`: `build_version` 1, `customer`, `persona`, `source` (`levelled_sha256`, the hash of `levelled.json`'s text as `backlog` computes it, and `build_kinds_version`), `plugin` (its name and files) and `artifacts`, one per task in card order. Each artifact has `id` (the task id), `task`, `kind`, `runtime` (`value`, `rule`, `cite`, `unverified`), `skill_name`, `skill_name_derived`, `skill_location` (`plugin`, `skills` or `null`), `in_pilot`, `runbook`, `files` (each a repo-relative `path` and the `sha256` the scaffold wrote), `status`, `history` (what `record` appended, below; `[]` until then) and `reason` (why nothing is built, for `none`). There is no timestamp, so the same inputs give the same bytes. A task not selected on this run keeps the artifact an earlier run recorded.
+`build/build.json`: `build_version` 1, `customer`, `persona`, `source` (`levelled_sha256`, the hash of `levelled.json`'s text as `backlog` computes it, and `build_kinds_version`), `plugin` (its name and files) and `artifacts`, one per task in card order. Each artifact has `id` (the task id), `task`, `kind`, `runtime` (`value`, `rule`, `cite`, `unverified`), `skill_name`, `skill_name_derived`, `skill_location` (`plugin`, `skills` or `null`), `in_pilot`, `runbook`, `files` (each a repo-relative `path` and the `sha256` the scaffold wrote), `status`, `history` (what `record` and `package` appended, below; `[]` until then) and `reason` (why nothing is built, for `none`). There is no timestamp, so the same inputs give the same bytes. A task not selected on this run keeps the artifact an earlier run recorded.
 
-Statuses, in order: `scaffolded`, `drafted`, `evals-passing`, `packaged`, `deployed`, `verified`, plus `not-built` for runtime `none`. `build` computes only the first two: `drafted` when no file of the artifact still contains `FILL IN`, else `scaffolded`. `record` sets `evals-passing` ([below](#check-and-record)); the package command (OPS-76) will set `packaged`, `deployed` and `verified`. `build` never lowers a recorded status above `drafted`, and keeps each artifact's `history`.
+Statuses, in order: `scaffolded`, `drafted`, `evals-passing`, `packaged`, `deployed`, `verified`, plus `not-built` for runtime `none`. `build` computes only the first two: `drafted` when no file of the artifact still contains `FILL IN`, else `scaffolded`. `record` sets `evals-passing`, `deployed` and `verified` ([below](#check-and-record)); only `package` sets `packaged` ([below](#package-and-deploy)). `build` never lowers a recorded status above `drafted`, and keeps each artifact's `history`.
 
 ### Never overwrite
 
@@ -613,13 +622,15 @@ Exit 1, nothing written, a `Next:` line: validation fails; `levelled.json` is mi
 | agent bundle | `agent.json` and `environment.json` parse; `model` and `system` are set; `skills` names a `skill_id`; the skill folder exists; `config.networking.type` is `limited` | the [Managed Agents runbook](../../starter-kit/runbooks/managed-agents.md#steps); 8a, what it writes |
 | routine, scheduled task, SDK runner | No `FILL IN` left in the sheet | as for every artifact |
 
-`cli.py record <persona-dir> <artifact-id> --status <s> --evidence <file> --by <name> [--pass-mark <percent> --approved-by <name>]` moves one artifact one status at a time, never backwards. It may set only `evals-passing`, from `drafted`; `build` sets `scaffolded` and `drafted`, and the package command (OPS-76) will set `packaged`, `deployed` and `verified`. It appends one entry to the artifact's `history`: `{status, by, evidence, pass_rate, baseline_rate, pass_mark, approved_by}`, with `evidence` a repo-relative path, rates as fractions to four places, `pass_mark` in percent and `approved_by` null when not given. No timestamp. It needs, in this order, or it refuses (exit 1, one line ending `Next:`, nothing written):
+`cli.py record <persona-dir> <artifact-id> --status <s> --evidence <file> --by <name> [--pass-mark <percent> --approved-by <name>]` moves one artifact one status at a time, never backwards. It sets `evals-passing` from `drafted`, `deployed` from `packaged` and `verified` from `deployed`; `build` sets `scaffolded` and `drafted`, and only `package` sets `packaged`. It appends one entry to the artifact's `history`: `{status, by, evidence, pass_rate, baseline_rate, pass_mark, approved_by}`, with `evidence` a repo-relative path, rates as fractions to four places, `pass_mark` in percent and `approved_by` null when not given. No timestamp. For `evals-passing` it needs, in this order, or it refuses (exit 1, one line ending `Next:`, nothing written):
 
-1. The status asked for is the next one: not the current one, not lower ("never backwards"), not `packaged` or above ("Next:" names the package command), not a skip, not `drafted` (build sets it), and the artifact is not `not-built`.
+1. The status asked for is the next one: not the current one, not lower ("never backwards"), not `packaged` (only `package` sets it; "Next:" names the package command), not `deployed` or `verified` before `package` has set `packaged`, not a skip, not `drafted` (build sets it), and the artifact is not `not-built`.
 2. A pass mark below 100 comes with `--approved-by`, which is recorded.
 3. `check` passes for the artifact.
 4. The evidence is a file under `<persona-dir>/build/evidence/<artifact-id>/` (resolved, so `..` cannot leave it) and is JSON.
 5. The evidence is one of the two shapes below, has a without-skill baseline, and its with-skill pass rate is at or above the pass mark (default 100%).
+
+For `deployed` (`--by` is the admin who deployed it) and `verified`, after the same status checks, `--evidence` is a note under `<persona-dir>/build/evidence/<artifact-id>/`: plain UTF-8 text, not empty. The `deployed` note says where the artifact was published or created: the surface, and the group or channel. The `verified` note gives the result of the runbook's check-it-worked step. A note holding what looks like a secret or an identifier is refused: an Anthropic key, a Slack token, a Salesforce org id, `password:` or `token:` with a value, a GUID (a tenant or object id), an agent, environment, session or vault id, or any `http://` or `https://` URL. A hosted agent is named by a placeholder such as `<agent-id>`, never its id. The history entry has the note's path as `evidence`, and `pass_rate`, `baseline_rate`, `pass_mark` and `approved_by` null. `check` is not run again: `packaged` already required it.
 
 Exit 2: `build.json` missing or not in its shape, an unknown artifact id, an unknown status, or a pass mark that is not above 0 and at most 100.
 
@@ -633,6 +644,35 @@ Exit 2: `build.json` missing or not in its shape, an unknown artifact id, an unk
 The benchmark page says "`configuration`: Must be `"with_skill"` or `"without_skill"`" and gives `run_summary` per configuration with `pass_rate` `mean`. The plugin eval page says the result "is a versioned document with `schemaVersion: 1`" and lists `aggregates.overallScore`, `cases[].aggregates.score` and `cases[].aggregates.delta`; it shows no full example document, so the test fixture `tests/fixtures/twincard/evidence/plugin-eval-result.json` is built from that field table. Plugin eval cases are directories, not `evals.json` ids, so record does not match them to `evals.json`.
 
 **Never invent a result.** No one writes or edits an evidence file or a `history` entry by hand, and no tool in this kit writes one. Real examples, eval prompts built from them and eval runs stay in the customer's environment or the engagement's private store, never in this repo. The fictional samples stay at `drafted` at most and hold no evidence; the Team sample's C1 is drafted, by hand, from its fictional interview notes. The `building-twin-artifacts` skill walks the consultant through the order: build, run the task without the skill, eval cases from the counted examples with the task's owner, the minimum `SKILL.md`, skill-creator's benchmark (or `claude plugin eval` once packaged) on Haiku, Sonnet and Opus, then check and record.
+
+### Package and deploy
+
+`cli.py package <customer-dir> [--include-drafts]` takes the customer folder (`engagements/<customer>`, the one that holds `customer-profile.json` and `personas/`), reads each persona's `build/build.json` and writes under `<customer-dir>/build/` (section 3):
+
+- `marketplace/.claude-plugin/marketplace.json`, in the shape of the repository's own: `name`, `description`, `owner.name`, and `plugins`, one entry per role plugin with `name`, `source` (`./plugins/<plugin_name>`) and the plugin's own `description`. The name is the profile's `marketplace_name` when it gives one, else `<customer>-twins`; `fields.json` has no `marketplace_name` field yet, so today it is always `<customer>-twins`. The owner is the profile's `display_name`.
+- `marketplace/plugins/<plugin_name>/`, a byte copy of the persona's `build/plugin/<plugin_name>/`. A role plugin is packaged only when every skill in it is `evals-passing` or above and its own `plugin.json` and `README.md` hold no `FILL IN`.
+- `bundles/<persona-id>/<task-id>/` for each agent, routine, scheduled-task and SDK artifact at `evals-passing` or above: its wrapper files (`agent.json` and `environment.json`, `routine.md`, `task.md` or the SDK `README.md`) with its skill folder beside them, `<skill-name>/`, copied even when the skill is also in the role plugin.
+- `deploy.md`, below.
+
+It then records `packaged` for each artifact it packaged that was `evals-passing`, with `by` `package` and `evidence` the package path; an artifact already `packaged` or above is left as it is, so a second run writes the same bytes. Package owns `marketplace/` and `bundles/` and writes them afresh each run; when nothing is packaged they are not written. Each persona or plugin left out is one line on stderr with the reason and a `Next:` step: no `build.json`, no artifact at the floor, a skill below it, a plugin file that still says `FILL IN`. A role plugin named `twin-consultant`, the partner kit, is never packaged. Exit 0 when `deploy.md` is written; 2 when the folder is not a customer folder or a `build.json` is unusable.
+
+`--include-drafts` writes `marketplace-draft/` and `bundles-draft/` instead and records nothing. Its floor is `drafted`: the draft role plugin carries only the skills at `drafted` or above (the others are listed on stderr), the marketplace is named `<name>-draft`, and every plugin description in it, in `marketplace.json` and in the copied `plugin.json`, starts "DRAFT, not evaluated:". A draft is for looking at with the customer, never for publishing.
+
+**`deploy.md`** is written by every run, with or without `--include-drafts`, and is the same either way. It is an ordered view of the deployment tasks already in each persona's `backlog.json`, in the task's own words; it never adds a step the backlog lacks. A step the deployment needs that no backlog task covers is a gap in the task library, reported, not written into `deploy.md`. A persona whose `levelled.json` or `backlog.json` is missing or out of date (the test `dashboard` uses, 9) gets no steps and a stderr line. The sections, in order, and the task-library templates each takes:
+
+| Section | Templates |
+|---|---|
+| 1. Org settings and data policy | `data-policy`, `retention-and-feedback-settings`, `spend-limits`, `zdr-retention`, `zdr-retention-agreement-first`, `settings-deploy`, `settings-none`, `web-tools-off`, `memory-off` |
+| 2. Identity and groups | `identity-scim-groups`, `identity-team-members`, `credentials-user`, `credentials-service-account`, `credentials-api-key-vault` |
+| 3. Connectors and tool permissions | `connector-review`, the `connect-*` templates, the `twin-marker-*` field templates, `tool-always-allow`, `tool-needs-approval`, `tool-blocked` |
+| 4. Publish the marketplace | `distribute-group`, `distribute-everyone`, `distribute-manual`, `publish-in-role-plugin`, `publish-in-role-plugin-team`; the section opens with `persona_plan.distribution`: group-targeted on Enterprise, everyone on Team, manual as a per-person install |
+| 5. Hosted agents, routines and scheduled tasks | the `setup-*` templates and `start-wiring`, each with its bundle path |
+| 6. Governance hook | `governance-log-destination`, `governance-hook-deploy`, `governance-without-hook` |
+| 7. Check it worked and hand over | `settings-verify`, `governance-log-check`, `source-audit`, `wall-test`; then every `how` line of a task above whose link ends `#check-it-worked` or `#hand-over`, in that line's words; then each story's `owner-handover` |
+
+Planning, authoring, evidence and warning tasks are not deployment steps and are left out. Within a section, steps follow the template order, then backlog story order. Tasks with the same template, item and package path, such as one tool's permission across several stories, are one step listing every task id. Each step is a checkbox (ticked when every task in it is `done` in `backlog.json`) with the backlog task ids, the owner role and name (or the acting owner), the runbook link with its anchor (the first `how` link under `starter-kit/runbooks/`, else the first kit link, else the first link), and the package path it uses: `build/marketplace/` for publishing, `build/marketplace/plugins/<plugin>/skills/<skill>/` for a skill, `build/bundles/<persona-id>/<task-id>/` for a runtime and its credentials, or none for a setting, record or account. A step whose story is gated says `Gated` and names each blocker, open question (with its spike) and sign-off. Credentials appear only as environment-variable names, and a test scans every file under both samples' `build/` folders, customer and persona, for keys, tokens, passwords, org and tenant ids and instance URLs.
+
+The customer's admin runs `deploy.md` in the customer's org. The consultant records `deployed` and `verified` with `record`, on notes kept in the customer's copy. Credentials live in the customer's secret store, never in the engagement folder. Neither sample has an artifact at `evals-passing`, so `package` packages nothing for them and says why; `--include-drafts` writes the Team sample's draft marketplace with C1, its only drafted artifact. Both samples' `deploy.md` is committed.
 
 ## 9. Dashboard (`dashboard.py`)
 

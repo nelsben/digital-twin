@@ -65,5 +65,22 @@ It also refuses when:
 - the plugin eval result is `partial`, or a run has `skippedPaidGraders`;
 - the pass rate is below the pass mark (default 100);
 - the pass mark is below 100 and `--approved-by` is missing;
-- the status asked for is packaged, deployed or verified: those come from
-  the package command (OPS-76).
+- the status asked for is packaged: only the package command sets it;
+- the status asked for is deployed or verified before the package command
+  has set packaged.
+
+## Deployed and verified
+
+After `package` has set packaged and the customer's admin has worked through
+`build/deploy.md`, record moves the artifact on a text note under
+`build/evidence/<task-id>/` in the customer's copy:
+
+- `--status deployed --by <admin's name> --evidence <note>`: the note says
+  where it was published or created (the surface, and the group or
+  channel). A hosted agent is named by a placeholder such as `<agent-id>`.
+- `--status verified --evidence <note>`: the note gives the result of the
+  runbook's check-it-worked step.
+
+It refuses a note that is empty, or that holds what looks like a key, a
+token, a password, an org, tenant, agent or vault id, or a URL. The history
+entry keeps the note's path and leaves the rates and the pass mark null.

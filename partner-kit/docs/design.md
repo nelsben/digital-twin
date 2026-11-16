@@ -75,11 +75,11 @@ python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py validate  <p
 python3 .../cli.py level     <persona-dir>     # writes levelled.json
 python3 .../cli.py backlog   <persona-dir>     # writes backlog.json, backlog.md
 python3 .../cli.py backlog   <persona-dir> --json --plan-out plan.json   # also prints backlog.json and writes the tracker plan
-python3 .../cli.py dashboard <persona-dir>     # writes dashboard.html
+python3 .../cli.py dashboard <persona-dir> [--date YYYY-MM-DD]   # writes dashboard.html; the date shown defaults to today
 python3 .../cli.py all       <persona-dir>     # the four in order; stops at the first failure
 ```
 
-`<persona-dir>` holds `card.json`; the customer profile is found at `../../customer-profile.json`. Exit code 0 on success; 1 when validation fails (`level` and `backlog` then write nothing), when `levelled.json` is missing or out of date (`backlog` writes nothing and says to run `level`), or when levelling reports a blocker (`level` still writes `levelled.json` and `backlog` still writes both backlog files, so the blocker can be read); 2 on a usage error, a missing persona folder or an unknown status in `backlog.json`. Errors name the field path and say what to do next. `level` validates first, and `--json` prints `levelled.json` (or the validation errors) instead of the summary.
+`<persona-dir>` holds `card.json`; the customer profile is found at `../../customer-profile.json`. Exit code 0 on success; 1 when validation fails (`level`, `backlog` and `dashboard` then write nothing), when `levelled.json` is missing or out of date (`backlog` and `dashboard` write nothing and say to run `level`), when `backlog.json` is missing or out of date (`dashboard` writes nothing and says to run `backlog`), or when levelling reports a blocker (`level` still writes `levelled.json`, `backlog` still writes both backlog files and `dashboard` still writes the page, so the blocker can be read); 2 on a usage error, a missing persona folder, an unknown status in `backlog.json` or a `--date` that is not a real calendar date. Errors name the field path and say what to do next. `level` validates first, and `--json` prints `levelled.json` (or the validation errors) instead of the summary.
 
 ## 4. The two records
 
@@ -426,17 +426,44 @@ Owner roles (`owner_roles`): the playbook 03 roles `executive-sponsor`, `technic
 
 ## 9. Dashboard (`dashboard.py`)
 
-One self-contained HTML file per persona (inline CSS, no external requests, light and dark, readable on a phone). It is a rendering of `card.json`, `levelled.json` and `backlog.json`:
+One self-contained HTML5 page per persona, `<persona-dir>/dashboard.html`, written by `cli.py dashboard <persona-dir> [--date YYYY-MM-DD]`. It is a rendering only: every value on it comes from `card.json`, `../../customer-profile.json`, `levelled.json`, `backlog.json`, or the completeness figures `validate` computes. Before rendering, `dashboard.py` validates the card and checks the inputs are current: `levelled.json` must exist and its `source.card_sha256` and `source.profile_sha256` must match the files on disk, and `backlog.json` must exist and its `source.card_sha256` and `source.levelled_sha256` must match. If not, it writes nothing and names the file and the command to run next (`level`, then `backlog`).
 
-1. Header: persona, customer, plan tier, completeness %, complete or not, generated date.
-2. Anatomy grid: nine panels (A1–A9), each with the decisions made, their status, and counts of tasks done.
-3. Feature list: features and their tasks, with runtime, autonomy start → ceiling, data class and plan fit per task; overrides marked.
-4. Blockers and warnings, including anything resting on an unverified fact.
-5. Backlog: epic → features → stories → tasks with status.
-6. Open questions with owner and due date.
-7. Where each answer came from (provenance summary).
+`render(persona_dir, date)` returns the page and never writes; `write_dashboard(persona_dir, date)` writes it. The page:
 
-The generated date comes from `--date YYYY-MM-DD` (default: today), so a run with a fixed date gives the same bytes every time. It can be published as a Claude artifact by the consultant. Only fictional samples are published from this repo.
+- has one `<style>` element and no script, no event handler and no JavaScript of any kind;
+- makes no external request: no link, image, font, `@import` or `url()`; the only links are the contents links to its own sections;
+- shows cites as text (the compendium page's file name and anchor, such as `06-autonomy.md#rules-for-moving-up-a-level`), never as links;
+- HTML-escapes every value it takes from the inputs;
+- uses `<details>` and `<summary>` to collapse reasons and the backlog, and a print style that shows every collapsed part;
+- defines its colours as custom properties on `:root`, redefined for dark mode, uses the system font stack, fits a 360px screen with a 16px gutter (tables scroll in their own container), and never shows a status by colour alone (each carries a word or symbol such as "⚠ Unverified", "✗ Blocker", "[x] done").
+
+Its seven sections, in order, are each a `<section data-section="<Name>" id="<kebab-name>">`, listed in a contents block after the header:
+
+1. **Header** (`header`): role, customer and a "Fictional sample" label when the profile says so; plan tier and seats, industry pack, pilot users of headcount; completeness % with the required fields answered or default; Complete or Not complete with the reasons (required fields missing, open questions that block an in-pilot task, blockers); role plugin, distribution and settings baseline; the sponsor goal and owners; the generated date; and a sponsor line, "Tasks in the pilot: N. Blockers: N. Backlog tasks done: N of N."
+2. **Anatomy grid** (`anatomy-grid`): nine panels, one per anatomy part, from the panel table below. Each panel shows its decisions, "Required fields answered: N of N" (the required fields of both records whose `part` in `data/fields.json` is that part, counted as `validate` counts them) and "Backlog tasks done: N of N" (backlog tasks whose `part` is that part). A line under the grid counts the required fields whose part is `context`, so the panels and that line add up to the header's figure.
+3. **Feature list** (`feature-list`): each card feature with its why, then each of its tasks in card order: name, in pilot or later, priority, trigger, data class, volume and cost of a mistake, then one row per decision: runtime, identity, autonomy start, autonomy ceiling, "start to ceiling" ("undecided" for a null), data controls, memory, plan fit and connectors (system, product, access, identity and permission). Each decision's reason, rule, basis and cite sit inside a `<details>`. A decision resting on an unverified fact carries an "Unverified" label; an overridden one carries an "Overridden" label with the rule's result, the reason and who approved it.
+4. **Blockers and warnings** (`blockers-and-warnings`): blockers, then warnings, grouped by what they are about (the persona first, then each task in card order); each shows its code, message, fix and cite, and an "Unverified" label when flagged. "No blockers." in words when there are none. A third list, "Rests on an unverified fact", names every decision, connector, tool permission, starting point and code that carries `unverified: true`.
+5. **Backlog** (`backlog`): the epic, features, stories and tasks as nested `<details>`, each with its id and status word (`[ ] todo`, `[~] in progress`, `[x] done`); the epic and features also show tasks done of total. A story shows its statement, part, pilot and priority, its gates and its tasks with owner role; a task shows its `how` steps (with their links as text) and `done_when`. Retired items come last, only when there are any.
+6. **Open questions** (`open-questions`): id, question, the tasks it blocks, owner and due date; those that block an in-pilot task first, marked as blocking the pilot.
+7. **Where each answer came from** (`where-each-answer-came-from`): a count of provenance entries by status (answered, default, assumed, open) for the card and for the profile; every assumed or open field with its record and path, owner, due date and source; and the interview files the card cites.
+
+The panel table (the `PANELS` constant at the top of `dashboard.py`):
+
+| Panel | Name | Shows |
+|---|---|---|
+| A1 | Persona | role plugin name; team and pilot users of headcount; voice: serves, tone, never, escalates to |
+| A2 | Skills | the tasks that are client skills; each task's skill owner; the industry pack's Anthropic starting points (kind, name, where, use), with an Unverified label where flagged |
+| A3 | Connectors | each tool (system, product, read or write, permission decision, tasks); each profile system (product, kind, edition, access model, private network) |
+| A4 | Runtime | tasks per runtime; where the role works; whether self-hosting is required |
+| A5 | Identity | tasks per identity; connectors per identity; the identity provider, SSO and SCIM |
+| A6 | Memory | whether the role wants personal memory; memory per task; the card's memory notes |
+| A7 | Guardrails | settings baseline; web tools per task; autonomy start and ceiling range, naming tasks whose ceiling is undecided; tasks per data class; devices (role device, MDM, managed and unmanaged); compliance (retention, walls, PHI, BAA, MNPI) |
+| A8 | Evaluation | good and bad examples per task; scorecard targets |
+| A9 | Distribution and governance | distribution; the governance log from the backlog's persona-voice story; the profile's governance answers (log destination, action log, source audit, spend owner); plan fit per task, with the reason for any limit |
+
+Data attributes, for tests and tools that read the page: `data-section` on each section; `data-part="A1"`…`"A9"` on each panel; `data-decision="<task id>.<decision>"` on each feature-list decision cell, with decision one of `runtime`, `identity`, `autonomy.start`, `autonomy.ceiling`, `data_controls`, `memory`, `plan_fit`, `connectors` (and `persona.plugin_name`, `persona.distribution`, `persona.settings_baseline` in the header); `data-code` and `data-about` on each blocker and warning; `data-unverified="true"` on exactly the decision cells and blocker or warning entries that rest on an unverified fact (a data-controls or connectors cell is unverified when any part of it is); and `data-field` on the header's `completeness`, `complete`, `complete-reasons` and `sponsor-line`.
+
+The generated date comes from `--date YYYY-MM-DD` (default: today); a date that is not a real calendar date is a usage error (exit 2). It is the only date the renderer adds, so the same inputs and the same date give the same bytes; due dates and interview file names on the page are input data. The committed pages for the two fixtures are generated with `--date 2026-11-15`, and the acceptance tests check they match a fresh render. A page can be published as a Claude artifact by the consultant; only fictional samples are published from this repo.
 
 ## 10. Fixtures (both fictional)
 

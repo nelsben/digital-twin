@@ -14,6 +14,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -695,6 +696,109 @@ class BacklogBuildTests(unittest.TestCase):
                 if story["in_pilot"]:
                     kinds = [g["kind"] for g in story["gated_by"]]
                     self.assertNotIn("blocker", kinds, "%s %s" % (fid, story["id"]))
+
+
+class _DashboardMarks(HTMLParser):
+    """The data- marks on a dashboard page, and the text of each data-field element."""
+
+    VOID = {"meta", "br", "hr", "img", "input", "link", "wbr", "col", "area", "base", "source", "track", "embed"}
+
+    def __init__(self):
+        HTMLParser.__init__(self, convert_charrefs=True)
+        self.sections, self.codes, self.decisions, self.unverified, self.fields = [], [], {}, [], {}
+        self._open = []
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if "data-section" in a:
+            self.sections.append(a["data-section"])
+        if "data-code" in a:
+            self.codes.append((a["data-code"], a.get("data-about"), a.get("data-unverified") == "true"))
+        if "data-decision" in a:
+            self.decisions[a["data-decision"]] = a.get("data-unverified") == "true"
+        if "data-unverified" in a:
+            self.unverified.append(a.get("data-decision") or "%s:%s" % (a.get("data-code"), a.get("data-about")))
+        if tag in self.VOID:
+            return
+        self._open.append((tag, a.get("data-field")))
+        if a.get("data-field"):
+            self.fields.setdefault(a["data-field"], "")
+
+    def handle_endtag(self, tag):
+        if tag in self.VOID:
+            return
+        while self._open:
+            name, _ = self._open.pop()
+            if name == tag:
+                break
+
+    def handle_data(self, data):
+        for _, field in self._open:
+            if field:
+                self.fields[field] += data
+
+
+class DashboardAcceptanceTests(unittest.TestCase):
+    """The committed dashboard.html of each fixture against expectations.json (dashboard, validate)."""
+
+    DATE = "2026-11-15"
+
+    @classmethod
+    def setUpClass(cls):
+        from twincard import dashboard
+        cls.engine = dashboard
+        cls.exp = load_expectations()
+        cls.pages = {}
+        for fid, fixture in cls.exp["fixtures"].items():
+            path = ROOT / fixture["persona_dir"] / dashboard.DASHBOARD_FILE
+            cls.pages[fid] = path.read_text(encoding="utf-8") if path.is_file() else ""
+
+    def marks(self, fid):
+        parser = _DashboardMarks()
+        parser.feed(self.pages[fid])
+        parser.close()
+        return parser
+
+    def test_sections_are_the_expected_ones_in_order(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            self.assertEqual(self.marks(fid).sections, fixture["dashboard"]["sections"], fid)
+
+    def test_every_must_show_code_is_an_entry(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            shown = {code for code, _, _ in self.marks(fid).codes}
+            for code in fixture["dashboard"]["must_show"]["codes"]:
+                self.assertIn(code, shown, "%s: %s is not shown as a data-code" % (fid, code))
+
+    def test_unverified_marks_are_exactly_the_expected_ones(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            page = self.marks(fid)
+            expected = fixture["dashboard"]["must_show"]["unverified"]
+            for item in expected:
+                if ":" in item:
+                    code, about = item.split(":", 1)
+                    self.assertIn((code, about, True), page.codes, "%s: %s is not marked unverified" % (fid, item))
+                else:
+                    self.assertIn(item, page.decisions, "%s: no data-decision cell for %s" % (fid, item))
+                    self.assertTrue(page.decisions[item], "%s: %s is not marked unverified" % (fid, item))
+            self.assertEqual(sorted(page.unverified), sorted(expected),
+                             "%s: the page marks something else unverified" % fid)
+
+    def test_header_shows_completeness_and_the_complete_flag(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            fields = self.marks(fid).fields
+            self.assertEqual(fields.get("completeness", "").strip(), "%d%%" % fixture["validate"]["completeness_pct"],
+                             fid)
+            word = "Complete" if fixture["validate"]["complete"] else "Not complete"
+            self.assertEqual(fields.get("complete", "").strip(), word, fid)
+
+    def test_committed_dashboard_is_current(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            persona_dir = ROOT / fixture["persona_dir"]
+            page = self.engine.render(str(persona_dir), self.DATE)
+            self.assertTrue(self.pages[fid], "%s: run cli.py dashboard %s --date %s"
+                            % (fid, fixture["persona_dir"], self.DATE))
+            self.assertEqual(self.pages[fid], page, "%s: dashboard.html is stale; run cli.py dashboard %s --date %s"
+                             % (fid, fixture["persona_dir"], self.DATE))
 
 
 if __name__ == "__main__":

@@ -25,7 +25,7 @@ The consultant plugin for the persona-card workflow. Design of record: [partner-
 | [templates/interview-guide.md](templates/interview-guide.md) | Plain-language role interview: questions P1 to P6 and F1 to F9, each with the card fields it fills |
 | [templates/interview-notes.md](templates/interview-notes.md) | Notes template with one slot per question, saved under the persona's `interviews/` folder |
 | [data/fields.json](data/fields.json) | The field catalogue: type, values, required flag, the questions that ask for each field, and what reads it |
-| [scripts/twincard/](scripts/twincard/) | Standard-library Python 3.9+: `fields.py` loads the catalogue, `validate.py` checks both records, `packs.py` loads and checks industry packs, `level.py` levels a card by rule, `backlog.py` builds the backlog from the levelled card, `cli.py` is the command line |
+| [scripts/twincard/](scripts/twincard/) | Standard-library Python 3.9+: `fields.py` loads the catalogue, `validate.py` checks both records, `packs.py` loads and checks industry packs, `level.py` levels a card by rule, `backlog.py` builds the backlog from the levelled card, `dashboard.py` renders the dashboard page, `cli.py` is the command line |
 | [data/rules.json](data/rules.json) | The levelling rules: each decides one thing, from facts on the card and profile, and cites the compendium section it comes from; the format is in [design section 7.3](../../docs/design.md) |
 | [data/plan-fit.json](data/plan-fit.json) | What each capability the twin relies on is on Team, Enterprise and individual plans, and what Team loses, with its compendium cite |
 | [data/industry-packs/](data/industry-packs/) | One JSON file per industry; the format is in [design section 7.1](../../docs/design.md) |
@@ -77,6 +77,26 @@ backlog.write_backlog(persona_dir)  # the same, and writes backlog.json and back
 backlog.load_library()              # task-library.json, checked; a fault raises BacklogError naming the template
 ```
 
+## Dashboard
+
+```
+python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py dashboard <persona-dir> --date 2026-11-15
+```
+
+`dashboard` validates the card, checks that `levelled.json` and `backlog.json` exist and were made from the current card, profile and levelled plan, then writes `<persona-dir>/dashboard.html`: one self-contained page with seven sections (header, anatomy grid, feature list, blockers and warnings, backlog, open questions, and where each answer came from). It prints the path written and one line with the completeness, the blocker and warning counts and the backlog tasks done. If an input is missing or out of date it writes nothing and names the file and the command to run next. The page has no JavaScript and makes no external request; cites are text, not links. `--date YYYY-MM-DD` sets the generated date shown on the page (default: today), so the same inputs and the same date give the same bytes.
+
+`dashboard.html` is generated and never hand-edited: change the card or a task's status in `backlog.json`, then run `level`, `backlog` and `dashboard` again. Only a fictional sample, such as the two under `engagements/sample-*`, may be published from this repo; a real customer's page stays with that customer.
+
+Exit code 0 means written with no blocker; 1 means validation failed or `levelled.json` or `backlog.json` is missing or out of date (nothing written), or levelling reports a blocker (the page is still written and shows it); 2 means a usage error, a missing folder, a folder with no `card.json`, or a `--date` that is not a real calendar date.
+
+```python
+from twincard import dashboard
+dashboard.render(persona_dir, "2026-11-15")           # the page as a string; never writes
+dashboard.write_dashboard(persona_dir, "2026-11-15")  # {"ok", "validation", "error", "path", "summary"}; writes when it renders
+```
+
+`render` raises `DashboardError` (validation errors, or an input missing or out of date) and `UsageError` (a bad date).
+
 ## Industry packs
 
 A customer profile's `industry` is `general` or the id of a pack; `validate` reports anything else. Every entry in a pack cites a compendium page, and carries `unverified: true` where that page marks the fact Unverified or Not confirmed.
@@ -98,4 +118,4 @@ packs.pack_problems(pack)   # [{"path", "message", "fix"}], empty when the pack 
 
 ## Not built yet
 
-Skills (interview to card), `dashboard.py`, and the `dashboard` and `all` commands.
+Skills (interview to card), and the `all` command.

@@ -277,6 +277,55 @@ Top level, `pack_version` 1:
 
 `packs.py` has `list_packs()`, `load_pack(id)` (an unknown id raises an error that names the ids that exist) and `pack_problems(pack)`, which returns `{path, message, fix}` for each fault and reads enumerations and profile field types from the catalogue. `tests/test_twincard_packs.py` checks each shipped pack against the repo: cites, anchors, runbooks, the settings baseline and the unverified rule.
 
+### 7.2 Decision values
+
+The vocabulary that `tests/fixtures/twincard/expectations.json` and the levelling engine share. A decision the compendium does not settle is `null`, with a reason that says it is undecided and what the page lacks; it is never filled in by judgment.
+
+| Decision | Values |
+|---|---|
+| `runtime` | `client-skill`, `claude-code-scheduled-task`, `claude-tag-routine`, `managed-agents`, `agent-sdk`, `none` (no runtime is allowed for this task) |
+| `identity` | `user`, `service-account`, `api-key-vault` |
+| `autonomy.start`, `autonomy.ceiling` | an integer from 0 to 4 (the ladder in compendium 06) |
+| `data_controls` | `{settings_baseline, web_tools, surfaces, retention}`: `settings_baseline` is a file stem in `starter-kit/settings/` (`general`, `confidential`, `pe-zdr`, `hipaa`) or `null`; `web_tools` is `on` or `off`; `surfaces` is a list of `role.works_in` values (empty for a hosted runtime); `retention` is a value of `compliance.retention` |
+| `connectors` | a list of `{system, access, identity}`: `system` is a profile system id, `access` is `read` or `write`, `identity` is an `identity` value |
+| `memory` | `on` or `off` |
+| `plan_fit` | `ok`, `ok-with-limits`, `needs-enterprise`, `not-supported` |
+
+Each decision in the expectations file is `{expected, cite, reason, unverified}`. A blocker or a warning is `{code, about, cite, unverified}`: `about` is a task id or `persona`, `cite` is a compendium page with an anchor, and `unverified` is true when the cited page marks the fact Unverified. An overridden decision also carries `overridden: true`, the rule's own result and the override's reason.
+
+Blocker codes (the task cannot be built as asked on this plan or data class):
+
+- `plan-below-team`: the plan is an individual plan; Team is the minimum for company data.
+- `private-network-unreachable`: a task reads a system on a private network that its runtime cannot reach on this plan (no MCP tunnel, no allowlisting, not run inside the network).
+- `log-every-action-not-met`: the customer requires a log of every action, and the twin runs where no governance hook can run (claude.ai on the web, no device management).
+- `highly-sensitive-needs-zdr-org`: a task is highly sensitive, and the customer has no Enterprise org with ZDR.
+- `unmanaged-device-no-access`: a highly sensitive or PHI task would run on an unmanaged device, which gets no direct access.
+- `phi-needs-hipaa-org`: PHI is in scope, and there is no dedicated HIPAA org with a signed BAA.
+- `phi-no-hosted-runtime`: a PHI task needs a hosted runtime, and none is covered for PHI.
+- `connector-cannot-write`: a task writes to a system whose connector cannot do that action.
+
+Warning codes (the task can be built, with a limit someone must see):
+
+- `agent-sdk-cover-unverified`: the design's runtime for the task is the Agent SDK, whose ZDR and HIPAA cover is Unverified.
+- `decision-undecided`: the compendium does not decide one of the task's decisions, so a person must.
+- `shared-tool-strictest`: two tasks share a connector tool, so both run at the stricter task's setting.
+- `override-applied`: a card override replaced a rule's result; the result is shown as overridden, with the reason.
+- `team-no-group-targeting`: on Team the role plugin is shared to everyone; group targeting needs Enterprise.
+- `team-no-managed-settings`: claude.ai on the web with no device management gets no managed settings and no hooks.
+- `team-no-governance-log`: the governance log is a Claude Code hook, so a Team twin on the web has none.
+- `team-no-audit-log`: Team has no audit log and no Compliance API.
+- `confidential-on-team`: confidential data on Team is acceptable only where the audit need is lower.
+- `unmanaged-connectors-read-only`: confidential data on an unmanaged device calls for read-only connectors, and the task writes.
+- `mail-read-only`: the mail and calendar connectors read only, so an email task ends in a draft a person sends.
+- `private-network-allowlist`: a system on a private network must be reachable from Anthropic's IP range, allowlisted at the edge.
+- `tag-private-channel-only`: Claude Tag on confidential data belongs only in scoped private channels.
+- `slack-directory-send-unverified`: whether the Slack directory connector can post is Unverified; post through Claude Tag or the Slack MCP server.
+- `untrusted-input-with-send`: a task reads untrusted content and can send it out, so a person approves each send.
+- `memory-poisoning-risk`: a task reads untrusted input while personal memory is wanted, so memory stays off for it.
+- `event-source-unverified`: nothing confirmed can start the task on its event, so a person starts it until that is confirmed.
+- `connector-early-access`: the task's connector is in an early-access programme, with Unverified points.
+- `hubspot-super-admin-approval`: the HubSpot connector needs a HubSpot Super Admin's approval as well as an Owner.
+
 ## 8. Backlog (`backlog.py`, `data/task-library.json`)
 
 The hierarchy is the one in `docs/playbook/04-stories.md`. The anatomy parts do not add a second hierarchy; they label the tasks.

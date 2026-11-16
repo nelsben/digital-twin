@@ -8,7 +8,9 @@ Example Capital Partners is a mid-market private-equity firm with about $4B in a
 |---|---|---|
 | [discovery.md](discovery.md) | The completed discovery questionnaire, with candidate tasks and a discovery summary | Done |
 | [stakeholders.md](stakeholders.md) | Named people for each customer role, and the RACI | Done |
-| Role interview notes (2 to 3 people per role) | The notes from the interviews. [discovery.md](discovery.md) section F summarises three interviews; the notes themselves are not here. A later task adds them with the persona card. | Not yet in the sample |
+| [customer-profile.json](customer-profile.json) | The customer profile, built from discovery: plan, identity, devices, compliance, systems, governance. Open discovery items stay open in it, with their owner and due date. | Done; open items as in discovery |
+| Role interview notes: [partner](personas/deal-team-associate/interviews/2026-11-10-partner.md), [principal](personas/deal-team-associate/interviews/2026-11-11-principal.md), [associate](personas/deal-team-associate/interviews/2026-11-12-associate.md) | The notes from the three deal-team interviews that [discovery.md](discovery.md) section F summarises | Done |
+| [personas/deal-team-associate/card.json](personas/deal-team-associate/card.json) | The persona card: role, voice, four features, six tasks T1 to T6, open questions | Valid; not complete (open discovery and design items) |
 | [design.md](design.md) | Org plan, data and device policy, connector plan, wall design, governance-log design | Draft, awaiting sign-off |
 | [wall-test-protocol.md](wall-test-protocol.md) | How we test that the soft walls hold | Protocol written. Dry run: #82. Live run needs a customer org. |
 | [backlog.md](backlog.md) | The prioritized story backlog | Draft, awaiting sign-off |
@@ -17,7 +19,7 @@ Example Capital Partners is a mid-market private-equity firm with about $4B in a
 
 - This sample is a worked example of the playbook, not a live engagement. Nothing here is delivered to a customer.
 - It is done when three things hold:
-  - The table above links a file here or in the [starter kit](../../starter-kit/README.md) for every deliverable of phases 1 to 3 in the [engagement model](../../docs/playbook/01-engagement-model.md). Today the role interview notes are the one gap, and the design and the backlog still await sign-off, so the sample is not yet done.
+  - The table above links a file here or in the [starter kit](../../starter-kit/README.md) for every deliverable of phases 1 to 3 in the [engagement model](../../docs/playbook/01-engagement-model.md). Today every deliverable is linked, but the design and the backlog still await sign-off and the persona card is not complete, so the sample is not yet done.
   - The kit parts the sample uses have passed the smoke test (issue #80).
   - The wall-test protocol exists, with a dry run (issues #30 and #82).
 - Actions that only the invented customer could take are illustrative: naming pilot users, sign-offs, contract checks with Anthropic, due dates and open discovery answers. They show what a real engagement tracks and are never completed in this repo. The [backlog](backlog.md) marks each one.

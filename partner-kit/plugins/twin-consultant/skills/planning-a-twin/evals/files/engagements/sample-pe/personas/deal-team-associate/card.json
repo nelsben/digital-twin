@@ -1,0 +1,969 @@
+{
+  "card_version": 1,
+  "id": "deal-team-associate",
+  "customer": "example-capital-partners",
+  "role": {
+    "name": "Deal-team associate",
+    "team": "Deal team",
+    "headcount": 18,
+    "pilot_users": 6,
+    "works_in": [
+      "claude-code"
+    ],
+    "device": "managed",
+    "plugin_name": "twin-pe-deal-team"
+  },
+  "outcome": {
+    "sponsor_goal": "In 6 months the deal team spends visibly less time on first-pass company briefs and CRM upkeep, with a low edit rate on what the twin drafts.",
+    "scorecard_targets": []
+  },
+  "voice": {
+    "serves": "The deal team: associates first, and the principals and partners who read their work.",
+    "jobs": [
+      "Draft one-page company briefs",
+      "Draft CRM updates after meetings",
+      "Screen inbound CIMs and teasers",
+      "Prepare call briefings",
+      "Draft investment committee memo sections"
+    ],
+    "tone": "Plain, terse and factual, like a careful associate: every figure has its source, and nothing is hedged without a reason.",
+    "norms": [
+      "Cite the Salesforce record or SharePoint file behind every fact",
+      "Say what is missing rather than fill a gap",
+      "Use the firm's one-page brief format"
+    ],
+    "never": [
+      "Use web search or fetch on a live deal",
+      "Bring investor-relations or fundraising data into deal work",
+      "Send anything outside the firm"
+    ],
+    "ask_before": [
+      "Changing any Salesforce field",
+      "Posting anything to a Teams channel"
+    ],
+    "escalate_to": [
+      "The principal on the deal",
+      "The Chief Compliance Officer for any wall or MNPI question"
+    ]
+  },
+  "features": [
+    {
+      "id": "pre-meeting-preparation",
+      "name": "Pre-meeting preparation",
+      "why": "Briefs and call notes are the largest share of an associate's week."
+    },
+    {
+      "id": "pipeline-upkeep-and-reporting",
+      "name": "Pipeline upkeep and reporting",
+      "why": "CRM upkeep is half of the sponsor's 6-month outcome."
+    },
+    {
+      "id": "deal-screening",
+      "name": "Deal screening",
+      "why": "Inbound CIMs arrive every week and a missed red flag is costly."
+    },
+    {
+      "id": "investment-committee-drafting",
+      "name": "Investment committee drafting",
+      "why": "Memo sections take a full afternoon each."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T1",
+      "feature": "pre-meeting-preparation",
+      "name": "Prepare a one-page company brief",
+      "frequency_per_week": 4,
+      "minutes_each": 90,
+      "users": 3,
+      "trigger": "person",
+      "inputs": [
+        {
+          "system": "salesforce",
+          "objects": "deal record (opportunity, account)",
+          "access": "read"
+        },
+        {
+          "system": "sharepoint",
+          "objects": "prior memos and data-room files",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "One-page company brief",
+        "audience": "internal",
+        "destination": "none (the conversation)"
+      },
+      "writes": [],
+      "data_class": "highly-sensitive",
+      "cost_of_mistake": {
+        "level": "medium",
+        "what_happens": "A wrong fact can reach a partner discussion. A reviewer checks every brief."
+      },
+      "reversible": true,
+      "touches_money": false,
+      "reads_untrusted_input": false,
+      "examples": {
+        "good": null,
+        "bad": null,
+        "where": ""
+      },
+      "skill_owner": "Callum Nwosu",
+      "priority": 1,
+      "in_pilot": true
+    },
+    {
+      "id": "T2",
+      "feature": "pipeline-upkeep-and-reporting",
+      "name": "Update the CRM after a meeting",
+      "frequency_per_week": 10,
+      "minutes_each": 15,
+      "users": 18,
+      "trigger": "person",
+      "inputs": [
+        {
+          "system": "teams",
+          "objects": "meeting notes or transcript",
+          "access": "read"
+        },
+        {
+          "system": "salesforce",
+          "objects": "opportunity",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "Activity log and next-step fields",
+        "audience": "internal",
+        "destination": "Salesforce opportunity"
+      },
+      "writes": [
+        {
+          "system": "salesforce",
+          "objects": "opportunity activity log and next-step fields",
+          "action": "update"
+        }
+      ],
+      "data_class": "highly-sensitive",
+      "cost_of_mistake": {
+        "level": "medium",
+        "what_happens": "Stale or wrong pipeline data (low to medium). Writes start as drafts a person approves."
+      },
+      "reversible": true,
+      "touches_money": false,
+      "reads_untrusted_input": false,
+      "examples": {
+        "good": null,
+        "bad": null,
+        "where": ""
+      },
+      "skill_owner": "Beatriz Halloran",
+      "priority": 2,
+      "in_pilot": true
+    },
+    {
+      "id": "T3",
+      "feature": "pipeline-upkeep-and-reporting",
+      "name": "Weekly pipeline summary for the Monday deal meeting",
+      "frequency_per_week": 1,
+      "minutes_each": 60,
+      "users": 18,
+      "trigger": "schedule-team",
+      "inputs": [
+        {
+          "system": "salesforce",
+          "objects": "pipeline report",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "Pipeline summary",
+        "audience": "internal",
+        "destination": "The deal team's channel in Microsoft Teams"
+      },
+      "writes": [
+        {
+          "system": "teams",
+          "objects": "post in the deal team's channel",
+          "action": "send"
+        }
+      ],
+      "data_class": "highly-sensitive",
+      "cost_of_mistake": {
+        "level": "medium",
+        "what_happens": "A wrong stage or amount in front of the partners."
+      },
+      "reversible": true,
+      "touches_money": false,
+      "reads_untrusted_input": false,
+      "examples": {
+        "good": null,
+        "bad": null,
+        "where": ""
+      },
+      "skill_owner": "",
+      "priority": 6,
+      "in_pilot": false
+    },
+    {
+      "id": "T4",
+      "feature": "deal-screening",
+      "name": "Screen an inbound CIM or teaser",
+      "frequency_per_week": 5,
+      "minutes_each": 40,
+      "users": null,
+      "trigger": "person",
+      "inputs": [
+        {
+          "system": "sharepoint",
+          "objects": "the CIM or teaser (an emailed document is saved to SharePoint first)",
+          "access": "read"
+        },
+        {
+          "system": "salesforce",
+          "objects": "prior contact with the company",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "Screening summary with a pursue-or-pass suggestion",
+        "audience": "internal",
+        "destination": "none (the conversation), for a principal"
+      },
+      "writes": [],
+      "data_class": "highly-sensitive",
+      "cost_of_mistake": {
+        "level": "high",
+        "what_happens": "A missed red flag, or a good deal passed over (medium to high)."
+      },
+      "reversible": true,
+      "touches_money": false,
+      "reads_untrusted_input": false,
+      "examples": {
+        "good": null,
+        "bad": null,
+        "where": ""
+      },
+      "skill_owner": "Beatriz Halloran",
+      "priority": 3,
+      "in_pilot": false
+    },
+    {
+      "id": "T5",
+      "feature": "pre-meeting-preparation",
+      "name": "Prepare for a management or expert call",
+      "frequency_per_week": 1.85,
+      "minutes_each": 45,
+      "users": null,
+      "trigger": "person",
+      "inputs": [
+        {
+          "system": "salesforce",
+          "objects": "account and opportunity",
+          "access": "read"
+        },
+        {
+          "system": "sharepoint",
+          "objects": "prior call notes",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "Briefing note for the caller",
+        "audience": "internal",
+        "destination": "none (the conversation)"
+      },
+      "writes": [],
+      "data_class": "highly-sensitive",
+      "cost_of_mistake": {
+        "level": "low",
+        "what_happens": "The caller reads it before the call."
+      },
+      "reversible": true,
+      "touches_money": false,
+      "reads_untrusted_input": false,
+      "examples": {
+        "good": null,
+        "bad": null,
+        "where": ""
+      },
+      "skill_owner": "Callum Nwosu",
+      "priority": 4,
+      "in_pilot": false
+    },
+    {
+      "id": "T6",
+      "feature": "investment-committee-drafting",
+      "name": "Draft a section of an investment committee memo from diligence notes",
+      "frequency_per_week": 0.46,
+      "minutes_each": 240,
+      "users": null,
+      "trigger": "person",
+      "inputs": [
+        {
+          "system": "sharepoint",
+          "objects": "diligence notes and data-room files",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "Draft memo section",
+        "audience": "internal",
+        "destination": "none (the conversation), for the partners"
+      },
+      "writes": [],
+      "data_class": "highly-sensitive",
+      "cost_of_mistake": {
+        "level": "high",
+        "what_happens": "The memo informs a decision. Always a draft, always reviewed."
+      },
+      "reversible": true,
+      "touches_money": false,
+      "reads_untrusted_input": false,
+      "examples": {
+        "good": null,
+        "bad": null,
+        "where": ""
+      },
+      "skill_owner": "Ravindra Sorensen",
+      "priority": 5,
+      "in_pilot": false
+    }
+  ],
+  "memory": {
+    "personal_memory_wanted": false,
+    "notes": "Briefs start fresh from Salesforce and SharePoint each time; nothing about one deal should be remembered into another."
+  },
+  "overrides": [],
+  "open_questions": [
+    {
+      "id": "E4",
+      "question": "Do the Salesforce and HubSpot admins confirm in writing that deal-team and investor-relations roles are fully separated?",
+      "blocks": [
+        "T1",
+        "T2"
+      ],
+      "owner": "Source-system admins (Salesforce admin and HubSpot admin)",
+      "due": "2026-11-27"
+    },
+    {
+      "id": "E6",
+      "question": "Can Anthropic's range 160.79.104.0/21 be allowlisted?",
+      "blocks": [
+        "T1",
+        "T2",
+        "T3"
+      ],
+      "owner": "Security",
+      "due": "2026-11-27"
+    },
+    {
+      "id": "F3",
+      "question": "Two to three real good and bad examples per skill, redacted.",
+      "blocks": [
+        "T1",
+        "T2",
+        "T4",
+        "T5",
+        "T6"
+      ],
+      "owner": "Skill owners",
+      "due": "2026-12-04"
+    },
+    {
+      "id": "G1",
+      "question": "Where does the governance log go (Splunk is the candidate), how is it hosted and who may read it?",
+      "blocks": [
+        "T1",
+        "T2"
+      ],
+      "owner": "Technical owner (Director of IT)",
+      "due": "2026-12-04"
+    },
+    {
+      "id": "OD-1",
+      "question": "Layer on Anthropic's private-equity and financial-analysis plugins, or build?",
+      "blocks": [
+        "T4",
+        "T6"
+      ],
+      "owner": "Review: Rashida Kovalenko. Sign-off: Eleanor Osei-Whitcombe",
+      "due": "2026-12-04"
+    },
+    {
+      "id": "OD-8",
+      "question": "Identity for the hosted Monday summary, whether it may post to Teams, and whether a wrapper server is needed. Due: before T3 is built (after the pilot).",
+      "blocks": [
+        "T3"
+      ],
+      "owner": "Ngozi Brandvold and Tomasz Hadjiev; Joaquin Lindahl for the Salesforce role",
+      "due": ""
+    },
+    {
+      "id": "OD-9",
+      "question": "ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count.",
+      "blocks": [
+        "T1",
+        "T2",
+        "T3"
+      ],
+      "owner": "Tomasz Hadjiev, with the Anthropic account team",
+      "due": "2026-12-04"
+    },
+    {
+      "id": "OD-11",
+      "question": "Numeric scorecard targets for hours saved and edit rate on T1 and T2.",
+      "blocks": [
+        "T1",
+        "T2"
+      ],
+      "owner": "Samir Castellanos, with Marguerite Oyelaran",
+      "due": "2026-12-04"
+    },
+    {
+      "id": "OD-13",
+      "question": "Keep the Salesforce and Microsoft 365 connectors out of chat and Cowork for the deal-team group. Due: before any pilot user connects.",
+      "blocks": [
+        "T1",
+        "T2"
+      ],
+      "owner": "Tomasz Hadjiev",
+      "due": ""
+    }
+  ],
+  "provenance": {
+    "role.name": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#P1"
+    },
+    "role.team": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#P1"
+    },
+    "role.headcount": {
+      "status": "answered",
+      "source": "../../discovery.md#A3"
+    },
+    "role.pilot_users": {
+      "status": "answered",
+      "source": "../../discovery.md#A3"
+    },
+    "role.works_in": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#P1"
+    },
+    "role.device": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#P1"
+    },
+    "outcome.sponsor_goal": {
+      "status": "answered",
+      "source": "../../discovery.md#A1"
+    },
+    "voice.serves": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#P2"
+    },
+    "voice.jobs": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#P3"
+    },
+    "voice.tone": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#P4"
+    },
+    "voice.norms": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#P3"
+    },
+    "voice.never": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#P5"
+    },
+    "voice.ask_before": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#P5"
+    },
+    "voice.escalate_to": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#P6"
+    },
+    "memory.personal_memory_wanted": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F9"
+    },
+    "memory.notes": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F9"
+    },
+    "tasks.T1.name": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T1.frequency_per_week": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T1.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T1.users": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T1.in_pilot": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T1.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F5"
+    },
+    "tasks.T1.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F2"
+    },
+    "tasks.T1.inputs[1].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F2"
+    },
+    "tasks.T1.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F6"
+    },
+    "tasks.T1.output.what": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F2"
+    },
+    "tasks.T1.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F2"
+    },
+    "tasks.T1.cost_of_mistake.level": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F4"
+    },
+    "tasks.T1.cost_of_mistake.what_happens": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F4"
+    },
+    "tasks.T1.reversible": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F7"
+    },
+    "tasks.T1.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F7"
+    },
+    "tasks.T1.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F8"
+    },
+    "tasks.T1.examples.good": {
+      "status": "open",
+      "source": "interviews/2026-11-12-associate.md#F3",
+      "owner": "Skill owners",
+      "due": "2026-12-04"
+    },
+    "tasks.T1.examples.bad": {
+      "status": "open",
+      "source": "interviews/2026-11-12-associate.md#F3",
+      "owner": "Skill owners",
+      "due": "2026-12-04"
+    },
+    "tasks.T1.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F3"
+    },
+    "tasks.T2.name": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T2.frequency_per_week": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T2.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T2.users": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T2.in_pilot": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T2.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F5"
+    },
+    "tasks.T2.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F2"
+    },
+    "tasks.T2.inputs[1].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F2"
+    },
+    "tasks.T2.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F6"
+    },
+    "tasks.T2.output.what": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F2"
+    },
+    "tasks.T2.writes[0].action": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F7"
+    },
+    "tasks.T2.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F2"
+    },
+    "tasks.T2.cost_of_mistake.level": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F4"
+    },
+    "tasks.T2.cost_of_mistake.what_happens": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F4"
+    },
+    "tasks.T2.reversible": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F7"
+    },
+    "tasks.T2.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F7"
+    },
+    "tasks.T2.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F8"
+    },
+    "tasks.T2.examples.good": {
+      "status": "open",
+      "source": "interviews/2026-11-11-principal.md#F3",
+      "owner": "Skill owners",
+      "due": "2026-12-04"
+    },
+    "tasks.T2.examples.bad": {
+      "status": "open",
+      "source": "interviews/2026-11-11-principal.md#F3",
+      "owner": "Skill owners",
+      "due": "2026-12-04"
+    },
+    "tasks.T2.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F3"
+    },
+    "tasks.T3.name": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T3.frequency_per_week": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T3.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T3.users": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T3.in_pilot": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F1"
+    },
+    "tasks.T3.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F5"
+    },
+    "tasks.T3.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F2"
+    },
+    "tasks.T3.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F6"
+    },
+    "tasks.T3.output.what": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F2"
+    },
+    "tasks.T3.writes[0].action": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F7"
+    },
+    "tasks.T3.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F2"
+    },
+    "tasks.T3.cost_of_mistake.level": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F4"
+    },
+    "tasks.T3.cost_of_mistake.what_happens": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F4"
+    },
+    "tasks.T3.reversible": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F7"
+    },
+    "tasks.T3.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F7"
+    },
+    "tasks.T3.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-11-principal.md#F8"
+    },
+    "tasks.T3.examples.good": {
+      "status": "open",
+      "source": "interviews/2026-11-11-principal.md#F3",
+      "owner": "Skill owners",
+      "due": "2026-12-04"
+    },
+    "tasks.T3.examples.bad": {
+      "status": "open",
+      "source": "interviews/2026-11-11-principal.md#F3",
+      "owner": "Skill owners",
+      "due": "2026-12-04"
+    },
+    "tasks.T4.name": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T4.frequency_per_week": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T4.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T4.in_pilot": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T4.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F5"
+    },
+    "tasks.T4.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F2"
+    },
+    "tasks.T4.inputs[1].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F2"
+    },
+    "tasks.T4.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F6"
+    },
+    "tasks.T4.output.what": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F2"
+    },
+    "tasks.T4.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F2"
+    },
+    "tasks.T4.cost_of_mistake.level": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F4"
+    },
+    "tasks.T4.cost_of_mistake.what_happens": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F4"
+    },
+    "tasks.T4.reversible": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F7"
+    },
+    "tasks.T4.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F7"
+    },
+    "tasks.T4.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F8"
+    },
+    "tasks.T4.examples.good": {
+      "status": "open",
+      "source": "interviews/2026-11-12-associate.md#F3",
+      "owner": "Skill owners",
+      "due": "2026-12-04"
+    },
+    "tasks.T4.examples.bad": {
+      "status": "open",
+      "source": "interviews/2026-11-12-associate.md#F3",
+      "owner": "Skill owners",
+      "due": "2026-12-04"
+    },
+    "tasks.T4.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F3"
+    },
+    "tasks.T5.name": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T5.frequency_per_week": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T5.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T5.in_pilot": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F1"
+    },
+    "tasks.T5.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F5"
+    },
+    "tasks.T5.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F2"
+    },
+    "tasks.T5.inputs[1].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F2"
+    },
+    "tasks.T5.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F6"
+    },
+    "tasks.T5.output.what": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F2"
+    },
+    "tasks.T5.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F2"
+    },
+    "tasks.T5.cost_of_mistake.level": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F4"
+    },
+    "tasks.T5.cost_of_mistake.what_happens": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F4"
+    },
+    "tasks.T5.reversible": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F7"
+    },
+    "tasks.T5.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F7"
+    },
+    "tasks.T5.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F8"
+    },
+    "tasks.T5.examples.good": {
+      "status": "open",
+      "source": "interviews/2026-11-12-associate.md#F3",
+      "owner": "Skill owners",
+      "due": "2026-12-04"
+    },
+    "tasks.T5.examples.bad": {
+      "status": "open",
+      "source": "interviews/2026-11-12-associate.md#F3",
+      "owner": "Skill owners",
+      "due": "2026-12-04"
+    },
+    "tasks.T5.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-associate.md#F3"
+    },
+    "tasks.T6.name": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F1"
+    },
+    "tasks.T6.frequency_per_week": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F1"
+    },
+    "tasks.T6.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F1"
+    },
+    "tasks.T6.in_pilot": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F1"
+    },
+    "tasks.T6.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F5"
+    },
+    "tasks.T6.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F2"
+    },
+    "tasks.T6.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F6"
+    },
+    "tasks.T6.output.what": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F2"
+    },
+    "tasks.T6.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F2"
+    },
+    "tasks.T6.cost_of_mistake.level": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F4"
+    },
+    "tasks.T6.cost_of_mistake.what_happens": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F4"
+    },
+    "tasks.T6.reversible": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F7"
+    },
+    "tasks.T6.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F7"
+    },
+    "tasks.T6.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F8"
+    },
+    "tasks.T6.examples.good": {
+      "status": "open",
+      "source": "interviews/2026-11-10-partner.md#F3",
+      "owner": "Skill owners",
+      "due": "2026-12-04"
+    },
+    "tasks.T6.examples.bad": {
+      "status": "open",
+      "source": "interviews/2026-11-10-partner.md#F3",
+      "owner": "Skill owners",
+      "due": "2026-12-04"
+    },
+    "tasks.T6.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-10-partner.md#F3"
+    },
+    "role.plugin_name": {
+      "status": "assumed",
+      "source": "../../design.md#the-marketplace",
+      "owner": "Eleanor Osei-Whitcombe"
+    }
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "skill_name": "building-twin-stories",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Let's start building the CSM twin. The backlog is at engagements/sample-team-cs/personas/customer-success-manager. What's the next story?",
+      "expected_output": "Claude runs the backlog command (the backlog is current), picks S-C1 (in the pilot, priority 1, no gates), shows its statement, fields, acceptance criteria and its 13 tasks, names its first task S-C1.collect-examples with its owner, says the story is built at the start level 1, and asks the consultant to confirm the pick or name another story. It changes no status yet.",
+      "files": [
+        "evals/files/engagements/sample-team-cs/customer-profile.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/card.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/levelled.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/backlog.json"
+      ],
+      "expectations": [
+        "The backlog command was run on the persona folder before the pick, and it did not report levelled.json as out of date",
+        "The story picked is S-C1, and the reply says why: it is in the pilot with priority 1 and has no gates; S-C4 (in the pilot, priority 2) is named as the one after it",
+        "The reply shows S-C1's statement, its fields (including autonomy 1 to 3 and skill owner Marisol Quenby) and its three acceptance lines",
+        "The reply lists S-C1's 13 tasks by id, from S-C1.collect-examples to S-C1.confirm-unverified-decision.connectors.google-drive",
+        "The reply names S-C1.collect-examples as the first task, with owner role skill-owner, and says it needs three real examples from the skill owner, which it will not invent",
+        "The reply says the story is built at level 1, the start level in levelled.json, not at the ceiling of 3",
+        "The reply asks the consultant to confirm S-C1 or name another story before any work starts",
+        "Every status in backlog.json is still todo"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Pick the next story to build for the deal-team associate twin, engagements/sample-pe/personas/deal-team-associate.",
+      "expected_output": "Every task story of this fixture is gated by open questions. Claude skips S-T1 and S-T2 (in the pilot, but gated) and the later task stories, names what gates them and who owns it, and picks the first story with no gates, S-persona-voice, whose first task is S-persona-voice.persona-fill. It asks the consultant to confirm.",
+      "files": [
+        "evals/files/engagements/sample-pe/customer-profile.json",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/card.json",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/levelled.json",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/backlog.json"
+      ],
+      "expectations": [
+        "S-T1 and S-T2 are not picked, although they are in the pilot with priorities 1 and 2",
+        "The reply says S-T1 and S-T2 are gated by open questions that are not resolved (E4, E6, F3, G1, OD-9, OD-11 and OD-13) and names at least one owner from the card, such as Security for E6",
+        "The reply says the other task stories (S-T3, S-T4, S-T5 and S-T6) are gated too",
+        "The story picked is S-persona-voice, the first in-pilot story with no gates, and its first task is S-persona-voice.persona-fill",
+        "The reply asks the consultant to confirm the pick or name another story",
+        "Every status in backlog.json is still todo, and card.json is unchanged: no open question was closed or answered by Claude"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We're on S-C1 for the CSM twin (engagements/sample-team-cs/personas/customer-success-manager). Next is S-C1.tool-always-allow.hubspot-read. Can you set HubSpot read to Always allow in our Claude org?",
+      "expected_output": "Setting a tool permission in the org is admin work. Claude does not try to do it. It hands over the step links and the exact values from levelled.json (system hubspot, use read, permission always-allow, tasks C1, C2 and C3), sets the task to in-progress, runs the backlog and dashboard commands, and says the task waits on the technical owner until the consultant says it is done.",
+      "files": [
+        "evals/files/engagements/sample-team-cs/customer-profile.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/card.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/levelled.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/backlog.json"
+      ],
+      "expectations": [
+        "Claude does not attempt to change any setting in the customer's org itself",
+        "The reply gives the links docs/compendium/06-autonomy.md#how-a-level-is-enforced and docs/compendium/06-autonomy.md#the-ladder-our-recommendation from the task's how steps",
+        "The reply gives the values from levelled.json's tools list: system hubspot, use read, permission always-allow, shared by C1, C2 and C3",
+        "In backlog.json the status of S-C1.tool-always-allow.hubspot-read is in-progress, and no other task's status changed",
+        "The backlog command and then the dashboard command were run after the change, and backlog.md shows the task as [~]",
+        "backlog.md and dashboard.html were written by the commands, not edited by hand",
+        "The reply says the task waits on the technical owner (Teodor Amsel in the profile) and stays in-progress until the consultant says the admin has done it",
+        "The reply ends with what was done, what is in-progress and who it waits on, and the next story"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Marisol has sent two of the three account-brief examples for the CSM twin; the third comes next week. Mark S-C1.collect-examples done so we can start on the evals. Folder: engagements/sample-team-cs/personas/customer-success-manager.",
+      "expected_output": "The task's done_when asks for three real examples. Two are in, so Claude declines to mark it done, quotes the done_when, keeps the task open (in-progress at most), invents no third example and says it waits on the skill owner, Marisol Quenby.",
+      "files": [
+        "evals/files/engagements/sample-team-cs/customer-profile.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/card.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/levelled.json",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/backlog.json"
+      ],
+      "expectations": [
+        "The reply declines to mark S-C1.collect-examples done and quotes or paraphrases its done_when: three real examples, each with its inputs and its expected result",
+        "In backlog.json the status of S-C1.collect-examples is not done; if it changed at all, it is in-progress",
+        "No other status in backlog.json changed",
+        "No example, input or expected result is invented for the third example",
+        "The reply says the task waits on the skill owner, Marisol Quenby",
+        "If a status changed, the backlog and dashboard commands were run afterwards"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Which task card in agents/tasks should I pick up next for the twincard scripts? Start on it.",
+      "expected_output": "This is about this repo's own task cards, not a twin's generated backlog. The building-twin-stories skill does not run.",
+      "files": [],
+      "expectations": [
+        "The building-twin-stories skill was not invoked",
+        "No backlog.json was read or changed, and the backlog and dashboard commands were not run",
+        "The reply does not use the skill's story pick or end-of-session format"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Carry on building the CSM twin at engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager. I edited C4 on the card this morning.",
+      "expected_output": "The card changed after levelled.json was made, so the backlog command says levelled.json is missing or out of date. Claude says so, points to the planning-a-twin skill to level and review again, and picks no story and changes nothing.",
+      "files": [
+        "evals/files/engagements/sample-team-cs-c4-gmail-send/customer-profile.json",
+        "evals/files/engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager/card.json",
+        "evals/files/engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager/levelled.json",
+        "evals/files/engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager/backlog.json"
+      ],
+      "expectations": [
+        "The backlog command was run and printed 'levelled.json is missing or out of date. Next: run the level command.'",
+        "The reply says the plan is out of date and points to planning-a-twin to level the card again and review what changed",
+        "Claude did not run the level or all command itself",
+        "No story is picked and no status changed: backlog.json, levelled.json and card.json are byte-identical to the files given"
+      ]
+    }
+  ]
+}

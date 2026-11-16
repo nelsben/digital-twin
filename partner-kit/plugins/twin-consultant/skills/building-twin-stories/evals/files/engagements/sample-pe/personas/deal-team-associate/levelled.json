@@ -1,0 +1,1107 @@
+{
+  "levelled_version": 1,
+  "customer": "example-capital-partners",
+  "persona": "deal-team-associate",
+  "source": {
+    "card_sha256": "d8a71ec821ba8eb07e153bd18cfad08e6c95e6a7c5cc8d34f6e1ba70ab1915af",
+    "profile_sha256": "71b85dab7c908141bf4d0aacd28cf2330d93fd3b5cf2bf12ce7ff69f3f1e8881",
+    "rules_version": 1,
+    "pack": "private-equity"
+  },
+  "persona_plan": {
+    "plugin_name": {
+      "value": "twin-pe-deal-team",
+      "rule": null,
+      "cite": "engagements/sample-pe/design.md#the-marketplace",
+      "reason": "The card names the role plugin twin-pe-deal-team in role.plugin_name.",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "overridden": null
+    },
+    "distribution": {
+      "value": "group-targeted",
+      "rule": "distribution-group-targeted",
+      "cite": "docs/compendium/09-plans-and-it-controls.md#what-it-can-do-on-each-plan",
+      "reason": "On Enterprise a plugin can be shared per group, so the role plugin reaches the role's group only.",
+      "unverified": false,
+      "basis": "compendium",
+      "overridden": null
+    },
+    "settings_baseline": {
+      "value": "pe-zdr",
+      "rule": "persona-baseline-highly-sensitive-pack",
+      "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+      "reason": "Highly sensitive work runs on a ZDR sign-in with the industry pack's settings baseline.",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "overridden": null
+    },
+    "starting_points": [
+      {
+        "kind": "plugin",
+        "name": "financial-analysis",
+        "where": "claude-for-financial-services",
+        "use": "start-from",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+        "unverified": false
+      },
+      {
+        "kind": "plugin",
+        "name": "private-equity",
+        "where": "claude-for-financial-services",
+        "use": "start-from",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "deal-screening",
+        "where": "claude-for-financial-services: private-equity",
+        "use": "start-from",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "dd-meeting-prep",
+        "where": "claude-for-financial-services: private-equity",
+        "use": "start-from",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "ic-memo",
+        "where": "claude-for-financial-services: private-equity",
+        "use": "start-from",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "dd-checklist",
+        "where": "claude-for-financial-services: private-equity",
+        "use": "start-from",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "returns-analysis",
+        "where": "claude-for-financial-services: private-equity",
+        "use": "reuse",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "unit-economics",
+        "where": "claude-for-financial-services: private-equity",
+        "use": "reuse",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "portfolio-monitoring",
+        "where": "claude-for-financial-services: private-equity",
+        "use": "start-from",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "value-creation-plan",
+        "where": "claude-for-financial-services: private-equity",
+        "use": "start-from",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "lbo-model",
+        "where": "claude-for-financial-services: financial-analysis",
+        "use": "start-from",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "competitive-analysis",
+        "where": "claude-for-financial-services: financial-analysis",
+        "use": "start-from",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "audit-xls",
+        "where": "claude-for-financial-services: financial-analysis",
+        "use": "reuse",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "clean-data-xls",
+        "where": "claude-for-financial-services: financial-analysis",
+        "use": "reuse",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "deck-refresh",
+        "where": "claude-for-financial-services: financial-analysis",
+        "use": "reuse",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "xlsx-author",
+        "where": "claude-for-financial-services: financial-analysis",
+        "use": "reuse",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "pptx-author",
+        "where": "claude-for-financial-services: financial-analysis",
+        "use": "reuse",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "docx",
+        "where": "https://github.com/anthropics/skills/tree/main/skills/docx",
+        "use": "reuse",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "xlsx",
+        "where": "https://github.com/anthropics/skills/tree/main/skills/xlsx",
+        "use": "reuse",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#2-whats-in-financial-analysis",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "discernment-nudge",
+        "where": "https://github.com/anthropics/skills/tree/main/skills/discernment-nudge",
+        "use": "start-from",
+        "cite": "docs/compendium/16-oob-skills-and-references.md#1-skills-in-githubcomanthropicsskills",
+        "unverified": false
+      },
+      {
+        "kind": "agent-template",
+        "name": "gl-reconciler",
+        "where": "managed-agent-cookbooks/ in anthropics/financial-services",
+        "use": "reference",
+        "cite": "docs/compendium/16-oob-skills-and-references.md#2-anthropic-plugin-marketplaces-and-plugins",
+        "unverified": false
+      },
+      {
+        "kind": "agent-template",
+        "name": "month-end-closer",
+        "where": "managed-agent-cookbooks/ in anthropics/financial-services",
+        "use": "reference",
+        "cite": "docs/compendium/16-oob-skills-and-references.md#2-anthropic-plugin-marketplaces-and-plugins",
+        "unverified": false
+      },
+      {
+        "kind": "agent-template",
+        "name": "valuation-reviewer",
+        "where": "managed-agent-cookbooks/ in anthropics/financial-services",
+        "use": "reference",
+        "cite": "docs/compendium/16-oob-skills-and-references.md#2-anthropic-plugin-marketplaces-and-plugins",
+        "unverified": false
+      },
+      {
+        "kind": "agent-template",
+        "name": "kyc-screener",
+        "where": "managed-agent-cookbooks/ in anthropics/financial-services",
+        "use": "reference",
+        "cite": "docs/compendium/16-oob-skills-and-references.md#2-anthropic-plugin-marketplaces-and-plugins",
+        "unverified": false
+      },
+      {
+        "kind": "reference",
+        "name": "Claude Code zero data retention",
+        "where": "https://code.claude.com/docs/en/zero-data-retention",
+        "use": "reference",
+        "cite": "docs/compendium/14-private-equity.md#three-facts-that-shape-everything",
+        "unverified": false
+      },
+      {
+        "kind": "reference",
+        "name": "Self-hosted Managed Agents",
+        "where": "https://platform.claude.com/docs/en/managed-agents/self-hosted-data-and-access",
+        "use": "reference",
+        "cite": "docs/compendium/14-private-equity.md#where-a-twin-can-leak-across-a-wall",
+        "unverified": false
+      },
+      {
+        "kind": "reference",
+        "name": "Managed MCP",
+        "where": "https://code.claude.com/docs/en/managed-mcp",
+        "use": "reference",
+        "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#5-how-to-pin-a-reviewed-copy",
+        "unverified": false
+      }
+    ]
+  },
+  "tasks": {
+    "T1": {
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "identity": {
+        "value": "user",
+        "rule": "identity-client-user",
+        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "autonomy": {
+        "start": {
+          "value": 1,
+          "rule": "autonomy-start-draft",
+          "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+          "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "ceiling": {
+          "value": 3,
+          "rule": "ceiling-person-started",
+          "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+          "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "data_controls": {
+        "settings_baseline": {
+          "value": "pe-zdr",
+          "rule": "baseline-highly-sensitive-pack",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "Highly sensitive work runs on a ZDR sign-in with the industry pack's settings baseline.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "web_tools": {
+          "value": "off",
+          "rule": "web-tools-off-sensitive",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Web search and fetch are not allowed for this data class: queries can reveal intent.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "surfaces": {
+          "value": [
+            "claude-code"
+          ],
+          "rule": "surfaces-sensitive-managed-claude-code",
+          "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "retention": {
+          "value": "zdr",
+          "rule": "retention-highly-sensitive-zdr",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "Highly sensitive deal work keeps zero data retention.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        }
+      },
+      "connectors": [
+        {
+          "system": "salesforce",
+          "access": "read",
+          "identity": "user",
+          "how": "Salesforce Hosted MCP Server, with OAuth through an External Client App. Do not use a Claude Tag connection for walled teams.",
+          "runbook": "starter-kit/runbooks/salesforce-hosted-mcp.md",
+          "permission": "always-allow",
+          "cite": "docs/compendium/14-private-equity.md#salesforce-and-hubspot-behind-a-wall",
+          "unverified": true
+        },
+        {
+          "system": "sharepoint",
+          "access": "read",
+          "identity": "user",
+          "how": "The Microsoft 365 connector from the Claude directory; a Global Admin must consent for the tenant. Read by default; admins can turn on writes.",
+          "runbook": "starter-kit/runbooks/microsoft-365-connector.md",
+          "permission": "always-allow",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        }
+      ],
+      "memory": {
+        "value": "off",
+        "rule": "memory-off-not-wanted",
+        "cite": "docs/compendium/02-persona.md#memory",
+        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "plan_fit": {
+        "value": "ok",
+        "rule": "plan-fit-highly-sensitive-zdr-org",
+        "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      }
+    },
+    "T2": {
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "identity": {
+        "value": "user",
+        "rule": "identity-client-user",
+        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "autonomy": {
+        "start": {
+          "value": 1,
+          "rule": "autonomy-start-draft",
+          "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+          "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "ceiling": {
+          "value": 3,
+          "rule": "ceiling-person-started",
+          "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+          "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "data_controls": {
+        "settings_baseline": {
+          "value": "pe-zdr",
+          "rule": "baseline-highly-sensitive-pack",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "Highly sensitive work runs on a ZDR sign-in with the industry pack's settings baseline.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "web_tools": {
+          "value": "off",
+          "rule": "web-tools-off-sensitive",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Web search and fetch are not allowed for this data class: queries can reveal intent.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "surfaces": {
+          "value": [
+            "claude-code"
+          ],
+          "rule": "surfaces-sensitive-managed-claude-code",
+          "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "retention": {
+          "value": "zdr",
+          "rule": "retention-highly-sensitive-zdr",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "Highly sensitive deal work keeps zero data retention.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        }
+      },
+      "connectors": [
+        {
+          "system": "teams",
+          "access": "read",
+          "identity": "user",
+          "how": "Part of the Microsoft 365 connector. It reads chat and calendar; admins can turn on sending.",
+          "runbook": "starter-kit/runbooks/microsoft-365-connector.md",
+          "permission": "always-allow",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        },
+        {
+          "system": "salesforce",
+          "access": "write",
+          "identity": "user",
+          "how": "Salesforce Hosted MCP Server, with OAuth through an External Client App. Do not use a Claude Tag connection for walled teams.",
+          "runbook": "starter-kit/runbooks/salesforce-hosted-mcp.md",
+          "permission": "blocked",
+          "cite": "docs/compendium/14-private-equity.md#salesforce-and-hubspot-behind-a-wall",
+          "unverified": true
+        }
+      ],
+      "memory": {
+        "value": "off",
+        "rule": "memory-off-not-wanted",
+        "cite": "docs/compendium/02-persona.md#memory",
+        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "plan_fit": {
+        "value": "ok",
+        "rule": "plan-fit-highly-sensitive-zdr-org",
+        "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      }
+    },
+    "T3": {
+      "runtime": {
+        "value": "managed-agents-self-hosted",
+        "rule": "runtime-zdr-self-hosted",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "reason": "A scheduled job wired into systems that needs ZDR cannot use hosted Managed Agents, which is not ZDR-eligible, so it runs on a fully self-hosted Managed Agents deployment, the page's ZDR route.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "identity": {
+        "value": "api-key-vault",
+        "rule": "identity-hosted-vault",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "reason": "Work that runs with nobody present holds its credentials in a vault (an API key plus a vault), not in a user's sign-in.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "autonomy": {
+        "start": {
+          "value": 1,
+          "rule": "autonomy-start-draft",
+          "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+          "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "ceiling": {
+          "value": 4,
+          "rule": "ceiling-unattended",
+          "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+          "reason": "The task is internal and reversible and runs without a person, so it may rise to unattended level 4 once evals support it.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "data_controls": {
+        "settings_baseline": {
+          "value": null,
+          "rule": "baseline-hosted-none",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "A hosted runtime has no client surface and no managed settings file.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "web_tools": {
+          "value": "off",
+          "rule": "web-tools-off-sensitive",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Web search and fetch are not allowed for this data class: queries can reveal intent.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "surfaces": {
+          "value": [],
+          "rule": "surfaces-hosted-none",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "A hosted runtime has no client surface.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "retention": {
+          "value": "zdr",
+          "rule": "retention-highly-sensitive-zdr",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "Highly sensitive deal work keeps zero data retention.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        }
+      },
+      "connectors": [
+        {
+          "system": "salesforce",
+          "access": "read",
+          "identity": "api-key-vault",
+          "how": "Salesforce Hosted MCP Server, with OAuth through an External Client App. Do not use a Claude Tag connection for walled teams.",
+          "runbook": "starter-kit/runbooks/salesforce-hosted-mcp.md",
+          "permission": "always-allow",
+          "cite": "docs/compendium/14-private-equity.md#salesforce-and-hubspot-behind-a-wall",
+          "unverified": true
+        },
+        {
+          "system": "teams",
+          "access": "write",
+          "identity": "api-key-vault",
+          "how": "Part of the Microsoft 365 connector. It reads chat and calendar; admins can turn on sending.",
+          "runbook": "starter-kit/runbooks/microsoft-365-connector.md",
+          "permission": "blocked",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        }
+      ],
+      "memory": {
+        "value": "off",
+        "rule": "memory-off-not-wanted",
+        "cite": "docs/compendium/02-persona.md#memory",
+        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "plan_fit": {
+        "value": "ok-with-limits",
+        "rule": "plan-fit-self-hosted-platform-org",
+        "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+        "reason": "The self-hosted Managed Agents deployment needs a Platform org with ZDR besides the people's org.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      }
+    },
+    "T4": {
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "identity": {
+        "value": "user",
+        "rule": "identity-client-user",
+        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "autonomy": {
+        "start": {
+          "value": 1,
+          "rule": "autonomy-start-draft",
+          "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+          "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "ceiling": {
+          "value": null,
+          "rule": "ceiling-high-cost-undecided",
+          "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+          "reason": "Undecided: page 06 sets the ceiling from audience, reversibility, money, deletes and trigger, but has no rule for a high cost of a mistake, so a person must decide it.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "data_controls": {
+        "settings_baseline": {
+          "value": "pe-zdr",
+          "rule": "baseline-highly-sensitive-pack",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "Highly sensitive work runs on a ZDR sign-in with the industry pack's settings baseline.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "web_tools": {
+          "value": "off",
+          "rule": "web-tools-off-sensitive",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Web search and fetch are not allowed for this data class: queries can reveal intent.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "surfaces": {
+          "value": [
+            "claude-code"
+          ],
+          "rule": "surfaces-sensitive-managed-claude-code",
+          "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "retention": {
+          "value": "zdr",
+          "rule": "retention-highly-sensitive-zdr",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "Highly sensitive deal work keeps zero data retention.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        }
+      },
+      "connectors": [
+        {
+          "system": "sharepoint",
+          "access": "read",
+          "identity": "user",
+          "how": "The Microsoft 365 connector from the Claude directory; a Global Admin must consent for the tenant. Read by default; admins can turn on writes.",
+          "runbook": "starter-kit/runbooks/microsoft-365-connector.md",
+          "permission": "always-allow",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        },
+        {
+          "system": "salesforce",
+          "access": "read",
+          "identity": "user",
+          "how": "Salesforce Hosted MCP Server, with OAuth through an External Client App. Do not use a Claude Tag connection for walled teams.",
+          "runbook": "starter-kit/runbooks/salesforce-hosted-mcp.md",
+          "permission": "always-allow",
+          "cite": "docs/compendium/14-private-equity.md#salesforce-and-hubspot-behind-a-wall",
+          "unverified": true
+        }
+      ],
+      "memory": {
+        "value": "off",
+        "rule": "memory-off-not-wanted",
+        "cite": "docs/compendium/02-persona.md#memory",
+        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "plan_fit": {
+        "value": "ok",
+        "rule": "plan-fit-highly-sensitive-zdr-org",
+        "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      }
+    },
+    "T5": {
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "identity": {
+        "value": "user",
+        "rule": "identity-client-user",
+        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "autonomy": {
+        "start": {
+          "value": 1,
+          "rule": "autonomy-start-draft",
+          "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+          "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "ceiling": {
+          "value": 3,
+          "rule": "ceiling-person-started",
+          "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+          "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "data_controls": {
+        "settings_baseline": {
+          "value": "pe-zdr",
+          "rule": "baseline-highly-sensitive-pack",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "Highly sensitive work runs on a ZDR sign-in with the industry pack's settings baseline.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "web_tools": {
+          "value": "off",
+          "rule": "web-tools-off-sensitive",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Web search and fetch are not allowed for this data class: queries can reveal intent.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "surfaces": {
+          "value": [
+            "claude-code"
+          ],
+          "rule": "surfaces-sensitive-managed-claude-code",
+          "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "retention": {
+          "value": "zdr",
+          "rule": "retention-highly-sensitive-zdr",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "Highly sensitive deal work keeps zero data retention.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        }
+      },
+      "connectors": [
+        {
+          "system": "salesforce",
+          "access": "read",
+          "identity": "user",
+          "how": "Salesforce Hosted MCP Server, with OAuth through an External Client App. Do not use a Claude Tag connection for walled teams.",
+          "runbook": "starter-kit/runbooks/salesforce-hosted-mcp.md",
+          "permission": "always-allow",
+          "cite": "docs/compendium/14-private-equity.md#salesforce-and-hubspot-behind-a-wall",
+          "unverified": true
+        },
+        {
+          "system": "sharepoint",
+          "access": "read",
+          "identity": "user",
+          "how": "The Microsoft 365 connector from the Claude directory; a Global Admin must consent for the tenant. Read by default; admins can turn on writes.",
+          "runbook": "starter-kit/runbooks/microsoft-365-connector.md",
+          "permission": "always-allow",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        }
+      ],
+      "memory": {
+        "value": "off",
+        "rule": "memory-off-not-wanted",
+        "cite": "docs/compendium/02-persona.md#memory",
+        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "plan_fit": {
+        "value": "ok",
+        "rule": "plan-fit-highly-sensitive-zdr-org",
+        "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      }
+    },
+    "T6": {
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "identity": {
+        "value": "user",
+        "rule": "identity-client-user",
+        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "autonomy": {
+        "start": {
+          "value": 1,
+          "rule": "autonomy-start-draft",
+          "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+          "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "ceiling": {
+          "value": null,
+          "rule": "ceiling-high-cost-undecided",
+          "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+          "reason": "Undecided: page 06 sets the ceiling from audience, reversibility, money, deletes and trigger, but has no rule for a high cost of a mistake, so a person must decide it.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "data_controls": {
+        "settings_baseline": {
+          "value": "pe-zdr",
+          "rule": "baseline-highly-sensitive-pack",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "Highly sensitive work runs on a ZDR sign-in with the industry pack's settings baseline.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "web_tools": {
+          "value": "off",
+          "rule": "web-tools-off-sensitive",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Web search and fetch are not allowed for this data class: queries can reveal intent.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "surfaces": {
+          "value": [
+            "claude-code"
+          ],
+          "rule": "surfaces-sensitive-managed-claude-code",
+          "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+          "reason": "This data class runs in Claude Code on a managed device, locked by MDM, and not in Desktop.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "retention": {
+          "value": "zdr",
+          "rule": "retention-highly-sensitive-zdr",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "Highly sensitive deal work keeps zero data retention.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        }
+      },
+      "connectors": [
+        {
+          "system": "sharepoint",
+          "access": "read",
+          "identity": "user",
+          "how": "The Microsoft 365 connector from the Claude directory; a Global Admin must consent for the tenant. Read by default; admins can turn on writes.",
+          "runbook": "starter-kit/runbooks/microsoft-365-connector.md",
+          "permission": "always-allow",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        }
+      ],
+      "memory": {
+        "value": "off",
+        "rule": "memory-off-not-wanted",
+        "cite": "docs/compendium/02-persona.md#memory",
+        "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "plan_fit": {
+        "value": "ok",
+        "rule": "plan-fit-highly-sensitive-zdr-org",
+        "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+        "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      }
+    }
+  },
+  "tools": [
+    {
+      "system": "salesforce",
+      "use": "read",
+      "tasks": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5"
+      ],
+      "permission": {
+        "value": "always-allow",
+        "rule": "permission-read-always-allow",
+        "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+        "reason": "Reading is allowed at every level.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "wanted": {
+        "T1": "always-allow",
+        "T2": "always-allow",
+        "T3": "always-allow",
+        "T4": null,
+        "T5": "always-allow"
+      }
+    },
+    {
+      "system": "sharepoint",
+      "use": "read",
+      "tasks": [
+        "T1",
+        "T4",
+        "T5",
+        "T6"
+      ],
+      "permission": {
+        "value": "always-allow",
+        "rule": "permission-read-always-allow",
+        "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+        "reason": "Reading is allowed at every level.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "wanted": {
+        "T1": "always-allow",
+        "T4": null,
+        "T5": "always-allow",
+        "T6": null
+      }
+    },
+    {
+      "system": "teams",
+      "use": "read",
+      "tasks": [
+        "T2"
+      ],
+      "permission": {
+        "value": "always-allow",
+        "rule": "permission-read-always-allow",
+        "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+        "reason": "Reading is allowed at every level.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "wanted": {
+        "T2": "always-allow"
+      }
+    },
+    {
+      "system": "salesforce",
+      "use": "update",
+      "tasks": [
+        "T2"
+      ],
+      "permission": {
+        "value": "blocked",
+        "rule": "permission-write-draft-blocked",
+        "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+        "reason": "At levels 0 and 1 the twin only drafts, so write tools are Blocked.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "wanted": {
+        "T2": "always-allow"
+      }
+    },
+    {
+      "system": "teams",
+      "use": "send",
+      "tasks": [
+        "T3"
+      ],
+      "permission": {
+        "value": "blocked",
+        "rule": "permission-write-draft-blocked",
+        "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+        "reason": "At levels 0 and 1 the twin only drafts, so write tools are Blocked.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "wanted": {
+        "T3": "always-allow"
+      }
+    }
+  ],
+  "blockers": [],
+  "warnings": [
+    {
+      "code": "agent-sdk-cover-unverified",
+      "about": "T3",
+      "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+      "unverified": true,
+      "message": "The task needs ZDR cover, and whether the Agent SDK is covered is Unverified, so the plan uses self-hosted Managed Agents, the route the page confirms.",
+      "fix": "Keep the Agent SDK out of this task until Anthropic confirms its ZDR cover in writing."
+    },
+    {
+      "code": "decision-undecided",
+      "about": "T4",
+      "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+      "unverified": false,
+      "message": "Undecided: page 06 sets the ceiling from audience, reversibility, money, deletes and trigger, but has no rule for a high cost of a mistake, so a person must decide it.",
+      "fix": "Decide it with the customer and record the answer as an override on the card."
+    },
+    {
+      "code": "decision-undecided",
+      "about": "T6",
+      "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+      "unverified": false,
+      "message": "Undecided: page 06 sets the ceiling from audience, reversibility, money, deletes and trigger, but has no rule for a high cost of a mistake, so a person must decide it.",
+      "fix": "Decide it with the customer and record the answer as an override on the card."
+    }
+  ],
+  "complete": false
+}

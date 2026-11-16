@@ -1,0 +1,365 @@
+{
+  "profile_version": 1,
+  "customer": "example-software-co",
+  "display_name": "Example Software Co",
+  "fictional": true,
+  "industry": "b2b-software",
+  "plan": {
+    "tier": "team",
+    "seats": 60,
+    "individual_accounts_on_domain": 0
+  },
+  "identity": {
+    "idp": "Google Workspace",
+    "sso": false,
+    "scim": false
+  },
+  "devices": {
+    "mdm": "none",
+    "managed_share": "None: staff use their own laptops",
+    "unmanaged_users": "All 60 staff"
+  },
+  "compliance": {
+    "data_classes": [
+      "internal",
+      "confidential"
+    ],
+    "phi": false,
+    "baa": false,
+    "mnpi": false,
+    "retention": "standard",
+    "walls": "none"
+  },
+  "systems": [
+    {
+      "id": "hubspot",
+      "kind": "crm",
+      "product": "HubSpot",
+      "edition": "Sales Hub Professional",
+      "access_model": "Teams and record permissions",
+      "private_network": false
+    },
+    {
+      "id": "google-drive",
+      "kind": "documents",
+      "product": "Google Drive",
+      "edition": "Google Workspace Business Standard",
+      "access_model": "Shared drives per team",
+      "private_network": false
+    },
+    {
+      "id": "gmail",
+      "kind": "email-calendar",
+      "product": "Gmail",
+      "edition": "Google Workspace Business Standard",
+      "access_model": "Each user's own mailbox",
+      "private_network": false
+    },
+    {
+      "id": "google-calendar",
+      "kind": "email-calendar",
+      "product": "Google Calendar",
+      "edition": "Google Workspace Business Standard",
+      "access_model": "Each user's own calendar",
+      "private_network": false
+    },
+    {
+      "id": "slack",
+      "kind": "messaging",
+      "product": "Slack",
+      "edition": "Slack Pro",
+      "access_model": "Public and private channels",
+      "private_network": false
+    },
+    {
+      "id": "zendesk",
+      "kind": "ticketing",
+      "product": "Zendesk",
+      "edition": "Suite Team",
+      "access_model": "Agent groups",
+      "private_network": false
+    },
+    {
+      "id": "usage-db",
+      "kind": "product-data",
+      "product": "Internal product-usage database",
+      "edition": "In-house (PostgreSQL)",
+      "access_model": "Database roles; analysts only",
+      "private_network": true
+    }
+  ],
+  "network": {
+    "can_allowlist_anthropic_ips": true
+  },
+  "runtime_preferences": {
+    "self_hosting_required": null
+  },
+  "governance": {
+    "log_destination": "None: no security log system",
+    "existing_source_audit": "HubSpot's own audit log; Zendesk ticket history",
+    "spend_owner": "IT and operations lead",
+    "spend_limits": "A monthly cap set by the IT and operations lead",
+    "action_log_required": false
+  },
+  "owners": {
+    "sponsor": "Odalys Fenwick (VP Customer Success)",
+    "technical_owner": "Teodor Amsel (IT and operations lead)",
+    "business_owner": "Marisol Quenby (Customer success team lead)",
+    "backup_owner": "Nadia Rusu (Operations analyst)",
+    "compliance": "Pieter Achterberg (Finance and legal lead)"
+  },
+  "provenance": {
+    "display_name": {
+      "status": "answered",
+      "source": "discovery#A1"
+    },
+    "industry": {
+      "status": "answered",
+      "source": "discovery#A2"
+    },
+    "plan.tier": {
+      "status": "answered",
+      "source": "discovery#B1"
+    },
+    "plan.seats": {
+      "status": "answered",
+      "source": "discovery#B1"
+    },
+    "plan.individual_accounts_on_domain": {
+      "status": "answered",
+      "source": "discovery#B2"
+    },
+    "identity.idp": {
+      "status": "answered",
+      "source": "discovery#D1"
+    },
+    "identity.sso": {
+      "status": "answered",
+      "source": "discovery#D1"
+    },
+    "identity.scim": {
+      "status": "answered",
+      "source": "discovery#D1"
+    },
+    "devices.mdm": {
+      "status": "answered",
+      "source": "discovery#D2"
+    },
+    "devices.managed_share": {
+      "status": "answered",
+      "source": "discovery#D2"
+    },
+    "devices.unmanaged_users": {
+      "status": "answered",
+      "source": "discovery#D2"
+    },
+    "compliance.data_classes": {
+      "status": "answered",
+      "source": "discovery#C1"
+    },
+    "compliance.phi": {
+      "status": "answered",
+      "source": "discovery#C2"
+    },
+    "compliance.baa": {
+      "status": "answered",
+      "source": "discovery#C2"
+    },
+    "compliance.mnpi": {
+      "status": "answered",
+      "source": "discovery#C5"
+    },
+    "compliance.retention": {
+      "status": "answered",
+      "source": "discovery#C3"
+    },
+    "compliance.walls": {
+      "status": "answered",
+      "source": "discovery#C4"
+    },
+    "network.can_allowlist_anthropic_ips": {
+      "status": "answered",
+      "source": "discovery#E6"
+    },
+    "governance.log_destination": {
+      "status": "answered",
+      "source": "discovery#G1"
+    },
+    "governance.existing_source_audit": {
+      "status": "answered",
+      "source": "discovery#G2"
+    },
+    "governance.spend_owner": {
+      "status": "answered",
+      "source": "discovery#G3"
+    },
+    "governance.spend_limits": {
+      "status": "answered",
+      "source": "discovery#G3"
+    },
+    "governance.action_log_required": {
+      "status": "answered",
+      "source": "discovery#G1"
+    },
+    "owners.sponsor": {
+      "status": "answered",
+      "source": "discovery#A1"
+    },
+    "owners.technical_owner": {
+      "status": "answered",
+      "source": "discovery#G4"
+    },
+    "owners.business_owner": {
+      "status": "answered",
+      "source": "discovery#G4"
+    },
+    "owners.backup_owner": {
+      "status": "answered",
+      "source": "discovery#G4"
+    },
+    "owners.compliance": {
+      "status": "answered",
+      "source": "discovery#C3"
+    },
+    "systems.hubspot.kind": {
+      "status": "answered",
+      "source": "discovery#E1"
+    },
+    "systems.hubspot.product": {
+      "status": "answered",
+      "source": "discovery#E1"
+    },
+    "systems.hubspot.edition": {
+      "status": "answered",
+      "source": "discovery#E1"
+    },
+    "systems.hubspot.access_model": {
+      "status": "answered",
+      "source": "discovery#E4"
+    },
+    "systems.hubspot.private_network": {
+      "status": "answered",
+      "source": "discovery#E5"
+    },
+    "systems.google-drive.kind": {
+      "status": "answered",
+      "source": "discovery#E2"
+    },
+    "systems.google-drive.product": {
+      "status": "answered",
+      "source": "discovery#E2"
+    },
+    "systems.google-drive.edition": {
+      "status": "answered",
+      "source": "discovery#E2"
+    },
+    "systems.google-drive.access_model": {
+      "status": "answered",
+      "source": "discovery#E4"
+    },
+    "systems.google-drive.private_network": {
+      "status": "answered",
+      "source": "discovery#E5"
+    },
+    "systems.gmail.kind": {
+      "status": "answered",
+      "source": "discovery#E2"
+    },
+    "systems.gmail.product": {
+      "status": "answered",
+      "source": "discovery#E2"
+    },
+    "systems.gmail.edition": {
+      "status": "answered",
+      "source": "discovery#E2"
+    },
+    "systems.gmail.access_model": {
+      "status": "answered",
+      "source": "discovery#E4"
+    },
+    "systems.gmail.private_network": {
+      "status": "answered",
+      "source": "discovery#E5"
+    },
+    "systems.google-calendar.kind": {
+      "status": "answered",
+      "source": "discovery#E2"
+    },
+    "systems.google-calendar.product": {
+      "status": "answered",
+      "source": "discovery#E2"
+    },
+    "systems.google-calendar.edition": {
+      "status": "answered",
+      "source": "discovery#E2"
+    },
+    "systems.google-calendar.access_model": {
+      "status": "answered",
+      "source": "discovery#E4"
+    },
+    "systems.google-calendar.private_network": {
+      "status": "answered",
+      "source": "discovery#E5"
+    },
+    "systems.slack.kind": {
+      "status": "answered",
+      "source": "discovery#E3"
+    },
+    "systems.slack.product": {
+      "status": "answered",
+      "source": "discovery#E3"
+    },
+    "systems.slack.edition": {
+      "status": "answered",
+      "source": "discovery#E3"
+    },
+    "systems.slack.access_model": {
+      "status": "answered",
+      "source": "discovery#E4"
+    },
+    "systems.slack.private_network": {
+      "status": "answered",
+      "source": "discovery#E5"
+    },
+    "systems.zendesk.kind": {
+      "status": "answered",
+      "source": "discovery#E3"
+    },
+    "systems.zendesk.product": {
+      "status": "answered",
+      "source": "discovery#E3"
+    },
+    "systems.zendesk.edition": {
+      "status": "answered",
+      "source": "discovery#E3"
+    },
+    "systems.zendesk.access_model": {
+      "status": "answered",
+      "source": "discovery#E4"
+    },
+    "systems.zendesk.private_network": {
+      "status": "answered",
+      "source": "discovery#E5"
+    },
+    "systems.usage-db.kind": {
+      "status": "answered",
+      "source": "discovery#E5"
+    },
+    "systems.usage-db.product": {
+      "status": "answered",
+      "source": "discovery#E5"
+    },
+    "systems.usage-db.edition": {
+      "status": "answered",
+      "source": "discovery#E5"
+    },
+    "systems.usage-db.access_model": {
+      "status": "answered",
+      "source": "discovery#E4"
+    },
+    "systems.usage-db.private_network": {
+      "status": "answered",
+      "source": "discovery#E5"
+    }
+  }
+}

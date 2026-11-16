@@ -1,0 +1,936 @@
+{
+  "levelled_version": 1,
+  "customer": "example-software-co",
+  "persona": "customer-success-manager",
+  "source": {
+    "card_sha256": "faa81239442dc52f210f6519f29fd6946fc48cf7455368bddedc29ac7e516e5e",
+    "profile_sha256": "c6fe7a6eea9eed0087bcd354c0f8f7a70bc72c788acf5e1deb79d140560f9f2a",
+    "rules_version": 1,
+    "pack": "b2b-software"
+  },
+  "persona_plan": {
+    "plugin_name": {
+      "value": "twin-customer-success-manager",
+      "rule": null,
+      "cite": "starter-kit/templates/role-plugin/README.md#steps",
+      "reason": "The card leaves role.plugin_name empty, so the engine uses the persona id as the role in twin-<role> (design 4.2).",
+      "unverified": false,
+      "basis": "our-recommendation",
+      "overridden": null
+    },
+    "distribution": {
+      "value": "everyone",
+      "rule": "distribution-everyone",
+      "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+      "reason": "On Team an Owner shares skills and plugins to everyone; group targeting needs Enterprise.",
+      "unverified": false,
+      "basis": "compendium",
+      "overridden": null
+    },
+    "settings_baseline": {
+      "value": null,
+      "rule": "persona-baseline-unmanaged-none",
+      "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+      "reason": "Claude.ai on the web with no device management takes no managed settings file, so there is no baseline.",
+      "unverified": false,
+      "basis": "compendium",
+      "overridden": null
+    },
+    "starting_points": [
+      {
+        "kind": "plugin",
+        "name": "customer-support",
+        "where": "knowledge-work-plugins",
+        "use": "start-from",
+        "cite": "docs/compendium/18-customer-success.md#whats-in-customer-support",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "customer-escalation",
+        "where": "knowledge-work-plugins: customer-support",
+        "use": "start-from",
+        "cite": "docs/compendium/18-customer-success.md#whats-in-customer-support",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "draft-response",
+        "where": "knowledge-work-plugins: customer-support",
+        "use": "start-from",
+        "cite": "docs/compendium/18-customer-success.md#whats-in-customer-support",
+        "unverified": false
+      },
+      {
+        "kind": "skill",
+        "name": "customer-research",
+        "where": "knowledge-work-plugins: customer-support",
+        "use": "start-from",
+        "cite": "docs/compendium/18-customer-success.md#whats-in-customer-support",
+        "unverified": false
+      },
+      {
+        "kind": "plugin",
+        "name": "sales",
+        "where": "knowledge-work-plugins",
+        "use": "reference",
+        "cite": "docs/compendium/16-oob-skills-and-references.md#2-anthropic-plugin-marketplaces-and-plugins",
+        "unverified": false
+      }
+    ]
+  },
+  "tasks": {
+    "C1": {
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "identity": {
+        "value": "user",
+        "rule": "identity-client-user",
+        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "autonomy": {
+        "start": {
+          "value": 1,
+          "rule": "autonomy-start-draft",
+          "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+          "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "ceiling": {
+          "value": 3,
+          "rule": "ceiling-person-started",
+          "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+          "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "data_controls": {
+        "settings_baseline": {
+          "value": null,
+          "rule": "baseline-unmanaged-none",
+          "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+          "reason": "With no device management the twin lives in claude.ai on the web, which has no managed settings file.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "web_tools": {
+          "value": "on",
+          "rule": "web-tools-on",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Web tools are allowed for this data class.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "surfaces": {
+          "value": [
+            "claude-ai"
+          ],
+          "rule": "surfaces-confidential-unmanaged-web",
+          "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+          "reason": "Confidential data on an unmanaged device is for claude.ai on the web only.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "retention": {
+          "value": "standard",
+          "rule": "retention-profile",
+          "cite": "docs/compendium/10-sensitive-data.md#other-controls",
+          "reason": "Retention follows the customer profile's compliance.retention.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "connectors": [
+        {
+          "system": "hubspot",
+          "access": "read",
+          "identity": "user",
+          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin approves it and sets its data permissions. Set write tools to Needs approval.",
+          "runbook": null,
+          "permission": "always-allow",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        },
+        {
+          "system": "google-drive",
+          "access": "read",
+          "identity": "user",
+          "how": "The Google Drive directory connector, built and run by Google. An Owner adds it on Team and Enterprise. It reads and creates files.",
+          "runbook": null,
+          "permission": "always-allow",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": true
+        }
+      ],
+      "memory": {
+        "value": "on",
+        "rule": "memory-on",
+        "cite": "docs/compendium/02-persona.md#memory",
+        "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "plan_fit": {
+        "value": "ok-with-limits",
+        "rule": "plan-fit-confidential-lower-audit",
+        "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+        "reason": "Confidential data is acceptable on Team only where the audit need is lower, so the fit has limits.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      }
+    },
+    "C2": {
+      "runtime": {
+        "value": "claude-tag-routine",
+        "rule": "runtime-team-slack-tag-routine",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "reason": "Shared team work that runs on a schedule and lives in Slack is a Claude Tag channel routine.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "identity": {
+        "value": "service-account",
+        "rule": "identity-tag-service-account",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "reason": "A Claude Tag routine acts as a service account, so it survives turnover.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "autonomy": {
+        "start": {
+          "value": 1,
+          "rule": "autonomy-start-draft",
+          "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+          "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "ceiling": {
+          "value": 2,
+          "rule": "ceiling-untrusted-send",
+          "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+          "reason": "The task reads untrusted input next to a send, so a person approves each post and it stays at level 2.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        }
+      },
+      "data_controls": {
+        "settings_baseline": {
+          "value": null,
+          "rule": "baseline-tag-none",
+          "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+          "reason": "The task runs in Slack through Claude Tag, which takes no managed settings file.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "web_tools": {
+          "value": "on",
+          "rule": "web-tools-on",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Web tools are allowed for this data class.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "surfaces": {
+          "value": [
+            "slack"
+          ],
+          "rule": "surfaces-tag-slack",
+          "cite": "docs/compendium/05-decision-matrix.md#the-options",
+          "reason": "A Claude Tag routine runs in Slack.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "retention": {
+          "value": "standard",
+          "rule": "retention-profile",
+          "cite": "docs/compendium/10-sensitive-data.md#other-controls",
+          "reason": "Retention follows the customer profile's compliance.retention.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "connectors": [
+        {
+          "system": "hubspot",
+          "access": "read",
+          "identity": "service-account",
+          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin approves it and sets its data permissions. Set write tools to Needs approval.",
+          "runbook": null,
+          "permission": "always-allow",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        },
+        {
+          "system": "usage-db",
+          "access": "read",
+          "identity": "service-account",
+          "how": "Our own MCP server, read-only, returning aggregates. On Team there is no MCP tunnel: the server must be reachable from Anthropic's IP range, or the agent runs inside the network.",
+          "runbook": null,
+          "permission": "always-allow",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        },
+        {
+          "system": "slack",
+          "access": "write",
+          "identity": "service-account",
+          "how": "The Slack directory connector (Team and Enterprise; the Claude in Slack app installed first). An Owner enables it. Whether it can post is unconfirmed; the Slack MCP server can.",
+          "runbook": null,
+          "permission": "blocked",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": true
+        }
+      ],
+      "memory": {
+        "value": "off",
+        "rule": "memory-off-untrusted-input",
+        "cite": "docs/compendium/02-persona.md#memory",
+        "reason": "The task reads untrusted input while personal memory is wanted, a memory-poisoning risk, so memory stays off for it.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "plan_fit": {
+        "value": "ok-with-limits",
+        "rule": "plan-fit-private-network-allowlist",
+        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+        "reason": "The private network has no MCP tunnel here, and this customer can allowlist Anthropic's IP range, so it is reachable at the edge.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      }
+    },
+    "C3": {
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "identity": {
+        "value": "user",
+        "rule": "identity-client-user",
+        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "autonomy": {
+        "start": {
+          "value": 1,
+          "rule": "autonomy-start-draft",
+          "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+          "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "ceiling": {
+          "value": 2,
+          "rule": "ceiling-customer-facing",
+          "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+          "reason": "The output reaches someone outside the company, so the task stays at level 1 or 2.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "data_controls": {
+        "settings_baseline": {
+          "value": null,
+          "rule": "baseline-unmanaged-none",
+          "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+          "reason": "With no device management the twin lives in claude.ai on the web, which has no managed settings file.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "web_tools": {
+          "value": "on",
+          "rule": "web-tools-on",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Web tools are allowed for this data class.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "surfaces": {
+          "value": [
+            "claude-ai"
+          ],
+          "rule": "surfaces-confidential-unmanaged-web",
+          "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+          "reason": "Confidential data on an unmanaged device is for claude.ai on the web only.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "retention": {
+          "value": "standard",
+          "rule": "retention-profile",
+          "cite": "docs/compendium/10-sensitive-data.md#other-controls",
+          "reason": "Retention follows the customer profile's compliance.retention.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "connectors": [
+        {
+          "system": "hubspot",
+          "access": "read",
+          "identity": "user",
+          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin approves it and sets its data permissions. Set write tools to Needs approval.",
+          "runbook": null,
+          "permission": "always-allow",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        }
+      ],
+      "memory": {
+        "value": "on",
+        "rule": "memory-on",
+        "cite": "docs/compendium/02-persona.md#memory",
+        "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "plan_fit": {
+        "value": "ok-with-limits",
+        "rule": "plan-fit-confidential-lower-audit",
+        "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+        "reason": "Confidential data is acceptable on Team only where the audit need is lower, so the fit has limits.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      }
+    },
+    "C4": {
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "identity": {
+        "value": "user",
+        "rule": "identity-client-user",
+        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "autonomy": {
+        "start": {
+          "value": 1,
+          "rule": "autonomy-start-draft",
+          "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+          "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "ceiling": {
+          "value": 2,
+          "rule": "ceiling-customer-facing",
+          "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+          "reason": "The output reaches someone outside the company, so the task stays at level 1 or 2.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "data_controls": {
+        "settings_baseline": {
+          "value": null,
+          "rule": "baseline-unmanaged-none",
+          "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+          "reason": "With no device management the twin lives in claude.ai on the web, which has no managed settings file.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "web_tools": {
+          "value": "on",
+          "rule": "web-tools-on",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Web tools are allowed for this data class.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "surfaces": {
+          "value": [
+            "claude-ai"
+          ],
+          "rule": "surfaces-confidential-unmanaged-web",
+          "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+          "reason": "Confidential data on an unmanaged device is for claude.ai on the web only.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "retention": {
+          "value": "standard",
+          "rule": "retention-profile",
+          "cite": "docs/compendium/10-sensitive-data.md#other-controls",
+          "reason": "Retention follows the customer profile's compliance.retention.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "connectors": [
+        {
+          "system": "google-drive",
+          "access": "read",
+          "identity": "user",
+          "how": "The Google Drive directory connector, built and run by Google. An Owner adds it on Team and Enterprise. It reads and creates files.",
+          "runbook": null,
+          "permission": "always-allow",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": true
+        },
+        {
+          "system": "hubspot",
+          "access": "write",
+          "identity": "user",
+          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin approves it and sets its data permissions. Set write tools to Needs approval.",
+          "runbook": null,
+          "permission": "blocked",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        }
+      ],
+      "memory": {
+        "value": "on",
+        "rule": "memory-on",
+        "cite": "docs/compendium/02-persona.md#memory",
+        "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "plan_fit": {
+        "value": "ok-with-limits",
+        "rule": "plan-fit-confidential-lower-audit",
+        "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+        "reason": "Confidential data is acceptable on Team only where the audit need is lower, so the fit has limits.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      }
+    },
+    "C5": {
+      "runtime": {
+        "value": "client-skill",
+        "rule": "runtime-event-source-unverified",
+        "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+        "reason": "What would start the task on an escalation is Unverified, so the manager starts it in a conversation until that is confirmed.",
+        "unverified": true,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "identity": {
+        "value": "user",
+        "rule": "identity-client-user",
+        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "autonomy": {
+        "start": {
+          "value": 1,
+          "rule": "autonomy-start-draft",
+          "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+          "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "ceiling": {
+          "value": 3,
+          "rule": "ceiling-event-person-until-confirmed",
+          "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+          "reason": "The task is internal and reversible, and a person starts it until the event source is confirmed, so it may not run unattended.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        }
+      },
+      "data_controls": {
+        "settings_baseline": {
+          "value": null,
+          "rule": "baseline-unmanaged-none",
+          "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+          "reason": "With no device management the twin lives in claude.ai on the web, which has no managed settings file.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        },
+        "web_tools": {
+          "value": "on",
+          "rule": "web-tools-on",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Web tools are allowed for this data class.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "surfaces": {
+          "value": [
+            "claude-ai"
+          ],
+          "rule": "surfaces-confidential-unmanaged-web",
+          "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+          "reason": "Confidential data on an unmanaged device is for claude.ai on the web only.",
+          "unverified": false,
+          "basis": "our-recommendation",
+          "overridden": null
+        },
+        "retention": {
+          "value": "standard",
+          "rule": "retention-profile",
+          "cite": "docs/compendium/10-sensitive-data.md#other-controls",
+          "reason": "Retention follows the customer profile's compliance.retention.",
+          "unverified": false,
+          "basis": "compendium",
+          "overridden": null
+        }
+      },
+      "connectors": [
+        {
+          "system": "zendesk",
+          "access": "read",
+          "identity": "user",
+          "how": "Zendesk's External AI connection (early access), https://<subdomain>.zendesk.com/mcp, added by an Owner as a custom connector. A Zendesk admin creates the connection and limits it to agent groups.",
+          "runbook": null,
+          "permission": "always-allow",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": true
+        }
+      ],
+      "memory": {
+        "value": "off",
+        "rule": "memory-off-untrusted-input",
+        "cite": "docs/compendium/02-persona.md#memory",
+        "reason": "The task reads untrusted input while personal memory is wanted, a memory-poisoning risk, so memory stays off for it.",
+        "unverified": false,
+        "basis": "compendium",
+        "overridden": null
+      },
+      "plan_fit": {
+        "value": "ok-with-limits",
+        "rule": "plan-fit-early-access-connector",
+        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+        "reason": "The Zendesk connection is in early access and which Claude plans it supports is Unverified.",
+        "unverified": true,
+        "basis": "compendium",
+        "overridden": null
+      }
+    }
+  },
+  "tools": [
+    {
+      "system": "hubspot",
+      "use": "read",
+      "tasks": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "permission": {
+        "value": "always-allow",
+        "rule": "permission-read-always-allow",
+        "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+        "reason": "Reading is allowed at every level.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "wanted": {
+        "C1": "always-allow",
+        "C2": "always-allow",
+        "C3": "always-allow"
+      }
+    },
+    {
+      "system": "google-drive",
+      "use": "read",
+      "tasks": [
+        "C1",
+        "C4"
+      ],
+      "permission": {
+        "value": "always-allow",
+        "rule": "permission-read-always-allow",
+        "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+        "reason": "Reading is allowed at every level.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "wanted": {
+        "C1": "always-allow",
+        "C4": "always-allow"
+      }
+    },
+    {
+      "system": "usage-db",
+      "use": "read",
+      "tasks": [
+        "C2"
+      ],
+      "permission": {
+        "value": "always-allow",
+        "rule": "permission-read-always-allow",
+        "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+        "reason": "Reading is allowed at every level.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "wanted": {
+        "C2": "always-allow"
+      }
+    },
+    {
+      "system": "slack",
+      "use": "send",
+      "tasks": [
+        "C2"
+      ],
+      "permission": {
+        "value": "blocked",
+        "rule": "permission-write-draft-blocked",
+        "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+        "reason": "At levels 0 and 1 the twin only drafts, so write tools are Blocked.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "wanted": {
+        "C2": "needs-approval"
+      }
+    },
+    {
+      "system": "hubspot",
+      "use": "create",
+      "tasks": [
+        "C4"
+      ],
+      "permission": {
+        "value": "blocked",
+        "rule": "permission-write-draft-blocked",
+        "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+        "reason": "At levels 0 and 1 the twin only drafts, so write tools are Blocked.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "wanted": {
+        "C4": "needs-approval"
+      }
+    },
+    {
+      "system": "zendesk",
+      "use": "read",
+      "tasks": [
+        "C5"
+      ],
+      "permission": {
+        "value": "always-allow",
+        "rule": "permission-read-always-allow",
+        "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
+        "reason": "Reading is allowed at every level.",
+        "unverified": false,
+        "basis": "our-recommendation",
+        "overridden": null
+      },
+      "wanted": {
+        "C5": "always-allow"
+      }
+    }
+  ],
+  "blockers": [],
+  "warnings": [
+    {
+      "code": "team-no-group-targeting",
+      "about": "persona",
+      "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+      "unverified": false,
+      "message": "The role plugin is shared to everyone; group targeting needs Enterprise.",
+      "fix": "Keep the role plugin free of anything other roles must not see, or move to Enterprise."
+    },
+    {
+      "code": "team-no-managed-settings",
+      "about": "persona",
+      "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+      "unverified": false,
+      "message": "Claude.ai on the web with no device management gets no managed settings and no hooks.",
+      "fix": "Put the guardrails in connector tool permissions and skills, and tell the customer what cannot be locked."
+    },
+    {
+      "code": "team-no-governance-log",
+      "about": "persona",
+      "cite": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management",
+      "unverified": false,
+      "message": "The governance log is a Claude Code hook, so a twin on the web has none.",
+      "fix": "Record use from the usage dashboard and the source systems' own audit, and say so in the design."
+    },
+    {
+      "code": "team-no-audit-log",
+      "about": "persona",
+      "cite": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management",
+      "unverified": false,
+      "message": "This plan has no audit log and no Compliance API.",
+      "fix": "Rely on the source systems' own audit logs, or move to Enterprise."
+    },
+    {
+      "code": "confidential-on-team",
+      "about": "persona",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "message": "Confidential data on Team is acceptable only where the audit need is lower.",
+      "fix": "Confirm with the customer's compliance owner that the lower audit need holds."
+    },
+    {
+      "code": "hubspot-super-admin-approval",
+      "about": "persona",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false,
+      "message": "The HubSpot connector needs a HubSpot Super Admin's approval as well as an Owner.",
+      "fix": "Name the customer's HubSpot Super Admin in the profile's owners and book the approval."
+    },
+    {
+      "code": "private-network-allowlist",
+      "about": "C2",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false,
+      "message": "A system on a private network must be reachable from Anthropic's IP range, allowlisted at the edge.",
+      "fix": "Have the customer allowlist 160.79.104.0/21 at the edge before the task is built."
+    },
+    {
+      "code": "tag-private-channel-only",
+      "about": "C2",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "message": "Claude Tag on confidential data belongs only in scoped private channels.",
+      "fix": "Run the routine in a private channel limited to the team."
+    },
+    {
+      "code": "slack-directory-send-unverified",
+      "about": "C2",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": true,
+      "message": "Whether the Slack directory connector can post is Unverified; post through Claude Tag or the Slack MCP server.",
+      "fix": "Post through Claude Tag or the Slack MCP server, not the directory connector."
+    },
+    {
+      "code": "untrusted-input-with-send",
+      "about": "C2",
+      "cite": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it",
+      "unverified": false,
+      "message": "The task reads untrusted content and can send it out, so a person approves each send.",
+      "fix": "Set the send tool to Needs approval and keep the task at level 2 or below."
+    },
+    {
+      "code": "memory-poisoning-risk",
+      "about": "C2",
+      "cite": "docs/compendium/02-persona.md#memory",
+      "unverified": false,
+      "message": "The task reads untrusted input while personal memory is wanted, so memory stays off for it.",
+      "fix": "Keep role knowledge in reviewed skills; let only controlled steps write memory."
+    },
+    {
+      "code": "mail-read-only",
+      "about": "C3",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false,
+      "message": "The mail and calendar connectors read only, so an email task ends in a draft a person sends.",
+      "fix": "Write the skill so it ends with a draft in the conversation that the person copies and sends."
+    },
+    {
+      "code": "unmanaged-connectors-read-only",
+      "about": "C4",
+      "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+      "unverified": false,
+      "message": "Confidential data on an unmanaged device calls for read-only connectors, and the task writes.",
+      "fix": "Set the write tool to Needs approval at most, or have the customer accept the write in writing."
+    },
+    {
+      "code": "mail-read-only",
+      "about": "C4",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false,
+      "message": "The mail and calendar connectors read only, so an email task ends in a draft a person sends.",
+      "fix": "Write the skill so it ends with a draft in the conversation that the person copies and sends."
+    },
+    {
+      "code": "memory-poisoning-risk",
+      "about": "C5",
+      "cite": "docs/compendium/02-persona.md#memory",
+      "unverified": false,
+      "message": "The task reads untrusted input while personal memory is wanted, so memory stays off for it.",
+      "fix": "Keep role knowledge in reviewed skills; let only controlled steps write memory."
+    },
+    {
+      "code": "event-source-unverified",
+      "about": "C5",
+      "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+      "unverified": true,
+      "message": "Nothing confirmed can start the task on its event, so a person starts it until that is confirmed.",
+      "fix": "Confirm with Anthropic and the vendor what would fire the event, then level the task again."
+    },
+    {
+      "code": "connector-early-access",
+      "about": "C5",
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": true,
+      "message": "The task's connector is in an early-access programme, with Unverified points.",
+      "fix": "Confirm the connection's plan support and per-user checks with the vendor before the build."
+    }
+  ],
+  "complete": true
+}

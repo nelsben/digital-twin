@@ -1,0 +1,11 @@
+[
+  {"query": "What's the next story to build for the CSM twin? Its backlog is in engagements/sample-team-cs/personas/customer-success-manager", "should_trigger": true},
+  {"query": "lets work S-C1.collect-examples for the csm twin, walk me thru the how steps", "should_trigger": true},
+  {"query": "Mark S-C1.write-evals done in the CSM backlog: the evals run and fail without the skill. Then refresh the dashboard", "should_trigger": true},
+  {"query": "Carry on building the deal-team associate twin's backlog where we stopped yesterday and tell me what's waiting on whom", "should_trigger": true},
+  {"query": "Level the CSM persona card and explain each blocker and warning", "should_trigger": false},
+  {"query": "Record an override on T4's autonomy ceiling and regenerate the backlog", "should_trigger": false},
+  {"query": "Which task card in agents/tasks should I do next for the twincard scripts?", "should_trigger": false},
+  {"query": "Pick the next open GitHub issue for the digital-twin platform build and implement it", "should_trigger": false},
+  {"query": "Fill the persona card from the new interview notes for the load planner", "should_trigger": false}
+]

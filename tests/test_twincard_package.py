@@ -538,6 +538,20 @@ class ExclusionTests(unittest.TestCase):
         for name, _ in package_mod.EXCLUDED:
             self.assertIn("| `%s` |" % name, section)
 
+    def test_every_design_exclusion_row_is_in_excluded(self):
+        text = DESIGN.read_text(encoding="utf-8")
+        section = text[text.index("### Package and deploy"):text.index("## 9. Dashboard")]
+        table = section[section.index("| Template | Why it is left out |"):]
+        rows = []
+        for line in table.split("\n")[2:]:
+            if not line.startswith("|"):
+                break
+            rows.append(re.match(r"^\| `([^`]+)` \|", line).group(1))
+        names = [name for name, _ in package_mod.EXCLUDED]
+        for row in rows:
+            self.assertIn(row, names, "a design.md exclusion row that package.EXCLUDED lacks")
+        self.assertEqual(sorted(rows), sorted(names))
+
     def test_every_sample_task_is_in_deploy_md_or_excluded(self):
         for customer in CUSTOMERS:
             placed, persona = {}, None

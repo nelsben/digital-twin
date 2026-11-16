@@ -1,7 +1,9 @@
 """Build a persona's backlog: turn card.json and levelled.json into backlog.json and backlog.md.
 
-build(persona_dir) validates the card, checks levelled.json is present and was made from the
-current card and profile, then builds the backlog from data/task-library.json; it never writes.
+build(persona_dir) validates the card, checks levelled.json is present, was made from the current
+card and profile, and is what level gives now (it levels again in memory and compares the parsed
+plans; whitespace and key order are not a difference), then builds the backlog from
+data/task-library.json; it never writes.
 write_backlog(persona_dir) does the same and writes <persona_dir>/backlog.json and backlog.md.
 
     {"ok": bool,                  # False on validation errors or a missing or stale levelled.json
@@ -13,7 +15,9 @@ write_backlog(persona_dir) does the same and writes <persona_dir>/backlog.json a
 The epic is the role twin; one feature per card feature, then F-twin-foundation; one story per
 card task, then the seven foundation stories; tasks come from the library's templates, whose
 'when' conditions use the levelling engine's condition language (level.matches). Statuses are
-kept across runs. Design of record: partner-kit/docs/design.md, section 8.
+kept across runs. Every value written to backlog.md goes through one helper (_md) so card and library
+text cannot change the page's structure; backlog.json and the --plan-out tree keep the raw values.
+Design of record: partner-kit/docs/design.md, section 8.
 """
 
 import hashlib
@@ -208,49 +212,86 @@ def _paths(persona_dir):
 
 
 def _read_levelled(persona_dir):
-    """(card, profile, levelled, levelled bytes), or None when levelled.json is missing or stale."""
+    """(card, profile, levelled) when levelled.json is what level gives now, else None.
+
+    levelled.json must name the current card and profile by hash, and level, run again in memory on
+    the current card, profile and kit data, must give the same plan once both are parsed. The plan
+    returned is the one level gives now, so the backlog's levelled_sha256 is the hash of its text.
+    """
     card_path, profile_path, levelled_path = _paths(persona_dir)
     if not levelled_path.is_file():
         return None
     card_bytes, profile_bytes = card_path.read_bytes(), profile_path.read_bytes()
-    levelled_bytes = levelled_path.read_bytes()
     try:
-        levelled = json.loads(levelled_bytes.decode("utf-8"))
+        levelled = json.loads(levelled_path.read_bytes().decode("utf-8"))
         source = levelled["source"]
-    except (ValueError, KeyError, TypeError):
+        stale = source.get("card_sha256") != _sha(card_bytes) or source.get("profile_sha256") != _sha(profile_bytes)
+    except (ValueError, KeyError, TypeError, AttributeError):
         return None
-    if source.get("card_sha256") != _sha(card_bytes) or source.get("profile_sha256") != _sha(profile_bytes):
+    if stale:
         return None
-    return (json.loads(card_bytes.decode("utf-8")), json.loads(profile_bytes.decode("utf-8")), levelled,
-            levelled_bytes)
+    fresh = _level.level(str(persona_dir))
+    if not fresh["ok"] or _level.canonical(fresh["levelled"]) != _level.canonical(levelled):
+        return None
+    return (json.loads(card_bytes.decode("utf-8")), json.loads(profile_bytes.decode("utf-8")), fresh["levelled"])
 
 
-def _old_statuses(persona_dir):
-    """({task id: (title, status)}, [retired entries]) from an existing backlog.json; UsageError if unusable."""
+BACKLOG_FIX = "Next: fix backlog.json or delete it, then run the backlog command again."
+
+
+def _unusable(what):
+    return UsageError("backlog.json %s. %s" % (what, BACKLOG_FIX))
+
+
+def read_statuses(persona_dir):
+    """({task id: (title, status)}, [retired entries]) from an existing backlog.json; UsageError if unusable.
+
+    A file that is not JSON or not in backlog.json's shape, or a status outside todo, in-progress and done,
+    is a usage error naming the file and what to do next.
+    """
     path = Path(persona_dir) / BACKLOG_JSON
     if not path.is_file():
         return {}, []
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
-        features = data["epic"]["features"]
-        retired = data.get("retired") or []
-    except (ValueError, KeyError, TypeError) as exc:
-        raise UsageError("backlog.json cannot be read (%s); fix it or delete it, then run backlog again" % exc)
+    except (ValueError, UnicodeDecodeError) as exc:
+        raise _unusable("cannot be read as JSON (%s)" % exc)
+    if not isinstance(data, dict):
+        raise _unusable("is not a JSON object")
+    epic = data.get("epic")
+    features = epic.get("features") if isinstance(epic, dict) else None
+    if not isinstance(features, list):
+        raise _unusable("has no list at epic.features")
     tasks = {}
-    for feature in features:
-        for story in feature.get("stories") or []:
-            for item in story.get("tasks") or []:
-                tid, status = item.get("id"), item.get("status")
+    for f_index, feature in enumerate(features):
+        stories = feature.get("stories") if isinstance(feature, dict) else None
+        if not isinstance(stories, list):
+            raise _unusable("epic.features[%d] has no list of stories" % f_index)
+        for s_index, story in enumerate(stories):
+            items = story.get("tasks") if isinstance(story, dict) else None
+            if not isinstance(items, list):
+                raise _unusable("epic.features[%d].stories[%d] has no list of tasks" % (f_index, s_index))
+            for t_index, item in enumerate(items):
+                where = "epic.features[%d].stories[%d].tasks[%d]" % (f_index, s_index, t_index)
+                if not isinstance(item, dict) or not isinstance(item.get("id"), str):
+                    raise _unusable("%s is not a task with an id" % where)
+                tid, status = item["id"], item.get("status")
                 if status not in STATUSES:
-                    raise UsageError("backlog.json: task %s has status %r; use one of %s"
+                    raise UsageError("backlog.json: task %s has status %r, which is not one of %s. Next: set it "
+                                     "to one of them, then run the backlog command again."
                                      % (tid, status, ", ".join(STATUSES)))
                 tasks[tid] = (item.get("title"), status)
+    retired = data.get("retired", [])
+    if retired is None:
+        retired = []
+    if not isinstance(retired, list):
+        raise _unusable("has retired that is not a list")
     out = []
     for entry in retired:
         if not isinstance(entry, dict) or entry.get("status") not in STATUSES:
             rid = entry.get("id") if isinstance(entry, dict) else entry
-            raise UsageError("backlog.json: retired item %s has an unknown status; use one of %s"
-                             % (rid, ", ".join(STATUSES)))
+            raise UsageError("backlog.json: retired item %s has an unknown status, not one of %s. Next: set it "
+                             "to one of them, then run the backlog command again." % (rid, ", ".join(STATUSES)))
         out.append({"id": entry.get("id"), "title": entry.get("title"), "status": entry["status"]})
     return tasks, out
 
@@ -612,9 +653,14 @@ def build(persona_dir, library=None):
     read = _read_levelled(persona_dir)
     if read is None:
         return _result(False, validation, STALE)
-    card, profile, levelled, levelled_bytes = read
+    card, profile, levelled = read
+    return assemble(persona_dir, validation, card, profile, levelled, library)
+
+
+def assemble(persona_dir, validation, card, profile, levelled, library=None):
+    """Build the backlog from parsed records known to be current; statuses come from backlog.json."""
     library = library if library is not None else load_library()
-    old_tasks, old_retired = _old_statuses(persona_dir)
+    old_tasks, old_retired = read_statuses(persona_dir)
     systems = _systems(profile)
     base = persona_facts(card, profile, levelled, systems)
     persona_blockers = [b for b in levelled.get("blockers", []) if b["about"] == "persona"]
@@ -642,7 +688,7 @@ def build(persona_dir, library=None):
         "backlog_version": BACKLOG_VERSION,
         "customer": card.get("customer"),
         "persona": card.get("id"),
-        "source": {"card_sha256": levelled["source"]["card_sha256"], "levelled_sha256": _sha(levelled_bytes),
+        "source": {"card_sha256": levelled["source"]["card_sha256"], "levelled_sha256": _sha(_level.render(levelled).encode("utf-8")),
                    "library_version": library["library_version"]},
         "epic": {"id": "E", "title": "%s twin for %s" % (role, display),
                  "status": derive_status(f["status"] for f in features), "features": features},
@@ -685,32 +731,53 @@ def counts(backlog):
     return len(backlog["epic"]["features"]), len(stories), sum(len(s["tasks"]) for s in stories)
 
 
+_MD_LEAD = re.compile(r"^(?:[#>+\-*=_`~|]|\d+[.)])")
+
+
+def _md(text, lead=False):
+    """A value as backlog.md writes it: one line, '<' as &lt;, and (lead) no block marker at its start.
+
+    Whitespace runs (CR and LF included) become one space and the ends are trimmed. With lead, the
+    value starts a line or follows a list marker, so a leading heading, list, quote, fence or table
+    character is backslash-escaped. backlog.json and the plan tree keep the raw values.
+    """
+    out = " ".join(str(text).split()).replace("<", "&lt;")
+    if lead:
+        match = _MD_LEAD.match(out)
+        if match:
+            mark = match.group(0)
+            out = mark[:-1] + "\\" + mark[-1] + out[len(mark):]
+    return out
+
+
 def _cell(text):
-    return str(text).replace("|", "/").replace("\n", " ")
+    """A table cell: _md, with '|' as '/'."""
+    return _md(text).replace("|", "/")
 
 
 def _md_story(story):
-    lines = ["", "### %s: %s" % (story["id"], story["title"]), "", story["statement"], "",
+    lines = ["", "### %s: %s" % (_md(story["id"]), _md(story["title"])), "", _md(story["statement"], lead=True), "",
              "Part %s. In pilot: %s. Priority: %s. Status: %s." % (
-                 story["part"], "yes" if story["in_pilot"] else "no",
-                 story["priority"] if story["priority"] is not None else "none", story["status"]),
+                 _md(story["part"]), "yes" if story["in_pilot"] else "no",
+                 _md(story["priority"]) if story["priority"] is not None else "none", _md(story["status"])),
              "", "| Field | Value |", "|---|---|"]
     for key, value in story["fields"].items():
         lines.append("| %s | %s |" % (key.replace("_", " ").capitalize(), _cell(value)))
     lines += ["", "**Acceptance criteria:**", ""]
-    lines += ["%d. %s" % (i, text) for i, text in enumerate(story["acceptance"], 1)]
+    lines += ["%d. %s" % (i, _md(text, lead=True)) for i, text in enumerate(story["acceptance"], 1)]
     lines += ["", "**Gated by:**", ""]
-    lines += ["- %s %s: %s" % (g["kind"], g["id"], g["text"]) for g in story["gated_by"]] or ["- Nothing."]
+    lines += ["- %s %s: %s" % (_md(g["kind"], lead=True), _md(g["id"]), _md(g["text"]))
+              for g in story["gated_by"]] or ["- Nothing."]
     lines += ["", "**Tasks:**", ""]
     for item in story["tasks"]:
         lines.append("- %s **%s** %s (owner: %s, part %s)" % (
-            MARKS[item["status"]], item["id"], item["title"], item["owner_role"], item["part"]))
+            MARKS[item["status"]], _md(item["id"]), _md(item["title"]), _md(item["owner_role"]), _md(item["part"])))
         for i, step in enumerate(item["how"], 1):
-            text = step["text"]
+            text = _md(step["text"], lead=True)
             if step["link"]:
-                text += " See [%s](%s%s)." % (step["link"], MD_LINK_PREFIX, step["link"])
+                text += " See [%s](%s%s)." % (_md(step["link"]), MD_LINK_PREFIX, _md(step["link"]))
             lines.append("  %d. %s" % (i, text))
-        lines.append("  - Done when: %s" % item["done_when"])
+        lines.append("  - Done when: %s" % _md(item["done_when"]))
     return lines
 
 
@@ -719,24 +786,25 @@ def render_md(backlog, persona_dir=None):
     epic = backlog["epic"]
     n_features, n_stories, n_tasks = counts(backlog)
     lines = [
-        "# " + epic["title"],
+        "# " + _md(epic["title"]),
         "",
         "Generated from card.json and levelled.json by `python3 %s backlog %s`; never edit it by hand. To mark a "
         "task, change only its status in backlog.json, then run the command again." % (
-            CLI_PATH, command_path(backlog, persona_dir)),
+            CLI_PATH, _md(command_path(backlog, persona_dir))),
         "",
         "Status: %s. %d features, %d stories, %d tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done."
-        % (epic["status"], n_features, n_stories, n_tasks),
+        % (_md(epic["status"]), n_features, n_stories, n_tasks),
     ]
     for feature in epic["features"]:
-        lines += ["", "## %s: %s" % (feature["id"], feature["title"]), "",
-                  "Kind: %s. Status: %s. %d stories." % (feature["kind"], feature["status"], len(feature["stories"]))]
+        lines += ["", "## %s: %s" % (_md(feature["id"]), _md(feature["title"])), "",
+                  "Kind: %s. Status: %s. %d stories." % (_md(feature["kind"]), _md(feature["status"]),
+                                                         len(feature["stories"]))]
         for story in feature["stories"]:
             lines += _md_story(story)
     lines += ["", "## Retired", ""]
     if backlog["retired"]:
         lines += ["Items no longer generated from the card that had been started or finished:", ""]
-        lines += ["- %s **%s** %s (%s)" % (MARKS[r["status"]], r["id"], r["title"], r["status"])
+        lines += ["- %s **%s** %s (%s)" % (MARKS[r["status"]], _md(r["id"]), _md(r["title"]), _md(r["status"]))
                   for r in backlog["retired"]]
     else:
         lines.append("Nothing retired.")

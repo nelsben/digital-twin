@@ -11,18 +11,24 @@
 
 Runs from any working directory. Exit codes: 0 on success; 1 when validation
 fails (level, backlog and dashboard then write nothing), when levelled.json is
-missing or out of date (backlog and dashboard write nothing), when backlog.json is
-missing or out of date (dashboard writes nothing), or when levelling reports a
+missing or no longer what level gives for the current card, profile and kit data
+(backlog and dashboard write nothing), when backlog.json is missing or no longer
+what backlog gives (dashboard writes nothing), or when levelling reports a
 blocker (level still writes levelled.json, backlog still writes both files,
 dashboard still writes dashboard.html); 2 on a usage error, a missing persona
-folder (for level, backlog and dashboard, a folder with no card.json), an unknown
-status in backlog.json or a --date that is not a real YYYY-MM-DD date.
+folder (for level, backlog and dashboard, a folder with no card.json), an output
+that cannot be written, a kit data file or backlog.json that cannot be read or is
+not in its shape, an unknown status in backlog.json or a --date that is not a
+real YYYY-MM-DD date. A usage error or refusal is one line on stderr ending
+"Next: <what to do>". With --json, level and backlog print exactly one JSON
+document on stdout.
 The all command runs the four in order and stops only when validation fails (nothing is
 written, exit 1); a levelling blocker still writes every file and exits 1.
 """
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -32,16 +38,34 @@ if __package__ in (None, ""):
 
 from twincard import backlog as backlog_mod  # noqa: E402
 from twincard import dashboard as dashboard_mod  # noqa: E402
-from twincard.level import LEVELLED_FILE, write_levelled  # noqa: E402
+from twincard import fields as fields_mod  # noqa: E402
+from twincard import packs as packs_mod  # noqa: E402
+from twincard.level import LEVELLED_FILE, LevelError, write_levelled  # noqa: E402
 from twincard.validate import qualified, validate  # noqa: E402
 
 EXIT_OK = 0
 EXIT_INVALID = 1
 EXIT_USAGE = 2
 
+DATA_NEXT = ("restore the twin-consultant plugin's data files (undo the edit, or reinstall the plugin), "
+             "then run the command again")
+VALIDATION_ERROR = "card.json or customer-profile.json has validation errors. Next: fix them, then run level again."
+
+
+class Refusal(Exception):
+    """A usage error or a refusal: one stderr line, exit 2."""
+
+
+class Parser(argparse.ArgumentParser):
+    """argparse with a one-line usage error that says what to do next."""
+
+    def error(self, message):
+        self.exit(EXIT_USAGE, "%s: %s. Next: run %s --help to see the commands and their arguments.\n"
+                  % (self.prog, message, self.prog))
+
 
 def build_parser():
-    parser = argparse.ArgumentParser(
+    parser = Parser(
         prog="cli.py", description="Persona-card workflow tools for the twin-consultant plugin.")
     commands = parser.add_subparsers(dest="command", metavar="command")
     commands.required = True
@@ -56,7 +80,8 @@ def build_parser():
     backlog = commands.add_parser(
         "backlog", help="build backlog.json and backlog.md from card.json, levelled.json and the task library")
     backlog.add_argument("persona_dir", help="the persona folder that holds card.json and levelled.json")
-    backlog.add_argument("--json", action="store_true", help="print backlog.json (or the validation errors) as JSON")
+    backlog.add_argument("--json", action="store_true",
+                         help="print backlog.json (or, when refused, the error and the validation errors) as JSON")
     backlog.add_argument("--plan-out", metavar="FILE", help="also write the backlog as a tree_import plan to FILE")
     board = commands.add_parser(
         "dashboard", help="render dashboard.html from card.json, the profile, levelled.json and backlog.json")
@@ -125,11 +150,25 @@ def format_level(result, persona_dir):
     return "\n".join(lines)
 
 
+def refused_json(validation, error):
+    """The JSON a refused level or backlog prints: the validate() result with ok false and the error."""
+    body = dict(validation) if validation else {"errors": [], "warnings": []}
+    body["ok"] = False
+    body["error"] = error
+    return json.dumps(body, indent=2, ensure_ascii=False)
+
+
+def print_json(text):
+    sys.stdout.write(text if text.endswith("\n") else text + "\n")
+
+
 def run_level(args, persona_dir):
     result = write_levelled(str(persona_dir))
     if args.json:
-        body = result["levelled"] if result["ok"] else result["validation"]
-        print(json.dumps(body, indent=2, ensure_ascii=False))
+        if result["ok"]:
+            print_json(json.dumps(result["levelled"], indent=2, ensure_ascii=False))
+        else:
+            print_json(refused_json(result["validation"], VALIDATION_ERROR))
     else:
         print(format_level(result, persona_dir))
     if not result["ok"] or result["levelled"]["blockers"]:
@@ -152,15 +191,13 @@ def format_backlog(result, persona_dir):
 
 
 def run_backlog(args, persona_dir):
-    try:
-        result = backlog_mod.write_backlog(str(persona_dir))
-    except backlog_mod.UsageError as exc:
-        sys.stderr.write("cli.py backlog: %s\n" % exc)
-        return EXIT_USAGE
+    result = backlog_mod.write_backlog(str(persona_dir))
     if not result["ok"]:
         if args.json:
-            print(json.dumps(result["validation"], indent=2, ensure_ascii=False))
-        elif result["validation"]["errors"]:
+            print_json(refused_json(result["validation"], result["error"]))
+            sys.stderr.write(result["error"] + "\n")
+            return EXIT_INVALID
+        if result["validation"]["errors"]:
             print(format_text(result["validation"]))
         print(result["error"])
         return EXIT_INVALID
@@ -173,18 +210,17 @@ def run_backlog(args, persona_dir):
     else:
         print(format_backlog(result, persona_dir))
     if backlog_mod.has_blocker(str(persona_dir)):
-        if not args.json:
-            print("Blocked: levelled.json reports a blocker; the gated stories say which.")
+        line = "Blocked: levelled.json reports a blocker; the gated stories say which."
+        if args.json:
+            sys.stderr.write(line + "\n")
+        else:
+            print(line)
         return EXIT_INVALID
     return EXIT_OK
 
 
 def run_dashboard(args, persona_dir):
-    try:
-        result = dashboard_mod.write_dashboard(str(persona_dir), args.date)
-    except dashboard_mod.UsageError as exc:
-        sys.stderr.write("cli.py dashboard: %s\n" % exc)
-        return EXIT_USAGE
+    result = dashboard_mod.write_dashboard(str(persona_dir), args.date)
     if not result["ok"]:
         if result["validation"] and result["validation"]["errors"]:
             print(format_text(result["validation"]))
@@ -200,11 +236,7 @@ def run_dashboard(args, persona_dir):
 
 def run_all(args, persona_dir):
     """validate, level, backlog, dashboard in order, by the same functions the single commands call."""
-    try:
-        date = dashboard_mod.parse_date(args.date)
-    except dashboard_mod.UsageError as exc:
-        sys.stderr.write("cli.py all: %s\n" % exc)
-        return EXIT_USAGE
+    date = dashboard_mod.parse_date(args.date)
     checked = validate(str(persona_dir))
     if not checked["ok"]:
         print("validate: failed")
@@ -220,11 +252,7 @@ def run_all(args, persona_dir):
     print("level: %s %s" % ("blocked" if blocked else "ok", Path(persona_dir) / LEVELLED_FILE))
     for line in format_task_lines(levelled) + format_findings(levelled):
         print(line)
-    try:
-        built = backlog_mod.write_backlog(str(persona_dir))
-    except backlog_mod.UsageError as exc:
-        sys.stderr.write("cli.py all: %s\n" % exc)
-        return EXIT_USAGE
+    built = backlog_mod.write_backlog(str(persona_dir))
     if not built["ok"]:
         print("backlog: failed")
         print(built["error"])
@@ -243,30 +271,94 @@ def run_all(args, persona_dir):
     return EXIT_INVALID if blocked else EXIT_OK
 
 
-def main(argv=None):
-    args = build_parser().parse_args(argv)
+OUTPUTS = {
+    "level": (LEVELLED_FILE,),
+    "backlog": (backlog_mod.BACKLOG_JSON, backlog_mod.BACKLOG_MD),
+    "dashboard": (dashboard_mod.DASHBOARD_FILE,),
+    "all": (LEVELLED_FILE, backlog_mod.BACKLOG_JSON, backlog_mod.BACKLOG_MD, dashboard_mod.DASHBOARD_FILE),
+}
+
+
+def check_writable(path):
+    """Refusal unless path can be written: an existing writable file, or a new file in a writable folder."""
+    path = Path(path)
+    if path.is_dir():
+        raise Refusal("cannot write %s: it is a folder. Next: give a file path" % path)
+    if path.exists():
+        if not os.access(str(path), os.W_OK):
+            raise Refusal("cannot write %s: the file is read-only. Next: make it writable (chmod u+w), then run "
+                          "the command again" % path)
+        return
+    folder = path.parent
+    if not folder.is_dir():
+        raise Refusal("cannot write %s: the folder %s does not exist. Next: create the folder or give another "
+                      "path, then run the command again" % (path, folder))
+    if not os.access(str(folder), os.W_OK):
+        raise Refusal("cannot write %s: the folder %s is read-only. Next: make it writable, then run the "
+                      "command again" % (path, folder))
+
+
+def _sentence(text):
+    text = str(text).strip()
+    return text[:-1] if text.endswith(".") else text
+
+
+def data_error_line(exc):
+    """One line for a kit data file that cannot be read or is not in its shape."""
+    text = _sentence(exc)
+    if "Next:" in text:
+        return text
+    return "%s. Next: %s" % (text, DATA_NEXT)
+
+
+def run(args):
     persona_dir = Path(args.persona_dir)
     if not persona_dir.is_dir():
-        sys.stderr.write("cli.py %s: no such persona folder: %s\n" % (args.command, persona_dir))
-        return EXIT_USAGE
-    if args.command in ("level", "backlog", "dashboard", "all"):
-        if not (persona_dir / "card.json").is_file():
-            sys.stderr.write("cli.py %s: %s holds no card.json, so it is not a persona folder\n"
-                             % (args.command, persona_dir))
-            return EXIT_USAGE
-        if args.command == "backlog":
-            return run_backlog(args, persona_dir)
-        if args.command == "dashboard":
-            return run_dashboard(args, persona_dir)
-        if args.command == "all":
-            return run_all(args, persona_dir)
-        return run_level(args, persona_dir)
-    result = validate(str(persona_dir))
-    if args.json:
-        print(json.dumps(result, indent=2, ensure_ascii=False))
-    else:
-        print(format_text(result))
-    return EXIT_OK if result["ok"] else EXIT_INVALID
+        raise Refusal("no such persona folder: %s. Next: give the path of a persona folder, "
+                      "engagements/<customer>/personas/<persona-id>" % persona_dir)
+    if args.command == "validate":
+        result = validate(str(persona_dir))
+        if args.json:
+            print(json.dumps(result, indent=2, ensure_ascii=False))
+        else:
+            print(format_text(result))
+        return EXIT_OK if result["ok"] else EXIT_INVALID
+    if not (persona_dir / "card.json").is_file():
+        raise Refusal("%s holds no card.json, so it is not a persona folder. Next: give the folder that holds "
+                      "card.json, or start one from templates/card.json" % persona_dir)
+    if getattr(args, "date", None) is not None or args.command in ("dashboard", "all"):
+        dashboard_mod.parse_date(args.date)
+    for name in OUTPUTS[args.command]:
+        check_writable(persona_dir / name)
+    if getattr(args, "plan_out", None):
+        check_writable(args.plan_out)
+    if args.command == "backlog":
+        return run_backlog(args, persona_dir)
+    if args.command == "dashboard":
+        return run_dashboard(args, persona_dir)
+    if args.command == "all":
+        return run_all(args, persona_dir)
+    return run_level(args, persona_dir)
+
+
+def main(argv=None):
+    args = build_parser().parse_args(argv)
+    try:
+        return run(args)
+    except (Refusal, backlog_mod.UsageError, dashboard_mod.UsageError) as exc:
+        line = _sentence(exc) if "Next:" in str(exc) else "%s. Next: run the command again with a usable value" % _sentence(exc)
+    except (LevelError, backlog_mod.BacklogError, packs_mod.PackError, fields_mod.CatalogueError) as exc:
+        line = data_error_line(exc)
+    except OSError as exc:
+        where = exc.filename or "a file"
+        line = "cannot read or write %s: %s. Next: check the file and its folder can be read and written, then " \
+               "run the command again" % (where, exc.strerror or exc)
+    line = " ".join(line.split())
+    line = line if line.endswith(".") else line + "."
+    if getattr(args, "json", False):
+        print_json(refused_json(None, line))
+    sys.stderr.write("cli.py %s: %s\n" % (args.command, line))
+    return EXIT_USAGE
 
 
 if __name__ == "__main__":

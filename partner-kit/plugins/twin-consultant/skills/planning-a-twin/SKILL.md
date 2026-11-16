@@ -79,10 +79,10 @@ the ways out and let the consultant choose.
 
 ## Recording an override
 
-Write one only when the consultant gives all three: the value, the reason,
-and the named person at the customer who approved it. If any is missing, ask
-for it and write nothing. Append one entry to the card's `overrides` list, in
-the design's shape, and change nothing else on the card:
+Write one only when the consultant gives all three: a value from the design's
+7.2 vocabulary (exactly, as `client-skill` or `2`), the reason, and the named
+approver at the customer. If any is missing, ask and write nothing. Append one
+entry per task and decision to `overrides`; change nothing else on the card:
 
 ```json
 {"task": "T4", "decision": "autonomy.ceiling", "value": 2, "reason": "<the consultant's words>", "approved_by": "<name and role at the customer>"}
@@ -90,10 +90,10 @@ the design's shape, and change nothing else on the card:
 
 Never set `autonomy.start` or `autonomy.ceiling` higher than the rule's
 result unless the consultant asks for exactly that and names the approver.
-After the rerun, state the rule's own result next to the override (in
-`levelled.json` it is `overridden.rule_result`) and say the dashboard will
-show the decision as Overridden, with the reason and the approver. The run
-raises warning `override-applied` for it.
+`validate` refuses a value outside the vocabulary, an empty reason or approver
+and a repeat. After the rerun, state the rule's own result next to the override
+(`overridden.rule_result` in `levelled.json`); the dashboard shows it as
+Overridden, with the reason and approver, and the run warns `override-applied`.
 
 ## After any change
 

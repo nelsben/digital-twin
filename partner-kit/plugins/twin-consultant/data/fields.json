@@ -1,6 +1,6 @@
 {
   "catalogue_version": 1,
-  "about": "Field catalogue for the customer profile and the persona card. Design: partner-kit/docs/design.md, section 5. A default is {value, source}; source is the compendium or playbook page that sets it. required is true when a levelling decision (design section 7) or the persona voice needs the field. key is true for a field that names or links an entry (record ids, list keys, references): a key field is always structurally required, carries no provenance and is left out of completeness, so its required flag is false. Lists whose key is null are positional: their paths use the position, as in tasks.T1.writes[0].action.",
+  "about": "Field catalogue for the customer profile and the persona card. Design: partner-kit/docs/design.md, section 5. A default is {value, source}; source is the compendium or playbook page that sets it. required is true when a levelling decision (design section 7) or the persona voice needs the field. key is true for a field that names or links an entry (record ids, list keys, references): a key field is always structurally required, carries no provenance and is left out of completeness, so its required flag is false. Lists whose key is null are positional: their paths use the position, as in tasks.T1.writes[0].action. Top-level keys a record does not have here (in envelope or as the first segment of a path) are validation errors. A number or integer field must be finite and not negative; lower_bounds names a field (record:path) whose least value is another number. no_provenance lists the paths of a record whose fields carry no provenance and are left out of completeness; a required one must be a non-empty string. override_values is the vocabulary of overrides[].value for each decision a card may override (design section 7.2), read by validate and by level.",
   "envelope": {
     "profile": [
       "profile_version",
@@ -88,6 +88,26 @@
         "must_be": "tasks[].id"
       }
     ]
+  },
+  "lower_bounds": {},
+  "no_provenance": {
+    "card": [
+      "overrides[].reason",
+      "overrides[].approved_by"
+    ]
+  },
+  "override_values": {
+    "runtime": {"type": "enum", "values": ["client-skill", "claude-code-scheduled-task", "claude-tag-routine", "managed-agents", "managed-agents-self-hosted", "agent-sdk", "none"]},
+    "identity": {"type": "enum", "values": ["user", "service-account", "api-key-vault"]},
+    "autonomy.start": {"type": "integer", "min": 0, "max": 4},
+    "autonomy.ceiling": {"type": "integer", "min": 0, "max": 4},
+    "memory": {"type": "enum", "values": ["on", "off"]},
+    "data_controls": {"type": "object", "parts": {
+      "settings_baseline": {"type": "enum", "values": ["general", "confidential", "pe-zdr", "hipaa"], "null": true},
+      "web_tools": {"type": "enum", "values": ["on", "off"]},
+      "surfaces": {"type": "enum-list", "values_from": "card:role.works_in"},
+      "retention": {"type": "enum", "values_from": "profile:compliance.retention"}
+    }}
   },
   "fields": [
     {"path": "customer", "record": "profile", "type": "string", "values": [], "required": false, "key": true, "asked_by": ["A1"], "default": null, "feeds": ["dashboard:header", "backlog:epic"], "part": "context"},
@@ -182,8 +202,8 @@
     {"path": "overrides[].task", "record": "card", "type": "string", "values": [], "required": false, "key": true, "asked_by": [], "default": {"value": null, "source": "docs/playbook/01-engagement-model.md"}, "feeds": ["dashboard:features", "backlog:story"], "part": "context"},
     {"path": "overrides[].decision", "record": "card", "type": "enum", "values": ["runtime", "identity", "autonomy.start", "autonomy.ceiling", "data_controls", "connectors", "memory", "plan_fit"], "required": false, "key": false, "asked_by": [], "default": {"value": null, "source": "docs/playbook/01-engagement-model.md"}, "feeds": ["dashboard:features", "backlog:story"], "part": "context"},
     {"path": "overrides[].value", "record": "card", "type": "any", "values": [], "required": false, "key": false, "asked_by": [], "default": {"value": null, "source": "docs/playbook/01-engagement-model.md"}, "feeds": ["dashboard:features", "backlog:story"], "part": "context"},
-    {"path": "overrides[].reason", "record": "card", "type": "string", "values": [], "required": false, "key": false, "asked_by": [], "default": {"value": null, "source": "docs/playbook/01-engagement-model.md"}, "feeds": ["dashboard:features", "backlog:story"], "part": "context"},
-    {"path": "overrides[].approved_by", "record": "card", "type": "string", "values": [], "required": false, "key": false, "asked_by": [], "default": {"value": null, "source": "docs/playbook/01-engagement-model.md"}, "feeds": ["dashboard:features"], "part": "context"},
+    {"path": "overrides[].reason", "record": "card", "type": "string", "values": [], "required": true, "key": false, "asked_by": [], "default": {"value": null, "source": "docs/playbook/01-engagement-model.md"}, "feeds": ["dashboard:features", "backlog:story"], "part": "context"},
+    {"path": "overrides[].approved_by", "record": "card", "type": "string", "values": [], "required": true, "key": false, "asked_by": [], "default": {"value": null, "source": "docs/playbook/01-engagement-model.md"}, "feeds": ["dashboard:features"], "part": "context"},
     {"path": "open_questions[].id", "record": "card", "type": "string", "values": [], "required": false, "key": true, "asked_by": [], "default": {"value": null, "source": "docs/playbook/02-discovery.md"}, "feeds": ["dashboard:open_questions"], "part": "context"},
     {"path": "open_questions[].question", "record": "card", "type": "string", "values": [], "required": false, "key": false, "asked_by": [], "default": {"value": null, "source": "docs/playbook/02-discovery.md"}, "feeds": ["dashboard:open_questions"], "part": "context"},
     {"path": "open_questions[].blocks", "record": "card", "type": "string-list", "values": [], "required": false, "key": true, "asked_by": [], "default": {"value": null, "source": "docs/playbook/02-discovery.md"}, "feeds": ["dashboard:open_questions", "backlog:story"], "part": "context"},

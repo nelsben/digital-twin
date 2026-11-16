@@ -16,6 +16,7 @@ import tempfile
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parent.parent
 SCRIPTS_DIR = ROOT / "partner-kit" / "plugins" / "twin-consultant" / "scripts"
@@ -269,16 +270,24 @@ class FixturePageTests(unittest.TestCase):
 
     def test_null_ceiling_shows_undecided(self):
         # Every trigger now has a ceiling rule with a level, so neither fixture has a null ceiling.
-        # A null ceiling is still possible (a rule whose fact is empty), so set one by hand and rebuild.
+        # A null ceiling is still possible (a rule whose fact is empty). A hand-edited levelled.json is now
+        # refused as out of date (OPS-47), so level itself is patched to give one, and the backlog and the
+        # page are built under the same patch.
+        from twincard import backlog as backlog_mod
+        from twincard import level as level_mod
+        real = level_mod.level
+
+        def null_t4_ceiling(*args, **kwargs):
+            result = real(*args, **kwargs)
+            if result["ok"]:
+                result["levelled"]["tasks"]["T4"]["autonomy"]["ceiling"]["value"] = None
+            return result
         with tempfile.TemporaryDirectory() as tmp:
             work = Copy("pe", tmp).regenerate()
-            path = work.persona / "levelled.json"
-            levelled = load_json(path)
-            levelled["tasks"]["T4"]["autonomy"]["ceiling"]["value"] = None
-            path.write_text(json.dumps(levelled, indent=2), encoding="utf-8")
-            proc = run_cli("backlog", str(work.persona))
-            self.assertIn(proc.returncode, (0, 1), proc.stdout + proc.stderr)
-            page = Page(self.dash.render(str(work.persona), DATE))
+            with mock.patch.object(level_mod, "level", null_t4_ceiling):
+                self.assertTrue(level_mod.write_levelled(str(work.persona))["ok"])
+                self.assertTrue(backlog_mod.write_backlog(str(work.persona))["ok"])
+                page = Page(self.dash.render(str(work.persona), DATE))
         self.assertIn("undecided", page.text("decision:T4.autonomy.ceiling"))
 
     def test_header(self):

@@ -18,6 +18,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parent.parent
 PLUGIN_DIR = ROOT / "partner-kit" / "plugins" / "twin-consultant"
@@ -94,7 +95,9 @@ def load(path):
 class Scenario(object):
     """A temporary copy of a fixture's engagement, changed by a function of (profile, card), then levelled.
 
-    after(persona) runs once levelled.json is written, for changes to levelled.json itself.
+    after(persona) runs once levelled.json is written, for changes to levelled.json itself. An after
+    with patch = True instead returns a patch that is in force from before levelling until the scenario
+    ends, so a backlog built inside the scenario levels again under it.
     """
 
     def __init__(self, persona_dir, change=None, level=True, after=None):
@@ -114,6 +117,11 @@ class Scenario(object):
             self.change(profile, card)
             (root / "customer-profile.json").write_text(json.dumps(profile, indent=2), encoding="utf-8")
             (persona / "card.json").write_text(json.dumps(card, indent=2), encoding="utf-8")
+        self.patcher = None
+        if self.after is not None and getattr(self.after, "patch", False):
+            self.patcher = self.after()
+            self.patcher.start()
+            self.after = None
         if self.level:
             result = L.write_levelled(str(persona))
             if not result["ok"]:
@@ -123,6 +131,8 @@ class Scenario(object):
         return persona
 
     def __exit__(self, *exc):
+        if self.patcher is not None:
+            self.patcher.stop()
         self.tmp.cleanup()
 
 
@@ -163,14 +173,20 @@ def open_persona_field(profile, card):
         "status": "open", "source": "discovery.md#G1", "owner": "Test owner", "due": "2026-12-11"}
 
 
-def inject_unknown_target(persona):
-    """override-unknown-target cannot pass validation through a card, so it is added to levelled.json."""
-    path = persona / "levelled.json"
-    levelled = load(path)
-    levelled["blockers"].append({
-        "code": "override-unknown-target", "about": "persona", "cite": L.DESIGN_CITE, "unverified": False,
-        "message": "overrides[0] names a task that levelling does not have.", "fix": "Name a task id on the card."})
-    path.write_text(L.render(levelled), encoding="utf-8")
+def inject_unknown_target():
+    """override-unknown-target cannot pass validation through a card, and a hand-edited levelled.json is
+    now refused as out of date, so level itself is patched to raise it (OPS-47)."""
+    real = L.override_problems
+
+    def with_unknown_target(overrides, task_ids, catalogue=None):
+        return real(overrides, task_ids, catalogue) + [(None, {
+            "code": "override-unknown-target", "about": "persona", "cite": L.DESIGN_CITE, "unverified": False,
+            "message": "overrides[0] names a task that levelling does not have.",
+            "fix": "Name a task id on the card."})]
+    return mock.patch.object(L, "override_problems", with_unknown_target)
+
+
+inject_unknown_target.patch = True
 
 
 def profile_value(key, value):

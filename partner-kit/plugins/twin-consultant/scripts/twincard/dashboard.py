@@ -1,7 +1,9 @@
 """Render a persona's dashboard: one self-contained dashboard.html from the card, the levelled plan and the backlog.
 
-render(persona_dir, date) validates the card, checks that levelled.json and backlog.json exist and were
-made from the files on disk, and returns the page as a string; it never writes. write_dashboard(persona_dir,
+render(persona_dir, date) validates the card, checks that levelled.json and backlog.json exist, were
+made from the files on disk, and are what level and backlog give now (it levels and builds the backlog
+again in memory and compares the parsed files; whitespace and key order are not a difference), and
+returns the page as a string; it never writes. write_dashboard(persona_dir,
 date) does the same and writes <persona_dir>/dashboard.html:
 
     {"ok": bool,                  # False on validation errors or a missing or stale input
@@ -69,7 +71,8 @@ DECISION_LABELS = {
 PERSONA_DECISIONS = ("plugin_name", "distribution", "settings_baseline")
 PROVENANCE_STATUSES = ("answered", "default", "assumed", "open")
 STATUS_WORDS = {"todo": "[ ] todo", "in-progress": "[~] in progress", "done": "[x] done"}
-DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+DATE_PATTERN = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}\Z")
+DATE_NEXT = "Next: give the date as YYYY-MM-DD, for example 2026-11-15."
 NULL_IS_A_VALUE = ("settings_baseline",)
 
 
@@ -82,7 +85,7 @@ class DashboardError(ValueError):
 
 
 class UsageError(ValueError):
-    """A date that is not a real calendar date in YYYY-MM-DD form."""
+    """A date that is not a real calendar date in YYYY-MM-DD form, or a backlog.json that cannot be used."""
 
 
 # --- Inputs -----------------------------------------------------------------------------------------------
@@ -95,11 +98,12 @@ def parse_date(value=None):
         return value.isoformat()
     text = str(value)
     if not DATE_PATTERN.match(text):
-        raise UsageError("--date must be a calendar date in YYYY-MM-DD form; got %r" % text)
+        raise UsageError("--date must be a calendar date in YYYY-MM-DD form, in ASCII digits; got %s. %s"
+                         % (json.dumps(text), DATE_NEXT))
     try:
         return datetime.date(int(text[:4]), int(text[5:7]), int(text[8:])).isoformat()
     except ValueError:
-        raise UsageError("--date %s is not a real calendar date" % text)
+        raise UsageError("--date %s is not a real calendar date. %s" % (text, DATE_NEXT))
 
 
 def _sha(data):
@@ -131,25 +135,41 @@ def load_inputs(persona_dir):
     if not levelled_path.is_file():
         raise DashboardError("levelled.json is missing. Next: run the level command, then the backlog command.",
                              validation)
-    levelled_bytes = levelled_path.read_bytes()
-    levelled = _json(levelled_bytes)
+    levelled = _json(levelled_path.read_bytes())
     source = (levelled or {}).get("source") or {}
-    if source.get("card_sha256") != _sha(card_bytes) or source.get("profile_sha256") != _sha(profile_bytes):
-        raise DashboardError("levelled.json is out of date: it was not made from the current card.json and "
-                             "customer-profile.json. Next: run the level command, then the backlog command.",
-                             validation)
+    stale = source.get("card_sha256") != _sha(card_bytes) or source.get("profile_sha256") != _sha(profile_bytes)
+    if not stale:
+        # Level again in memory: the plan must be what level gives now for the current inputs and kit data.
+        fresh = _level.level(str(persona))
+        stale = not fresh["ok"] or _level.canonical(fresh["levelled"]) != _level.canonical(levelled)
+    if stale:
+        raise DashboardError("levelled.json is out of date: it is not what level gives for the current card.json, "
+                             "customer-profile.json and kit data. Next: run the level command, then the backlog "
+                             "command.", validation)
+    levelled = fresh["levelled"]
     if not backlog_path.is_file():
         raise DashboardError("backlog.json is missing. Next: run the backlog command.", validation)
+    try:
+        _backlog.read_statuses(persona)
+    except _backlog.UsageError as exc:
+        raise UsageError(str(exc))
     backlog = _json(backlog_path.read_bytes())
     source = (backlog or {}).get("source") or {}
-    if source.get("card_sha256") != _sha(card_bytes) or source.get("levelled_sha256") != _sha(levelled_bytes):
-        raise DashboardError("backlog.json is out of date: it was not made from the current card.json and "
-                             "levelled.json. Next: run the backlog command.", validation)
+    stale = source.get("card_sha256") != _sha(card_bytes) or \
+        source.get("levelled_sha256") != _sha(_level.render(levelled).encode("utf-8"))
+    if not stale:
+        # Build the backlog again in memory, with backlog.json's statuses carried over, and compare.
+        built = _backlog.assemble(persona, validation, json.loads(card_bytes.decode("utf-8")),
+                                  json.loads(profile_bytes.decode("utf-8")), levelled)
+        stale = _level.canonical(built["backlog"]) != _level.canonical(backlog)
+    if stale:
+        raise DashboardError("backlog.json is out of date: it is not what backlog gives for the current card.json, "
+                             "levelled.json and task library. Next: run the backlog command.", validation)
     return {
         "card": json.loads(card_bytes.decode("utf-8")),
         "profile": json.loads(profile_bytes.decode("utf-8")),
         "levelled": levelled,
-        "backlog": backlog,
+        "backlog": built["backlog"],
         "validation": validation,
         "catalogue": catalogue,
     }

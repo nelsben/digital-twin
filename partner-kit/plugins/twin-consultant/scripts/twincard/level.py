@@ -279,12 +279,21 @@ def rule_scope(rule):
 
 
 def load_rules(path=None, plan_fit=None, codes=None):
-    """Return rules.json, checked; raise LevelError naming the rule at fault.
+    """Return rules.json, checked; raise LevelError naming rules.json and the rule at fault.
 
     codes is the set of blocker and warning codes the rules may raise; by default it is read from
     design section 7.2 when the design file is present (it is not, in an installed plugin).
     """
     plan_fit = plan_fit if plan_fit is not None else load_plan_fit()
+    try:
+        return _load_rules(path, plan_fit, codes)
+    except LevelError as exc:
+        if str(exc).startswith("rules.json"):
+            raise
+        raise LevelError("rules.json (%s): %s" % (path or RULES_PATH, exc)) from None
+
+
+def _load_rules(path, plan_fit, codes):
     codes = codes if codes is not None else design_codes()
     data = _read_json(path or RULES_PATH, "rules.json")
     if not isinstance(data, dict) or data.get("rules_version") != RULES_VERSION:
@@ -627,8 +636,13 @@ def _is_undecided(value):
     return isinstance(value, Empty) or value == UNDECIDED
 
 
-def override_problems(overrides, task_ids):
-    """Blockers for card overrides the engine will not apply: [(index, blocker)]."""
+def override_problems(overrides, task_ids, catalogue=None):
+    """Blockers for card overrides the engine will not apply: [(index, blocker)].
+
+    A value outside design 7.2's vocabulary (override_values in fields.json, the one validate checks)
+    is not applied either: validate refuses the card first, and this guard keeps level from applying
+    it when level is called on a card that was not validated.
+    """
     out = []
     for index, override in enumerate(overrides or []):
         task, decision = override.get("task"), override.get("decision")
@@ -643,6 +657,14 @@ def override_problems(overrides, task_ids):
                 "override-unknown-target", task if task in task_ids else "persona", DESIGN_CITE, False,
                 "overrides[%d] names task %r and decision %r, which levelling does not have." % (index, task, decision),
                 "Name a task id on the card and one of: %s." % ", ".join(OVERRIDABLE))))
+        else:
+            problems = _validate.override_value_problems(decision, override.get("value"), catalogue)
+            if problems:
+                suffix, message, fix = problems[0]
+                out.append((index, _item(
+                    "override-unknown-target", task, DESIGN_VALUES_CITE, False,
+                    "overrides[%d].value%s %s, so the override of %s is not applied." % (index, suffix, message, decision),
+                    fix + ".")))
     return out
 
 
@@ -772,7 +794,7 @@ def level(persona_dir, fired=None, rules=None, plan_fit=None, catalogue=None):
     run.known = set(persona) | set(TASK_FACTS) | set(DECISION_FACTS) | set(TOOL_FACTS)
 
     blockers, warnings = [], []
-    problems = override_problems(card.get("overrides"), task_ids)
+    problems = override_problems(card.get("overrides"), task_ids, catalogue)
     skipped = set(index for index, _ in problems)
     blockers.extend(item for _, item in problems)
     overrides = {}
@@ -960,7 +982,8 @@ def level(persona_dir, fired=None, rules=None, plan_fit=None, catalogue=None):
 def _dedupe(items):
     out, seen = [], set()
     for item in items:
-        key = (item["code"], item["about"], item["message"] if item["code"] == "field-open" else None)
+        keep_message = item["code"] == "field-open" or item["code"].startswith("override-")
+        key = (item["code"], item["about"], item["message"] if keep_message else None)
         if key not in seen:
             seen.add(key)
             out.append(item)
@@ -980,6 +1003,11 @@ def _plugin_name(card, persona, persona_dir, catalogue):
     return _decision("twin-%s" % card.get("id"), None, default_cite,
                      "The card leaves role.plugin_name empty, so the engine uses the persona id as the role "
                      "in twin-<role> (design 4.2).", False, "our-recommendation")
+
+
+def canonical(obj):
+    """The comparison form of a parsed plan: keys sorted, no layout. Whitespace and key order are not a difference."""
+    return json.dumps(obj, sort_keys=True, ensure_ascii=False)
 
 
 def render(levelled):

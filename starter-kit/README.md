@@ -24,6 +24,7 @@ The starter kit is the set of parts we copy into a customer's repo to build a ro
 | [runbooks/microsoft-365-connector.md](runbooks/microsoft-365-connector.md) | Connect Microsoft 365: tenant consent, a SharePoint access check, and Outlook mail and calendar |
 | [runbooks/hubspot-connector.md](runbooks/hubspot-connector.md) | Connect HubSpot to a role's twin |
 | [runbooks/google-workspace-connectors.md](runbooks/google-workspace-connectors.md) | Connect Google Drive, Gmail and Google Calendar to a role's twin |
+| [runbooks/google-docs-sheets-slides-connectors.md](runbooks/google-docs-sheets-slides-connectors.md) | Connect the Google Docs, Google Sheets and Google Slides connectors to a role's twin |
 | [runbooks/slack-connector.md](runbooks/slack-connector.md) | Connect Slack to a role's twin, for reading and searching Slack |
 | [runbooks/zendesk-connector.md](runbooks/zendesk-connector.md) | Connect Zendesk to a role's twin |
 | [runbooks/claude-code-scheduled-task.md](runbooks/claude-code-scheduled-task.md) | Set up a Claude Code scheduled task for a twin's task |

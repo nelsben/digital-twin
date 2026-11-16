@@ -27,7 +27,7 @@ Sources: [Scheduled tasks](https://code.claude.com/docs/en/routines.md), [Claude
 | **Autonomy** | Approvals can be decided in advance through policy and hooks | Each action needs a person's judgment |
 | **Identity** | Shared team work, done as a service account or a vaulted user credential | Must act *as the employee*, with their permissions and their audit trail |
 | **Continuity** | Must keep running when the person is away or has left | Tied to one person |
-| **Data sensitivity** | Needs ZDR: the Messages API with eligible features, or a fully self-hosted Managed Agents deployment (**not** hosted Managed Agents or API skills). Needs HIPAA (PHI): no hosted route until Anthropic confirms one in writing (our recommendation; the API's HIPAA-eligible features are listed in [10](10-sensitive-data.md)). ⚠ **Unverified:** whether the Agent SDK is covered under HIPAA or ZDR. No page says so ([10](10-sensitive-data.md)). | Data the user can already see in the client |
+| **Data sensitivity** | Needs ZDR: the Messages API with eligible features, or a fully self-hosted Managed Agents deployment (**not** hosted Managed Agents or API skills). Needs HIPAA (PHI): no hosted agent runtime. Managed Agents is blocked under HIPAA readiness, and the Agent SDK's cover is unverified (below). The API route with HIPAA readiness covers only your own code on the Messages API with the eligible features ([10](10-sensitive-data.md#what-hipaa-covers)). (Our recommendation) Don't build a twin on it until Anthropic confirms a hosted route in writing. ⚠ **Unverified:** whether the Agent SDK is covered under HIPAA or ZDR. No page says so ([10](10-sensitive-data.md)). | Data the user can already see in the client |
 | **Cost** | Mostly tokens, plus runtime: Managed Agents charges $0.08 per session-hour while running; containers cost about $0.05 per hour | Covered by seats and usage limits; no infrastructure to run |
 | **Who maintains it** | An engineering team that owns deploys, secrets and on-call | Admins publish; domain experts write skills |
 | **Reach** | One endpoint can serve many channels and systems | One copy per surface, since skills don't sync to the API |
@@ -46,7 +46,7 @@ Sources: [API data retention](https://platform.claude.com/docs/en/manage-claude/
       ├─ It's shared team work that lives in Slack
       │     → Claude Tag channel routine (service account; survives turnover)
       └─ It's wired into systems (CRM webhook, ticket queue, nightly job)
-            ├─ PHI (HIPAA)       → no hosted route until Anthropic confirms one in writing
+            ├─ PHI (HIPAA)       → no hosted agent runtime; see 10 (HIPAA, the API route)
             ├─ Needs ZDR         → Messages API with eligible features, or fully
             │                      self-hosted Managed Agents. Agent SDK only once
             │                      Anthropic confirms ZDR cover in writing (⚠ Unverified)

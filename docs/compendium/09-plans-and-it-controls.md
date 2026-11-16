@@ -22,7 +22,7 @@ Y = yes, N = no, L = limited. Free, Pro, Max and Ultra share one column; where F
 | Connectors | Y, the user adds them (Free: 1 custom) | L: only an Owner adds custom connectors; members sign in | L: Owner, or a custom role with the Libraries permission |
 | Per-tool connector permission (Allow / Approve / Block); the only autonomy control in chat and Cowork, set per tool, not per skill or task ([06](06-autonomy.md)) | User | Owner | Owner |
 | Desktop extensions | Y | Y; allowlist or block via MDM | Y |
-| Claude Code | Pro and up | Y | Y on new and self-serve Enterprise plans, where it is "included with the single Enterprise seat"; on older Enterprise plans the user needs a Chat + Claude Code or Premium seat ([help center](https://support.claude.com/en/articles/11845131)) |
+| Claude Code | Pro and up: the [pricing page](https://claude.com/pricing) shows "No" for Free, and its FAQ says "included in all paid plans" | Y | Y on new and self-serve Enterprise plans, where it is "included with the single Enterprise seat"; on older Enterprise plans the user needs a Chat + Claude Code or Premium seat ([help center](https://support.claude.com/en/articles/11845131)) |
 | Cowork | Pro and up | Y (cloud sessions on by default) | Y (cloud sessions off until turned on) |
 | Claude Tag (Slack) | N | Y (beta) | Y (beta) |
 | Claude Code scheduled tasks | Pro and up | Y; Owner can turn off | Y; Owner can turn off |
@@ -37,7 +37,7 @@ Y = yes, N = no, L = limited. Free, Pro, Max and Ultra share one column; where F
 | Zero data retention (ZDR) | N | N | L: qualified orgs, Claude Code only |
 | HIPAA / BAA | N | N | Y (**permanent once on**) |
 | Customer-managed encryption keys (CMEK) | N | N | L: eligible orgs |
-| Spend controls ([detail](#spend-and-usage-limits)) | N | Y | Y, including per-user limits |
+| Spend controls ([detail](#spend-and-usage-limits)) | N | Y: an Owner sets a monthly org-wide limit; per-user limits are not available to every Team org ([help center](https://support.claude.com/en/articles/12005970)). **⚠ Conflict:** the [pricing page](https://claude.com/pricing) says only "Yes" for Team, and lists "Admins set user and org spend limits" as an Enterprise addition | Y, including per-user limits and group limits ([detail](#spend-and-usage-limits)) |
 | Roles | None | User, Admin, Owner, Primary Owner | The same four, plus custom roles for groups |
 
 **The API / Console** is a separate product with commercial terms. It offers SSO, tenant restrictions, HIPAA readiness and ZDR by arrangement, plus `inference_geo` for US-only processing. Claude Code running with a Console API key **bypasses claude.ai's server-managed settings**.

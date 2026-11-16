@@ -21,16 +21,15 @@ Tooling for us, the partner, to run the persona-card workflow: interview notes b
 | Path | What it is |
 |---|---|
 | [docs/design.md](docs/design.md) | The design of the whole workflow: records, field catalogue, levelling, backlog, dashboard |
-| [plugins/twin-consultant/](plugins/twin-consultant/README.md) | The consultant plugin: record templates, the field catalogue and the validator |
+| [plugins/twin-consultant/](plugins/twin-consultant/README.md) | The consultant plugin: record templates, the interview guide, the field catalogue, industry packs, levelling rules and plan fit, the task library, the `validate`, `level`, `backlog`, `dashboard` and `all` commands, and four skills |
+| [engagements/](../engagements/README.md) | The two worked examples, both fictional: `sample-pe` (Enterprise, ZDR) and `sample-team-cs` (Team) |
 
-## Validate a persona card
+## Run the workflow
 
 ```
-python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py validate <persona-dir>
+python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py all <persona-dir>
 ```
 
-`<persona-dir>` holds `card.json`; the customer profile is read from `../../customer-profile.json`. Add `--json` for the full result. Exit code 0 means no errors, 1 means validation failed, 2 means a usage error or a missing folder.
+`<persona-dir>` holds `card.json`; the customer profile is read from `../../customer-profile.json`. `all` validates the card, then writes `levelled.json`, `backlog.json`, `backlog.md` and `dashboard.html` next to it. The other commands, the exit codes and the four skills are in the [plugin README](plugins/twin-consultant/README.md). The playbook walks the steps in order: [05 The persona-card workflow](../docs/playbook/05-persona-card-workflow.md).
 
-## Not built yet
-
-The interview guide and the interview-to-card skill; `level`, `backlog`, `dashboard` and `all`; `rules.json`, `plan-fit.json`, `task-library.json` and the industry packs; the fictional fixtures. See [docs/design.md](docs/design.md), sections 3 and 6 to 10.
+The skills' evals are written and have not been run yet.

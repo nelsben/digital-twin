@@ -11,6 +11,7 @@ We are Anthropic partners. We deliver digital twins **into our customers' Claude
 | [02-discovery.md](02-discovery.md) | The discovery questionnaire we run with every customer |
 | [03-stakeholders.md](03-stakeholders.md) | The customer and partner roles, and a RACI across the engagement |
 | [04-stories.md](04-stories.md) | How we write epics, features, stories, tasks and spikes, with templates and an example |
+| [05-persona-card-workflow.md](05-persona-card-workflow.md) | How a consultant goes from a qualified customer to a persona card, a levelled plan, a backlog and a dashboard |
 
 ## Defaults are not decisions
 

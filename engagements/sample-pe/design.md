@@ -146,7 +146,7 @@ Owner: Tomasz Hadjiev. Rashida Kovalenko reviews the device policy.
 
 Operating partners and contractors get a **hosted twin we run**, not direct access ([13](../../docs/compendium/13-devices.md)):
 
-- The Agent SDK in the hosted ZDR Platform org, with a front end we build: a web page behind Okta SSO, or a Teams bot. Claude Tag cannot fill this role because ZDR turns it off.
+- The Agent SDK in the hosted ZDR Platform org, with a front end we build: a web page behind Okta SSO, or a Teams bot. [Compendium 05](../../docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation) marks the Agent SDK's ZDR cover **⚠ Unverified** and names self-hosted Managed Agents as the confirmed route. Claude Tag cannot fill this role because ZDR turns it off.
 - The device only displays results. Tools, files and credentials stay on our servers. Every connector call uses the person's own OAuth token, so the wall in section 7 still holds.
 - Contractors: connectors read-only (D3). Level 1 only.
 - It is out of the pilot (none of the 6 pilot users need it). It enters the backlog as a Scale item. Until it exists, operating partners and contractors have no Claude access to firm data.
@@ -245,7 +245,7 @@ The repo's `.claude-plugin/marketplace.json` publishes one marketplace, `digital
 | Plugin | Holds | Installed for |
 |---|---|---|
 | `twin-shared` | Shared skills (house style, account research) | Everyone in the org |
-| `twin-pe-deal-team` | The deal-team skills and the persona (output style) | The deal-team SCIM group only |
+| `twin-pe-deal-team` | The deal-team skills and the persona (output style) | The deal team's Intune device group, through that group's settings file. The SCIM group decides role and seat, not the plugin ([runbook, How to publish to groups](../../starter-kit/runbooks/identity-devices-publishing.md#how-to-publish-to-groups)) |
 | `twin-governance` | Hooks that enforce governance, including the governance-log hook (section 9) | Everyone in the org, required |
 
 ### Managed-settings restriction to this one marketplace
@@ -372,7 +372,7 @@ IT owns tooling and spend, as discovery G3 confirms. The pilot budget and the pe
 | Per-user limits | Enterprise spend controls, per user, set once the budget is known |
 | Alerts | Usage alerts on the org and on each user, at thresholds Tomasz Hadjiev proposes after G3 |
 | Seats | 40 today. Up to 48 if the 8 Pro accounts are not among them (OD-9). Pilot use is 6 seats. |
-| Hosted runtime (later) | Agent SDK containers run at about $0.05 per hour, plus tokens ([05](../../docs/compendium/05-decision-matrix.md)). Hosted Managed Agents are not an option under ZDR; self-hosted ones are. |
+| Hosted runtime (later) | Page 05 gives Managed Agents at $0.08 per session-hour while running and containers at about $0.05 per hour, plus tokens ([05](../../docs/compendium/05-decision-matrix.md)). It does not say which figure applies to self-hosted Managed Agents: **⚠ Unverified**. Page 05 marks the Agent SDK's ZDR cover **⚠ Unverified** and names self-hosted Managed Agents as the confirmed route. Hosted Managed Agents are not an option under ZDR; self-hosted ones are. |
 | `inference_geo: us` in the hosted org | Priced at 1.1 times the standard price ([10](../../docs/compendium/10-sensitive-data.md)) |
 | Cost per task | Tokens plus runtime, on the monthly scorecard ([15](../../docs/compendium/15-governance-and-performance.md)) |
 

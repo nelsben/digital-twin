@@ -13,6 +13,10 @@
 
 These match the `type:` labels in this repo (`type:epic`, `type:feature`, `type:story`, `type:task`, `type:spike`, `type:bug`). Customer backlogs can live in the customer's own tracker, using the same levels.
 
+## From the persona card
+
+The backlog the [persona-card workflow](05-persona-card-workflow.md) generates uses the same levels. It adds one feature, **Twin foundation**, for work that no single task owns. Its stories are always the same seven: persona voice, connectors and identity, guardrails and settings, distribution, governance log, memory policy, and pilot rollout and scorecard. Each generated story carries the fields of the template below, taken from the levelled plan. The rules are in [section 8 of the design](../../partner-kit/docs/design.md#8-backlog-backlogpy-datatask-libraryjson).
+
 ## Story template
 
 ```markdown

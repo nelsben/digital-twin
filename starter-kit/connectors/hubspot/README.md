@@ -1,4 +1,4 @@
-Written 2026-11-16 by the author from the pages listed; not yet checked by a second reader.
+Checked 2026-11-16 by the author against the pages listed. Every claim was checked again on 2026-11-16 by a second reader; the results are in the [verification log](../../runbooks/verification-log.md).
 
 # HubSpot marker property: Last updated by twin
 
@@ -16,7 +16,7 @@ Deals come first. The connector lists Contacts, Leads, Companies, Deals, Tickets
 
 ## Create it (the HubSpot admin does this)
 
-1. In HubSpot, click the settings icon, then in Data Management go to **Properties**, pick the **Deals** object and create a property ([E]). "Edit property settings permissions are required to create properties." ([E])
+1. In HubSpot, click the settings icon, then in the left sidebar menu go to **Properties**, pick the **Deals** object and create a property ([E]). "Edit property settings permissions are required to create properties." ([E])
 2. Name it "Last updated by twin", choose the field type **Date and time picker**, and write a description that says the twin sets it and nobody else should. ([A], [E])
 3. Do this in a test portal first. HubSpot shows a date-and-time value in the viewer's own time zone ("current time zone is used", [A]), so the skill must write UTC and people must expect local display.
 

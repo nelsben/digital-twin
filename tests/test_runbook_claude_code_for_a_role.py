@@ -4,7 +4,7 @@ starter-kit/runbooks/claude-code-for-a-role.md must exist, carry the eight
 level-2 headings in order and a 'Pages used' list, stay 80 to 220 lines, name
 macOS and Windows, link identity-devices-publishing.md sections 3, 4 or 5, and
 6 by anchors that exist there, link compendium page 13, carry the
-recommendation label and the 'not yet checked by a second reader' sentence,
+recommendation label and the 'checked again by a second reader' sentence,
 define every source tag with an https URL on an accepted domain, resolve every
 relative link and anchor, and keep the warning sign inside the two bold
 labels. starter-kit/README.md must link it.
@@ -38,7 +38,7 @@ HEADINGS = [
 ]
 HOSTS = {"code.claude.com", "support.claude.com", "claude.com"}
 MIN_LINES, MAX_LINES = 80, 220
-SECOND_READER = "not yet checked by a second reader"
+SECOND_READER = "was checked again on 2026-11-16 by a second reader"
 LABELS = ("**⚠ Conflict:**", "**⚠ Unverified:**")
 
 FENCE = re.compile(r"^\s*(```|~~~)")

@@ -60,7 +60,7 @@ class Section6a(unittest.TestCase):
         t = "\n".join(section())
         for s in ("Blocked", "Needs approval", "(Our recommendation):",
                   "docs/compendium/18-customer-success.md",
-                  "not yet checked by a second reader"):
+                  "was checked again on 2026-11-16 by a second reader"):
             self.assertIn(s, t)
 
     def test_https_hosts(self):

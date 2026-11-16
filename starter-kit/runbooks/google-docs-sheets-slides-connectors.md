@@ -12,7 +12,7 @@ What the pages do not give us: no page we downloaded lists the tools of the Docs
 
 How sources are marked: each numbered step and each product sentence ends with the page it came from, in brackets. **⚠ Unverified:** (the compendium's marker) means the pages we read did not confirm it; confirm each such item at setup, then replace the mark with the page you checked. Where two pages disagree we write **⚠ Conflict:**, name both and take the safer reading; none of these pages disagree on the three connectors. Menu paths and setting names are copied from the pages, so a screen that reads differently means the product has changed: trust the screen and note the difference.
 
-Written 2026-11-16 by the author from the pages listed; not yet checked by a second reader.
+Checked 2026-11-16 by the author against the pages listed. Every claim was checked again on 2026-11-16 by a second reader; the results are in the [verification log](verification-log.md).
 
 Pages used (each downloaded on 2026-11-16):
 
@@ -23,6 +23,7 @@ Pages used (each downloaded on 2026-11-16):
 - [E] [Use Claude in Google Docs, Sheets, and Slides (Claude help center)](https://support.claude.com/en/articles/16951679-use-claude-in-google-docs-sheets-and-slides)
 - [F] [Claude docs index (llms.txt)](https://claude.com/docs/llms.txt)
 - [G] [Claude connectors directory](https://claude.com/connectors)
+- [H] [Set up role-based permissions on Enterprise plans (Claude help center)](https://support.claude.com/en/articles/13930458-set-up-role-based-permissions-on-enterprise-plans)
 
 Pages that do not exist, so no listing or docs page can be cited: `claude.com/connectors/google-docs`, `/google-sheets` and `/google-slides` (and the shorter `docs`, `sheets`, `slides` forms) and `claude.com/docs/connectors/google/docs.md`, `sheets.md`, `slides.md` all returned 404. The docs index lists Google pages for Drive, Gmail and Google Calendar only ([F]), and the directory index we downloaded names Google Drive and Google Calendar but no Docs, Sheets or Slides entry ([G]).
 
@@ -52,7 +53,7 @@ These are decisions the engagement has already made. The steps consume them; do 
 
 1. Google Workspace admin: decide whether the Claude app is allowed. Follow steps 1 and 2 of the [Google Workspace runbook](google-workspace-connectors.md#steps); the app is the same one, so there is no second approval for Docs, Sheets and Slides. ([A]) **⚠ Unverified:** the scopes Claude's connectors ask for. Google lists scopes for its own preview servers, including read-only and edit scopes for documents, spreadsheets and presentations ([D]), but no page lists Claude's. Copy each consent screen's list into the Hand over record.
 2. Claude org Owner: add each connector for the organization. Go to **Organization settings > Connectors**, click **Browse connectors**, select the connector, click **Add to your team**; adding it gives nobody access, and each person still authenticates. ([B]) **⚠ Unverified:** whether Docs, Sheets and Slides appear as three entries there, since the directory index we downloaded shows none ([G]).
-3. Claude org Owner, Enterprise only: set each role's connector access as step 3 of the [Google Workspace runbook](google-workspace-connectors.md#steps) says (the role's **Connectors** tab; the org-wide **Tool permissions** are a ceiling the role can only narrow). ([B])
+3. Claude org Owner, Enterprise only: set each role's connector access as step 3 of the [Google Workspace runbook](google-workspace-connectors.md#steps) says (the role's **Connectors** tab; the org-wide **Tool permissions** are a ceiling the role can only narrow). ([B], [H])
 4. Pilot user: connect and turn on. Click the plus sign in the chat, hover over "Connectors" and toggle them on; "If the connector isn't turned on when you ask Claude to edit a Google file, Claude prompts you to connect it, then continues with your request." ([A]) The connector then shows under **Your connectors** with the status **Connected**. ([C])
 5. Pilot user: open a file in the pane. Paste a Google link into the chat, or ask for a new file by naming Google ("make a Google Slides deck from these notes"); "Asking for a generic "doc" or "deck" without naming Google creates a local file instead." The pane needs its own Google sign-in, with the same account you connected to Claude. ([A])
 6. Claude org Owner, with the Business owner: set the tools. Go to **Customize > Connectors**, select the connector and, under **Tool permissions**, choose **Always allow**, **Needs approval** or **Blocked** for each category or single tool; the setting applies org-wide and users cannot override it. ([B]) **⚠ Unverified:** whether each of the three connectors has its own **Tool permissions** page, and what its tools are called; no Claude page names them. Record what the page shows.

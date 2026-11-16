@@ -3,7 +3,7 @@
 starter-kit/runbooks/google-docs-sheets-slides-connectors.md must exist, carry
 the eight level-2 headings in order and a 'Pages used' list, stay 100 to 260
 lines, name each of the three connectors in a heading or a step, carry the
-Blocked / Needs approval / recommendation wording and the 'not yet checked by a
+Blocked / Needs approval / recommendation wording and the 'checked again by a
 second reader' sentence, define every source tag with an https URL on an
 accepted domain, resolve every relative link, and keep the warning sign inside
 the two bold labels. google-workspace-connectors.md and starter-kit/README.md
@@ -42,7 +42,7 @@ HOSTS = {
     "developers.google.com",
 }
 MIN_LINES, MAX_LINES = 100, 260
-SECOND_READER = "not yet checked by a second reader"
+SECOND_READER = "was checked again on 2026-11-16 by a second reader"
 LABELS = ("**⚠ Conflict:**", "**⚠ Unverified:**")
 
 FENCE = re.compile(r"^\s*(```|~~~)")

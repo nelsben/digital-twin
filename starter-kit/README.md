@@ -28,6 +28,8 @@ The starter kit is the set of parts we copy into a customer's repo to build a ro
 | [runbooks/google-docs-sheets-slides-connectors.md](runbooks/google-docs-sheets-slides-connectors.md) | Connect the Google Docs, Google Sheets and Google Slides connectors to a role's twin |
 | [runbooks/slack-connector.md](runbooks/slack-connector.md) | Connect Slack to a role's twin, for reading and searching Slack |
 | [runbooks/zendesk-connector.md](runbooks/zendesk-connector.md) | Connect Zendesk to a role's twin |
+| [connectors/hubspot/README.md](connectors/hubspot/README.md) | The HubSpot twin marker: a date-and-time property the skill sets on every write, and how to check and report on it |
+| [connectors/zendesk/README.md](connectors/zendesk/README.md) | The Zendesk twin marker: a text ticket field the skill sets on every write, and how to check and report on it |
 | [runbooks/claude-code-scheduled-task.md](runbooks/claude-code-scheduled-task.md) | Set up a Claude Code scheduled task for a twin's task |
 | [runbooks/claude-tag-routine.md](runbooks/claude-tag-routine.md) | Set up a Claude Tag routine in a Slack channel for a twin's task |
 | [runbooks/managed-agents.md](runbooks/managed-agents.md) | Set up a task on Managed Agents, hosted or self-hosted |

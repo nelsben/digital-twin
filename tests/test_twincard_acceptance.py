@@ -507,6 +507,131 @@ class FixtureRecordTests(unittest.TestCase):
                     self.assertNotIn(name, body, "%s names %s" % (path, name))
 
 
+# --- Levelling: levelled.json against the expectations ---------------------------------------------
+
+def _levelled_decision(levelled, tid, name):
+    node = levelled["tasks"][tid]
+    for part in name.split("."):
+        node = node[part]
+    return node
+
+
+def _items(levelled, kind):
+    return {(w["code"], w["about"]): {"code": w["code"], "about": w["about"], "cite": w["cite"],
+                                      "unverified": w["unverified"]} for w in levelled[kind]}
+
+
+class LevelTests(unittest.TestCase):
+    """The levelling engine (scripts/twincard/level.py) reproduces tests/fixtures/twincard/expectations.json."""
+
+    @classmethod
+    def setUpClass(cls):
+        from twincard import level as tc_level
+        cls.engine = tc_level
+        cls.exp = load_expectations()
+        cls.out = {}
+        for fid, fixture in cls.exp["fixtures"].items():
+            cls.out[fid] = tc_level.level(str(ROOT / fixture["persona_dir"]))["levelled"]
+
+    def check_decision(self, where, got, want):
+        """got is a levelled decision, the data_controls dict or a connectors list; want is from the file."""
+        if isinstance(got, list):
+            self.assertEqual([{k: c[k] for k in ("system", "access", "identity")} for c in got], want["expected"], where)
+            self.assertEqual(any(c["unverified"] for c in got), want["unverified"], where)
+            return
+        if "value" not in got:
+            self.assertEqual({k: d["value"] for k, d in got.items()}, want["expected"], where)
+            self.assertIn(want["cite"], [d["cite"] for d in got.values()], where)
+            self.assertEqual(any(d["unverified"] for d in got.values()), want["unverified"], where)
+            return
+        self.assertEqual(got["value"], want["expected"], where)
+        self.assertEqual(got["cite"], want["cite"], where)
+        self.assertEqual(got["unverified"], want["unverified"], where)
+        if want.get("overridden"):
+            self.assertIsNotNone(got["overridden"], where)
+            self.assertEqual(got["overridden"]["rule_result"], want["rule_result"], where)
+            self.assertEqual(got["overridden"]["reason"], want["override_reason"], where)
+
+    def test_task_decisions_match(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            levelled = self.out[fid]
+            self.assertIsNotNone(levelled, fid)
+            self.assertEqual(list(levelled["tasks"]), [t["id"] for t in card_of(fixture)["tasks"]], fid)
+            for tid, decisions in fixture["tasks"].items():
+                for name, want in decisions.items():
+                    self.check_decision("%s %s %s" % (fid, tid, name), _levelled_decision(levelled, tid, name), want)
+
+    def test_persona_plan_matches(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            for name, want in fixture["persona"].items():
+                self.check_decision("%s persona %s" % (fid, name), self.out[fid]["persona_plan"][name], want)
+
+    def test_blockers_and_warnings_match(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            for kind in ("blockers", "warnings"):
+                want = {(w["code"], w["about"]): w for w in fixture[kind]}
+                self.assertEqual(_items(self.out[fid], kind), want, "%s %s" % (fid, kind))
+
+    def test_complete_flag_matches(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            self.assertEqual(self.out[fid]["complete"], fixture["validate"]["complete"], fid)
+
+    def test_committed_levelled_json_is_current(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            path = ROOT / fixture["persona_dir"] / self.engine.LEVELLED_FILE
+            self.assertTrue(path.is_file(), "%s: run cli.py level %s" % (fid, fixture["persona_dir"]))
+            self.assertEqual(path.read_text(encoding="utf-8"), self.engine.render(self.out[fid]),
+                             "%s: levelled.json is stale; run cli.py level %s" % (fid, fixture["persona_dir"]))
+
+    def test_level_command_exit_codes(self):
+        for fid, fixture in self.exp["fixtures"].items():
+            with self.subTest(fixture=fid), tempfile.TemporaryDirectory() as tmp:
+                persona_dir = ROOT / fixture["persona_dir"]
+                engagement = persona_dir.parent.parent
+                copy_root = Path(tmp) / engagement.name
+                shutil.copytree(engagement, copy_root)
+                copy_persona = copy_root / persona_dir.relative_to(engagement)
+                proc = subprocess.run([sys.executable, str(CLI), "level", "--json", str(copy_persona)],
+                                      capture_output=True, text=True, cwd=str(ROOT), timeout=60)
+                want = 1 if fixture["blockers"] else 0
+                self.assertEqual(proc.returncode, want, proc.stdout + proc.stderr)
+                self.assertEqual(json.loads(proc.stdout)["complete"], fixture["validate"]["complete"], fid)
+
+    def test_variants_change_what_they_expect(self):
+        catalogue = tc_fields.load_catalogue()
+        for variant in self.exp["variants"]:
+            with self.subTest(variant=variant["id"]):
+                fixture = self.exp["fixtures"][variant["base"]]
+                base = self.out[variant["base"]]
+                persona_dir = ROOT / fixture["persona_dir"]
+                engagement = persona_dir.parent.parent
+                with tempfile.TemporaryDirectory() as tmp:
+                    copy_root = Path(tmp) / engagement.name
+                    shutil.copytree(engagement, copy_root)
+                    copy_persona = copy_root / persona_dir.relative_to(engagement)
+                    records = {"profile": load_json(copy_root / "customer-profile.json"),
+                               "card": load_json(copy_persona / "card.json")}
+                    for change in variant["change"]:
+                        apply_change(records, change, catalogue)
+                    (copy_root / "customer-profile.json").write_text(json.dumps(records["profile"]), encoding="utf-8")
+                    (copy_persona / "card.json").write_text(json.dumps(records["card"]), encoding="utf-8")
+                    result = self.engine.level(str(copy_persona))
+                self.assertEqual(result["ok"], variant["expect"]["still_valid"], result["validation"]["errors"])
+                levelled = result["levelled"]
+                expect = variant["expect"]
+                for key, want in expect["decisions"].items():
+                    tid, name = key.split(".", 1)
+                    self.check_decision("%s %s" % (variant["id"], key), _levelled_decision(levelled, tid, name), want)
+                for kind in ("blockers", "warnings"):
+                    before, after = _items(base, kind), _items(levelled, kind)
+                    added = {k: v for k, v in after.items() if k not in before}
+                    removed = {k: v for k, v in before.items() if k not in after}
+                    self.assertEqual(added, {(w["code"], w["about"]): w for w in expect[kind + "_added"]},
+                                     "%s %s added" % (variant["id"], kind))
+                    self.assertEqual(removed, {(w["code"], w["about"]): w for w in expect[kind + "_removed"]},
+                                     "%s %s removed" % (variant["id"], kind))
+
+
 if __name__ == "__main__":
     unittest.main()
 

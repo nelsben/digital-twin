@@ -25,7 +25,9 @@ The consultant plugin for the persona-card workflow. Design of record: [partner-
 | [templates/interview-guide.md](templates/interview-guide.md) | Plain-language role interview: questions P1 to P6 and F1 to F9, each with the card fields it fills |
 | [templates/interview-notes.md](templates/interview-notes.md) | Notes template with one slot per question, saved under the persona's `interviews/` folder |
 | [data/fields.json](data/fields.json) | The field catalogue: type, values, required flag, the questions that ask for each field, and what reads it |
-| [scripts/twincard/](scripts/twincard/) | Standard-library Python 3.9+: `fields.py` loads the catalogue, `validate.py` checks both records, `packs.py` loads and checks industry packs, `cli.py` is the command line |
+| [scripts/twincard/](scripts/twincard/) | Standard-library Python 3.9+: `fields.py` loads the catalogue, `validate.py` checks both records, `packs.py` loads and checks industry packs, `level.py` levels a card by rule, `cli.py` is the command line |
+| [data/rules.json](data/rules.json) | The levelling rules: each decides one thing, from facts on the card and profile, and cites the compendium section it comes from; the format is in [design section 7.3](../../docs/design.md) |
+| [data/plan-fit.json](data/plan-fit.json) | What each capability the twin relies on is on Team, Enterprise and individual plans, and what Team loses, with its compendium cite |
 | [data/industry-packs/](data/industry-packs/) | One JSON file per industry; the format is in [design section 7.1](../../docs/design.md) |
 
 ## Validate
@@ -36,6 +38,22 @@ python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py validate --j
 ```
 
 Each error prints as `<record>:<path>: <message>. Next: <fix>`, then a completeness line: the share of required fields whose provenance status is `answered` or `default`. Exit code 0 means no errors, 1 means validation failed, 2 means a usage error or a missing folder.
+
+## Level
+
+```
+python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py level <persona-dir>
+python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py level --json <persona-dir>
+```
+
+`level` validates first and levels nothing when there are errors. Otherwise it applies `data/rules.json` and `data/plan-fit.json` to the card, its profile and the profile's industry pack, writes `<persona-dir>/levelled.json` and prints each blocker and warning as `<kind>: <task or persona> <code>: <message> Next: <fix>`. Every decision in `levelled.json` carries its value, the rule that made it, the compendium cite, the reason, whether it rests on an Unverified fact, and whether a card override replaced it. A decision the compendium does not settle is `null`, with a `decision-undecided` warning. Exit code 0 means levelled with no blocker, 1 means validation failed (nothing written) or there is a blocker (the file is still written), 2 means a usage error or a missing folder. The same card and profile always give the same bytes, so a committed `levelled.json` shows in a diff exactly what a change moved.
+
+```python
+from twincard import level
+level.level(persona_dir)           # {"ok", "validation", "levelled"}; never writes
+level.write_levelled(persona_dir)  # the same, and writes levelled.json when validation passes
+level.matches(when, facts)         # one rule condition against flat facts; an unknown fact raises LevelError
+```
 
 ## Industry packs
 
@@ -58,4 +76,4 @@ packs.pack_problems(pack)   # [{"path", "message", "fix"}], empty when the pack 
 
 ## Not built yet
 
-Skills (interview to card), `level.py`, `backlog.py`, `dashboard.py`, and the `level`, `backlog`, `dashboard` and `all` commands, `rules.json`, `plan-fit.json` and `task-library.json`.
+Skills (interview to card), `backlog.py`, `dashboard.py`, the `backlog`, `dashboard` and `all` commands, and `task-library.json`.

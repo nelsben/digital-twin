@@ -1,0 +1,248 @@
+{
+  "note": "Test fixture, not a real run. Invented numbers in the shape of skill-creator's benchmark.json (references/schemas.md), used only by tests/test_twincard_build_record.py. Never copy it into an engagement as evidence.",
+  "metadata": {
+    "skill_name": "account-brief-before-a-customer-call",
+    "skill_path": "skills/account-brief-before-a-customer-call",
+    "executor_model": "test-fixture-model",
+    "analyzer_model": "test-fixture-model",
+    "timestamp": "2026-01-01T00:00:00Z",
+    "evals_run": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "case-1",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 40.0,
+        "tokens": 3000,
+        "tool_calls": 6,
+        "errors": 0
+      },
+      "expectations": [],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "case-1",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 2,
+        "failed": 2,
+        "total": 4,
+        "time_seconds": 30.0,
+        "tokens": 2000,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "case-2",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 40.0,
+        "tokens": 3000,
+        "tool_calls": 6,
+        "errors": 0
+      },
+      "expectations": [],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "case-2",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.25,
+        "passed": 1,
+        "failed": 3,
+        "total": 4,
+        "time_seconds": 30.0,
+        "tokens": 2000,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "case-3",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 40.0,
+        "tokens": 3000,
+        "tool_calls": 6,
+        "errors": 0
+      },
+      "expectations": [],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "case-3",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 2,
+        "failed": 2,
+        "total": 4,
+        "time_seconds": 30.0,
+        "tokens": 2000,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "case-4",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 40.0,
+        "tokens": 3000,
+        "tool_calls": 6,
+        "errors": 0
+      },
+      "expectations": [],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "case-4",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.25,
+        "passed": 1,
+        "failed": 3,
+        "total": 4,
+        "time_seconds": 30.0,
+        "tokens": 2000,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "case-5",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 40.0,
+        "tokens": 3000,
+        "tool_calls": 6,
+        "errors": 0
+      },
+      "expectations": [],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "case-5",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 2,
+        "failed": 2,
+        "total": 4,
+        "time_seconds": 30.0,
+        "tokens": 2000,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 40.0,
+        "stddev": 0.0,
+        "min": 40.0,
+        "max": 40.0
+      },
+      "tokens": {
+        "mean": 3000,
+        "stddev": 0,
+        "min": 3000,
+        "max": 3000
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.4,
+        "stddev": 0.12,
+        "min": 0.25,
+        "max": 0.5
+      },
+      "time_seconds": {
+        "mean": 30.0,
+        "stddev": 0.0,
+        "min": 30.0,
+        "max": 30.0
+      },
+      "tokens": {
+        "mean": 2000,
+        "stddev": 0,
+        "min": 2000,
+        "max": 2000
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.60",
+      "time_seconds": "+10.0",
+      "tokens": "+1000"
+    }
+  },
+  "notes": []
+}

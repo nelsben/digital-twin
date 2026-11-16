@@ -428,7 +428,7 @@
 | Line or step | Claim | State | Source URL | Old wording → new wording (corrections) |
 |---|---|---|---|---|
 | Read this first | TypeScript names differ in case (`allowedTools`, `permissionMode`) | Confirmed | https://code.claude.com/docs/en/agent-sdk/permissions.md |  |
-| Inputs: Data class | Whether the Agent SDK is covered by ZDR or HIPAA | Unverified |  | Retried on api-and-data-retention and the SDK overview; neither names the Agent SDK; marker kept |
+| Inputs: Data class | Whether the Agent SDK is covered by ZDR or HIPAA | Unverified |  | Retried on api-and-data-retention and the SDK overview; neither names the Agent SDK; marker kept; OPS-62: the HIPAA half is now settled by compendium 10 (a Console API key session is not eligible); ZDR stays unverified |
 | Inputs: Memory | What the SDK keeps as memory: `CLAUDE.md` files and auto memory on the container's disk, lost on restart, off with `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` | Corrected | https://code.claude.com/docs/en/agent-sdk/hosting.md | The SDK pages we read describe no memory store ([02]). → The SDK pages we read describe no memory store, only `CLAUDE.md` files and auto memory on the container's disk, which a restart loses and `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` turns off ([G], [02]). |
 | Before you start 1 | Python 3.10 or later, or Node.js 18.14 or later | Confirmed | https://code.claude.com/docs/en/agent-sdk/hosting.md |  |
 | Before you start 2 | 1 GiB RAM, 5 GiB disk and 1 CPU per agent as a starting point | Confirmed | https://code.claude.com/docs/en/agent-sdk/hosting.md |  |

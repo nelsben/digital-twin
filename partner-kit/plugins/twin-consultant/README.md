@@ -30,7 +30,7 @@ The consultant plugin for the persona-card workflow. Design of record: [partner-
 | [data/plan-fit.json](data/plan-fit.json) | What each capability the twin relies on is on Team, Enterprise and individual plans, and what Team loses, with its compendium cite |
 | [data/industry-packs/](data/industry-packs/) | One JSON file per industry; the format is in [design section 7.1](../../docs/design.md) |
 | [data/task-library.json](data/task-library.json) | The backlog's task templates: each has an anatomy part, the story it applies to, a `when` condition in the rules language, numbered `how` steps that link the kit template, runbook or compendium page to use, `done_when` and an owner role; the format is in [design section 8](../../docs/design.md#8-backlog-backlogpy-datatask-libraryjson) |
-| [skills/](skills/) | The two interview skills: `preparing-role-interviews` and `filling-persona-cards` |
+| [skills/](skills/) | The four consultant skills, one per step of the flow below: `preparing-role-interviews`, `filling-persona-cards`, `planning-a-twin` and `building-twin-stories` |
 | [scripts/twincard/backlog.py](scripts/twincard/backlog.py) | Builds `backlog.json` and `backlog.md` from `card.json`, `levelled.json` and the task library, keeping each task's status across runs |
 
 ## Validate
@@ -131,6 +131,15 @@ packs.load_pack("general")  # the pack; an unknown id raises PackError naming th
 packs.pack_problems(pack)   # [{"path", "message", "fix"}], empty when the pack is well formed
 ```
 
-## Not built yet
+## The flow, from interview to dashboard
 
-The `planning-a-twin` and `building-twin-stories` skills.
+Four skills carry one role from its interviews to a dashboard. Each takes what the step before it left behind. The design is in [partner-kit/docs/design.md](../../docs/design.md).
+
+| Step | Skill | Takes | Leaves behind | Runs |
+|---|---|---|---|---|
+| 1. Prepare the interviews | [preparing-role-interviews](skills/preparing-role-interviews/) | The customer folder, the role and who will be interviewed | The persona folder, one notes file per interviewee under its `interviews/` folder (from [templates/interview-notes.md](templates/interview-notes.md)), and a question plan for each person from [templates/interview-guide.md](templates/interview-guide.md) | no command |
+| 2. Fill the card | [filling-persona-cards](skills/filling-persona-cards/) | The interview notes and the customer profile (it starts one when there is none) | `card.json`, each answer with its source, and an open question for each answer still missing | `validate` |
+| 3. Plan the twin | [planning-a-twin](skills/planning-a-twin/) | A card that validates, and the consultant's overrides, each with a value, a reason and an approver | `levelled.json`, `backlog.json`, `backlog.md` and `dashboard.html`, and a report of blockers, unverified facts, undecided decisions, warnings by code and open questions | `all`, again after any change |
+| 4. Build the stories | [building-twin-stories](skills/building-twin-stories/) | A backlog that is not out of date | The twin's work in the customer's delivery repo, task statuses kept true in `backlog.json`, and a refreshed `backlog.md` and `dashboard.html` | `backlog`, then `dashboard`, after each status change |
+
+Each skill's evals are in its `evals/` folder and were written before its `SKILL.md`. The evals of `planning-a-twin` and `building-twin-stories` are written and have not been run.

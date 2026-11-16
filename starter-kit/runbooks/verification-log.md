@@ -4,17 +4,23 @@
 - **Checked by:** Claude Opus 5.5 (`claude-opus-5-5`), task SHA-21
 - **Updated 2026-11-15 (OPS-24):** rows marked OPS-24 below were added or changed after the review; the summary counts above were not recomputed.
 - **Runbooks:** [identity-devices-publishing.md](identity-devices-publishing.md), [salesforce-hosted-mcp.md](salesforce-hosted-mcp.md), [microsoft-365-connector.md](microsoft-365-connector.md)
+- **Updated 2026-11-16 (OPS-59):** sections for the four runtime runbooks were added by a second reader, Claude Opus 5.5 (`claude-opus-5-5`); their rows are in the summary table below.
 
 | Runbook | Confirmed | Corrected | Unverified | Total |
 |---|---|---|---|---|
 | identity-devices-publishing.md | 55 | 16 | 4 | 75 |
 | salesforce-hosted-mcp.md | 34 | 11 | 12 | 57 |
 | microsoft-365-connector.md | 44 | 8 | 7 | 59 |
+| claude-code-scheduled-task.md | 44 | 2 | 6 | 52 |
+| claude-tag-routine.md | 37 | 1 | 3 | 41 |
+| managed-agents.md | 50 | 5 | 3 | 58 |
+| agent-sdk-runner.md | 34 | 3 | 3 | 40 |
 
 ## How the check was done
 
 - Every runbook was treated as untrusted. A source tag did not count as proof. Each numbered step, table row and factual product sentence was checked against the page it cites. Where there was no citation, or the citation did not support the claim, it was checked against the vendor's own docs.
 - Accepted vendor domains: code.claude.com, platform.claude.com, claude.com/docs, support.claude.com and support.anthropic.com for Anthropic; help.salesforce.com, developer.salesforce.com and Salesforce's official GitHub for Salesforce; learn.microsoft.com for Microsoft; help.okta.com and developer.okta.com for Okta. Blogs, forums, search snippets and other third-party pages were not counted as confirmation.
+- For the four runtime runbooks (OPS-59), the accepted domains were platform.claude.com, code.claude.com, claude.com (docs and connectors pages), support.claude.com, and github.com under the anthropics, anthropic-ai or modelcontextprotocol organisations.
 - Exact strings (keys, menu paths, roles, scopes, URLs, IP ranges, file paths, registry keys, CLI commands) were compared character by character with the vendor page.
 - Repo statements were checked against the branch: `starter-kit/settings/*.json`, [starter-kit/settings/README.md](../settings/README.md), `.claude-plugin/marketplace.json` and `starter-kit/plugins/twin-governance/hooks/`.
 - **States.** Confirmed: the vendor page supports the claim, and the link is kept or added. Corrected: the runbook was changed to match the vendor page, and the link is given. Unverified: no accepted page confirmed it, so the runbook now carries the compendium's `**⚠ Unverified:**` marker ([Conventions](../../docs/compendium/README.md)) and words it as something to confirm at setup. Where two vendor pages disagree, the runbook also carries `**⚠ Conflict:**`.
@@ -244,6 +250,217 @@
 | Deploy 1 | Salesforce allows 20 tracked fields per object | Unverified | | developer.salesforce.com returned HTTP 403 on 2026-11-15; stated as fact before; marker added |
 | Report | The marker row and the changed-field rows share `CreatedById` and `CreatedDate` | Unverified | | Never observed: the marker has not deployed to an org yet; marker added |
 | Report (RevOps) | Retention period of Field History rows | Unverified | | "(⚠ confirm the retention ...)" → the compendium's marker |
+
+## claude-code-scheduled-task.md (OPS-59)
+
+| Line or step | Claim | State | Source URL | Old wording → new wording (corrections) |
+|---|---|---|---|---|
+| What this is | A saved prompt, repositories and connectors that runs on its own, in Anthropic's cloud or a self-hosted environment, with the laptop closed | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| What this is | Release status is research preview | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Inputs: Runs as | A task belongs to the owner's claude.ai account, is not shared with teammates, and acts through their connectors as them | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Inputs: Autonomy | Pilots start at level 1; an unwatched run is level 4 | Confirmed | repo: docs/compendium/06-autonomy.md |  |
+| Inputs: Data class | Cloud sessions are off under ZDR, the HIPAA configuration and CMEK | Confirmed | https://code.claude.com/docs/en/claude-code-on-the-web.md |  |
+| Inputs: Connectors | All the employee's connected connectors are included by default | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Inputs: Memory | The repository's CLAUDE.md is part of the clone | Confirmed | https://code.claude.com/docs/en/cloud-environments.md |  |
+| Inputs: Memory | Whether auto memory is on in an Anthropic-hosted scheduled run | Unverified |  | Retried: memory.md says auto memory is machine-local; the self-hosted page covers self-hosted only; marker kept |
+| Before you start 1 | Plans: Pro, Max, Ultra, Team or Enterprise | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Before you start 2 | Toggle **Scheduled tasks (Was Routines)** or **Routines** at **Organization settings > Capabilities > Remote sessions**; off stops existing tasks and blocks new ones | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Before you start 3 | Custom roles: the permission sits in the role's **Remote sessions** section at **Organization settings > Roles** | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Before you start 4 | Policy message `Cloud sessions are disabled by your organization's policy` | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Before you start 5 | A Console API key or a cloud provider login hides `/schedule` | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Before you start 6 | On Team and Enterprise an Owner turns on the GitHub connection method | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Step 1 | Anthropic-managed cloud is the default place a task runs; self-hosted when routed there | Confirmed | https://code.claude.com/docs/en/scheduled-tasks.md |  |
+| Step 2 | Each run is a fresh cloud session that does not read `~/.claude/skills/`; the repository's `.claude/skills/` is part of the clone | Confirmed | https://code.claude.com/docs/en/skills.md |  |
+| Step 2 | Account skills versus [G]: skills.md says cloud sessions load account skills and that some self-hosted sessions do not; [G]'s sentence sits in the self-hosted page's session-config section, so the two pages do not disagree | Corrected | https://code.claude.com/docs/en/skills.md | **⚠ Conflict:** [D] says cloud sessions also load skills enabled on the claude.ai account, while [G] says a cloud scheduled task run does not get its owner's skills; follow the committed copy, and → Cloud sessions also load skills enabled on the claude.ai account, but in a self-hosted environment a cloud scheduled task run does not get its owner's skills, so follow the committed copy; |
+| Step 2 | A skill committed to `.claude/skills/` is not available to cloud threads in a project | Confirmed | https://code.claude.com/docs/en/skills.md |  |
+| Step 3 | claude.ai/code/routines, **New task** or **New routine** (full-page form), the **New scheduled task** dialog, `/schedule` in the CLI | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Step 4 | The saved prompt is not live user input and cannot act as approval | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Step 4 | Whether a prompt that is only `/<skill-name>` invokes the skill | Unverified |  | Retried on routines.md and skills.md; neither says; marker kept |
+| Step 5 | Presets in local time; five-field cron in UTC; `CRON_TZ=` prefix; more often than hourly rejected; 9:07 to avoid a late start on the hour | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Step 5 | **Custom** cron is set in the edit dialog of an existing task, not when the task is created | Corrected | https://code.claude.com/docs/en/routines.md | or **Custom** with a cron expression such as `0 */2 * * *`; → or, once the task exists, **Custom** in its edit dialog with a cron expression such as `0 */2 * * *`; |
+| Step 5 | Minimum interval one hour | Confirmed | https://code.claude.com/docs/en/scheduled-tasks.md |  |
+| Step 6 | **Advanced settings**, **Repository** on the **General** tab; cloned each run; `claude/`-prefixed branches | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Step 6 | **Default** environment: **Limited** network with **Allow package managers**; connectors go through Anthropic's servers | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Step 7 | Model and effort are chosen in the prompt input's model selector | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Step 8 | **Connectors** tab; included connectors can be used during a run, including writes | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Step 9 | A cloud run begins in auto mode, stops for an ask rule and after repeated blocks | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Step 9 | Repository `.claude/settings.json` permission rules apply in a session with one repository | Confirmed | https://code.claude.com/docs/en/cloud-environments.md |  |
+| Step 9 | Server-managed settings reach cloud sessions | Confirmed | https://code.claude.com/docs/en/server-managed-settings.md |  |
+| Step 9 | `allowManagedPermissionRulesOnly` makes the repository's rules ignored | Confirmed | https://code.claude.com/docs/en/claude-code-on-the-web.md |  |
+| Step 9 | Whether a connector tool set to Blocked or Needs approval holds in a scheduled run | Unverified |  | Retried on routines.md; not stated; marker kept |
+| Step 10 | Endpoint-managed settings do not reach Anthropic-hosted cloud sessions | Confirmed | https://code.claude.com/docs/en/server-managed-settings.md |  |
+| Step 10 | Plugins declared in a repository's `.claude/settings.json` do not load in cloud sessions | Confirmed | https://code.claude.com/docs/en/cloud-environments.md |  |
+| Step 10 | The starter kit delivers `twin-governance` through managed `enabledPlugins` | Confirmed | repo: starter-kit/settings/README.md |  |
+| Step 10 | Whether the governance hook runs in a scheduled run and where its log lives | Unverified |  | Retried; no page says; marker kept |
+| Step 11 | **Create** opens the detail page; the task runs at the next trigger; **Run now** on the detail page | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Step 12 | 100 runs per hour per account; Run now, API fires and one-off re-runs share 30 per hour per task; no overage; usage credits | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Step 13 | On/off switch, **Edit** and **Delete** in the name menu, `/schedule list`, `/schedule update`, `/schedule run` | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Check 1 | History rows end with **Error** or **Cancelled** | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Check 2 | Succeeded only means the session ended | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Check 4 | Default log `~/.claude/twin-governance/log.jsonl` via `TWIN_GOVERNANCE_LOG` | Confirmed | repo: starter-kit/plugins/twin-governance/README.md |  |
+| Check 5 | Paused tasks keep their configuration and run again when switched on | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Hand over | What happens to the task when its owner leaves | Unverified |  | Retried on routines.md; not stated; marker kept |
+| Can go wrong 1 | Causes of `/schedule` Unknown command (API key, cloud provider, signed out, cloud session, toggle off, custom role) | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Can go wrong 2 | A missing GitHub connection skips runs for up to 72 hours, then the task turns off | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Can go wrong 4 | Warnings beginning "The last run" explain runs that did not start | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Can go wrong 4 | Whether a missed run is replayed | Unverified |  | Retried on routines.md and scheduled-tasks.md; not stated; marker kept |
+| Can go wrong 5 | A skill only in `~/.claude/skills/` is reported as not found | Confirmed | https://code.claude.com/docs/en/skills.md |  |
+| Can go wrong 6 | A host outside the allowlist fails with `403` or `ENOTFOUND` | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+| Can go wrong 8 | A toggle turned off or a paused subscription stops the task | Confirmed | https://code.claude.com/docs/en/routines.md |  |
+
+## claude-tag-routine.md (OPS-59)
+
+| Line or step | Claim | State | Source URL | Old wording → new wording (corrections) |
+|---|---|---|---|---|
+| What this is | Routine kinds: a scheduled job, a channel watch, a subscription to one pull request | Confirmed | https://claude.com/docs/claude-tag/users/proactivity.md |  |
+| What this is | Runs on the channel's connections with a typed request's permissions; keeps running when its creator leaves | Confirmed | https://claude.com/docs/claude-tag/users/proactivity.md |  |
+| What this is | Claude Tag is in public beta | Confirmed | https://claude.com/docs/claude-tag/users/proactivity.md |  |
+| Inputs: Runs as | Channels and group DMs run as Claude's service accounts; a one-to-one DM runs on the person's own account | Confirmed | https://claude.com/docs/claude-tag/concepts/agent-identity.md |  |
+| Inputs: Data class | Not available with ZDR, CMEK or the HIPAA configuration | Confirmed | https://claude.com/docs/claude-tag/admins/setup-overview |  |
+| Inputs: Memory | Memory is per channel and anyone in the channel can read and change it | Confirmed | https://claude.com/docs/claude-tag/users/memory.md |  |
+| Inputs: Memory | Workspace notes: from a public channel Claude also saves notes it reads in every channel | Corrected | https://claude.com/docs/claude-tag/users/memory.md | Memory is per channel and anyone in the channel can read and change it. → Memory is per channel and anyone in the channel can read and change it; from a public channel Claude can also save workspace notes, which it reads in every channel, private ones included. |
+| Before you start 1 | Team or Enterprise plan on Anthropic's first-party service | Confirmed | https://claude.com/docs/claude-tag/overview.md |  |
+| Before you start 2 | **Organization settings > Capabilities > Remote sessions > Routines**; while off, Claude answers that it is unavailable | Confirmed | https://claude.com/docs/claude-tag/admins/setup-overview |  |
+| Before you start 3 | Owner role, a Slack workspace admin, usage credits on a Team plan | Confirmed | https://claude.com/docs/claude-tag/admins/setup-overview |  |
+| Step 1 | `claude.ai/admin-settings/claude-tag`, **Start setup**, claude.com/claude-for-slack, `/invite @Claude`, `@Claude connect`, 15-minute code, **Paste the pairing code**, **Pair workspace**, **Launch Claude Tag** | Confirmed | https://claude.com/docs/claude-tag/admins/setup-overview |  |
+| Step 2 | Guests off by default; **How should Claude work in channels with guests**; **Restrict** posts no notice; guests can read posts; no routines in Slack Connect | Confirmed | https://claude.com/docs/claude-tag/admins/restrict-access.md |  |
+| Step 2 | The Slack menu path to list a channel's members and guests | Unverified |  | Retried; no accepted page gives it (slack.com is not on this card's list); marker kept |
+| Step 3 | Anyone in a channel where a connector applies can use it; Claude can never exceed what the key allows | Confirmed | https://claude.com/docs/claude-tag/admins/add-connections.md |  |
+| Step 4 | **Organization settings > Claude Tag**, **Connectors** tab, **Add**, **Custom connector**, **Advanced** tab, **Allowed websites**, **Connect** | Confirmed | https://claude.com/docs/claude-tag/admins/add-connections.md |  |
+| Step 5 | A first credential is on everywhere; **Slack** row under **Assign access**, **Add place**, **Save changes**; **Bundles** tab and **Where it applies** | Confirmed | https://claude.com/docs/claude-tag/admins/add-connections.md |  |
+| Step 6 | Plugin plus credential; remote server only, not stdio; a cloned repository's `.mcp.json` is not loaded | Confirmed | https://claude.com/docs/claude-tag/admins/connections/custom.md |  |
+| Step 7 | The **Credential type** list, nine entries, character for character | Confirmed | https://claude.com/docs/claude-tag/admins/connections/custom.md |  |
+| Step 8 | **Skills and plugins** tab, **What's in it**, **Plugin**; changes apply to new threads only | Confirmed | https://claude.com/docs/claude-tag/admins/add-connections.md |  |
+| Step 9 | Schedules run in UTC; Slack-profile time zone when none is named; at most once an hour | Confirmed | https://claude.com/docs/claude-tag/users/proactivity.md |  |
+| Step 10 | Watch and pull-request subscription syntax; a subscription is the only GitHub event trigger | Confirmed | https://claude.com/docs/claude-tag/users/proactivity.md |  |
+| Step 10 | A watch of another channel needs Claude to be a member of it | Confirmed | https://claude.com/docs/claude-tag/concepts/how-it-works.md |  |
+| Step 11 | Thread reporting; a top-level routine announces each run and works in the thread under it | Confirmed | https://claude.com/docs/claude-tag/users/proactivity.md |  |
+| Step 12 | `@Claude remember for this channel:` syntax; keep it short; members can list, change or forget; Owner edits under **Activity**, **Memory** tab | Confirmed | https://claude.com/docs/claude-tag/users/memory.md |  |
+| Step 12 | A setting that turns channel memory off | Unverified |  | Retried on memory.md, settings-map.md and audit.md; none shown; marker kept |
+| Step 13 | Routines never use personal connectors | Confirmed | https://claude.com/docs/claude-tag/concepts/personal-connectors.md |  |
+| Step 13 | **Tools and access** tab of the **Configure** page; **Auto mode allow rules** per scope | Confirmed | https://claude.com/docs/claude-tag/concepts/settings-map.md |  |
+| Step 14 | **Scheduled work** tab at `claude.ai/admin-settings/claude-tag/audit`; service-account logs; Compliance API transcripts on Enterprise | Confirmed | https://claude.com/docs/claude-tag/admins/audit.md |  |
+| Step 15 | `@Claude !scheduled` lists routines in UTC; changes by plain request | Confirmed | https://claude.com/docs/claude-tag/users/proactivity.md |  |
+| Step 15 | **Pause**, **Resume**, **Delete** in a row's **⋮** menu | Confirmed | https://claude.com/docs/claude-tag/admins/audit.md |  |
+| Check 3 | **View details** shows **Created by** | Confirmed | https://claude.com/docs/claude-tag/admins/audit.md |  |
+| Hand over | A channel's routines survive their creator leaving; anyone in the channel can disable them | Confirmed | https://claude.com/docs/claude-tag/users/proactivity.md |  |
+| Hand over | A one-to-one DM routine is turned off when its owner is removed from the organization | Confirmed | https://claude.com/docs/claude-tag/users/proactivity.md |  |
+| Can go wrong 2 | Fixed UTC time; daylight saving shifts the local time | Confirmed | https://claude.com/docs/claude-tag/users/proactivity.md |  |
+| Can go wrong 3 | Slack Connect: no routines, earlier routines do not run | Confirmed | https://claude.com/docs/claude-tag/admins/restrict-access.md |  |
+| Can go wrong 4 | Output boundaries; a group DM routine posts only there | Confirmed | https://claude.com/docs/claude-tag/users/proactivity.md |  |
+| Can go wrong 5 | **Access from** table, **Not enabled**, **Enable** | Confirmed | https://claude.com/docs/claude-tag/admins/add-connections.md |  |
+| Can go wrong 5 | A host no allow layer covers is blocked | Confirmed | https://claude.com/docs/claude-tag/concepts/agent-identity.md |  |
+| Can go wrong 6 | A running thread keeps the plugins it began with | Confirmed | https://claude.com/docs/claude-tag/admins/add-connections.md |  |
+| Can go wrong 8 | Failure notice to the creator when their Slack account is connected | Confirmed | https://claude.com/docs/claude-tag/users/proactivity.md |  |
+| Can go wrong 8 | Whether a run missed while Claude Tag was down is replayed | Unverified |  | Retried on proactivity.md and audit.md; not stated; marker kept |
+
+## managed-agents.md (OPS-59)
+
+| Line or step | Claim | State | Source URL | Old wording → new wording (corrections) |
+|---|---|---|---|---|
+| Read this first | Managed Agents is in beta | Confirmed | https://platform.claude.com/docs/en/managed-agents/overview |  |
+| Inputs: Data class | Hosted transcripts persist until you delete them; not eligible for ZDR or HIPAA | Confirmed | https://platform.claude.com/docs/en/managed-agents/overview |  |
+| Before you start 1 | Vaults and credentials are workspace-scoped; any key with workspace access can use them | Confirmed | https://platform.claude.com/docs/en/managed-agents/vaults |  |
+| Before you start 2 | Beta header `managed-agents-2026-04-01` on every request; the SDKs set it | Confirmed | https://platform.claude.com/docs/en/managed-agents/overview |  |
+| Before you start 4 | 300 create and 1,200 read requests per minute | Confirmed | https://platform.claude.com/docs/en/managed-agents/reference |  |
+| Before you start 4 | Maximum 20 credentials per vault | Confirmed | https://platform.claude.com/docs/en/managed-agents/vaults |  |
+| Before you start 4 | Maximum 8 memory stores per session | Confirmed | https://platform.claude.com/docs/en/managed-agents/memory |  |
+| Before you start 4 | Maximum 1,000 scheduled deployments per organization | Confirmed | https://platform.claude.com/docs/en/managed-agents/scheduled-deployments |  |
+| Step 1 | A create request that omits `networking` gets `unrestricted` | Confirmed | https://platform.claude.com/docs/en/managed-agents/environments |  |
+| Step 1 | Environment sample: curl flags | Corrected | https://platform.claude.com/docs/en/managed-agents/environments | `curl -fsSL https://api.anthropic.com/v1/environments` → `curl -fsS https://api.anthropic.com/v1/environments` (the page's sample) |
+| Step 1 | Sample body `python-dev`, `limited`, `allow_package_managers`; `allowed_hosts` and `allow_mcp_servers` exist | Confirmed | https://platform.claude.com/docs/en/managed-agents/environments |  |
+| Step 2 | Skill upload: `curl -X POST "https://api.anthropic.com/v1/skills"`, `anthropic-version: 2026-10-21`, `files[]=@example_skill.zip`; returns the `skill_*` ID | Confirmed | https://platform.claude.com/docs/en/managed-agents/skills |  |
+| Step 3 | Agent sample: `curl -fsSL`, `Coding Assistant`, `claude-opus-5-5`, `agent_toolset_20260401`; response has `id` and `version` | Confirmed | https://platform.claude.com/docs/en/managed-agents/agent-setup |  |
+| Step 3 | Skill attachment `{"type": "custom", "skill_id": "skill_01AbCdEfGhIjKlMnOpQrStUv", "version": "latest"}` | Confirmed | https://platform.claude.com/docs/en/managed-agents/skills |  |
+| Step 3 | A fixed skill `version` is accepted: "Pin to a specific version or use `latest`" | Corrected | https://platform.claude.com/docs/en/managed-agents/skills | **⚠ Unverified:** [E] shows `"latest"` only; confirm that a numbered version is accepted. → `version` pins a specific version or uses `latest` ([E]). |
+| Step 4 | The agent toolset defaults to `always_allow` | Confirmed | https://platform.claude.com/docs/en/managed-agents/agent-setup |  |
+| Step 4 | The `default_config: { enabled: false }` sample with `bash` and `read` comes from the Tools page, not [B] | Corrected | https://platform.claude.com/docs/en/managed-agents/tools | Sample from [B]; → Sample from [U], cut to two tools; (and [U] Tools added to Pages used) |
+| Step 5 | `mcp_servers` plus a matching `{"type": "mcp_toolset", "mcp_server_name": "github"}`; `default_config` and `configs` on the toolset; credentials come from a vault | Confirmed | https://platform.claude.com/docs/en/managed-agents/mcp-connector |  |
+| Step 6 | Policies are `always_allow`, `always_ask` and `auto` | Confirmed | https://platform.claude.com/docs/en/managed-agents/permission-policies |  |
+| Step 6 | `always_ask` pauses until `user.tool_confirmation` with `"allow"` or `"deny"` | Confirmed | https://platform.claude.com/docs/en/managed-agents/permission-policies |  |
+| Step 6 | MCP toolsets default to `always_ask` | Confirmed | https://platform.claude.com/docs/en/managed-agents/permission-policies |  |
+| Step 6 | How `auto` maps to our autonomy ladder | Unverified |  | Retried: the page explains `auto` (runs, denies or pauses) but not our ladder; marker kept |
+| Step 7 | `GET /v1/agents/$AGENT_ID/versions`; `version` increments on a change; no-op updates create none | Confirmed | https://platform.claude.com/docs/en/managed-agents/agent-setup |  |
+| Step 8 | Credentials keyed by `mcp_server_url`, unique per vault, secret fields write-only | Confirmed | https://platform.claude.com/docs/en/managed-agents/vaults |  |
+| Step 8 | Vault sample `curl --fail-with-body -sS`, `Alice`, `external_user_id`; auth types `mcp_oauth` and `static_bearer` | Confirmed | https://platform.claude.com/docs/en/managed-agents/vaults |  |
+| Step 9 | With a `refresh` block Anthropic refreshes the token; `metadata` maps the vault to your user | Confirmed | https://platform.claude.com/docs/en/managed-agents/vaults |  |
+| Step 9 | Whether Anthropic offers a hosted sign-in screen for the first token | Unverified |  | Retried on vaults and mcp-connector; none shown; marker kept |
+| Step 10 | Webhook event `vault_credential.refresh_failed` | Confirmed | https://platform.claude.com/docs/en/managed-agents/webhooks |  |
+| Step 11 | `access` defaults to `read_write`; `read_only` supported; prompt-injection warning; 100 kB per memory, 10,000 per store | Confirmed | https://platform.claude.com/docs/en/managed-agents/memory |  |
+| Step 12 | Agent ID string takes the latest version; `{"type": "agent", "id": ..., "version": 1}` pins one; `initial_events` with `user.message` | Confirmed | https://platform.claude.com/docs/en/managed-agents/sessions |  |
+| Step 12 | The session body with `vault_ids` and `title` is the Vaults page's sample | Corrected | https://platform.claude.com/docs/en/managed-agents/vaults | Body from [H]; → Body from [G]; |
+| Step 12 | Budget `{"type": "limit", "max_list_cost": {"amount": "125", "currency": "USD"}}`; a session at its budget pauses | Confirmed | https://platform.claude.com/docs/en/managed-agents/budgets |  |
+| Step 13 | Deployment sample: `?beta=true` URL, `Weekly compliance scan`, `0 20 * * 5`, `America/New_York` | Confirmed | https://platform.claude.com/docs/en/managed-agents/scheduled-deployments |  |
+| Step 13 | The budget bounds every run separately, not the total | Confirmed | https://platform.claude.com/docs/en/managed-agents/scheduled-deployments |  |
+| Step 13 | A deployment keeps its agent version; update it with the agent ID to move | Confirmed | https://platform.claude.com/docs/en/managed-agents/scheduled-deployments |  |
+| Step 13 | Jitter up to 15 percent, at least 5 seconds, at most 9 minutes; missed triggers not backfilled; avoid 1 to 3 AM; `schedule.upcoming_runs_at` | Confirmed | https://platform.claude.com/docs/en/managed-agents/scheduled-deployments |  |
+| Step 14 | Whether session creation accepts an idempotency key | Unverified |  | Retried: no Managed Agents page read mentions one; marker kept |
+| Step 15 | Webhook delivery attempts | Corrected | https://platform.claude.com/docs/en/managed-agents/webhooks | Anthropic's own webhooks retry up to three times with the same `event.id` → Anthropic's own webhooks make up to three delivery attempts with the same `event.id` |
+| Step 15 | Duplicates carry the same `event.id`; an event emitted while no endpoint subscribes is never delivered | Confirmed | https://platform.claude.com/docs/en/managed-agents/webhooks |  |
+| Step 16 | Dropped after three attempts; no ordering guarantee; "aren't a durable log"; HTTPS on port 443; fetch the object by ID | Confirmed | https://platform.claude.com/docs/en/managed-agents/webhooks |  |
+| Step 16 | Stream `GET .../sessions/$SESSION_ID/events/stream?beta=true` with `accept: text/event-stream` | Confirmed | https://platform.claude.com/docs/en/managed-agents/events-and-streaming |  |
+| Step 17 | Update with the last-read `version`, or the request returns 409 | Confirmed | https://platform.claude.com/docs/en/managed-agents/agent-setup |  |
+| Step 18 | "Anthropic might refine behaviors between releases" | Confirmed | https://platform.claude.com/docs/en/managed-agents/overview |  |
+| Step 18 | Header `anthropic-version: 2026-10-21` | Confirmed | https://platform.claude.com/docs/en/managed-agents/agent-setup |  |
+| Self-hosted 1 | Access through the account team or by switching organization; `operator-guide.md` in each release archive | Confirmed | https://platform.claude.com/docs/en/managed-agents/self-hosted |  |
+| Self-hosted 2 | `cma-server`, PostgreSQL 16 or later, workers; model at Anthropic or a chosen provider | Confirmed | https://platform.claude.com/docs/en/managed-agents/self-hosted |  |
+| Self-hosted 2 | Self-hosted sandboxes keep the service at Anthropic and move tool execution only | Confirmed | https://platform.claude.com/docs/en/managed-agents/choosing-an-environment |  |
+| Self-hosted 3 | Each model call carries the conversation, tool inputs and results, and session, agent and environment IDs; the agreement's retention applies | Confirmed | https://platform.claude.com/docs/en/managed-agents/self-hosted-data-and-access |  |
+| Self-hosted 4 | No scheduled deployments, no webhooks, `mcp_oauth` rejected | Confirmed | https://platform.claude.com/docs/en/managed-agents/self-hosted/differences |  |
+| Check 1 | A finished turn idles with `end_turn` | Confirmed | https://platform.claude.com/docs/en/managed-agents/events-and-streaming |  |
+| Check 2 | `session.status_idle` with `requires_action`; `user.tool_confirmation` with `"result": "deny"` | Confirmed | https://platform.claude.com/docs/en/managed-agents/permission-policies |  |
+| Check 4 | The Console session viewer shows cost and spend against the budget | Confirmed | https://platform.claude.com/docs/en/managed-agents/session-observability |  |
+| Hand over | `{"type": "user.interrupt"}` ends the turn with `session.status_idle` | Confirmed | https://platform.claude.com/docs/en/managed-agents/events-and-streaming |  |
+| Hand over | `POST /v1/deployments/$DEPLOYMENT_ID/pause?beta=true` | Confirmed | https://platform.claude.com/docs/en/managed-agents/scheduled-deployments |  |
+| Hand over | `POST /v1/agents/$AGENT_ID/archive`: new sessions stop, running ones continue | Confirmed | https://platform.claude.com/docs/en/managed-agents/agent-setup |  |
+| Hand over | Deleting the vault revokes its credentials | Confirmed | https://platform.claude.com/docs/en/managed-agents/vaults |  |
+| Can go wrong 3 | An unrecoverable trigger error pauses the deployment; `deployment_runs` with `has_error=true` | Confirmed | https://platform.claude.com/docs/en/managed-agents/scheduled-deployments |  |
+| Can go wrong 5 | A 3xx disables an endpoint | Confirmed | https://platform.claude.com/docs/en/managed-agents/webhooks |  |
+
+## agent-sdk-runner.md (OPS-59)
+
+| Line or step | Claim | State | Source URL | Old wording → new wording (corrections) |
+|---|---|---|---|---|
+| Read this first | TypeScript names differ in case (`allowedTools`, `permissionMode`) | Confirmed | https://code.claude.com/docs/en/agent-sdk/permissions.md |  |
+| Inputs: Data class | Whether the Agent SDK is covered by ZDR or HIPAA | Unverified |  | Retried on api-and-data-retention and the SDK overview; neither names the Agent SDK; marker kept |
+| Inputs: Memory | What the SDK keeps as memory: `CLAUDE.md` files and auto memory on the container's disk, lost on restart, off with `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` | Corrected | https://code.claude.com/docs/en/agent-sdk/hosting.md | The SDK pages we read describe no memory store ([02]). → The SDK pages we read describe no memory store, only `CLAUDE.md` files and auto memory on the container's disk, which a restart loses and `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` turns off ([G], [02]). |
+| Before you start 1 | Python 3.10 or later, or Node.js 18.14 or later | Confirmed | https://code.claude.com/docs/en/agent-sdk/hosting.md |  |
+| Before you start 2 | 1 GiB RAM, 5 GiB disk and 1 CPU per agent as a starting point | Confirmed | https://code.claude.com/docs/en/agent-sdk/hosting.md |  |
+| Before you start 3 | Outbound HTTPS to `api.anthropic.com` and to each MCP server | Confirmed | https://code.claude.com/docs/en/agent-sdk/hosting.md |  |
+| Before you start 5 | The SDK spawns a `claude` CLI subprocess that owns a shell, a working directory and session files | Confirmed | https://code.claude.com/docs/en/agent-sdk/hosting.md |  |
+| Before you start 5 | The agent runs inside the container's isolation boundary | Confirmed | https://code.claude.com/docs/en/agent-sdk/secure-deployment.md |  |
+| Step 1 | The bundled native binary is pinned to the package version; semver; patch releases, read the changelog before a minor | Confirmed | https://code.claude.com/docs/en/agent-sdk/hosting.md |  |
+| Step 1 | `model` takes an alias or a full model name | Confirmed | https://code.claude.com/docs/en/agent-sdk/python.md |  |
+| Step 2 | The skills sample (`cwd`, `setting_sources=["user", "project"]`, `skills="all"`, `allowed_tools`) and comments, character for character | Confirmed | https://code.claude.com/docs/en/agent-sdk/skills.md |  |
+| Step 2 | Setting `setting_sources` without `user` and `project` stops skills loading; `ClaudeAgentOptions(skills=["pdf", "docx"])` | Confirmed | https://code.claude.com/docs/en/agent-sdk/skills.md |  |
+| Step 3 | `system_prompt` forms: string, custom object, file object, `claude_code` preset | Confirmed | https://code.claude.com/docs/en/agent-sdk/python.md |  |
+| Step 4 | `allowed_tools` auto-approves and does not restrict | Confirmed | https://code.claude.com/docs/en/agent-sdk/python.md |  |
+| Step 4 | In `dontAsk` the callback step is skipped and the call is denied; a bare name in `disallowed_tools` removes the tool | Confirmed | https://code.claude.com/docs/en/agent-sdk/permissions.md |  |
+| Step 5 | `can_use_tool` runs only when the flow falls through to a prompt, not for calls an allow rule approved | Confirmed | https://code.claude.com/docs/en/agent-sdk/python.md |  |
+| Step 5 | Hooks run first, can deny outright, before the mode step that `bypassPermissions` uses | Confirmed | https://code.claude.com/docs/en/agent-sdk/permissions.md |  |
+| Step 5 | `bypassPermissions` approves each call that reaches the mode step | Confirmed | https://code.claude.com/docs/en/agent-sdk/permissions.md |  |
+| Step 6 | `strict_mcp_config=True` ignores project `.mcp.json` and claude.ai connectors | Confirmed | https://code.claude.com/docs/en/agent-sdk/python.md |  |
+| Step 6 | MCP sample `remote-api`, `sse`, `headers`, `mcp__remote-api__*`; names `mcp__<server-name>__<tool-name>` | Confirmed | https://code.claude.com/docs/en/agent-sdk/mcp.md |  |
+| Step 7 | `ANTHROPIC_API_KEY` from the environment, or `ANTHROPIC_BASE_URL` to a key-injecting proxy | Confirmed | https://code.claude.com/docs/en/agent-sdk/hosting.md |  |
+| Step 7 | Credentials outside the boundary via an MCP server or tool, or a proxy that injects them and keeps an allowlist | Confirmed | https://code.claude.com/docs/en/agent-sdk/secure-deployment.md |  |
+| Step 7 | Per-run credentials passed in an MCP server's `headers` or `env` | Confirmed | https://code.claude.com/docs/en/agent-sdk/mcp.md |  |
+| Step 8 | `PostToolUse` and `PostToolUseFailure` hooks; return `{}` to allow; the `protect_env_files(input_data, tool_use_id, context)` pattern | Confirmed | https://code.claude.com/docs/en/agent-sdk/hooks.md |  |
+| Step 8 | An SDK plugin loaded by local path brings its hooks (`hooks/hooks.json`) | Corrected | https://code.claude.com/docs/en/agent-sdk/plugins.md | **⚠ Unverified:** whether the twin-governance plugin's own `hooks.json` fires inside an SDK session; write the callback yourself and confirm ... → A plugin loaded by local path through the `plugins` option brings its hooks, `hooks/hooks.json` included ([K]), so the twin-governance plugin can be loaded instead of the callback; either way confirm ... ([K] added to Pages used) |
+| Step 9 | `CLAUDE_CODE_ENABLE_TELEMETRY=1`, `CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1` for traces only, `OTEL_TRACES_EXPORTER=otlp`; prompt text and tool inputs off by default | Confirmed | https://code.claude.com/docs/en/agent-sdk/hosting.md |  |
+| Step 10 | No top-level session timeout; set `max_turns` | Confirmed | https://code.claude.com/docs/en/agent-sdk/hosting.md |  |
+| Step 10 | `max_budget_usd`; the estimate can pass the cap, leave headroom | Confirmed | https://code.claude.com/docs/en/agent-sdk/python.md |  |
+| Step 10 | `ResultMessage` subtypes include `success`, `error_max_turns`, `error_max_budget_usd` | Confirmed | https://code.claude.com/docs/en/agent-sdk/python.md |  |
+| Step 11 | One-shot entrypoint reading `TASK_PROMPT`, calls the SDK and exits | Confirmed | https://code.claude.com/docs/en/agent-sdk/hosting.md |  |
+| Step 11 | Shared container: `setting_sources=[]`, `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`, per-tenant `CLAUDE_CONFIG_DIR` and `cwd` | Confirmed | https://code.claude.com/docs/en/agent-sdk/hosting.md |  |
+| Step 12 | Proxy that enforces domain allowlists, injects credentials and logs all traffic | Confirmed | https://code.claude.com/docs/en/agent-sdk/secure-deployment.md |  |
+| Step 13 | Built-in dedupe or event intake in the SDK | Unverified |  | Retried on the overview and hosting pages; none described; marker kept |
+| Step 14 | `ClaudeSDKClient` holds a session open across turns | Confirmed | https://code.claude.com/docs/en/agent-sdk/hosting.md |  |
+| Step 15 | Agent SDK release status | Unverified |  | Retried on the overview; no status stated; marker kept |
+| Check 1 | A finished task returns subtype `success` | Confirmed | https://code.claude.com/docs/en/agent-sdk/agent-loop.md |  |
+| Can go wrong 5 | Error subtypes carry no `result` field | Confirmed | https://code.claude.com/docs/en/agent-sdk/agent-loop.md |  |
+| Can go wrong 6 | Container-local state does not survive a restart | Confirmed | https://code.claude.com/docs/en/agent-sdk/hosting.md |  |
+| Can go wrong 8 | "Claude Code is not covered under HIPAA readiness" | Confirmed | https://platform.claude.com/docs/en/manage-claude/api-and-data-retention.md |  |
+| Can go wrong 8 | The other vendor page: a Console API key session is not eligible for the HIPAA configuration, so it does not disagree for this runner | Corrected | https://code.claude.com/docs/en/hipaa-setup.md | but other vendor pages disagree (see [10]). → and the HIPAA setup page lists a session on a Claude Console API key, as this runner uses, as not eligible for the HIPAA configuration ([L]); see also [10]. ([L] added to Pages used) |
 
 ## Sources that could not be read
 

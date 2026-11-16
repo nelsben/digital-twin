@@ -44,9 +44,10 @@ FILES = {
     "agent-sdk-runner.md": False,
 }
 
-CHECKED_SENTENCE = (
-    "Checked 2026-11-16 by the author against the pages listed. "
-    "Not yet independently verified: verification-log.md has no rows for this runbook."
+CHECKED_SENTENCE = re.compile(
+    r"Checked 2026-11-16 by the author against the pages listed\. "
+    r"Every claim was checked again on \d{4}-\d{2}-\d{2} by a second reader; "
+    r"the results are in the \[verification log\]\(verification-log\.md\)\."
 )
 
 UNVERIFIED = "**⚠ Unverified:**"
@@ -211,7 +212,7 @@ class HostedRuntimeRunbookTests(unittest.TestCase):
         for path, _, text in self.each_file():
             sections = dict(level2_sections(text))
             body = "\n".join(sections.get("Read this first", []))
-            self.assertIn(CHECKED_SENTENCE, body, "%s: checked sentence" % path.name)
+            self.assertRegex(body, CHECKED_SENTENCE, "%s: checked sentence" % path.name)
             self.assertIn("Pages used", body, "%s: Pages used" % path.name)
             self.assertIn("How sources are marked", body, "%s: how sources are marked" % path.name)
             self.assertTrue(self.pages_used(text), "%s: no pages listed" % path.name)

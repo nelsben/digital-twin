@@ -19,7 +19,7 @@ Roles use the names in [03-stakeholders](../../docs/playbook/03-stakeholders.md)
 
 How sources are marked: each numbered step ends with the pages it came from, such as ([C], [I]). **⚠ Unverified:** (the compendium's marker) means no page we read confirmed the sentence; confirm it at set-up, then replace the mark with the page you checked. Where a compendium page already states a fact, this runbook links it and does not repeat it. Option names below are the Python SDK's; the TypeScript names differ in case (`allowedTools`, `permissionMode`) ([C]).
 
-Checked 2026-11-16 by the author against the pages listed. Not yet independently verified: verification-log.md has no rows for this runbook.
+Checked 2026-11-16 by the author against the pages listed. Every claim was checked again on 2026-11-16 by a second reader; the results are in the [verification log](verification-log.md).
 
 Pages used:
 
@@ -33,6 +33,8 @@ Pages used:
 - [H] [Securely deploying AI agents](https://code.claude.com/docs/en/agent-sdk/secure-deployment.md)
 - [I] [Agent SDK reference, Python](https://code.claude.com/docs/en/agent-sdk/python.md)
 - [J] [API and data retention](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention.md)
+- [K] [Plugins in the SDK](https://code.claude.com/docs/en/agent-sdk/plugins.md)
+- [L] [Set up Claude Code (local mode) for a HIPAA-ready organization](https://code.claude.com/docs/en/hipaa-setup.md)
 
 ## Inputs you need
 
@@ -43,7 +45,7 @@ The engagement has already decided these for the task. Do not start without all 
 - **Data class and retention.** The class Compliance set. Hosted agent runtimes are ruled out for some classes ([10](../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt)). **⚠ Unverified:** whether the Agent SDK is covered by ZDR or HIPAA; compendium [05](../../docs/compendium/05-decision-matrix.md) marks it unverified and none of the pages listed below names the Agent SDK in its ZDR or HIPAA text. Ask the Anthropic account team in writing before this runner touches ZDR or PHI data.
 - **Connectors and each tool's permission.** Each MCP server (its URL and transport) and, for each tool, one of: left out, needs approval, or allowed. Include the built-in tools such as `Read`, `Write` and `Bash`.
 - **What starts a run.** A webhook from a source system, a schedule (cron expression and timezone), or a chat bot message. The customer's IT names who runs the trigger host.
-- **Memory on or off.** The SDK pages we read describe no memory store ([02](../../docs/compendium/02-persona.md#memory)). If on, name where it lives and which parts are read-only.
+- **Memory on or off.** The SDK pages we read describe no memory store, only `CLAUDE.md` files and auto memory on the container's disk, which a restart loses and `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` turns off ([G], [02](../../docs/compendium/02-persona.md#memory)). If on, name where it lives and which parts are read-only.
 - **The persona's system-prompt form.** The text, written from the persona template in [02](../../docs/compendium/02-persona.md#a-persona-template-our-recommendation), and whether it replaces or extends the default prompt.
 - **The skill that holds the task's instructions.** Its folder, already evaluated.
 
@@ -96,7 +98,7 @@ The engagement has already decided these for the task. Do not start without all 
        hooks={"PostToolUse": [HookMatcher(hooks=[log_tool_call])]}
    )
    ```
-   Pattern from [D] (`hooks={"PreToolUse": [HookMatcher(matcher="Write|Edit", hooks=[protect_env_files])]}`); `log_tool_call(input_data, tool_use_id, context)` is ours. **⚠ Unverified:** whether the twin-governance plugin's own `hooks.json` fires inside an SDK session; write the callback yourself and confirm one row appears in "Check it worked".
+   Pattern from [D] (`hooks={"PreToolUse": [HookMatcher(matcher="Write|Edit", hooks=[protect_env_files])]}`); `log_tool_call(input_data, tool_use_id, context)` is ours. A plugin loaded by local path through the `plugins` option brings its hooks, `hooks/hooks.json` included ([K]), so the twin-governance plugin can be loaded instead of the callback; either way confirm one row appears in "Check it worked".
 9. Export traces as well. Set `CLAUDE_CODE_ENABLE_TELEMETRY=1`, `CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1` (needed for traces only), `OTEL_TRACES_EXPORTER=otlp` and the endpoint at container level; prompt text and tool inputs are off by default. ([G])
 10. Bound every run. Set `max_turns` (the SDK has no top-level session timeout) and `max_budget_usd`, leave headroom because the cost estimate can pass the cap, and branch on the `ResultMessage` subtype: `success`, `error_max_turns`, `error_max_budget_usd`. Treat anything but `success` as a failed run in our log. ([G], [B], [I])
 
@@ -132,4 +134,4 @@ The **Runner owner** owns the container, the API key and the log pipeline after 
 - **A run stops with no answer.** Its subtype is `error_max_turns` or `error_max_budget_usd`, and the `result` field is empty ([B]).
 - **The log has gaps.** A container restart loses local transcripts; send the log to our system, not the container's disk ([G]).
 - **Two containers for one event.** The dedupe row was written after the start, or removed too early (step 13).
-- **The customer needs ZDR or PHI.** The Agent SDK's cover is unverified (step 15 and Inputs); the API data-retention page says Claude Code is not covered under HIPAA readiness ([J]), but other vendor pages disagree (see [10](../../docs/compendium/10-sensitive-data.md#what-hipaa-covers)). Get the answer from Anthropic in writing before the runner touches PHI.
+- **The customer needs ZDR or PHI.** The Agent SDK's cover is unverified (step 15 and Inputs); the API data-retention page says Claude Code is not covered under HIPAA readiness ([J]), and the HIPAA setup page lists a session on a Claude Console API key, as this runner uses, as not eligible for the HIPAA configuration ([L]); see also [10](../../docs/compendium/10-sensitive-data.md#what-hipaa-covers). Get the answer from Anthropic in writing before the runner touches PHI.

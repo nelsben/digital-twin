@@ -1,0 +1,312 @@
+{
+  "profile_version": 1,
+  "customer": "sample-insurance-broker",
+  "display_name": "Example Regional Insurance Brokers",
+  "fictional": true,
+  "industry": "general",
+  "plan": {
+    "tier": "enterprise",
+    "seats": 120,
+    "individual_accounts_on_domain": 3
+  },
+  "identity": {
+    "idp": "okta",
+    "sso": true,
+    "scim": true
+  },
+  "devices": {
+    "mdm": "intune",
+    "managed_share": "all Windows laptops",
+    "unmanaged_users": "about ten claims staff read Outlook and Teams on personal phones"
+  },
+  "compliance": {
+    "data_classes": [
+      "internal",
+      "confidential",
+      "highly-sensitive"
+    ],
+    "phi": null,
+    "baa": false,
+    "mnpi": false,
+    "retention": "standard",
+    "walls": "none"
+  },
+  "systems": [
+    {
+      "id": "dynamics",
+      "kind": "crm",
+      "product": "Microsoft Dynamics 365 Sales",
+      "edition": "Enterprise",
+      "access_model": "security roles by business unit",
+      "private_network": false
+    },
+    {
+      "id": "outlook",
+      "kind": "email-calendar",
+      "product": "Microsoft Outlook",
+      "edition": "Microsoft 365 E3",
+      "access_model": "per-user mailbox; shared claims inbox",
+      "private_network": false
+    },
+    {
+      "id": "teams",
+      "kind": "messaging",
+      "product": "Microsoft Teams",
+      "edition": "Microsoft 365 E3",
+      "access_model": "team and channel membership",
+      "private_network": false
+    },
+    {
+      "id": "sharepoint",
+      "kind": "documents",
+      "product": "SharePoint Online",
+      "edition": "Microsoft 365 E3",
+      "access_model": "site permissions per client team; medical library limited to the injury team",
+      "private_network": false
+    },
+    {
+      "id": "ledgerline",
+      "kind": "other",
+      "product": "Ledgerline Claims",
+      "edition": "9.2 on-premises",
+      "access_model": "roles: handler, senior handler, team leader",
+      "private_network": true
+    }
+  ],
+  "network": {
+    "can_allowlist_anthropic_ips": false
+  },
+  "runtime_preferences": {
+    "self_hosting_required": false
+  },
+  "governance": {
+    "log_destination": "Microsoft Sentinel",
+    "existing_source_audit": "Ledgerline claim audit trail",
+    "spend_owner": "IT Infrastructure Manager",
+    "spend_limits": "per-user monthly limit wanted; amount not set",
+    "action_log_required": true
+  },
+  "owners": {
+    "sponsor": "Head of Claims",
+    "technical_owner": "IT Infrastructure Manager",
+    "business_owner": "Claims Team Leader",
+    "backup_owner": "IT Service Desk Lead",
+    "compliance": "Head of Compliance"
+  },
+  "provenance": {
+    "display_name": {
+      "status": "answered",
+      "source": "discovery.md#A1"
+    },
+    "industry": {
+      "status": "answered",
+      "source": "discovery.md#A2"
+    },
+    "plan.tier": {
+      "status": "answered",
+      "source": "discovery.md#B1"
+    },
+    "plan.seats": {
+      "status": "answered",
+      "source": "discovery.md#B1"
+    },
+    "plan.individual_accounts_on_domain": {
+      "status": "answered",
+      "source": "discovery.md#B2"
+    },
+    "identity.idp": {
+      "status": "answered",
+      "source": "discovery.md#D1"
+    },
+    "identity.sso": {
+      "status": "answered",
+      "source": "discovery.md#D1"
+    },
+    "identity.scim": {
+      "status": "answered",
+      "source": "discovery.md#D1"
+    },
+    "devices.mdm": {
+      "status": "answered",
+      "source": "discovery.md#D2"
+    },
+    "devices.managed_share": {
+      "status": "answered",
+      "source": "discovery.md#D2"
+    },
+    "devices.unmanaged_users": {
+      "status": "answered",
+      "source": "discovery.md#D2"
+    },
+    "compliance.data_classes": {
+      "status": "answered",
+      "source": "discovery.md#C1"
+    },
+    "compliance.phi": {
+      "status": "open",
+      "source": "discovery.md#C2",
+      "owner": "Head of Compliance",
+      "due": "2026-11-27"
+    },
+    "compliance.baa": {
+      "status": "answered",
+      "source": "discovery.md#C2"
+    },
+    "compliance.mnpi": {
+      "status": "answered",
+      "source": "discovery.md#C5"
+    },
+    "compliance.retention": {
+      "status": "answered",
+      "source": "discovery.md#C3"
+    },
+    "compliance.walls": {
+      "status": "answered",
+      "source": "discovery.md#C4"
+    },
+    "network.can_allowlist_anthropic_ips": {
+      "status": "answered",
+      "source": "discovery.md#E6"
+    },
+    "governance.log_destination": {
+      "status": "answered",
+      "source": "discovery.md#G1"
+    },
+    "governance.existing_source_audit": {
+      "status": "answered",
+      "source": "discovery.md#G2"
+    },
+    "governance.spend_owner": {
+      "status": "answered",
+      "source": "discovery.md#G3"
+    },
+    "governance.spend_limits": {
+      "status": "answered",
+      "source": "discovery.md#G3"
+    },
+    "governance.action_log_required": {
+      "status": "answered",
+      "source": "discovery.md#G1"
+    },
+    "owners.sponsor": {
+      "status": "answered",
+      "source": "discovery.md#A1"
+    },
+    "owners.technical_owner": {
+      "status": "answered",
+      "source": "discovery.md#G4"
+    },
+    "owners.business_owner": {
+      "status": "answered",
+      "source": "discovery.md#G4"
+    },
+    "owners.backup_owner": {
+      "status": "answered",
+      "source": "discovery.md#G4"
+    },
+    "owners.compliance": {
+      "status": "answered",
+      "source": "discovery.md#C3"
+    },
+    "systems.dynamics.kind": {
+      "status": "answered",
+      "source": "discovery.md#E1"
+    },
+    "systems.dynamics.product": {
+      "status": "answered",
+      "source": "discovery.md#E1"
+    },
+    "systems.dynamics.edition": {
+      "status": "answered",
+      "source": "discovery.md#E1"
+    },
+    "systems.dynamics.access_model": {
+      "status": "answered",
+      "source": "discovery.md#E4"
+    },
+    "systems.dynamics.private_network": {
+      "status": "answered",
+      "source": "discovery.md#E5"
+    },
+    "systems.outlook.kind": {
+      "status": "answered",
+      "source": "discovery.md#E3"
+    },
+    "systems.outlook.product": {
+      "status": "answered",
+      "source": "discovery.md#E3"
+    },
+    "systems.outlook.edition": {
+      "status": "answered",
+      "source": "discovery.md#E3"
+    },
+    "systems.outlook.access_model": {
+      "status": "answered",
+      "source": "discovery.md#E4"
+    },
+    "systems.outlook.private_network": {
+      "status": "answered",
+      "source": "discovery.md#E5"
+    },
+    "systems.teams.kind": {
+      "status": "answered",
+      "source": "discovery.md#E3"
+    },
+    "systems.teams.product": {
+      "status": "answered",
+      "source": "discovery.md#E3"
+    },
+    "systems.teams.edition": {
+      "status": "answered",
+      "source": "discovery.md#E3"
+    },
+    "systems.teams.access_model": {
+      "status": "answered",
+      "source": "discovery.md#E4"
+    },
+    "systems.teams.private_network": {
+      "status": "answered",
+      "source": "discovery.md#E5"
+    },
+    "systems.sharepoint.kind": {
+      "status": "answered",
+      "source": "discovery.md#E2"
+    },
+    "systems.sharepoint.product": {
+      "status": "answered",
+      "source": "discovery.md#E2"
+    },
+    "systems.sharepoint.edition": {
+      "status": "answered",
+      "source": "discovery.md#E2"
+    },
+    "systems.sharepoint.access_model": {
+      "status": "answered",
+      "source": "discovery.md#E4"
+    },
+    "systems.sharepoint.private_network": {
+      "status": "answered",
+      "source": "discovery.md#E5"
+    },
+    "systems.ledgerline.kind": {
+      "status": "answered",
+      "source": "discovery.md#E5"
+    },
+    "systems.ledgerline.product": {
+      "status": "answered",
+      "source": "discovery.md#E5"
+    },
+    "systems.ledgerline.edition": {
+      "status": "answered",
+      "source": "discovery.md#E5"
+    },
+    "systems.ledgerline.access_model": {
+      "status": "answered",
+      "source": "discovery.md#E4"
+    },
+    "systems.ledgerline.private_network": {
+      "status": "answered",
+      "source": "discovery.md#E5"
+    }
+  }
+}

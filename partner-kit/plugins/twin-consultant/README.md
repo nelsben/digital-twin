@@ -43,6 +43,7 @@ A customer profile's `industry` is `general` or the id of a pack; `validate` rep
 
 | Pack | For |
 |---|---|
+| [b2b-software](data/industry-packs/b2b-software.json) | A customer-success role at a B2B software company: Anthropic's customer-support plugin and the skills to adapt, HubSpot, Google Drive, Gmail, Google Calendar, Slack, Zendesk and product-usage connector defaults, no settings baseline, and the typical customer-success tasks, from compendium [11](../../../docs/compendium/11-connectors.md), [16](../../../docs/compendium/16-oob-skills-and-references.md) and [18](../../../docs/compendium/18-customer-success.md) |
 | [general](data/industry-packs/general.json) | A customer with no pack: Anthropic skills, plugins and references that apply to any role, from [compendium 16](../../../docs/compendium/16-oob-skills-and-references.md) |
 | [private-equity](data/industry-packs/private-equity.json) | A private-equity deal team: Anthropic's financial-services plugins and skills, the data vendors they bring, Salesforce and Microsoft 365 connector defaults with their runbooks, compliance defaults, settings baseline `pe-zdr`, and the typical deal-team tasks, from compendium [11](../../../docs/compendium/11-connectors.md), [14](../../../docs/compendium/14-private-equity.md), [16](../../../docs/compendium/16-oob-skills-and-references.md) and [17](../../../docs/compendium/17-anthropic-pe-plugins-review.md) |
 
@@ -50,7 +51,7 @@ The loader is `scripts/twincard/packs.py`:
 
 ```python
 from twincard import packs
-packs.list_packs()          # ["general", "private-equity"]
+packs.list_packs()          # ["b2b-software", "general", "private-equity"]
 packs.load_pack("general")  # the pack; an unknown id raises PackError naming the ids that exist
 packs.pack_problems(pack)   # [{"path", "message", "fix"}], empty when the pack is well formed
 ```

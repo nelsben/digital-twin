@@ -84,6 +84,7 @@ class ShippedPackTests(unittest.TestCase):
         self.assertEqual(packs.list_packs(), sorted(p.stem for p in pack_files()))
         self.assertIn("general", packs.list_packs())
         self.assertIn("private-equity", packs.list_packs())
+        self.assertIn("b2b-software", packs.list_packs())
 
     def test_every_pack_file(self):
         self.assertTrue(pack_files())
@@ -175,6 +176,48 @@ class ShippedPackTests(unittest.TestCase):
         self.assertTrue({"compliance.mnpi", "compliance.walls", "compliance.retention"} <= fields)
         self.assertGreaterEqual(len(pack["typical_tasks"]), 4)
         self.assertTrue([e for _, e in entries(pack) if e["unverified"] is True])
+
+    def test_private_equity_task_features(self):
+        pack = packs.load_pack("private-equity")
+        features = {e["id"]: e["feature"] for e in pack["typical_tasks"]}
+        self.assertEqual(features, {
+            "T1": "pre-meeting-preparation",
+            "T2": "pipeline-upkeep-and-reporting",
+            "T4": "deal-screening",
+            "T5": "pre-meeting-preparation",
+            "T6": "investment-committee-drafting",
+        })
+
+    def test_b2b_software_pack_content(self):
+        pack = packs.load_pack("b2b-software")
+        self.assertEqual(pack["name"], "B2B software")
+        self.assertIsNone(pack["settings_baseline"])
+        for page in ("11-connectors", "16-oob-skills-and-references", "18-customer-success"):
+            self.assertIn("docs/compendium/%s.md" % page, pack["sources"])
+        names = {(e["kind"], e["name"]) for e in pack["anthropic_starting_points"]}
+        self.assertIn(("plugin", "customer-support"), names)
+        tasks = {e["id"]: e for e in pack["typical_tasks"]}
+        expected = {
+            "C1": ("Account brief", "call-preparation-and-follow-up", "person", ["crm", "documents"]),
+            "C2": ("Weekly renewal-risk digest", "renewals", "schedule-team", ["crm", "product-data"]),
+            "C3": ("Renewal quote email", "renewals", "person", ["crm"]),
+            "C4": ("Follow-up email and CRM call note", "call-preparation-and-follow-up", "person", ["documents"]),
+            "C5": ("Open-ticket summary on escalation", "escalations", "event", ["ticketing"]),
+        }
+        self.assertEqual(sorted(tasks), sorted(expected))
+        for task_id, (name, feature, trigger, inputs) in expected.items():
+            with self.subTest(task=task_id):
+                task = tasks[task_id]
+                self.assertEqual((task["name"], task["feature"], task["trigger"], task["inputs"]),
+                                 (name, feature, trigger, inputs))
+                self.assertEqual(task["data_class"], "confidential")
+                self.assertEqual(task["cite"], "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation")
+        kinds = {e["system_kind"] for e in pack["connector_defaults"]}
+        self.assertTrue({"crm", "documents", "email-calendar", "messaging", "ticketing", "product-data"} <= kinds)
+        products = {e["product"] for e in pack["connector_defaults"]}
+        for product in ("HubSpot", "Google Drive", "Gmail", "Google Calendar", "Slack", "Zendesk"):
+            self.assertIn(product, products)
+        self.assertTrue(all(e["runbook"] is None for e in pack["connector_defaults"]))
 
 
 class LoaderTests(unittest.TestCase):

@@ -197,3 +197,32 @@ New sources:
 - Claude Tag access and spend (who can use Claude, group DMs, DMs from members without an account): https://claude.com/docs/claude-tag/admins/restrict-access.md
 
 Re-fetched on 2026-11-15 to back the changes in this pass: API and data retention, Claude Code ZDR, Claude Code data usage, HIPAA setup, Claude Tag overview and identity, Claude Code skills, Hooks, Agent Skills overview, Skills API guide (audit logging, version pinning), Provisioning skills, Plugins admin, Plugin security, Connectors getting started, Server-managed settings, Pricing and plan features, Audit logs, Skills analytics API, Agent SDK overview, CMEK, Data residency, Custom retention, Self-hosted Managed Agents, MCP tunnels, Claude.ai memory, Claim and migrate accounts, Tenant restrictions. Their URLs are listed above.
+
+## Customer success (page 18)
+
+Fetched on 2026-11-15. The plugin was reviewed at commit `e91a134584eb798bac7fb0379358006a2b63b965` (2026-11-13), read through the GitHub API.
+
+- Knowledge-work plugins, reviewed commit: https://github.com/anthropics/knowledge-work-plugins/commit/e91a134584eb798bac7fb0379358006a2b63b965
+- `customer-support` plugin: https://github.com/anthropics/knowledge-work-plugins/tree/e91a134584eb798bac7fb0379358006a2b63b965/customer-support
+- `customer-support` plugin.json, .mcp.json, CONNECTORS.md, README.md, LICENSE: https://github.com/anthropics/knowledge-work-plugins/blob/e91a134584eb798bac7fb0379358006a2b63b965/customer-support/.claude-plugin/plugin.json ; https://github.com/anthropics/knowledge-work-plugins/blob/e91a134584eb798bac7fb0379358006a2b63b965/customer-support/.mcp.json ; https://github.com/anthropics/knowledge-work-plugins/blob/e91a134584eb798bac7fb0379358006a2b63b965/customer-support/CONNECTORS.md ; https://github.com/anthropics/knowledge-work-plugins/blob/e91a134584eb798bac7fb0379358006a2b63b965/customer-support/README.md ; https://github.com/anthropics/knowledge-work-plugins/blob/e91a134584eb798bac7fb0379358006a2b63b965/customer-support/LICENSE
+- `customer-support` skills: https://github.com/anthropics/knowledge-work-plugins/tree/e91a134584eb798bac7fb0379358006a2b63b965/customer-support/skills (customer-escalation, customer-research, draft-response, kb-article, ticket-triage)
+- Last commit touching the plugin: https://github.com/anthropics/knowledge-work-plugins/commit/c71b6f3082b1e5ace3d1a9e30ac9205934134c9c
+- Microsoft 365 removed from the role plugins (#285): https://github.com/anthropics/knowledge-work-plugins/commit/181c4f6ff5a246f776027dcd79e2b330b68bf3be
+- `sales` plugin (reference; plugin.json, .mcp.json, CONNECTORS.md and the frontmatter of six skills read): https://github.com/anthropics/knowledge-work-plugins/tree/e91a134584eb798bac7fb0379358006a2b63b965/sales
+
+## Connectors (OPS-31, fetched 2026-11-15)
+
+New sources for page 11's rows:
+
+- HubSpot connector listing: https://claude.com/connectors/hubspot
+- HubSpot connector for Claude (tiers, approval, read and write by object): https://knowledge.hubspot.com/integrations/set-up-and-use-the-hubspot-connector-for-claude
+- HubSpot connector changelog, 2025-08-28 (all tiers; older, read-only additions): https://developers.hubspot.com/changelog/claude-connector-additional-objects-and-admin-controls
+- Gmail connector: https://claude.com/docs/connectors/google/gmail.md
+- Google Calendar connector: https://claude.com/docs/connectors/google/calendar.md
+- Zendesk external AI agents (early access): https://support.zendesk.com/hc/en-us/articles/11400026079130-Connecting-external-AI-agents-to-Zendesk-EAP
+- Intercom connector listing: https://claude.com/connectors/intercom
+- Intercom MCP server: https://developers.intercom.com/docs/guides/mcp
+
+Not found: https://claude.com/connectors/zendesk returned 404 on 2026-11-15, so a Claude directory listing for Zendesk is not confirmed.
+
+Re-fetched on 2026-11-15 to re-check rows: Connectors directory, Google Drive connector, Google Workspace MCP, Slack connector, Slack MCP, HubSpot remote MCP, MCP tunnels. Their URLs are listed above.

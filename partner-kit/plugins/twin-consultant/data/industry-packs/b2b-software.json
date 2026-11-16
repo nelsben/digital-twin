@@ -1,0 +1,190 @@
+{
+  "pack_version": 1,
+  "id": "b2b-software",
+  "name": "B2B software",
+  "summary": "Anthropic's customer-support plugin, connector defaults for HubSpot, Google Workspace, Slack, Zendesk and product-usage data, and the typical customer-success tasks for a B2B software company.",
+  "sources": [
+    "docs/compendium/11-connectors.md",
+    "docs/compendium/16-oob-skills-and-references.md",
+    "docs/compendium/18-customer-success.md"
+  ],
+  "settings_baseline": null,
+  "anthropic_starting_points": [
+    {
+      "kind": "plugin",
+      "name": "customer-support",
+      "where": "knowledge-work-plugins",
+      "use": "start-from",
+      "note": "Adapt. Five skills, no separate commands, agents or hooks; eight connectors in .mcp.json. Vendor a reviewed copy (reviewed at commit e91a134): cut each body under the kit's 150 lines, descriptions under 200 characters, drop argument-hint, and keep only the connectors the customer runs. ticket-triage and kb-article are skipped.",
+      "cite": "docs/compendium/18-customer-success.md#whats-in-customer-support",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "customer-escalation",
+      "where": "knowledge-work-plugins: customer-support",
+      "use": "start-from",
+      "note": "Adapt, for C5. Point it at Zendesk and HubSpot, use the customer's escalation tiers and targets, and post to Slack only after a person approves.",
+      "cite": "docs/compendium/18-customer-success.md#whats-in-customer-support",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "draft-response",
+      "where": "knowledge-work-plugins: customer-support",
+      "use": "start-from",
+      "note": "Adapt, for C3 and C4. Add the customer's tone, signature and renewal and follow-up templates. Keep it draft-only.",
+      "cite": "docs/compendium/18-customer-success.md#whats-in-customer-support",
+      "unverified": false
+    },
+    {
+      "kind": "skill",
+      "name": "customer-research",
+      "where": "knowledge-work-plugins: customer-support",
+      "use": "start-from",
+      "note": "Adapt. Keep the source ranking; limit it to connected systems, with web search only for public product facts.",
+      "cite": "docs/compendium/18-customer-success.md#whats-in-customer-support",
+      "unverified": false
+    },
+    {
+      "kind": "plugin",
+      "name": "sales",
+      "where": "knowledge-work-plugins",
+      "use": "reference",
+      "note": "Reference. Its account-context, call-prep, renewal-radar, customer-health, call-summary and log-activity skills match C1 to C4. Not reviewed on page 18; review it before taking any skill from it.",
+      "cite": "docs/compendium/16-oob-skills-and-references.md#2-anthropic-plugin-marketplaces-and-plugins",
+      "unverified": false
+    }
+  ],
+  "data_providers": [],
+  "connector_defaults": [
+    {
+      "system_kind": "crm",
+      "product": "HubSpot",
+      "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin approves it and sets its data permissions. Set write tools to Needs approval.",
+      "identity": "Per user, via OAuth, within the user's HubSpot permissions.",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false
+    },
+    {
+      "system_kind": "documents",
+      "product": "Google Drive",
+      "how": "The Google Drive directory connector, built and run by Google. An Owner adds it on Team and Enterprise. It reads and creates files.",
+      "identity": "Per user, via OAuth; each member connects their own Google account.",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": true
+    },
+    {
+      "system_kind": "email-calendar",
+      "product": "Gmail",
+      "how": "The Gmail directory connector. An Owner or Primary Owner enables it on Team and Enterprise. Read and search only: it can't draft, send or change mail.",
+      "identity": "Per user, via OAuth with the user's own Google account.",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false
+    },
+    {
+      "system_kind": "email-calendar",
+      "product": "Google Calendar",
+      "how": "The Google Calendar directory connector. An Owner or Primary Owner enables it on Team and Enterprise. Read only: it can't create or change events.",
+      "identity": "Per user, via OAuth with the user's own Google account.",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": true
+    },
+    {
+      "system_kind": "messaging",
+      "product": "Slack",
+      "how": "The Slack directory connector (Team and Enterprise; the Claude in Slack app installed first). An Owner enables it. Whether it can post is unconfirmed; the Slack MCP server can.",
+      "identity": "Per user: each member connects their own account. Slack admin approval required.",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": true
+    },
+    {
+      "system_kind": "ticketing",
+      "product": "Zendesk",
+      "how": "Zendesk's External AI connection (early access), https://<subdomain>.zendesk.com/mcp, added by an Owner as a custom connector. A Zendesk admin creates the connection and limits it to agent groups.",
+      "identity": "Per user, via OAuth: each user authorizes their own Zendesk account.",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": true
+    },
+    {
+      "system_kind": "product-data",
+      "product": "Internal usage database",
+      "how": "Our own MCP server, read-only, returning aggregates. On Team there is no MCP tunnel: the server must be reachable from Anthropic's IP range, or the agent runs inside the network.",
+      "identity": "Set by the server we build: OAuth 2.1; per user through the customer's identity provider (our recommendation).",
+      "runbook": null,
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "unverified": false
+    }
+  ],
+  "compliance_defaults": [],
+  "typical_tasks": [
+    {
+      "id": "C1",
+      "name": "Account brief",
+      "feature": "call-preparation-and-follow-up",
+      "trigger": "person",
+      "data_class": "confidential",
+      "inputs": [
+        "crm",
+        "documents"
+      ],
+      "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+      "unverified": false
+    },
+    {
+      "id": "C2",
+      "name": "Weekly renewal-risk digest",
+      "feature": "renewals",
+      "trigger": "schedule-team",
+      "data_class": "confidential",
+      "inputs": [
+        "crm",
+        "product-data"
+      ],
+      "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+      "unverified": true
+    },
+    {
+      "id": "C3",
+      "name": "Renewal quote email",
+      "feature": "renewals",
+      "trigger": "person",
+      "data_class": "confidential",
+      "inputs": [
+        "crm"
+      ],
+      "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+      "unverified": false
+    },
+    {
+      "id": "C4",
+      "name": "Follow-up email and CRM call note",
+      "feature": "call-preparation-and-follow-up",
+      "trigger": "person",
+      "data_class": "confidential",
+      "inputs": [
+        "documents"
+      ],
+      "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+      "unverified": false
+    },
+    {
+      "id": "C5",
+      "name": "Open-ticket summary on escalation",
+      "feature": "escalations",
+      "trigger": "event",
+      "data_class": "confidential",
+      "inputs": [
+        "ticketing"
+      ],
+      "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+      "unverified": true
+    }
+  ]
+}

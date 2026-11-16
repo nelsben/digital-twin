@@ -409,7 +409,7 @@
     {
       "id": "T1",
       "name": "Company brief",
-      "feature": "pre-meeting-prep",
+      "feature": "pre-meeting-preparation",
       "trigger": "person",
       "data_class": "highly-sensitive",
       "inputs": [
@@ -422,7 +422,7 @@
     {
       "id": "T2",
       "name": "Post-meeting CRM update",
-      "feature": "post-meeting-follow-up",
+      "feature": "pipeline-upkeep-and-reporting",
       "trigger": "person",
       "data_class": "highly-sensitive",
       "inputs": [
@@ -446,7 +446,7 @@
     {
       "id": "T5",
       "name": "Call preparation",
-      "feature": "pre-meeting-prep",
+      "feature": "pre-meeting-preparation",
       "trigger": "person",
       "data_class": "highly-sensitive",
       "inputs": [],
@@ -456,7 +456,7 @@
     {
       "id": "T6",
       "name": "IC memo sections",
-      "feature": "ic-drafting",
+      "feature": "investment-committee-drafting",
       "trigger": "person",
       "data_class": "highly-sensitive",
       "inputs": [],

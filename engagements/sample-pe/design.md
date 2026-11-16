@@ -4,11 +4,11 @@
 
 Phase 2 deliverable for the deal-team twin. Author: Mateo Ferreira (solution architect). Sign-off collected by Eleanor Osei-Whitcombe (engagement lead). Status: draft for sign-off, 2026-11-14.
 
-Every decision below cites the [discovery](discovery.md) question it answers (A1 to G4) and the compendium page that explains the options. People are named as in [stakeholders.md](stakeholders.md). Items marked **open** wait on a discovery answer; section 12 lists them with an owner and a date. The prioritized story backlog is a separate Phase 2 deliverable ([backlog.md](backlog.md)) and is signed off with this document.
+Every decision below cites the [discovery](discovery.md) question it answers (A1 to G4) and the compendium page that explains the options. People are named as in [stakeholders.md](stakeholders.md). Items marked **open** wait on a discovery answer; section 12 lists them with an owner and a date. The prioritized story backlog is a separate Phase 2 deliverable ([backlog.md](backlog.md)). It exists, is also a draft awaiting sign-off, and is signed off with this document.
 
 ## 1. Summary
 
-Example Capital Partners gets one Claude org for people, the existing Claude Enterprise org with 40 seats, run as a **private-equity org** with zero data retention (ZDR) on Claude Code. A second, Platform org for hosted agents is planned but not provisioned until the first hosted job or hosted front end is scheduled. The deal-team twin starts with a pilot of 6 users on Intune-managed laptops, at autonomy level 1 (drafts only), with two skills: the company brief (T1) and the post-meeting CRM update (T2). Because the deal team handles MNPI, deal material stays on ZDR surfaces with web search and fetch off; chat is held to 30-day retention, provisionally, so our own metadata-only governance log is the long-term audit record. The soft wall between the deal team and investor relations is enforced by Salesforce and HubSpot role-based access under per-user identity, and a wall test (spike #30) must pass before the pilot. Operating partners and contractors on unmanaged devices get no direct access to highly sensitive data; a hosted twin we run is their route later. Six discovery items are still open and each blocks part of this design: PHI (C2), retention (C3), IP allowlisting (E6), the log destination (G1), Salesforce logging (G2) and spend limits (G3). C2 and C3 must close before the CCO signs; section 12 gives every owner and date.
+Example Capital Partners gets one Claude org for people, the existing Claude Enterprise org with 40 seats, run as a **private-equity org** with zero data retention (ZDR) on Claude Code. A second, Platform org for hosted agents is planned but not provisioned until the first hosted job or hosted front end is scheduled. The deal-team twin starts with a pilot of 6 users on Intune-managed laptops, at autonomy level 1 (drafts only), with two skills: the company brief (T1) and the post-meeting CRM update (T2). Because the deal team handles MNPI, deal material stays on ZDR surfaces with web search and fetch off; chat is held to 30-day retention, provisionally, so our own metadata-only governance log is the long-term audit record. The soft wall between the deal team and investor relations is enforced by Salesforce and HubSpot role-based access under per-user identity, and a wall test (spike #30) must pass before the pilot. Operating partners and contractors on unmanaged devices get no direct access to highly sensitive data; a hosted twin we run is their route later. Six discovery items are still open and each blocks part of this design: PHI (C2), retention (C3), IP allowlisting (E6), the log destination (G1), Salesforce logging (G2) and spend limits (G3). Two more are open and do not block the design: the wall role boundary (E4), which the wall test needs, and the examples for evals (F3), which Build needs. C2 and C3 must close before the CCO signs; section 12 gives every owner and date.
 
 | # | Decision | Choice | Why (discovery) | See |
 |---|---|---|---|---|
@@ -21,7 +21,7 @@ Example Capital Partners gets one Claude org for people, the existing Claude Ent
 | 7 | Device gate | Intune-managed devices only for sign-in to the org, through Okta device trust | D1, D2 | [13](../../docs/compendium/13-devices.md) |
 | 8 | Unmanaged users | Operating partners and contractors get a hosted twin we run (later); no seat in the org until then | D2, D3 | [13](../../docs/compendium/13-devices.md) |
 | 9 | Identity | Okta SSO and SCIM groups; per-user OAuth on every connector; no shared identities | C4, D1 | [09](../../docs/compendium/09-plans-and-it-controls.md), [14](../../docs/compendium/14-private-equity.md) |
-| 10 | Connectors for the pilot | Salesforce Hosted MCP and the Microsoft 365 connector, reads only. HubSpot and Slack not enabled. | E1 to E5, F2 | [11](../../docs/compendium/11-connectors.md) |
+| 10 | Connectors for the pilot | Salesforce Hosted MCP and the Microsoft 365 connector, reads only, and kept out of chat and Cowork for the deal-team group (section 3; whether the org can do this is **⚠ Unverified**, see OD-13). HubSpot and Slack not enabled. | C1, C5, E1 to E5, F2 | [11](../../docs/compendium/11-connectors.md) |
 | 11 | Wall | Soft wall (design B), proven by spike #30 before the pilot | C4, E4 | [14](../../docs/compendium/14-private-equity.md) |
 | 12 | Autonomy | Level 1 for T1 and T2. CRM writes move to level 2 only on scorecard evidence. | F4 | [06](../../docs/compendium/06-autonomy.md) |
 | 13 | Marketplace | One reviewed marketplace, `digital-twin-kit`; managed settings block all others | B3, D2 | [16](../../docs/compendium/16-oob-skills-and-references.md) |
@@ -29,6 +29,8 @@ Example Capital Partners gets one Claude org for people, the existing Claude Ent
 | 15 | Governance log | Metadata only. Splunk is the candidate (G1 open); Salesforce Event Monitoring may cover the Salesforce half (G2 open). | G1, G2 | [15](../../docs/compendium/15-governance-and-performance.md) |
 | 16 | Spend | IT owns tooling and spend; limits and budget set once G3 closes | G3 | [15](../../docs/compendium/15-governance-and-performance.md) |
 | 17 | First hosted job | The Monday pipeline summary (T3), after the pilot, in the hosted org | F5 | [05](../../docs/compendium/05-decision-matrix.md) |
+| 18 | Pilot scope: T1 and T2 | The pilot is two skills, the company brief (T1) and the post-meeting CRM update (T2), for 6 users. T3 to T6 follow after the pilot (section 8, "Later tasks"). | A1 names company briefs and CRM upkeep as the 6-month outcome. F4 rates a mistake in them medium (T1, and a reviewer checks every brief) and low to medium (T2, writes start as drafts a person approves), so both can start at level 1. F5: both are started by a person, so they run in the client and need no hosted org. F2: their inputs sit in Salesforce, SharePoint or Teams, which the two pilot connectors cover (decision 10). F1: both have a weekly baseline to measure against (section 11). | [07](../../docs/compendium/07-pilot-roles.md) |
+| 19 | Scorecard | Metrics: hours saved per task against the F1 baselines (section 11); edit rate on drafts; eval pass rate; approve and reject rates; adoption; cost per task. Owner: Samir Castellanos, with Marguerite Oyelaran. The numeric targets for T1 and T2 are fixed by 2026-12-04, before Build starts and so before the pilot starts (OD-11). They are not stated here, because there is no pilot data yet to set them on. | A1 ("less time on first-pass company briefs and CRM upkeep, with a low edit rate"; targets set in design) | [15](../../docs/compendium/15-governance-and-performance.md) |
 
 ## 2. Org plan
 
@@ -70,7 +72,7 @@ Only Owners can manage plugins and skills; the Admin role cannot ([09](../../doc
 
 ### Migrating the 8 Pro accounts (B1, B2)
 
-The eight people who bought Pro plans on the company domain are on consumer terms, outside IT's control, and their data may be used for training unless they opted out. They do not use a twin or any company data until they have migrated ([09](../../docs/compendium/09-plans-and-it-controls.md)). Owner of the migration: Tomasz Hadjiev.
+The eight people who bought Pro plans on the company domain are on consumer terms, outside IT's control, and their data may be used for training unless they opted out. They do not use a twin or any company data until they have migrated ([09](../../docs/compendium/09-plans-and-it-controls.md)). Owner of the migration: Tomasz Hadjiev. The build task is BT-2 in [backlog.md](backlog.md).
 
 1. **Check seats.** Discovery does not say whether the 8 are among the 40 seats. If they are not, the org needs up to 48. Confirm the count and the contract first (OD-9).
 2. **Announce.** Domain capture is one-way, and accounts not migrated within 30 days are deleted. Tell the 8 people, in writing, what happens and by when.
@@ -92,14 +94,15 @@ The data classes are those from discovery C1: **internal**, **confidential** and
 | Data class | Examples here | Allowed surfaces | ZDR status of those surfaces | Web search and fetch | Not allowed |
 |---|---|---|---|---|---|
 | **Internal** | Process documents, firm policies, public company information | Claude Code, claude.ai chat, Desktop, Cowork, connectors | Claude Code: ZDR. Chat and Cowork: not ZDR, 30-day retention | **Off** | Individual plans. Claude Tag and cloud sessions (off by ZDR) |
-| **Confidential** (deal team: pipeline records, prior memos; investor relations: investor and fundraising contacts) | Salesforce opportunities, SharePoint memos, HubSpot contacts | Claude Code on managed devices; Cowork and chat on managed devices; vetted connectors, read-only, per-user | Claude Code: ZDR. Chat and Cowork: not ZDR, 30-day retention | **Off** | Individual plans; unvetted connectors; Claude Tag |
-| **Highly sensitive (MNPI)** | Target lists, deal models, diligence notes, data-room files, anything that names a live target | **ZDR surfaces only:** Claude Code locally on a ZDR sign-in on a managed device, and a hosted agent in the ZDR Platform org (later) | **ZDR** | **Off** | Chat, Cowork, artifacts, Claude Tag, cloud sessions, Remote Control, hosted Managed Agents, API skills, code execution, Files, Batch, the API's MCP connector, web search and fetch |
+| **Confidential** (deal team: records and documents that name no live target; investor relations: investor and fundraising contacts) | HubSpot contacts; Salesforce or SharePoint records that name no live target (for example a closed-deal archive) | Claude Code on managed devices; Cowork and chat on managed devices; vetted connectors, read-only, per-user | Claude Code: ZDR. Chat and Cowork: not ZDR, 30-day retention | **Off** | Individual plans; unvetted connectors; Claude Tag |
+| **Highly sensitive (MNPI)** | Salesforce opportunity records and SharePoint deal-folder memos for a live deal; target lists, deal models, diligence notes, data-room files; anything that names a live target | **ZDR surfaces only:** Claude Code locally on a ZDR sign-in on a managed device, and a hosted agent in the ZDR Platform org (later) | **ZDR** | **Off** | Chat, Cowork, artifacts, Claude Tag, cloud sessions, Remote Control, hosted Managed Agents, API skills, code execution, Files, Batch, the API's MCP connector, web search and fetch |
 | **PHI** | None today | None (out of scope until C2 closes) | n/a | **Off** | Everything, in this org |
 
 Rules that make the table hold:
 
 - **Web search and fetch are off for the whole private-equity org**, not only for MNPI work. Search queries and fetched sites can reveal deal intent even under ZDR, and the org cannot tell which class a given chat holds ([14](../../docs/compendium/14-private-equity.md)).
-- **Highly sensitive work goes through Claude Code.** A session that touches MNPI starts in Claude Code on a ZDR sign-in. Chat and Cowork are for internal and confidential work only. The deal-team plugin tells users so.
+- **Highly sensitive work goes through Claude Code.** A session that touches MNPI starts in Claude Code on a ZDR sign-in. Chat and Cowork are for internal and confidential work only. The deal-team plugin tells users so, but a plugin message is advice, not a control.
+- **The Salesforce and Microsoft 365 connectors stay out of chat and Cowork for the deal-team group.** The records they return for a live deal are MNPI, and the org cannot tell which class a chat holds. The compendium does not confirm a control that scopes a connector to one surface or one group: it confirms per-tool permissions and, in Claude Code, managed MCP allow and deny lists ([09](../../docs/compendium/09-plans-and-it-controls.md), [11](../../docs/compendium/11-connectors.md)). So this is **⚠ Unverified**, and the backlog carries it as a spike (BT-1, OD-13). Until the spike answers, no deal-team user connects either connector in chat or Cowork.
 - **Scripts return results, not records.** A skill script returns totals, IDs or pass/fail, never raw deal rows. Skills hold methods and never deal data ([10](../../docs/compendium/10-sensitive-data.md), [14](../../docs/compendium/14-private-equity.md)).
 - **Model choice.** The most capable "Covered Models" tier needs 30-day retention, so ZDR roles use a model outside it. Which models qualify is a question to Anthropic ([12](../../docs/compendium/12-orgs-and-ownership.md), question 6) and it is settled before the pilot (OD-9).
 - **Evals contain deal facts.** The two past briefs and sample CRM update from F3 are deal data. The skill owners redact them (targets, amounts and names replaced) before they enter the repo; the originals stay in SharePoint. Evals run only on ZDR surfaces.
@@ -125,6 +128,8 @@ Compendium 13 recommends keeping unmanaged devices out of sensitive orgs. This o
 - **Okta device trust** allows sign-in to the private-equity org only from Intune-managed devices (D1).
 - **The Enterprise IP allowlist (beta)** limits the org to the corporate network or VPN. Tomasz Hadjiev supplies the egress ranges.
 - **Tenant restrictions** block other Claude orgs on the corporate network, through the TLS-inspecting proxy.
+
+The build task for device trust and the allowlist is BT-4 in [backlog.md](backlog.md).
 
 With the gate on, the unmanaged column above is **moot for the org itself**: operating partners and contractors have no seat in it. The column states the rule for the hosted twin's front end and for any later decision to lift the gate, which needs Ngozi Brandvold's and Rashida Kovalenko's agreement.
 
@@ -156,7 +161,7 @@ This is engineering work, and it is the price of letting unmanaged devices near 
 | Provisioning | SCIM from Okta. Groups: one for the deal team (18) and one for the pilot (6). Group names are set by Tomasz Hadjiev. Investor relations gets its own group when it joins, so plugin targeting never crosses the wall. | D1, A3, C4 |
 | Owners | Two: Tomasz Hadjiev (Primary) and Keiko Lindqvist. No custom role with the Libraries permission. | B3, G4 |
 | Connector identity | **Per-user OAuth only.** Each person's Salesforce, HubSpot and SharePoint permissions then apply to their twin. No service accounts, no Claude Tag integration users, no HubSpot private-app tokens. | C4 |
-| Connector permissions | Owner sets each tool to Always allow, Needs approval or Blocked. Read tools: Always allow. Write tools: Blocked at level 1. | F4 |
+| Connector permissions | Owner sets each tool to Always allow, Needs approval or Blocked ([11](../../docs/compendium/11-connectors.md)). At level 1 the only Salesforce write route, the `dispatch` tool, is Blocked. The per-tool settings are in the [Salesforce Hosted MCP runbook](../../starter-kit/runbooks/salesforce-hosted-mcp.md). | F4 |
 | Projects, shared chats, artifacts | One Project per deal team, members from that team only. Sharing limited. Per-group sharing controls are unverified: we ask Anthropic ([12](../../docs/compendium/12-orgs-and-ownership.md), question 5). | C4 |
 | Memory | Per user (fine). Project memory is shared with the project's members, so Projects stay per team. | C4 |
 | Quarterly access review | Owners, group membership, connector scopes. Tomasz Hadjiev, with Ngozi Brandvold for retention. | G4 |
@@ -211,7 +216,7 @@ Cross-cutting points:
 
 ### Proof before the pilot: spike #30
 
-Discovery E4 is answered but not confirmed: the Salesforce and HubSpot admins have not yet said that deal-team and investor-relations roles are fully separated. **Spike #30 is the proof, and it must pass before any pilot user connects.** It follows the spike template in [04 Stories](../../docs/playbook/04-stories.md) and produces [wall-test-protocol.md](wall-test-protocol.md). In outline:
+Discovery E4 is open (owners: the Salesforce and HubSpot admins, due 2026-11-27): they have not yet said that deal-team and investor-relations roles are fully separated. That written confirmation comes before the spike runs. **Spike #30 is the proof, and it must pass before any pilot user connects.** It follows the spike template in [04 Stories](../../docs/playbook/04-stories.md) and produces [wall-test-protocol.md](wall-test-protocol.md). In outline:
 
 1. Joaquin Lindahl and Imani Petrov each confirm in writing that the deal-team and investor-relations roles are fully separated in their systems.
 2. A test user on each side of the wall signs in to the twin and tries to read the other side's records, through Salesforce Hosted MCP and, for the test only, through HubSpot.
@@ -268,11 +273,20 @@ Rules for both ([06](../../docs/compendium/06-autonomy.md), [03](../../docs/comp
 - **Skills hold methods, never deal data.**
 - Web search and fetch stay off.
 
-T3 (the Monday pipeline summary), T4 (CIM screening), T5 (call preparation) and T6 (IC memo sections) are backlog items after T1 and T2. T3 is the first hosted job (section 12, OD-8).
+### Later tasks: T3 to T6
+
+T3 (the Monday pipeline summary), T4 (CIM screening), T5 (call preparation) and T6 (IC memo sections) are backlog items after T1 and T2 (decision 18). T3 is the first hosted job (section 12, OD-8). Each has a data class and surface now, so that its story can be written; the autonomy start level is 1 for all four.
+
+| Task | Data class | Surface | Inputs and notes |
+|---|---|---|---|
+| **T3** Monday pipeline summary | Highly sensitive (MNPI): the pipeline report holds opportunity records for live deals | Hosted agent in the ZDR Platform org, on a schedule (decision 17). Identity is open (OD-8). | Salesforce pipeline report. Posting to Teams is a send and is decided under OD-8. |
+| **T4** CIM or teaser screening | Highly sensitive (MNPI): a CIM or teaser for a deal under screening names the target | Claude Code on a ZDR sign-in, on a managed device, started by a person. An event-driven version needs a hosted job, later. | Only a document the associate uploads to the session, or one that sits in SharePoint. An emailed document is saved to SharePoint first. No mail connector is added (section 6). Salesforce for prior contact with the company. |
+| **T5** Call preparation | Highly sensitive (MNPI): a briefing for a management or expert call names the target | Claude Code on a ZDR sign-in, on a managed device, started by a person | Salesforce, SharePoint and prior call notes. F2 puts every input in Salesforce, SharePoint or Teams, so the notes are read from there; which one is confirmed when the F3-style examples for T5 are collected. Same connectors as T1. |
+| **T6** IC memo sections | Highly sensitive (MNPI): diligence notes and data-room files | Claude Code on a ZDR sign-in, on a managed device, started by a person. Always a draft, always reviewed (F4). | Diligence notes and data-room files in SharePoint. PHI from the healthcare-services portfolio company stays out of scope until C2 closes (section 2). OD-1 shapes it. |
 
 ### Layering on Anthropic's plugins (OD-1)
 
-Our recommendation is to layer `twin-pe-deal-team` on Anthropic's `financial-analysis` and `private-equity` plugins from `anthropics/financial-services`, adapting them and not shipping them unchanged ([compendium 16](../../docs/compendium/16-oob-skills-and-references.md)). T1 and T2 are firm-specific (Salesforce fields, the firm's brief format), so we write them either way; layering shapes T4, T6 and the plugin's structure. It is pending partner sign-off. The review spike is done ([compendium 17](../../docs/compendium/17-anthropic-pe-plugins-review.md)). See OD-1.
+Our recommendation is to layer `twin-pe-deal-team` on Anthropic's `financial-analysis` and `private-equity` plugins from `anthropics/financial-services`, adapting them and not shipping them unchanged ([compendium 16](../../docs/compendium/16-oob-skills-and-references.md)). T1 and T2 are firm-specific (Salesforce fields, the firm's brief format), so we write them either way; layering shapes T4, T6 and the plugin's structure. It is pending Rashida Kovalenko's review of the spike and partner sign-off. The review spike is done and written up in [compendium 17](../../docs/compendium/17-anthropic-pe-plugins-review.md). See OD-1.
 
 ## 9. Governance log and audit
 
@@ -371,7 +385,7 @@ From the interviews (F1), figures are the interviewees' estimates:
 | T1 Company brief | About 4 per associate per week | 90 | About 6, per associate |
 | T2 Post-meeting CRM update | About 10 per person per week | 15 | About 2.5 |
 
-Discovery A1 left the numeric targets for design. We set them with Samir Castellanos before the pilot starts, against these baselines (OD-11), and do not state them here, because there is no pilot data yet to set them on.
+Discovery A1 left the numeric targets for design. Decision 19 (Scorecard) names the metrics and the owner, Samir Castellanos, and fixes the date: 2026-12-04, against these baselines (OD-11). We do not state the numbers here, because there is no pilot data yet to set them on.
 
 ## 12. Open design decisions
 
@@ -379,7 +393,7 @@ Discovery A1 left the numeric targets for design. We set them with Samir Castell
 
 **Question:** is `twin-pe-deal-team` layered on Anthropic's `private-equity` and `financial-analysis` plugins from `anthropics/financial-services`, or built from scratch?
 
-**Our recommendation: layer**, pending partner sign-off and a review spike. Why: the `private-equity` plugin already has skills for deal screening, diligence checklists, IC memos, portfolio monitoring and returns analysis, which cover T4 and T6; its outputs are drafts "staged for human sign-off", which fits level 1; and it is Apache-2.0 per GitHub ([compendium 16](../../docs/compendium/16-oob-skills-and-references.md)). What the spike must check before we depend on it:
+**Our recommendation: layer**, pending Rashida Kovalenko's review of the spike and partner sign-off. The review spike is done (outcome below). Why: the `private-equity` plugin already has skills for deal screening, diligence checklists, IC memos, portfolio monitoring and returns analysis, which cover T4 and T6; its outputs are drafts "staged for human sign-off", which fits level 1; and it is Apache-2.0 per GitHub ([compendium 16](../../docs/compendium/16-oob-skills-and-references.md)). What the spike checked before we depend on it:
 
 - Every skill and connector in both plugins, read before use; none ships unchanged.
 - Data flows against compendium [10](../../docs/compendium/10-sensitive-data.md) and [11](../../docs/compendium/11-connectors.md). `financial-analysis` holds all the data connectors: any third-party data connector is out for MNPI work, and any web access is off.
@@ -388,13 +402,13 @@ Discovery A1 left the numeric targets for design. We set them with Samir Castell
 
 | Owner | Date |
 |---|---|
-| Sign-off: Eleanor Osei-Whitcombe (engagement lead). Spike: Yuki Sandoval (skill engineer), reviewed by Rashida Kovalenko | 2026-12-04, before Build starts |
+| Spike (done): Yuki Sandoval (skill engineer). Review of the spike: Rashida Kovalenko. Sign-off: Eleanor Osei-Whitcombe (engagement lead) | Review and sign-off by 2026-12-04, before Build starts |
 
-**Outcome (2026-11-14): still open, pending sign-off.** The review spike is written up in [compendium 17](../../docs/compendium/17-anthropic-pe-plugins-review.md), at upstream commit `3e32c22`. It passes all four checks above and supports layering as a vendored copy in `digital-twin-kit`, with the connectors file and the web, EDGAR and mail steps removed. It keeps 19 of the 23 skills (8 as shipped, 11 changed) and skips `deal-sourcing`, `ai-readiness`, `dcf-model` and `skill-creator`. T1 and T2 take only small pieces from it. It stays open because Rashida Kovalenko has not yet reviewed the spike and Eleanor Osei-Whitcombe has not signed off.
+**Outcome (2026-11-14): spike done; the decision is still open, pending review and sign-off.** The review spike is written up in [compendium 17](../../docs/compendium/17-anthropic-pe-plugins-review.md), at upstream commit `3e32c22`. It passes all four checks above and supports layering as a vendored copy in `digital-twin-kit`, with the connectors file and the web, EDGAR and mail steps removed. It keeps 19 of the 23 skills (8 as shipped, 11 changed) and skips `deal-sourcing`, `ai-readiness`, `dcf-model` and `skill-creator`. T1 and T2 take only small pieces from it. The decision stays open because Rashida Kovalenko has not yet reviewed the spike and Eleanor Osei-Whitcombe has not signed off.
 
 ### Open discovery items that block design
 
-These are the open items from [discovery](discovery.md) that block this design. F3 (examples for evals) is also open, due 2026-12-04, but blocks Build and not design.
+These are the open items from [discovery](discovery.md) that block this design. Two more are open and do not block design: E4 (written confirmation of the role boundary from the Salesforce and HubSpot admins, due 2026-11-27) blocks the wall test and so the pilot, and F3 (examples for evals, due 2026-12-04) blocks Build.
 
 | # | Discovery item | What it blocks | Owner | Date |
 |---|---|---|---|---|
@@ -414,12 +428,13 @@ Design sign-off needs C2 and C3 closed first (stakeholders.md). The other four c
 | OD-8 | **Identity for the hosted Monday summary (T3).** A scheduled job has no person present, so it cannot use per-user OAuth. Decide whether it runs under a credential scoped to the deal-team role, which would be a deliberate exception to "no shared identities", and whether it may post to Teams. Until decided, T3 stays out of scope. Also: whether compliance requires a wrapper server with redaction or field allowlists for Salesforce deal data (compendium 11 "Build"). | Ngozi Brandvold and Tomasz Hadjiev; Joaquin Lindahl for the Salesforce role | Before T3 is built (after the pilot) |
 | OD-9 | **Contract and capacity checks with Anthropic.** (a) The ZDR addendum can be added to the existing Enterprise org, and what ZDR covers there (compendium 12, questions 3 and 4). (b) Which models qualify for ZDR (question 6). (c) Seats: whether the 8 Pro users are among the 40. | Tomasz Hadjiev, with the Anthropic account team | 2026-12-04 |
 | OD-10 | **HubSpot MCP tier.** Confirm that Marketing Hub Professional supports the server. Needed only when investor relations joins. | Imani Petrov, HubSpot administrator | Before investor relations joins |
-| OD-11 | **Numeric scorecard targets** for hours saved and edit rate on T1 and T2, against the baselines in section 11 | Samir Castellanos, RevOps manager, with Marguerite Oyelaran | Before the pilot starts |
+| OD-11 | **Numeric scorecard targets** for hours saved and edit rate on T1 and T2, against the baselines in section 11 (decision 19) | Samir Castellanos, RevOps manager, with Marguerite Oyelaran | 2026-12-04, before the pilot starts |
 | OD-12 | **Slack administrator.** Named only if Slack is ever enabled (section 6). | Tomasz Hadjiev | When Slack is proposed |
+| OD-13 | **Keep the Salesforce and Microsoft 365 connectors out of chat and Cowork for the deal-team group** (section 3). **⚠ Unverified:** the compendium does not confirm a control that scopes a connector to one surface or one group. The spike checks it (BT-1 in [backlog.md](backlog.md)). | Tomasz Hadjiev | Before any pilot user connects |
 
 ## 13. Sign-off
 
-This is the Phase 2 gate in the [engagement model](../../docs/playbook/01-engagement-model.md): technical and business owners approve. The prioritized backlog is signed off with this document once `backlog.md` exists.
+This is the Phase 2 gate in the [engagement model](../../docs/playbook/01-engagement-model.md): technical and business owners approve. The prioritized backlog, [backlog.md](backlog.md), exists and awaits sign-off. It is signed off with this document.
 
 | Role | Name | Signs for | Sections | Condition | Signature | Date |
 |---|---|---|---|---|---|---|

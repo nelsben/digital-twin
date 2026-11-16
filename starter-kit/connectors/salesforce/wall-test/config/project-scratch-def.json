@@ -1,0 +1,10 @@
+{
+  "orgName": "Twin wall test",
+  "edition": "Enterprise",
+  "features": [],
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    }
+  }
+}

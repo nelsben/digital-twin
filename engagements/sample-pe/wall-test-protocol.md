@@ -75,6 +75,8 @@ The conductor records a **case window** for every case: the start and end time, 
 
 Run mode is one of two: **can be dry-run at the API level in a scratch org** (issue #82 replays these calls, as each user, in a Salesforce scratch org with two roles) or **needs the live connector in the customer's org**. A dry run shows that the cases run and the rules apply; it cannot show that this customer's roles hold.
 
+The dry-run script and its results live in [starter-kit/connectors/salesforce/wall-test](../../starter-kit/connectors/salesforce/wall-test/README.md).
+
 **⚠ Unverified:** whether headless-360's read tools can run a search, open list views or run an aggregate query (its tool list is unconfirmed: [Salesforce runbook step 2](../../starter-kit/runbooks/salesforce-hosted-mcp.md#2-turn-on-and-activate-the-server-in-salesforce)), and whether Salesforce and HubSpot sharing applies to every such call under per-user OAuth ([compendium 14](../../docs/compendium/14-private-equity.md#salesforce-and-hubspot-behind-a-wall)). The cases test both. Claude's security guide states that the Microsoft 365 connector does not bypass SharePoint sharing ([runbook](../../starter-kit/runbooks/microsoft-365-connector.md#what-access-the-connector-gets-read-this-before-consent)); the cases still test it.
 
 ### Step 2: reading the other side

@@ -77,8 +77,14 @@ From the Team sample (`engagements/sample-team-cs`):
 
 ```json
 "tasks.C1.minutes_each": {"status": "answered", "source": "interviews/2026-11-06-csm.md#F1"},
-"tasks.C2.trigger": {"status": "answered", "source": "interviews/2026-11-07-senior-csm.md#F5"},
-"tasks.C5.data_class": {"status": "default", "source": "data/industry-packs/b2b-software.json"}
+"tasks.C2.trigger": {"status": "answered", "source": "interviews/2026-11-07-senior-csm.md#F5"}
+```
+
+A pack default, as a general example (task D1 stands for any card task). It
+applies only when the notes are silent on the data class:
+
+```json
+"tasks.D1.data_class": {"status": "default", "source": "data/industry-packs/<id>.json"}
 ```
 
 A missing answer (F4 was not asked for task D1):

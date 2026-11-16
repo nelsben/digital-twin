@@ -83,6 +83,7 @@
         "where": ""
       },
       "skill_owner": "",
+      "starts_from": [],
       "priority": null,
       "in_pilot": null
     }

@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Fill the persona card for engagements/sample-team-cs/personas/customer-success-manager from the notes files in its interviews folder and the customer's discovery.md. There is no card.json yet.",
-      "expected_output": "Claude creates card.json from the template, fills every field from the notes and discovery.md under the question ids the catalogue allows, writes a provenance entry per field, runs validate until it passes, and reports completeness 100% (105 of 105), as the fixture card does, then names levelling as the next step without running it.",
+      "expected_output": "Claude creates card.json from the template, fills every field from the notes and discovery.md under the question ids the catalogue allows, writes a provenance entry per field, runs validate until it passes, and reports completeness 100% (111 of 111), as the fixture card does, then names levelling as the next step without running it.",
       "files": [
         "evals/files/engagements/sample-team-cs/customer-profile.json",
         "evals/files/engagements/sample-team-cs/discovery.md",
@@ -14,7 +14,7 @@
       ],
       "expectations": [
         "card.json is created in engagements/sample-team-cs/personas/customer-success-manager with id customer-success-manager and customer example-software-co",
-        "The validate command was run on the persona folder, and its last run prints Valid with 'Completeness: 100% (105 of 105 required fields answered or default)', as the fixture card does",
+        "The validate command was run on the persona folder, and its last run prints Valid with 'Completeness: 100% (111 of 111 required fields answered or default)', as the fixture card does",
         "The card has tasks C1, C2, C3, C4 and C5, the task ids the notes use",
         "tasks.C1.frequency_per_week is 6 and tasks.C1.minutes_each is 30; provenance.tasks.C1.minutes_each.source is interviews/2026-11-06-csm.md#F1 with status answered",
         "tasks.C1.inputs lists hubspot and google-drive, both with access read; provenance.tasks.C1.inputs[0].access.source names interviews/2026-11-06-csm.md and question F2",

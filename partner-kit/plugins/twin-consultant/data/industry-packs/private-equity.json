@@ -440,6 +440,9 @@
       "inputs": [
         "documents"
       ],
+      "starts_from": [
+        "deal-screening"
+      ],
       "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#4-what-the-deal-team-stories-layer-on",
       "unverified": false
     },
@@ -450,6 +453,9 @@
       "trigger": "person",
       "data_class": "highly-sensitive",
       "inputs": [],
+      "starts_from": [
+        "dd-meeting-prep"
+      ],
       "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#4-what-the-deal-team-stories-layer-on",
       "unverified": false
     },
@@ -460,6 +466,9 @@
       "trigger": "person",
       "data_class": "highly-sensitive",
       "inputs": [],
+      "starts_from": [
+        "ic-memo"
+      ],
       "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#4-what-the-deal-team-stories-layer-on",
       "unverified": false
     }

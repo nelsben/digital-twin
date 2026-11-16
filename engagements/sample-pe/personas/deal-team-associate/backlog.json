@@ -3,8 +3,8 @@
   "customer": "example-capital-partners",
   "persona": "deal-team-associate",
   "source": {
-    "card_sha256": "f72c43ac12040ed75efbe5f09d5b6b7a133ec9cab0f6989506330a40dd109938",
-    "levelled_sha256": "807c02aa7f3eb798b246d1a1efbe407b3f99eccb5440c18414e767c5accd1067",
+    "card_sha256": "d27a6436df21e62950f581a361a7ec1b8d79337d2a46c6a32b4c3be9811b573c",
+    "levelled_sha256": "8eabb0b2c7a41da3963e7ac85ff356341b2d467a4a26e1742dd9eb13fc4810a0",
     "library_version": 1
   },
   "unnamed_roles": [
@@ -768,9 +768,13 @@
               {
                 "id": "S-T5.write-skill",
                 "template": "write-skill",
-                "title": "Write the skill from the kit template until the evals pass",
+                "title": "Write the skill from dd-meeting-prep until the evals pass",
                 "part": "A2",
                 "how": [
+                  {
+                    "text": "Start from dd-meeting-prep (claude-for-financial-services: private-equity): Adapt, for T5.",
+                    "link": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity"
+                  },
                   {
                     "text": "Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime.",
                     "link": "starter-kit/templates/skill/README.md#copy-it"
@@ -2785,9 +2789,13 @@
               {
                 "id": "S-T4.write-skill",
                 "template": "write-skill",
-                "title": "Write the skill from the kit template until the evals pass",
+                "title": "Write the skill from deal-screening until the evals pass",
                 "part": "A2",
                 "how": [
+                  {
+                    "text": "Start from deal-screening (claude-for-financial-services: private-equity): Adapt, for T4.",
+                    "link": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity"
+                  },
                   {
                     "text": "Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime.",
                     "link": "starter-kit/templates/skill/README.md#copy-it"
@@ -3368,9 +3376,13 @@
               {
                 "id": "S-T6.write-skill",
                 "template": "write-skill",
-                "title": "Write the skill from the kit template until the evals pass",
+                "title": "Write the skill from ic-memo until the evals pass",
                 "part": "A2",
                 "how": [
+                  {
+                    "text": "Start from ic-memo (claude-for-financial-services: private-equity): Adapt, for T6.",
+                    "link": "docs/compendium/17-anthropic-pe-plugins-review.md#1-whats-in-private-equity"
+                  },
                   {
                     "text": "Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime.",
                     "link": "starter-kit/templates/skill/README.md#copy-it"
@@ -3838,6 +3850,104 @@
               "The role's users are in the organisation with the right role."
             ],
             "gated_by": [],
+            "data_providers": [
+              {
+                "name": "Daloopa",
+                "kind": "financial-data",
+                "access": "mcp",
+                "note": "Remote MCP server https://mcp.daloopa.com/server/mcp, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Per vendor later, after the vendor test. Its retention and identity model are unconfirmed.",
+                "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+                "unverified": true
+              },
+              {
+                "name": "Morningstar",
+                "kind": "market-data",
+                "access": "mcp",
+                "note": "Remote MCP server https://mcp.morningstar.com/mcp, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Its retention and identity model are unconfirmed.",
+                "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+                "unverified": true
+              },
+              {
+                "name": "S&P Global (Kensho)",
+                "kind": "market-data",
+                "access": "mcp",
+                "note": "Remote MCP server https://kfinance.kensho.com/integrations/mcp, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Capital IQ data. Its retention and identity model are unconfirmed.",
+                "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+                "unverified": true
+              },
+              {
+                "name": "FactSet",
+                "kind": "market-data",
+                "access": "mcp",
+                "note": "Remote MCP server https://mcp.factset.com/mcp, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Its retention and identity model are unconfirmed.",
+                "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+                "unverified": true
+              },
+              {
+                "name": "Moody's",
+                "kind": "credit-data",
+                "access": "mcp",
+                "note": "Remote MCP server https://api.moodys.com/genai-ready-data/m1/mcp, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Its retention and identity model are unconfirmed.",
+                "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+                "unverified": true
+              },
+              {
+                "name": "MT Newswires",
+                "kind": "news",
+                "access": "mcp",
+                "note": "Remote MCP server https://vast-mcp.blueskyapi.com/mtnewswires, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. The host is not the news vendor's own domain, so there is an extra party in the path. Its retention and identity model are unconfirmed.",
+                "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+                "unverified": true
+              },
+              {
+                "name": "Aiera",
+                "kind": "earnings-data",
+                "access": "mcp",
+                "note": "Remote MCP server https://mcp-pub.aiera.com, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Its retention and identity model are unconfirmed.",
+                "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+                "unverified": true
+              },
+              {
+                "name": "LSEG",
+                "kind": "market-data",
+                "access": "mcp",
+                "note": "Remote MCP server https://api.analytics.lseg.com/lfa/mcp, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Its retention and identity model are unconfirmed.",
+                "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+                "unverified": true
+              },
+              {
+                "name": "PitchBook",
+                "kind": "private-company-data",
+                "access": "mcp",
+                "note": "Remote MCP server https://premium.mcp.pitchbook.com/mcp, shipped in the financial-analysis plugin. Not allowed in the private-equity ZDR org for the pilot: a query shows the vendor what the firm is looking at. Highest exposure: searching for private targets shows the vendor the firm's pipeline. Its retention and identity model are unconfirmed.",
+                "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+                "unverified": true
+              },
+              {
+                "name": "Chronograph",
+                "kind": "portfolio-monitoring",
+                "access": "mcp",
+                "note": "Remote MCP server https://ai.chronograph.pe/mcp, shipped in the financial-analysis plugin. Not allowed for the pilot. A later candidate for portfolio-monitoring if the firm already uses it, after the compendium 11 review. Its retention and identity model are unconfirmed.",
+                "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+                "unverified": true
+              },
+              {
+                "name": "Egnyte",
+                "kind": "document-storage",
+                "access": "mcp",
+                "note": "Remote MCP server https://mcp-server.egnyte.com/mcp, shipped in the financial-analysis plugin. Not for a firm that uses SharePoint. For a firm that keeps deal files there it is acceptable after the compendium 11 review, per user and read-only. Its retention and identity model are unconfirmed.",
+                "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+                "unverified": true
+              },
+              {
+                "name": "Box",
+                "kind": "document-storage",
+                "access": "mcp",
+                "note": "Remote MCP server https://mcp.box.com, shipped in the financial-analysis plugin. Same as Egnyte. Its retention and identity model are unconfirmed.",
+                "cite": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools",
+                "unverified": true
+              }
+            ],
             "tasks": [
               {
                 "id": "S-connectors-and-identity.identity-scim-groups",
@@ -3904,6 +4014,27 @@
                 "owner_role": "security",
                 "owner_name": null,
                 "acting_owner": "Director of IT",
+                "status": "todo"
+              },
+              {
+                "id": "S-connectors-and-identity.data-providers-decide",
+                "template": "data-providers-decide",
+                "title": "Decide for each data provider the pack knows: allowed, not allowed or later",
+                "part": "A3",
+                "how": [
+                  {
+                    "text": "Decide for Daloopa, Morningstar, S&P Global (Kensho), FactSet, Moody's, MT Newswires, Aiera, LSEG, PitchBook, Chronograph, Egnyte and Box: allowed, not allowed or later, with the approver and the reason.",
+                    "link": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools"
+                  },
+                  {
+                    "text": "Record each provider's decision, its approver and its reason in the customer's engagement folder.",
+                    "link": "docs/compendium/17-anthropic-pe-plugins-review.md#3-where-the-data-goes-connectors-and-external-tools"
+                  }
+                ],
+                "done_when": "Every data provider the story lists has a recorded decision (allowed, not allowed or later), with its approver and reason, in the customer's engagement folder.",
+                "owner_role": "compliance",
+                "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -3990,6 +4121,52 @@
                 "done_when": "Compliance has signed off the data policy for every data class the role holds.",
                 "owner_role": "compliance",
                 "owner_name": "Chief Compliance Officer",
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-guardrails-and-settings.retention-and-feedback-settings",
+                "template": "retention-and-feedback-settings",
+                "title": "Set the org's retention period and its feedback and training-data settings to the data policy",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Read the retention the data policy sets for chat, Claude Code and the governance log.",
+                    "link": "docs/compendium/15-governance-and-performance.md#retention-decided"
+                  },
+                  {
+                    "text": "Settle with compliance whether /feedback transcripts may be kept 5 years and local sessions 6 years; if not, turn feedback off with DISABLE_FEEDBACK_COMMAND=1 in managed settings and set a custom retention period.",
+                    "link": "docs/compendium/10-sensitive-data.md#questions-to-settle-with-compliance-and-legal"
+                  },
+                  {
+                    "text": "Set the retention period (custom retention is Enterprise only, at least 30 days) and the feedback and training-data settings in the org, and record each value in the customer's engagement folder.",
+                    "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
+                  }
+                ],
+                "done_when": "The org's retention period and its feedback and training-data settings match the data policy, and each value is recorded in the customer's engagement folder.",
+                "owner_role": "technical-owner",
+                "owner_name": "Director of IT",
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-guardrails-and-settings.spend-limits",
+                "template": "spend-limits",
+                "title": "Set the org's spend limits and name who watches them",
+                "part": "A9",
+                "how": [
+                  {
+                    "text": "Set the org's spend limit, and on Enterprise a per-user limit for the role's users.",
+                    "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
+                  },
+                  {
+                    "text": "Name who watches spend and the usage alerts, and record the limits and that person in the customer's engagement folder.",
+                    "link": "docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often"
+                  }
+                ],
+                "done_when": "The org's spend limit, and on Enterprise the per-user limits, are set and recorded, and a named person watches them.",
+                "owner_role": "technical-owner",
+                "owner_name": "IT",
                 "acting_owner": null,
                 "status": "todo"
               }

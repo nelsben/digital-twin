@@ -508,6 +508,18 @@
       "status": "answered",
       "source": "interviews/2026-11-12-claims-handler.md#F1"
     },
+    "tasks.T2.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F3"
+    },
+    "tasks.T2.examples.good": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F3"
+    },
+    "tasks.T2.examples.bad": {
+      "status": "answered",
+      "source": "interviews/2026-11-12-claims-handler.md#F3"
+    },
     "tasks.T2.inputs[0].access": {
       "status": "answered",
       "source": "interviews/2026-11-12-claims-handler.md#F2"
@@ -547,6 +559,18 @@
     "tasks.T3.in_pilot": {
       "status": "answered",
       "source": "interviews/2026-11-13-senior-claims-handler.md#F1"
+    },
+    "tasks.T3.skill_owner": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F3"
+    },
+    "tasks.T3.examples.good": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F3"
+    },
+    "tasks.T3.examples.bad": {
+      "status": "answered",
+      "source": "interviews/2026-11-13-senior-claims-handler.md#F3"
     },
     "tasks.T3.inputs[0].access": {
       "status": "answered",

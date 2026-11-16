@@ -147,8 +147,12 @@ class EmptyFactTests(unittest.TestCase):
 
 
 def set_profile_value(key, value):
+    """A new industry also clears each task's starts_from, which names the old pack's starting points."""
     def change(profile, card):
         profile[key] = value
+        if key == "industry":
+            for task in card["tasks"]:
+                task.pop("starts_from", None)
     return change
 
 

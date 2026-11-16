@@ -8,6 +8,7 @@ partner-kit/docs/design.md, section 7.1.
     list_packs()            -> ["general", "private-equity"]
     load_pack(id)           -> the pack, or PackError naming the ids that exist
     pack_problems(pack)     -> [{"path", "message", "fix"}], empty when the pack is well formed
+    find_starting_point(name, pack, general) -> the starting point a card task's starts_from names, or None
 
 Enumerations (task triggers and data classes, system kinds) and the type of
 each compliance default come from the field catalogue, data/fields.json.
@@ -44,6 +45,13 @@ ENTRY_FIELDS = {
     "typical_tasks": ("id", "name", "feature", "trigger", "data_class", "inputs"),
 }
 COMMON_FIELDS = ("cite", "unverified")
+# Fields an entry may leave out. A typical task's starts_from suggests the starting points a card task
+# that matches it starts from (design section 7.1).
+OPTIONAL_FIELDS = {"typical_tasks": ("starts_from",)}
+# The uses a card task's starts_from may name; a reference entry is read, not built from.
+STARTS_FROM_USES = ("start-from", "reuse")
+GENERAL = "general"
+STARTS_FROM_FIX = "use a name from the pack's starting points, or remove it."
 
 # Entry fields that are free text: a non-empty string. runbook is a path or null.
 TEXT_FIELDS = {
@@ -154,7 +162,7 @@ def _check_text(entry, names, path, problems):
 
 
 def _check_keys(entry, kind, path, problems):
-    allowed = ENTRY_FIELDS[kind] + COMMON_FIELDS
+    allowed = ENTRY_FIELDS[kind] + COMMON_FIELDS + OPTIONAL_FIELDS.get(kind, ())
     for name in ENTRY_FIELDS[kind]:
         if name not in entry:
             problems.add("%s.%s" % (path, name), "is missing", "Add %s to this entry" % name)
@@ -207,6 +215,59 @@ def _check_compliance(entry, path, catalogue, problems):
         problems.add(path + ".value", "%r should be %s" % (entry["value"], _validate._expected(spec)),
                      "Change the value to %s, the type the catalogue gives %s"
                      % (_validate._expected(spec), field))
+
+
+def find_starting_point(name, pack, general=None):
+    """The anthropic_starting_points entry called name: the customer's pack first, then the general pack.
+
+    When both packs have the name, the customer's pack wins, as it does for connector defaults.
+    """
+    for source in (pack, general):
+        for point in (source or {}).get("anthropic_starting_points") or []:
+            if isinstance(point, dict) and point.get("name") == name:
+                return point
+    return None
+
+
+def starts_from_problem(name, pack, general=None):
+    """Why a starts_from name cannot be used, or None: it is in neither pack, or it is a reference.
+
+    The text follows the name it is about: "'x', which is not a starting point in ...".
+    """
+    point = find_starting_point(name, pack, general)
+    pack_id = (pack or {}).get("id") or GENERAL
+    if point is None:
+        packs = "the %s pack" % pack_id if general is None else "the %s pack or the general pack" % pack_id
+        return "%r, which is not a starting point in %s" % (name, packs)
+    if point.get("use") not in STARTS_FROM_USES:
+        return "%r, which is a %s entry: it is read, not built from, and starts_from takes start-from or reuse" % (
+            name, point.get("use"))
+    return None
+
+
+def _general_for(pack):
+    if pack.get("id") == GENERAL:
+        return None
+    try:
+        return load_pack(GENERAL)
+    except PackError:
+        return None
+
+
+def _check_starts_from(entry, path, pack, problems):
+    if "starts_from" not in entry:
+        return
+    names = entry["starts_from"]
+    if not isinstance(names, list) or not all(_is_text(n) for n in names):
+        problems.add(path + ".starts_from", "is not a list of starting-point names",
+                     "Write starts_from as a list of names from anthropic_starting_points, or leave it out")
+        return
+    general = _general_for(pack)
+    for index, name in enumerate(names):
+        problem = starts_from_problem(name, pack, general)
+        if problem:
+            problems.add("%s.starts_from[%d]" % (path, index), "names " + problem,
+                         "Use a name from the pack's starting points, or remove it")
 
 
 def _check_task(entry, path, catalogue, problems):
@@ -284,6 +345,8 @@ def pack_problems(pack, catalogue=None):
                 problems.add(path, "is not an object", "Write each entry as an object")
                 continue
             _check_entry(kind, entry, path, catalogue, source_set, problems)
+            if kind == "typical_tasks":
+                _check_starts_from(entry, path, pack, problems)
             if kind == "typical_tasks" and _is_text(entry.get("id")):
                 if entry["id"] in seen:
                     problems.add(path + ".id", "%r is used twice in typical_tasks" % entry["id"],

@@ -207,6 +207,9 @@
         "where": "Shared drive 'CS examples' (invented)"
       },
       "skill_owner": "Marisol Quenby",
+      "starts_from": [
+        "draft-response"
+      ],
       "priority": 4,
       "in_pilot": false
     },
@@ -256,6 +259,9 @@
         "where": "Shared drive 'CS examples' (invented)"
       },
       "skill_owner": "Marisol Quenby",
+      "starts_from": [
+        "draft-response"
+      ],
       "priority": 2,
       "in_pilot": true
     },
@@ -297,6 +303,9 @@
         "where": "Shared drive 'CS examples' (invented)"
       },
       "skill_owner": "Marisol Quenby",
+      "starts_from": [
+        "customer-escalation"
+      ],
       "priority": 5,
       "in_pilot": false
     }

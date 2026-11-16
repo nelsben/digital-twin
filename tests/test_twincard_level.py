@@ -26,6 +26,7 @@ PLAN_FIT = PLUGIN_DIR / "data" / "plan-fit.json"
 DESIGN = ROOT / "partner-kit" / "docs" / "design.md"
 PE = ROOT / "engagements" / "sample-pe" / "personas" / "deal-team-associate"
 TEAM = ROOT / "engagements" / "sample-team-cs" / "personas" / "customer-success-manager"
+BROKER = ROOT / "tests" / "fixtures" / "twincard" / "sample-insurance-broker" / "personas" / "claims-handler"
 
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
@@ -248,6 +249,7 @@ SCENARIOS = [
     ("pe T1 PHI schedule-own", PE, chain(pe_t1_phi, set_task("T1", trigger="schedule-own"))),
     ("pe mixed devices", PE, role_device("mixed")),
     ("team C5 event-started", TEAM, set_task("C5", trigger="event")),
+    ("insurance broker (fictional, tests only)", BROKER, None),
 ]
 
 

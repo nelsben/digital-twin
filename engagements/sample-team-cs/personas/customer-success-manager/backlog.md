@@ -2,7 +2,7 @@
 
 Generated from card.json and levelled.json by `python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py backlog engagements/sample-team-cs/personas/customer-success-manager`; never edit it by hand. To mark a task, change only its status in backlog.json, then run the command again.
 
-Status: todo. 4 features, 12 stories, 103 tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done.
+Status: todo. 4 features, 12 stories, 105 tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done.
 
 ## F-call-preparation-and-follow-up: Call preparation and follow-up
 
@@ -49,10 +49,16 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
 - [ ] **S-C1.write-skill** Write the skill from the kit template until the evals pass (owner: skill-engineer, part A2)
-  1. Copy the kit's skill template into the role plugin's skills folder. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  1. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Rename the copy to the skill's name. See [starter-kit/templates/skill/README.md#rename-it](../../../../starter-kit/templates/skill/README.md#rename-it).
   3. Fill in the description and the body, then rerun the evals until they pass. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
-  - Done when: The skill sits in the role plugin and every eval for the story passes.
+  4. On client-skill, the skill loads from the role plugin, which an Owner publishes to claude.ai, Desktop and Cowork and which reaches a signed-in Claude Code. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  5. On managed-agents, the skill loads from the agent's skills array (skills uploaded through the Skills API), or from a mounted GitHub repo's .claude/skills folder. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  6. On managed-agents-self-hosted, load the skill the same two ways as hosted Managed Agents (Unverified: no compendium page says where a self-hosted deployment loads skills from). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
+  - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
 - [ ] **S-C1.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
@@ -150,10 +156,16 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
 - [ ] **S-C4.write-skill** Write the skill from the kit template until the evals pass (owner: skill-engineer, part A2)
-  1. Copy the kit's skill template into the role plugin's skills folder. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  1. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Rename the copy to the skill's name. See [starter-kit/templates/skill/README.md#rename-it](../../../../starter-kit/templates/skill/README.md#rename-it).
   3. Fill in the description and the body, then rerun the evals until they pass. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
-  - Done when: The skill sits in the role plugin and every eval for the story passes.
+  4. On client-skill, the skill loads from the role plugin, which an Owner publishes to claude.ai, Desktop and Cowork and which reaches a signed-in Claude Code. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  5. On managed-agents, the skill loads from the agent's skills array (skills uploaded through the Skills API), or from a mounted GitHub repo's .claude/skills folder. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  6. On managed-agents-self-hosted, load the skill the same two ways as hosted Managed Agents (Unverified: no compendium page says where a self-hosted deployment loads skills from). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
+  - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
 - [ ] **S-C4.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
@@ -264,6 +276,22 @@ Part A4. In pilot: no. Priority: 3. Status: todo.
   2. Put the eval cases in the files the kit expects, next to the skill. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
+- [ ] **S-C2.write-skill** Write the skill from the kit template until the evals pass (owner: skill-engineer, part A2)
+  1. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  2. Rename the copy to the skill's name. See [starter-kit/templates/skill/README.md#rename-it](../../../../starter-kit/templates/skill/README.md#rename-it).
+  3. Fill in the description and the body, then rerun the evals until they pass. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
+  4. On client-skill, the skill loads from the role plugin, which an Owner publishes to claude.ai, Desktop and Cowork and which reaches a signed-in Claude Code. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  5. On managed-agents, the skill loads from the agent's skills array (skills uploaded through the Skills API), or from a mounted GitHub repo's .claude/skills folder. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  6. On managed-agents-self-hosted, load the skill the same two ways as hosted Managed Agents (Unverified: no compendium page says where a self-hosted deployment loads skills from). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
+  - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
+- [ ] **S-C2.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
+  1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
+  2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
+  3. Run the trigger evals and tighten the description until they pass. See [docs/compendium/03-skills-authoring.md#writing-a-good-description](../../../../docs/compendium/03-skills-authoring.md#writing-a-good-description).
+  - Done when: The skill starts on every should-trigger prompt and on none of the should-not prompts.
 - [ ] **S-C2.second-review** Have a second person review the skill and its evals (owner: skill-owner, part A8)
   1. Open a pull request with the skill and its evals. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   2. Have someone other than the author review it against the definition of done. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
@@ -390,10 +418,16 @@ Part A2. In pilot: no. Priority: 4. Status: todo.
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
 - [ ] **S-C3.write-skill** Write the skill from the kit template until the evals pass (owner: skill-engineer, part A2)
-  1. Copy the kit's skill template into the role plugin's skills folder. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  1. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Rename the copy to the skill's name. See [starter-kit/templates/skill/README.md#rename-it](../../../../starter-kit/templates/skill/README.md#rename-it).
   3. Fill in the description and the body, then rerun the evals until they pass. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
-  - Done when: The skill sits in the role plugin and every eval for the story passes.
+  4. On client-skill, the skill loads from the role plugin, which an Owner publishes to claude.ai, Desktop and Cowork and which reaches a signed-in Claude Code. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  5. On managed-agents, the skill loads from the agent's skills array (skills uploaded through the Skills API), or from a mounted GitHub repo's .claude/skills folder. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  6. On managed-agents-self-hosted, load the skill the same two ways as hosted Managed Agents (Unverified: no compendium page says where a self-hosted deployment loads skills from). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
+  - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
 - [ ] **S-C3.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
@@ -470,10 +504,16 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
 - [ ] **S-C5.write-skill** Write the skill from the kit template until the evals pass (owner: skill-engineer, part A2)
-  1. Copy the kit's skill template into the role plugin's skills folder. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  1. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Rename the copy to the skill's name. See [starter-kit/templates/skill/README.md#rename-it](../../../../starter-kit/templates/skill/README.md#rename-it).
   3. Fill in the description and the body, then rerun the evals until they pass. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
-  - Done when: The skill sits in the role plugin and every eval for the story passes.
+  4. On client-skill, the skill loads from the role plugin, which an Owner publishes to claude.ai, Desktop and Cowork and which reaches a signed-in Claude Code. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  5. On managed-agents, the skill loads from the agent's skills array (skills uploaded through the Skills API), or from a mounted GitHub repo's .claude/skills folder. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  6. On managed-agents-self-hosted, load the skill the same two ways as hosted Managed Agents (Unverified: no compendium page says where a self-hosted deployment loads skills from). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
+  9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
+  - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
 - [ ] **S-C5.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).

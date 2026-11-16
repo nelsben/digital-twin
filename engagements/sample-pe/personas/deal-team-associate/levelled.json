@@ -328,8 +328,8 @@
         "retention": {
           "value": "zdr",
           "rule": "retention-highly-sensitive-zdr",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "Highly sensitive deal work keeps zero data retention.",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Highly sensitive data calls for a separate Enterprise org with ZDR, so the task keeps zero data retention; our recommendation, from page 10's matrix.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -448,8 +448,8 @@
         "retention": {
           "value": "zdr",
           "rule": "retention-highly-sensitive-zdr",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "Highly sensitive deal work keeps zero data retention.",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Highly sensitive data calls for a separate Enterprise org with ZDR, so the task keeps zero data retention; our recommendation, from page 10's matrix.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -566,8 +566,8 @@
         "retention": {
           "value": "zdr",
           "rule": "retention-highly-sensitive-zdr",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "Highly sensitive deal work keeps zero data retention.",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Highly sensitive data calls for a separate Enterprise org with ZDR, so the task keeps zero data retention; our recommendation, from page 10's matrix.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -686,8 +686,8 @@
         "retention": {
           "value": "zdr",
           "rule": "retention-highly-sensitive-zdr",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "Highly sensitive deal work keeps zero data retention.",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Highly sensitive data calls for a separate Enterprise org with ZDR, so the task keeps zero data retention; our recommendation, from page 10's matrix.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -806,8 +806,8 @@
         "retention": {
           "value": "zdr",
           "rule": "retention-highly-sensitive-zdr",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "Highly sensitive deal work keeps zero data retention.",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Highly sensitive data calls for a separate Enterprise org with ZDR, so the task keeps zero data retention; our recommendation, from page 10's matrix.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null
@@ -926,8 +926,8 @@
         "retention": {
           "value": "zdr",
           "rule": "retention-highly-sensitive-zdr",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "Highly sensitive deal work keeps zero data retention.",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Highly sensitive data calls for a separate Enterprise org with ZDR, so the task keeps zero data retention; our recommendation, from page 10's matrix.",
           "unverified": false,
           "basis": "our-recommendation",
           "overridden": null

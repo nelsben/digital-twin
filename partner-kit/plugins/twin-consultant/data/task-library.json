@@ -87,11 +87,16 @@
       "applies_to": "task-story",
       "per": null,
       "when": {
-        "runtime": "client-skill"
+        "not": {
+          "runtime": [
+            "none",
+            null
+          ]
+        }
       },
       "how": [
         {
-          "text": "Copy the kit's skill template into the role plugin's skills folder.",
+          "text": "Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime.",
           "link": "starter-kit/templates/skill/README.md#copy-it"
         },
         {
@@ -101,9 +106,33 @@
         {
           "text": "Fill in the description and the body, then rerun the evals until they pass.",
           "link": "starter-kit/templates/skill/README.md#fill-it-in"
+        },
+        {
+          "text": "On client-skill, the skill loads from the role plugin, which an Owner publishes to claude.ai, Desktop and Cowork and which reaches a signed-in Claude Code.",
+          "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+        },
+        {
+          "text": "On managed-agents, the skill loads from the agent's skills array (skills uploaded through the Skills API), or from a mounted GitHub repo's .claude/skills folder.",
+          "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+        },
+        {
+          "text": "On managed-agents-self-hosted, load the skill the same two ways as hosted Managed Agents (Unverified: no compendium page says where a self-hosted deployment loads skills from).",
+          "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+        },
+        {
+          "text": "On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill.",
+          "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+        },
+        {
+          "text": "On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads).",
+          "link": "docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills"
+        },
+        {
+          "text": "On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills).",
+          "link": "docs/compendium/05-decision-matrix.md#the-options"
         }
       ],
-      "done_when": "The skill sits in the role plugin and every eval for the story passes.",
+      "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
       "owner_role": "skill-engineer"
     },
     {
@@ -113,7 +142,12 @@
       "applies_to": "task-story",
       "per": null,
       "when": {
-        "runtime": "client-skill"
+        "not": {
+          "runtime": [
+            "none",
+            null
+          ]
+        }
       },
       "how": [
         {
@@ -313,6 +347,40 @@
         }
       ],
       "done_when": "The runner has run once from its schedule or trigger with pinned versions.",
+      "owner_role": "integration-engineer"
+    },
+    {
+      "id": "start-wiring",
+      "title": "Build what starts each session from the task's event or schedule",
+      "part": "A4",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "runtime": [
+          "managed-agents",
+          "managed-agents-self-hosted",
+          "agent-sdk"
+        ],
+        "task.trigger": [
+          "event",
+          "schedule-team"
+        ]
+      },
+      "how": [
+        {
+          "text": "For an event, build what receives it from the input system and calls the API to start one session for it (Unverified: page 05 says a session starts from an API call, not what turns the input system's event into that call).",
+          "link": "docs/compendium/05-decision-matrix.md#the-options"
+        },
+        {
+          "text": "For a schedule, set up what runs it: a Managed Agents scheduled deployment, or for the Agent SDK a scheduler we host (Unverified: page 05 does not say whether a self-hosted deployment has scheduled deployments).",
+          "link": "docs/compendium/05-decision-matrix.md#the-options"
+        },
+        {
+          "text": "Key each start by the event's id or the scheduled time, so a repeat of the same event starts no second session (our recommendation; no compendium page covers repeats).",
+          "link": "docs/compendium/05-decision-matrix.md"
+        }
+      ],
+      "done_when": "One test event, or one scheduled time, starts exactly one session, and a repeat of the same event does not start a second.",
       "owner_role": "integration-engineer"
     },
     {
@@ -969,6 +1037,32 @@
         }
       ],
       "done_when": "The customer has chosen in writing and levelling no longer raises the blocker.",
+      "owner_role": "solution-architect"
+    },
+    {
+      "id": "blocker-log-every-action-not-met-task",
+      "title": "Resolve blocker log-every-action-not-met for this task: keep it to Claude Code with the governance hook, or drop the requirement",
+      "part": "A9",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "log-every-action-not-met",
+        "runtime": [
+          "client-skill",
+          "claude-code-scheduled-task"
+        ]
+      },
+      "how": [
+        {
+          "text": "Show the customer that the governance log is a Claude Code hook, so the task's other planned surfaces log none of its actions.",
+          "link": "docs/compendium/13-devices.md#team-plan-with-no-device-management"
+        },
+        {
+          "text": "Agree either a data_controls override whose surfaces are claude-code, on MDM-managed devices with the hook locked in managed settings, or dropping the requirement in writing.",
+          "link": "starter-kit/plugins/twin-governance/README.md#deploying-it-managed-hooks"
+        }
+      ],
+      "done_when": "The customer has chosen in writing and levelling no longer raises the blocker about this task.",
       "owner_role": "solution-architect"
     },
     {
@@ -1744,6 +1838,58 @@
       ],
       "done_when": "The customer has agreed the task's retention, or the task runs where custom retention applies.",
       "owner_role": "compliance"
+    },
+    {
+      "id": "warning-claude-code-not-in-role",
+      "title": "Resolve warning claude-code-not-in-role: give the users Claude Code, or change the runtime or surfaces (no kit runbook for installing Claude Code yet)",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "claude-code-not-in-role"
+      },
+      "how": [
+        {
+          "text": "Tell the customer the plan needs Claude Code for this task, and the role does not work in it today.",
+          "link": "docs/compendium/05-decision-matrix.md#the-options"
+        },
+        {
+          "text": "No runbook: the kit has no runbook for giving users a Claude Code seat and installing it yet, so write down the steps you follow.",
+          "link": null
+        },
+        {
+          "text": "Deploy the managed settings to the devices that get Claude Code, then add claude-code to role.works_in.",
+          "link": "starter-kit/runbooks/identity-devices-publishing.md#4-deploy-the-managed-settings-baseline-to-devices"
+        },
+        {
+          "text": "Or override the task's runtime or surfaces on the card, with the customer's approval, and level again.",
+          "link": "partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson"
+        }
+      ],
+      "done_when": "The role's users have Claude Code with managed settings and role.works_in lists claude-code, or an override removes the need, and levelling no longer raises the warning.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "warning-mixed-fleet-unmanaged-surfaces",
+      "title": "Resolve warning mixed-fleet-unmanaged-surfaces: keep the narrower surfaces for everyone, or split the role by device",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "codes": "mixed-fleet-unmanaged-surfaces"
+      },
+      "how": [
+        {
+          "text": "Explain that with managed and unmanaged devices in the role, every user gets the surfaces allowed on an unmanaged device.",
+          "link": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation"
+        },
+        {
+          "text": "Agree with the customer to keep the narrower surfaces for everyone, or to split the role into two persona cards, one for each kind of device.",
+          "link": null
+        }
+      ],
+      "done_when": "The customer has chosen in writing: the narrower surfaces for everyone, or two persona cards split by device.",
+      "owner_role": "solution-architect"
     },
     {
       "id": "persona-fill",

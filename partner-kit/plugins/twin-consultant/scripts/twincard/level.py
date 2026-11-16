@@ -77,7 +77,7 @@ DERIVED_PERSONA_FACTS = ("systems.kinds", "systems.products", "pack.id", "pack.s
 TASK_FIELD_FACTS = ("trigger", "data_class", "output.audience", "reversible", "touches_money",
                     "cost_of_mistake.level", "reads_untrusted_input", "in_pilot")
 DERIVED_TASK_FACTS = ("task.write_actions", "task.write_products", "task.input_products", "task.products",
-                      "task.reads_private_network", "task.shared_tool_ceiling")
+                      "task.touches_private_network", "task.shared_tool_ceiling")
 TOOL_FACTS = ("tool.use", "tool.level", "tool.wanted_differs")
 TASK_FACTS = tuple("task." + name for name in TASK_FIELD_FACTS) + DERIVED_TASK_FACTS
 CAPABILITY_PREFIX = "capability."
@@ -91,6 +91,10 @@ DESIGN_CITE = "partner-kit/docs/design.md#7-levelling-datarulesjson-levelpy"
 DESIGN_VALUES_CITE = "partner-kit/docs/design.md#72-decision-values"
 DESIGN_PROVENANCE_CITE = "partner-kit/docs/design.md#43-provenance-and-completeness"
 UNREACHED_CONNECTOR_CITE = "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
+# A system with no connector default in the customer's pack takes the general pack's (design 7.1).
+FALLBACK_PACK = "general"
+NO_ENTRY_HOW = ("The compendium has no entry for %s. First check the Claude connector directory for it; "
+                "if it is not listed there, add it as a custom connector.")
 
 
 class LevelError(ValueError):
@@ -402,30 +406,54 @@ def _tokens(text):
     return set(re.findall(r"[a-z0-9]+", (text or "").lower()))
 
 
+def _alternatives(product):
+    """A pack product and, when it names several with " / " (as page 11's rows do), each of them."""
+    product = product or ""
+    parts = [part.strip() for part in product.split(" / ")]
+    return [product] + [part for part in parts if part and part != product]
+
+
 def match_default(system, defaults):
     """The pack's connector default for a profile system: the same product, else a same-kind product
-    whose words contain, or are contained in, the system's product words."""
+    whose words contain, or are contained in, the system's product words. A pack product written as
+    "A / B" is matched as A and as B."""
     product = (system.get("product") or "").lower()
     for entry in defaults:
-        if (entry.get("product") or "").lower() == product and product:
+        if product and any(alt.lower() == product for alt in _alternatives(entry.get("product"))):
             return entry
     words = _tokens(product)
     for entry in defaults:
         if entry.get("system_kind") != system.get("kind"):
             continue
-        theirs = _tokens(entry.get("product"))
-        if words and theirs and (words <= theirs or theirs <= words):
-            return entry
+        for alt in _alternatives(entry.get("product")):
+            theirs = _tokens(alt)
+            if words and theirs and (words <= theirs or theirs <= words):
+                return entry
     return None
+
+
+def fallback_defaults(pack):
+    """The general pack's connector defaults, looked in when the customer's pack has none for a system."""
+    if pack.get("id") == FALLBACK_PACK:
+        return []
+    return _packs.load_pack(FALLBACK_PACK).get("connector_defaults") or []
 
 
 def _systems(profile, pack):
     out = {}
+    fallback = fallback_defaults(pack)
     for system in profile.get("systems") or []:
-        default = match_default(system, pack.get("connector_defaults") or [])
+        default = (match_default(system, pack.get("connector_defaults") or [])
+                   or match_default(system, fallback))
         product = default["product"] if default else system.get("product")
         out[system.get("id")] = {"system": system, "default": default, "product": product}
     return out
+
+
+def _product_name(systems, system_id):
+    """The profile's product name for a system, for the no-entry connector text; else its id."""
+    entry = (systems.get(system_id) or {}).get("system") or {}
+    return entry.get("product") or system_id
 
 
 def _unique(items):
@@ -493,9 +521,9 @@ def task_facts(task, card, profile, pack):
     facts["task.write_products"] = products(writes)
     facts["task.input_products"] = products(inputs)
     facts["task.products"] = _unique(facts["task.input_products"] + facts["task.write_products"])
-    facts["task.reads_private_network"] = any(
+    facts["task.touches_private_network"] = any(
         systems[i.get("system")]["system"].get("private_network") is True
-        for i in inputs if i.get("system") in systems)
+        for i in inputs + writes if i.get("system") in systems)
     facts["task.shared_tool_ceiling"] = None
     for name in DECISION_FACTS:
         facts[name] = None
@@ -851,7 +879,7 @@ def level(persona_dir, fired=None, rules=None, plan_fit=None, catalogue=None):
                 default = systems.get(system, {}).get("default")
                 connectors.append({
                     "system": system, "access": access, "identity": state["connector_identity"]["value"],
-                    "how": default.get("how") if default else None,
+                    "how": default.get("how") if default else NO_ENTRY_HOW % _product_name(systems, system),
                     "runbook": default.get("runbook") if default else None,
                     "permission": None,
                     "cite": default.get("cite") if default else UNREACHED_CONNECTOR_CITE,

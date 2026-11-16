@@ -29,6 +29,7 @@ DESIGN = ROOT / "partner-kit" / "docs" / "design.md"
 EXPECTATIONS = ROOT / "tests" / "fixtures" / "twincard" / "expectations.json"
 PE = ROOT / "engagements" / "sample-pe" / "personas" / "deal-team-associate"
 TEAM = ROOT / "engagements" / "sample-team-cs" / "personas" / "customer-success-manager"
+BROKER = ROOT / "tests" / "fixtures" / "twincard" / "sample-insurance-broker" / "personas" / "claims-handler"
 
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
@@ -233,6 +234,7 @@ LOCAL_SCENARIOS = [
     ("team C1 open field", TEAM, open_task_field, None),
     ("team open persona field", TEAM, open_persona_field, None),
     ("team unknown override target", TEAM, None, inject_unknown_target),
+    ("insurance broker (fictional, tests only)", BROKER, None, None),
 ]
 
 
@@ -711,7 +713,7 @@ class StatusTests(unittest.TestCase):
     def test_items_no_longer_generated_are_retired(self):
         with Scenario(TEAM) as persona:
             B.write_backlog(str(persona))
-            self.edit_status(persona, {"S-C1.write-skill": "done", "S-C1.trigger-evals": "in-progress"})
+            self.edit_status(persona, {"S-C1.publish-in-role-plugin": "done", "S-C1.write-skill": "in-progress"})
             card = load(persona / "card.json")
             task(card, "C1")["trigger"] = "schedule-own"
             (persona / "card.json").write_text(json.dumps(card, indent=2), encoding="utf-8")
@@ -720,13 +722,18 @@ class StatusTests(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
             data = load(persona / "backlog.json")
             retired = dict((r["id"], r) for r in data["retired"])
-            self.assertEqual(set(retired), {"S-C1.write-skill", "S-C1.trigger-evals"})
-            self.assertEqual(list(retired["S-C1.write-skill"]), ["id", "title", "status"])
-            self.assertEqual(retired["S-C1.write-skill"]["status"], "done")
-            self.assertNotIn("S-C1.publish-in-role-plugin", retired)
+            # C1 moves from a client skill to a Claude Code scheduled task: publishing in the role
+            # plugin no longer applies, but the skill tasks apply on every runtime, so they stay.
+            self.assertEqual(set(retired), {"S-C1.publish-in-role-plugin"})
+            self.assertEqual(list(retired["S-C1.publish-in-role-plugin"]), ["id", "title", "status"])
+            self.assertEqual(retired["S-C1.publish-in-role-plugin"]["status"], "done")
+            self.assertNotIn("S-C1.write-skill", retired)
+            kept = next(t for f in data["epic"]["features"] for s in f["stories"] for t in s["tasks"]
+                        if t["id"] == "S-C1.write-skill")
+            self.assertEqual(kept["status"], "in-progress")
             for rid in retired:
                 self.assertEqual(len([line for line in proc.stdout.splitlines() if rid in line]), 1, proc.stdout)
-            self.assertIn("S-C1.write-skill", (persona / "backlog.md").read_text(encoding="utf-8"))
+            self.assertIn("S-C1.publish-in-role-plugin", (persona / "backlog.md").read_text(encoding="utf-8"))
             # Retired items stay retired on the next run, with their status.
             B.write_backlog(str(persona))
             self.assertEqual(load(persona / "backlog.json")["retired"], data["retired"])

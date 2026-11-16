@@ -30,6 +30,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from twincard import level as L  # noqa: E402
+from twincard import packs as P  # noqa: E402
 from twincard import backlog as B  # noqa: E402
 
 
@@ -105,10 +106,13 @@ class BrokerWalkTests(unittest.TestCase):
             conn = self.connector(tid, system)
             self.assertEqual(conn["cite"], GENERAL_CITE, system)
             self.assertIn(conn["how"], hows, system)
-        teams = [c for t in self.levelled["tasks"].values() for c in t["connectors"] if c["system"] == "teams"]
-        for conn in teams:
-            self.assertEqual(conn["cite"], GENERAL_CITE)
-            self.assertIn(conn["how"], hows)
+        systems = L._systems(self.profile, P.load_pack(self.profile["industry"]))
+        for system in ("sharepoint", "teams", "dynamics"):
+            default = systems[system]["default"]
+            self.assertIsNotNone(default, system)
+            self.assertEqual(default["cite"], GENERAL_CITE, system)
+            self.assertIn(default["how"], hows, system)
+        self.assertIsNone(systems["outlook"]["default"])
         products = [d["product"] for d in general.get("connector_defaults") or []]
         self.assertTrue(any("SharePoint" in p for p in products))
         self.assertTrue(any("Teams" in p for p in products))

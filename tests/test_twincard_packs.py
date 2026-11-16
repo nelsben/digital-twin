@@ -26,6 +26,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from twincard import fields as tc_fields  # noqa: E402
 from twincard import packs  # noqa: E402
+from twincard import level  # noqa: E402
 from twincard.validate import _type_ok  # noqa: E402
 
 LISTS = ("anthropic_starting_points", "data_providers", "connector_defaults",
@@ -150,12 +151,43 @@ class ShippedPackTests(unittest.TestCase):
                         page = (ROOT / entry["cite"].partition("#")[0]).read_text(encoding="utf-8")
                         self.assertRegex(page, UNVERIFIED_MARKER)
 
-    def test_general_pack_has_starting_points_and_nothing_else(self):
+    def test_general_pack_has_starting_points_and_page_11_connectors(self):
         pack = packs.load_pack("general")
         self.assertTrue(pack["anthropic_starting_points"])
-        for name in LISTS[1:]:
+        for name in ("data_providers", "compliance_defaults", "typical_tasks"):
             self.assertEqual(pack[name], [], name)
-        self.assertTrue(all(e["cite"].startswith("docs/compendium/16-") for _, e in entries(pack)))
+        self.assertTrue(all(e["cite"].startswith("docs/compendium/16-") for e in pack["anthropic_starting_points"]))
+        self.assertIn("docs/compendium/11-connectors.md", pack["sources"])
+        products = [e["product"] for e in pack["connector_defaults"]]
+        self.assertEqual(products, ["Salesforce", "HubSpot", "Microsoft Dynamics / Dataverse", "Google Drive / Sheets",
+                                    "SharePoint / OneDrive", "Teams", "Slack", "Gmail", "Google Calendar", "Zendesk",
+                                    "Intercom"])
+        runbooks = dict((e["product"], e["runbook"]) for e in pack["connector_defaults"])
+        self.assertEqual(runbooks.pop("Salesforce"), "starter-kit/runbooks/salesforce-hosted-mcp.md")
+        self.assertEqual(runbooks.pop("SharePoint / OneDrive"), "starter-kit/runbooks/microsoft-365-connector.md")
+        self.assertEqual(runbooks.pop("Teams"), "starter-kit/runbooks/microsoft-365-connector.md")
+        self.assertTrue(all(value is None for value in runbooks.values()), runbooks)
+        for entry in pack["connector_defaults"]:
+            self.assertEqual(entry["cite"], "docs/compendium/11-connectors.md#what-exists-for-our-systems")
+        dynamics = next(e for e in pack["connector_defaults"] if "Dynamics" in e["product"])
+        self.assertIn("Entra", dynamics["identity"])
+        self.assertIn("tenant admin consent", dynamics["identity"])
+        self.assertIn("Copilot Credits", dynamics["how"])
+
+    def test_a_product_in_an_industry_pack_and_the_general_pack_has_one_runbook(self):
+        general = packs.load_pack("general")["connector_defaults"]
+        checked = 0
+        for pack_id in packs.list_packs():
+            if pack_id == "general":
+                continue
+            for entry in packs.load_pack(pack_id)["connector_defaults"]:
+                match = level.match_default({"kind": entry["system_kind"], "product": entry["product"]}, general)
+                if match is None:
+                    continue
+                checked += 1
+                with self.subTest(pack=pack_id, product=entry["product"]):
+                    self.assertEqual(entry["runbook"], match["runbook"])
+        self.assertGreater(checked, 0)
 
     def test_private_equity_pack_content(self):
         pack = packs.load_pack("private-equity")

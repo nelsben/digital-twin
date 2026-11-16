@@ -70,7 +70,7 @@
               ],
               "retention": "zdr"
             },
-            "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
             "reason": "Highly sensitive deal work runs in Claude Code on a ZDR sign-in on a managed device, with web tools off.",
             "unverified": false
           },
@@ -138,7 +138,7 @@
               ],
               "retention": "zdr"
             },
-            "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
             "reason": "Highly sensitive deal work runs in Claude Code on a ZDR sign-in on a managed device, with web tools off.",
             "unverified": false
           },
@@ -204,7 +204,7 @@
               "surfaces": [],
               "retention": "zdr"
             },
-            "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
             "reason": "The self-hosted Managed Agents deployment has no client surface or settings file, and deal data keeps ZDR and web tools off.",
             "unverified": false
           },
@@ -272,7 +272,7 @@
               ],
               "retention": "zdr"
             },
-            "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
             "reason": "Highly sensitive deal work runs in Claude Code on a ZDR sign-in on a managed device, with web tools off.",
             "unverified": false
           },
@@ -340,7 +340,7 @@
               ],
               "retention": "zdr"
             },
-            "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
             "reason": "Highly sensitive deal work runs in Claude Code on a ZDR sign-in on a managed device, with web tools off.",
             "unverified": false
           },
@@ -408,7 +408,7 @@
               ],
               "retention": "zdr"
             },
-            "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
             "reason": "Highly sensitive deal work runs in Claude Code on a ZDR sign-in on a managed device, with web tools off.",
             "unverified": false
           },
@@ -1166,6 +1166,30 @@
             "about": "persona",
             "cite": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management",
             "unverified": false
+          },
+          {
+            "code": "log-every-action-not-met",
+            "about": "C1",
+            "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+            "unverified": false
+          },
+          {
+            "code": "log-every-action-not-met",
+            "about": "C3",
+            "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+            "unverified": false
+          },
+          {
+            "code": "log-every-action-not-met",
+            "about": "C4",
+            "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+            "unverified": false
+          },
+          {
+            "code": "log-every-action-not-met",
+            "about": "C5",
+            "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+            "unverified": false
           }
         ],
         "blockers_removed": [],
@@ -1174,7 +1198,7 @@
         "still_valid": true
       },
       "cite": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management",
-      "reason": "A Team twin on the web has no governance hook, so it cannot meet a requirement to log every action."
+      "reason": "A Team twin on the web has no governance hook, so it cannot meet a requirement to log every action, and nor can a task that runs on a client surface outside Claude Code."
     },
     {
       "id": "team-highly-sensitive-task",

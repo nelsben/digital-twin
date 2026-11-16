@@ -76,7 +76,7 @@ python3 .../cli.py level     <persona-dir>     # writes levelled.json
 python3 .../cli.py backlog   <persona-dir>     # writes backlog.json, backlog.md
 python3 .../cli.py backlog   <persona-dir> --json --plan-out plan.json   # also prints backlog.json and writes the tracker plan
 python3 .../cli.py dashboard <persona-dir> [--date YYYY-MM-DD]   # writes dashboard.html; the date shown defaults to today
-python3 .../cli.py all       <persona-dir>     # the four in order; stops at the first failure
+python3 .../cli.py all       <persona-dir>     # the four in order; stops only when validation fails; a levelling blocker still writes every file and exits 1
 ```
 
 `<persona-dir>` holds `card.json`; the customer profile is found at `../../customer-profile.json`. Exit code 0 on success; 1 when validation fails (`level`, `backlog` and `dashboard` then write nothing), when `levelled.json` is missing or out of date (`backlog` and `dashboard` write nothing and say to run `level`), when `backlog.json` is missing or out of date (`dashboard` writes nothing and says to run `backlog`), or when levelling reports a blocker (`level` still writes `levelled.json`, `backlog` still writes both backlog files and `dashboard` still writes the page, so the blocker can be read); 2 on a usage error, a missing persona folder, an unknown status in `backlog.json` or a `--date` that is not a real calendar date. Errors name the field path and say what to do next. `level` validates first, and `--json` prints `levelled.json` (or the validation errors) instead of the summary.

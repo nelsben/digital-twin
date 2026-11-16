@@ -16,3 +16,18 @@ Discovery for this customer was a single call with the IT and operations lead. T
 | [personas/customer-success-manager/card.json](personas/customer-success-manager/card.json) | The persona card: role, voice, three features, five tasks C1 to C5 | Done; validates at 100% |
 | [personas/customer-success-manager/interviews/2026-11-06-csm.md](personas/customer-success-manager/interviews/2026-11-06-csm.md) | Interview notes: a customer success manager (C1, C4) | Done |
 | [personas/customer-success-manager/interviews/2026-11-07-senior-csm.md](personas/customer-success-manager/interviews/2026-11-07-senior-csm.md) | Interview notes: a senior customer success manager (C2, C3, C5) | Done |
+
+The four files below are generated from the card; none is written by hand. Regenerate them with:
+
+```
+python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py all engagements/sample-team-cs/personas/customer-success-manager --date 2026-11-15
+```
+
+| File | What it is | Person or command |
+|---|---|---|
+| [personas/customer-success-manager/levelled.json](personas/customer-success-manager/levelled.json) | The levelled plan: each task's decisions with rule, cite and reason, plus blockers and warnings | Command |
+| [personas/customer-success-manager/backlog.json](personas/customer-success-manager/backlog.json) | The generated backlog; a person edits only a task's `status` | Command |
+| [personas/customer-success-manager/backlog.md](personas/customer-success-manager/backlog.md) | The same backlog, readable | Command |
+| [personas/customer-success-manager/dashboard.html](personas/customer-success-manager/dashboard.html) | One self-contained status page | Command |
+
+The card and the interview notes above are written by a person. See the [plugin README](../../partner-kit/plugins/twin-consultant/README.md#all) for the command.

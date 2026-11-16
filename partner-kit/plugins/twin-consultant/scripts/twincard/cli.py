@@ -7,6 +7,7 @@
     python3 .../cli.py backlog <persona-dir>        # writes backlog.json and backlog.md
     python3 .../cli.py backlog --json <persona-dir> [--plan-out FILE]
     python3 .../cli.py dashboard <persona-dir> [--date YYYY-MM-DD]   # writes dashboard.html
+    python3 .../cli.py all <persona-dir> [--date YYYY-MM-DD]   # validate, level, backlog, dashboard
 
 Runs from any working directory. Exit codes: 0 on success; 1 when validation
 fails (level, backlog and dashboard then write nothing), when levelled.json is
@@ -16,7 +17,8 @@ blocker (level still writes levelled.json, backlog still writes both files,
 dashboard still writes dashboard.html); 2 on a usage error, a missing persona
 folder (for level, backlog and dashboard, a folder with no card.json), an unknown
 status in backlog.json or a --date that is not a real YYYY-MM-DD date.
-The all command is planned (partner-kit/docs/design.md, section 3).
+The all command runs the four in order and stops only when validation fails (nothing is
+written, exit 1); a levelling blocker still writes every file and exits 1.
 """
 
 import argparse
@@ -60,6 +62,11 @@ def build_parser():
         "dashboard", help="render dashboard.html from card.json, the profile, levelled.json and backlog.json")
     board.add_argument("persona_dir", help="the persona folder that holds card.json, levelled.json and backlog.json")
     board.add_argument("--date", metavar="YYYY-MM-DD", help="the generated date shown on the page (default: today)")
+    everything = commands.add_parser(
+        "all", help="validate, level, backlog and dashboard in order; stops only when validation fails")
+    everything.add_argument("persona_dir", help="the persona folder that holds card.json")
+    everything.add_argument("--date", metavar="YYYY-MM-DD",
+                            help="the generated date shown on the dashboard (default: today)")
     return parser
 
 
@@ -83,14 +90,35 @@ def format_text(result):
     return "\n".join(lines)
 
 
+def _show(value, none="undecided"):
+    return none if value is None else str(value)
+
+
+def format_task_lines(levelled):
+    """One line per task: its id and seven decisions, in task order."""
+    lines = []
+    for task_id, decisions in levelled["tasks"].items():
+        autonomy = decisions["autonomy"]
+        connectors = ", ".join("%s %s" % (c["system"], c["access"]) for c in decisions.get("connectors") or []) or "none"
+        lines.append("%s: runtime %s; identity %s; autonomy %s to %s; settings baseline %s; memory %s; plan fit %s; connectors %s" % (
+            task_id, _show(decisions["runtime"]["value"]), _show(decisions["identity"]["value"]),
+            _show(autonomy["start"]["value"]), _show(autonomy["ceiling"]["value"]),
+            _show(decisions["data_controls"]["settings_baseline"]["value"], "none"),
+            _show(decisions["memory"]["value"]), _show(decisions["plan_fit"]["value"]), connectors))
+    return lines
+
+
+def format_findings(levelled):
+    return ["%s: %s %s: %s Next: %s" % (kind, item["about"], item["code"], item["message"], item["fix"])
+            for kind, items in (("blocker", levelled["blockers"]), ("warning", levelled["warnings"]))
+            for item in items]
+
+
 def format_level(result, persona_dir):
     if not result["ok"]:
         return format_text(result["validation"]) + "\nNot levelled: fix the errors above, then run level again."
     levelled = result["levelled"]
-    lines = []
-    for kind, items in (("blocker", levelled["blockers"]), ("warning", levelled["warnings"])):
-        for item in items:
-            lines.append("%s: %s %s: %s Next: %s" % (kind, item["about"], item["code"], item["message"], item["fix"]))
+    lines = format_task_lines(levelled) + format_findings(levelled)
     lines.append("Wrote %s: %d task(s), %d blocker(s), %d warning(s); complete: %s." % (
         Path(persona_dir) / LEVELLED_FILE, len(levelled["tasks"]), len(levelled["blockers"]),
         len(levelled["warnings"]), "yes" if levelled["complete"] else "no"))
@@ -170,13 +198,58 @@ def run_dashboard(args, persona_dir):
     return EXIT_INVALID if s["blockers"] else EXIT_OK
 
 
+def run_all(args, persona_dir):
+    """validate, level, backlog, dashboard in order, by the same functions the single commands call."""
+    try:
+        date = dashboard_mod.parse_date(args.date)
+    except dashboard_mod.UsageError as exc:
+        sys.stderr.write("cli.py all: %s\n" % exc)
+        return EXIT_USAGE
+    checked = validate(str(persona_dir))
+    if not checked["ok"]:
+        print("validate: failed")
+        print("\n".join(format_line(error) for error in checked["errors"]))
+        print("Not valid: %d error(s). Skipped: level, backlog, dashboard. Nothing written." % len(checked["errors"]))
+        return EXIT_INVALID
+    done = checked["completeness"]
+    print("validate: ok. Completeness: %d%% (%d of %d required fields)" % (
+        done["percent"], done["satisfied"], done["required"]))
+    result = write_levelled(str(persona_dir))
+    levelled = result["levelled"]
+    blocked = bool(levelled["blockers"])
+    print("level: %s %s" % ("blocked" if blocked else "ok", Path(persona_dir) / LEVELLED_FILE))
+    for line in format_task_lines(levelled) + format_findings(levelled):
+        print(line)
+    try:
+        built = backlog_mod.write_backlog(str(persona_dir))
+    except backlog_mod.UsageError as exc:
+        sys.stderr.write("cli.py all: %s\n" % exc)
+        return EXIT_USAGE
+    if not built["ok"]:
+        print("backlog: failed")
+        print(built["error"])
+        print("Skipped: dashboard.")
+        return EXIT_INVALID
+    print("backlog: %s %s and %s" % ("blocked" if blocked else "ok", Path(persona_dir) / backlog_mod.BACKLOG_JSON,
+                                     Path(persona_dir) / backlog_mod.BACKLOG_MD))
+    for item in built["retired_now"]:
+        print("retired: %s (%s): %s" % (item["id"], item["status"], item["title"]))
+    board = dashboard_mod.write_dashboard(str(persona_dir), date)
+    if not board["ok"]:
+        print("dashboard: failed")
+        print(board["error"])
+        return EXIT_INVALID
+    print("dashboard: %s %s" % ("blocked" if blocked else "ok", board["path"]))
+    return EXIT_INVALID if blocked else EXIT_OK
+
+
 def main(argv=None):
     args = build_parser().parse_args(argv)
     persona_dir = Path(args.persona_dir)
     if not persona_dir.is_dir():
         sys.stderr.write("cli.py %s: no such persona folder: %s\n" % (args.command, persona_dir))
         return EXIT_USAGE
-    if args.command in ("level", "backlog", "dashboard"):
+    if args.command in ("level", "backlog", "dashboard", "all"):
         if not (persona_dir / "card.json").is_file():
             sys.stderr.write("cli.py %s: %s holds no card.json, so it is not a persona folder\n"
                              % (args.command, persona_dir))
@@ -185,6 +258,8 @@ def main(argv=None):
             return run_backlog(args, persona_dir)
         if args.command == "dashboard":
             return run_dashboard(args, persona_dir)
+        if args.command == "all":
+            return run_all(args, persona_dir)
         return run_level(args, persona_dir)
     result = validate(str(persona_dir))
     if args.json:

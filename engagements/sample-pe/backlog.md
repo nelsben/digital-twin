@@ -49,7 +49,7 @@ Issue numbers are those in this repo. Every item below now has one. Owners are a
 
 | Issue | Type | Item | Serves | Owner |
 |---|---|---|---|---|
-| #30 | Spike | Wall test: confirm that Salesforce role-based access holds through the MCP server, using a test user on each side of the wall. Produces `wall-test-protocol.md`. Must pass before any pilot user connects. | All rows | Joaquin Lindahl and Imani Petrov confirm the roles; Ngozi Brandvold reviews |
+| #30 | Spike | Wall test: confirm that Salesforce role-based access holds through the MCP server, using a test user on each side of the wall. Produces [wall-test-protocol.md](wall-test-protocol.md). The protocol is written, a scratch-org dry run passed the API-level cases (#82), and the live run needs the customer's org. Must pass before any pilot user connects. | All rows | Joaquin Lindahl and Imani Petrov confirm the roles; Ngozi Brandvold reviews |
 | #32 | Story (skill) | Company-brief skill | T1 | Skill owner Callum Nwosu; built by Yuki Sandoval |
 | #34 | Story (skill) | CRM-update skill | T2 | Skill owner Beatriz Halloran; built by Yuki Sandoval |
 | #36 | Story (skill) | House-style skill, in `twin-shared` | T1, T2 and every later skill | Yuki Sandoval |

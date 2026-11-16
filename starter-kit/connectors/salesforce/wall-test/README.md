@@ -80,6 +80,7 @@ The search index caught up within the script's wait, so no pair was NOT RUN.
 **Marker metadata (`../force-app`): fails to deploy.** Two findings, both with the Salesforce error text:
 
 - **Twin_Marker_Edit has a description that is too long.** Validate and deploy both fail with `Twin_Marker_Edit`: `Description: data value too large: Edit access to Opportunity.Last_Updated_By_Twin__c, for the identity the twin writes as. ... (max length=255)`. The file's description is 338 characters; `Twin_Marker_Read`'s is 186 and was not named in any error. Nothing was changed here (the file is outside this folder). The fix is to shorten that description to 255 characters or fewer.
+- The Twin_Marker_Edit description was shortened to 255 characters after this run (#93, PR #94). The marker has not been re-deployed to a scratch org since.
 - **Opportunity history must be on first.** In a run on the same org before history was enabled, validate also failed with `Opportunity.Last_Updated_By_Twin__c`: `The entity: Opportunity does not have history tracking enabled`. This confirms step 1 of the [marker README](../README.md#deploy-it-the-salesforce-admin-does-this). The script turns history on from `optional/enable-opportunity-history/` and retries; that step passed. In the final run history was already on, so only the description error showed.
 
 Because the deploy is all or nothing, the field and `Twin_Marker_Read` are not in the org either, and the marker's permission sets were not assigned.

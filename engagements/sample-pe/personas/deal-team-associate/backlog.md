@@ -25,14 +25,16 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
 | Output and audience | One-page company brief, internal; to none (the conversation) |
 | Skill owner | Callum Nwosu |
 | Baseline | 4 per week x 90 minutes each x 3 users |
+| Constraints | A reviewer checks every brief before it goes further. |
 
 **Acceptance criteria:**
 
 1. Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.
 2. Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.
 3. Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.
-4. Plus: no web tools are used.
-5. Plus: each tool call reaches the governance log.
+4. Keeps: A reviewer checks every brief before it goes further.
+5. Plus: no web tools are used.
+6. Plus: each tool call reaches the governance log.
 
 **Gated by:**
 
@@ -66,6 +68,7 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
   7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
+  10. Make the skill keep these rules from the interviews, in the interviewee's words: A reviewer checks every brief before it goes further..
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
 - [ ] **S-T1.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
@@ -116,10 +119,6 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
   1. Check the settings baseline or the org setting turns web tools off on the task's surfaces. See [starter-kit/settings/README.md#keys](../../../../starter-kit/settings/README.md#keys).
   2. Try a web search in the task and confirm it is refused. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
   - Done when: A web search or fetch attempted during the task is refused.
-- [ ] **S-T1.zdr-retention** Confirm the task runs only in the org with zero data retention (owner: compliance, part A7)
-  1. Check the task's surfaces and connectors are all in the ZDR org. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
-  2. Record which features the ZDR org lacks that the task might expect. See [docs/compendium/12-orgs-and-ownership.md#recommended-starting-point](../../../../docs/compendium/12-orgs-and-ownership.md#recommended-starting-point).
-  - Done when: Compliance has confirmed the task runs only in the ZDR org.
 - [ ] **S-T1.confirm-unverified-decision.connectors.salesforce** Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce) (owner: solution-architect, part A9)
   1. Find the Unverified mark on the page the decision cites in levelled.json. See [partner-kit/docs/design.md#72-decision-values](../../../../partner-kit/docs/design.md#72-decision-values).
   2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
@@ -127,8 +126,13 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
   - Done when: The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.
 - [ ] **S-T1.warning-zdr-org-not-confirmed** Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR (owner: compliance, part A7)
   1. Explain that highly sensitive data needs a separate Enterprise org with ZDR. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
-  2. Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
-  - Done when: The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.
+  2. Confirm with the customer whether a zero-data-retention agreement covers the org this work runs in, record the answer as compliance.zdr_cover in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  - Done when: The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.
+- [ ] **S-T1.zdr-retention-agreement-first** Get the zero-data-retention agreement signed, then confirm the task runs only in that org (owner: compliance, part A7)
+  1. The profile's compliance.zdr_cover is planned or still open: no signed zero-data-retention agreement covers this work yet. Do not let the task go live until the agreement is signed and covers the org it runs in. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  2. Check the task's surfaces and connectors are all in the ZDR org. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  3. Record which features the ZDR org lacks that the task might expect. See [docs/compendium/12-orgs-and-ownership.md#recommended-starting-point](../../../../docs/compendium/12-orgs-and-ownership.md#recommended-starting-point).
+  - Done when: The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.
 
 ### S-T5: Prepare for a management or expert call
 
@@ -232,10 +236,6 @@ Part A2. In pilot: no. Priority: 4. Status: todo.
   1. Check the settings baseline or the org setting turns web tools off on the task's surfaces. See [starter-kit/settings/README.md#keys](../../../../starter-kit/settings/README.md#keys).
   2. Try a web search in the task and confirm it is refused. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
   - Done when: A web search or fetch attempted during the task is refused.
-- [ ] **S-T5.zdr-retention** Confirm the task runs only in the org with zero data retention (owner: compliance, part A7)
-  1. Check the task's surfaces and connectors are all in the ZDR org. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
-  2. Record which features the ZDR org lacks that the task might expect. See [docs/compendium/12-orgs-and-ownership.md#recommended-starting-point](../../../../docs/compendium/12-orgs-and-ownership.md#recommended-starting-point).
-  - Done when: Compliance has confirmed the task runs only in the ZDR org.
 - [ ] **S-T5.confirm-unverified-decision.connectors.salesforce** Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce) (owner: solution-architect, part A9)
   1. Find the Unverified mark on the page the decision cites in levelled.json. See [partner-kit/docs/design.md#72-decision-values](../../../../partner-kit/docs/design.md#72-decision-values).
   2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
@@ -243,8 +243,13 @@ Part A2. In pilot: no. Priority: 4. Status: todo.
   - Done when: The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.
 - [ ] **S-T5.warning-zdr-org-not-confirmed** Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR (owner: compliance, part A7)
   1. Explain that highly sensitive data needs a separate Enterprise org with ZDR. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
-  2. Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
-  - Done when: The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.
+  2. Confirm with the customer whether a zero-data-retention agreement covers the org this work runs in, record the answer as compliance.zdr_cover in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  - Done when: The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.
+- [ ] **S-T5.zdr-retention-agreement-first** Get the zero-data-retention agreement signed, then confirm the task runs only in that org (owner: compliance, part A7)
+  1. The profile's compliance.zdr_cover is planned or still open: no signed zero-data-retention agreement covers this work yet. Do not let the task go live until the agreement is signed and covers the org it runs in. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  2. Check the task's surfaces and connectors are all in the ZDR org. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  3. Record which features the ZDR org lacks that the task might expect. See [docs/compendium/12-orgs-and-ownership.md#recommended-starting-point](../../../../docs/compendium/12-orgs-and-ownership.md#recommended-starting-point).
+  - Done when: The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.
 
 ## F-pipeline-upkeep-and-reporting: Pipeline upkeep and reporting
 
@@ -267,15 +272,18 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
 | Output and audience | Activity log and next-step fields, internal; to Salesforce opportunity |
 | Skill owner | Beatriz Halloran |
 | Baseline | 10 per week x 15 minutes each x 18 users |
+| Constraints | I want to approve each change before it's written. |
+| Wanted change | Asked for, not planned: Later it could start when the meeting ends. |
 
 **Acceptance criteria:**
 
 1. Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.
 2. Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.
 3. Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.
-4. Plus: no web tools are used.
-5. Plus: every write carries the twin marker.
-6. Plus: each tool call reaches the governance log.
+4. Keeps: I want to approve each change before it's written.
+5. Plus: no web tools are used.
+6. Plus: every write carries the twin marker.
+7. Plus: each tool call reaches the governance log.
 
 **Gated by:**
 
@@ -309,6 +317,7 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
   7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
+  10. Make the skill keep these rules from the interviews, in the interviewee's words: I want to approve each change before it's written..
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
 - [ ] **S-T2.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
@@ -375,10 +384,6 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
   1. Check the settings baseline or the org setting turns web tools off on the task's surfaces. See [starter-kit/settings/README.md#keys](../../../../starter-kit/settings/README.md#keys).
   2. Try a web search in the task and confirm it is refused. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
   - Done when: A web search or fetch attempted during the task is refused.
-- [ ] **S-T2.zdr-retention** Confirm the task runs only in the org with zero data retention (owner: compliance, part A7)
-  1. Check the task's surfaces and connectors are all in the ZDR org. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
-  2. Record which features the ZDR org lacks that the task might expect. See [docs/compendium/12-orgs-and-ownership.md#recommended-starting-point](../../../../docs/compendium/12-orgs-and-ownership.md#recommended-starting-point).
-  - Done when: Compliance has confirmed the task runs only in the ZDR org.
 - [ ] **S-T2.confirm-unverified-decision.connectors.salesforce** Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce) (owner: solution-architect, part A9)
   1. Find the Unverified mark on the page the decision cites in levelled.json. See [partner-kit/docs/design.md#72-decision-values](../../../../partner-kit/docs/design.md#72-decision-values).
   2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
@@ -386,8 +391,13 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
   - Done when: The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.
 - [ ] **S-T2.warning-zdr-org-not-confirmed** Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR (owner: compliance, part A7)
   1. Explain that highly sensitive data needs a separate Enterprise org with ZDR. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
-  2. Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
-  - Done when: The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.
+  2. Confirm with the customer whether a zero-data-retention agreement covers the org this work runs in, record the answer as compliance.zdr_cover in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  - Done when: The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.
+- [ ] **S-T2.zdr-retention-agreement-first** Get the zero-data-retention agreement signed, then confirm the task runs only in that org (owner: compliance, part A7)
+  1. The profile's compliance.zdr_cover is planned or still open: no signed zero-data-retention agreement covers this work yet. Do not let the task go live until the agreement is signed and covers the org it runs in. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  2. Check the task's surfaces and connectors are all in the ZDR org. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  3. Record which features the ZDR org lacks that the task might expect. See [docs/compendium/12-orgs-and-ownership.md#recommended-starting-point](../../../../docs/compendium/12-orgs-and-ownership.md#recommended-starting-point).
+  - Done when: The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.
 
 ### S-T3: Weekly pipeline summary for the Monday deal meeting
 
@@ -519,10 +529,6 @@ Part A4. In pilot: no. Priority: 6. Status: todo.
   1. Check the settings baseline or the org setting turns web tools off on the task's surfaces. See [starter-kit/settings/README.md#keys](../../../../starter-kit/settings/README.md#keys).
   2. Try a web search in the task and confirm it is refused. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
   - Done when: A web search or fetch attempted during the task is refused.
-- [ ] **S-T3.zdr-retention** Confirm the task runs only in the org with zero data retention (owner: compliance, part A7)
-  1. Check the task's surfaces and connectors are all in the ZDR org. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
-  2. Record which features the ZDR org lacks that the task might expect. See [docs/compendium/12-orgs-and-ownership.md#recommended-starting-point](../../../../docs/compendium/12-orgs-and-ownership.md#recommended-starting-point).
-  - Done when: Compliance has confirmed the task runs only in the ZDR org.
 - [ ] **S-T3.confirm-unverified-decision.connectors.salesforce** Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce) (owner: solution-architect, part A9)
   1. Find the Unverified mark on the page the decision cites in levelled.json. See [partner-kit/docs/design.md#72-decision-values](../../../../partner-kit/docs/design.md#72-decision-values).
   2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
@@ -534,8 +540,13 @@ Part A4. In pilot: no. Priority: 6. Status: todo.
   - Done when: The task uses a route the pages confirm, or Anthropic's written confirmation is recorded with its source.
 - [ ] **S-T3.warning-zdr-org-not-confirmed** Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR (owner: compliance, part A7)
   1. Explain that highly sensitive data needs a separate Enterprise org with ZDR. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
-  2. Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
-  - Done when: The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.
+  2. Confirm with the customer whether a zero-data-retention agreement covers the org this work runs in, record the answer as compliance.zdr_cover in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  - Done when: The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.
+- [ ] **S-T3.zdr-retention-agreement-first** Get the zero-data-retention agreement signed, then confirm the task runs only in that org (owner: compliance, part A7)
+  1. The profile's compliance.zdr_cover is planned or still open: no signed zero-data-retention agreement covers this work yet. Do not let the task go live until the agreement is signed and covers the org it runs in. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  2. Check the task's surfaces and connectors are all in the ZDR org. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  3. Record which features the ZDR org lacks that the task might expect. See [docs/compendium/12-orgs-and-ownership.md#recommended-starting-point](../../../../docs/compendium/12-orgs-and-ownership.md#recommended-starting-point).
+  - Done when: The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.
 
 ## F-deal-screening: Deal screening
 
@@ -644,10 +655,6 @@ Part A2. In pilot: no. Priority: 3. Status: todo.
   1. Check the settings baseline or the org setting turns web tools off on the task's surfaces. See [starter-kit/settings/README.md#keys](../../../../starter-kit/settings/README.md#keys).
   2. Try a web search in the task and confirm it is refused. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
   - Done when: A web search or fetch attempted during the task is refused.
-- [ ] **S-T4.zdr-retention** Confirm the task runs only in the org with zero data retention (owner: compliance, part A7)
-  1. Check the task's surfaces and connectors are all in the ZDR org. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
-  2. Record which features the ZDR org lacks that the task might expect. See [docs/compendium/12-orgs-and-ownership.md#recommended-starting-point](../../../../docs/compendium/12-orgs-and-ownership.md#recommended-starting-point).
-  - Done when: Compliance has confirmed the task runs only in the ZDR org.
 - [ ] **S-T4.confirm-unverified-decision.connectors.salesforce** Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.salesforce) (owner: solution-architect, part A9)
   1. Find the Unverified mark on the page the decision cites in levelled.json. See [partner-kit/docs/design.md#72-decision-values](../../../../partner-kit/docs/design.md#72-decision-values).
   2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
@@ -659,8 +666,13 @@ Part A2. In pilot: no. Priority: 3. Status: todo.
   - Done when: The customer has confirmed the ceiling, or a lower ceiling is on the card as an override with a reason and an approver.
 - [ ] **S-T4.warning-zdr-org-not-confirmed** Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR (owner: compliance, part A7)
   1. Explain that highly sensitive data needs a separate Enterprise org with ZDR. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
-  2. Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
-  - Done when: The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.
+  2. Confirm with the customer whether a zero-data-retention agreement covers the org this work runs in, record the answer as compliance.zdr_cover in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  - Done when: The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.
+- [ ] **S-T4.zdr-retention-agreement-first** Get the zero-data-retention agreement signed, then confirm the task runs only in that org (owner: compliance, part A7)
+  1. The profile's compliance.zdr_cover is planned or still open: no signed zero-data-retention agreement covers this work yet. Do not let the task go live until the agreement is signed and covers the org it runs in. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  2. Check the task's surfaces and connectors are all in the ZDR org. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  3. Record which features the ZDR org lacks that the task might expect. See [docs/compendium/12-orgs-and-ownership.md#recommended-starting-point](../../../../docs/compendium/12-orgs-and-ownership.md#recommended-starting-point).
+  - Done when: The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.
 
 ## F-investment-committee-drafting: Investment committee drafting
 
@@ -683,14 +695,16 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
 | Output and audience | Draft memo section, internal; to none (the conversation), for the partners |
 | Skill owner | Ravindra Sorensen |
 | Baseline | 0.46 per week x 240 minutes each x unknown users |
+| Constraints | It's always a draft and always reviewed. |
 
 **Acceptance criteria:**
 
 1. Eval 1 of 3: written from a real example once the skill owner has collected it, with the expected result.
 2. Eval 2 of 3: written from a real example once the skill owner has collected it, with the expected result.
 3. Eval 3 of 3: written from a real example once the skill owner has collected it, with the expected result.
-4. Plus: no web tools are used.
-5. Plus: each tool call reaches the governance log.
+4. Keeps: It's always a draft and always reviewed.
+5. Plus: no web tools are used.
+6. Plus: each tool call reaches the governance log.
 
 **Gated by:**
 
@@ -719,6 +733,7 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
   7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
+  10. Make the skill keep these rules from the interviews, in the interviewee's words: It's always a draft and always reviewed..
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
 - [ ] **S-T6.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
@@ -760,18 +775,19 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
   1. Check the settings baseline or the org setting turns web tools off on the task's surfaces. See [starter-kit/settings/README.md#keys](../../../../starter-kit/settings/README.md#keys).
   2. Try a web search in the task and confirm it is refused. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
   - Done when: A web search or fetch attempted during the task is refused.
-- [ ] **S-T6.zdr-retention** Confirm the task runs only in the org with zero data retention (owner: compliance, part A7)
-  1. Check the task's surfaces and connectors are all in the ZDR org. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
-  2. Record which features the ZDR org lacks that the task might expect. See [docs/compendium/12-orgs-and-ownership.md#recommended-starting-point](../../../../docs/compendium/12-orgs-and-ownership.md#recommended-starting-point).
-  - Done when: Compliance has confirmed the task runs only in the ZDR org.
 - [ ] **S-T6.warning-high-cost-ceiling-unconfirmed** Resolve warning high-cost-ceiling-unconfirmed: confirm the ceiling of a task whose mistakes cost a lot (owner: business-owner, part A9)
   1. Read which cap applied and why in levelled.json, and note that page 06 has no rule for the cost of a mistake. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
   2. Confirm the cap with the customer, or record a lower ceiling as an override on the card, then level again. See [partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson](../../../../partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson).
   - Done when: The customer has confirmed the ceiling, or a lower ceiling is on the card as an override with a reason and an approver.
 - [ ] **S-T6.warning-zdr-org-not-confirmed** Resolve warning zdr-org-not-confirmed: confirm the separate Enterprise org with ZDR (owner: compliance, part A7)
   1. Explain that highly sensitive data needs a separate Enterprise org with ZDR. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
-  2. Confirm with the customer that the org exists or will be set up, and record its retention in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
-  - Done when: The profile shows the ZDR org for this work, or the task's data class is lowered with the compliance owner.
+  2. Confirm with the customer whether a zero-data-retention agreement covers the org this work runs in, record the answer as compliance.zdr_cover in the profile, then level again. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  - Done when: The profile's compliance.zdr_cover is in-place for this work, or the task's data class is lowered with the compliance owner.
+- [ ] **S-T6.zdr-retention-agreement-first** Get the zero-data-retention agreement signed, then confirm the task runs only in that org (owner: compliance, part A7)
+  1. The profile's compliance.zdr_cover is planned or still open: no signed zero-data-retention agreement covers this work yet. Do not let the task go live until the agreement is signed and covers the org it runs in. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  2. Check the task's surfaces and connectors are all in the ZDR org. See [docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt](../../../../docs/compendium/10-sensitive-data.md#what-zdr-is-and-isnt).
+  3. Record which features the ZDR org lacks that the task might expect. See [docs/compendium/12-orgs-and-ownership.md#recommended-starting-point](../../../../docs/compendium/12-orgs-and-ownership.md#recommended-starting-point).
+  - Done when: The zero-data-retention agreement is signed and covers the org, compliance.zdr_cover is in-place, and compliance has confirmed the task runs only in the ZDR org.
 
 ## F-twin-foundation: Twin foundation
 

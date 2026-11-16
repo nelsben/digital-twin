@@ -3,8 +3,8 @@
   "customer": "example-capital-partners",
   "persona": "deal-team-associate",
   "source": {
-    "card_sha256": "08016d0633d84f785445a706b67e7a3bfc34a364bd74c8ab780a0a0cb873d6ec",
-    "profile_sha256": "115e399ea7f2e169ad9a819716a1ba45ec2bf6745e4cd657d0ec9ae6ebf7a2df",
+    "card_sha256": "46c79c3f5d8f1a2784ab3e9730345d50779bc4418e06f93123a87e2ad2131fb1",
+    "profile_sha256": "eb23d8fe089c589586c08ff54b29a2370a53e7a344a02ddb54023034838983b5",
     "rules_version": 1,
     "pack": "private-equity"
   },
@@ -1083,16 +1083,16 @@
       "about": "T1",
       "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
       "unverified": false,
-      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's retention is not zdr, so it does not show one.",
-      "fix": "Confirm with the customer that a separate Enterprise org with ZDR holds this work and record it in the profile, or lower the task's data class with the customer's compliance owner."
+      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's compliance.zdr_cover is planned or still open, so no signed zero-data-retention agreement covers this work yet.",
+      "fix": "Get the zero-data-retention agreement signed for the org this work runs in and set compliance.zdr_cover to in-place, or lower the task's data class with the customer's compliance owner."
     },
     {
       "code": "zdr-org-not-confirmed",
       "about": "T2",
       "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
       "unverified": false,
-      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's retention is not zdr, so it does not show one.",
-      "fix": "Confirm with the customer that a separate Enterprise org with ZDR holds this work and record it in the profile, or lower the task's data class with the customer's compliance owner."
+      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's compliance.zdr_cover is planned or still open, so no signed zero-data-retention agreement covers this work yet.",
+      "fix": "Get the zero-data-retention agreement signed for the org this work runs in and set compliance.zdr_cover to in-place, or lower the task's data class with the customer's compliance owner."
     },
     {
       "code": "agent-sdk-cover-unverified",
@@ -1107,8 +1107,8 @@
       "about": "T3",
       "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
       "unverified": false,
-      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's retention is not zdr, so it does not show one.",
-      "fix": "Confirm with the customer that a separate Enterprise org with ZDR holds this work and record it in the profile, or lower the task's data class with the customer's compliance owner."
+      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's compliance.zdr_cover is planned or still open, so no signed zero-data-retention agreement covers this work yet.",
+      "fix": "Get the zero-data-retention agreement signed for the org this work runs in and set compliance.zdr_cover to in-place, or lower the task's data class with the customer's compliance owner."
     },
     {
       "code": "high-cost-ceiling-unconfirmed",
@@ -1123,16 +1123,16 @@
       "about": "T4",
       "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
       "unverified": false,
-      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's retention is not zdr, so it does not show one.",
-      "fix": "Confirm with the customer that a separate Enterprise org with ZDR holds this work and record it in the profile, or lower the task's data class with the customer's compliance owner."
+      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's compliance.zdr_cover is planned or still open, so no signed zero-data-retention agreement covers this work yet.",
+      "fix": "Get the zero-data-retention agreement signed for the org this work runs in and set compliance.zdr_cover to in-place, or lower the task's data class with the customer's compliance owner."
     },
     {
       "code": "zdr-org-not-confirmed",
       "about": "T5",
       "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
       "unverified": false,
-      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's retention is not zdr, so it does not show one.",
-      "fix": "Confirm with the customer that a separate Enterprise org with ZDR holds this work and record it in the profile, or lower the task's data class with the customer's compliance owner."
+      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's compliance.zdr_cover is planned or still open, so no signed zero-data-retention agreement covers this work yet.",
+      "fix": "Get the zero-data-retention agreement signed for the org this work runs in and set compliance.zdr_cover to in-place, or lower the task's data class with the customer's compliance owner."
     },
     {
       "code": "high-cost-ceiling-unconfirmed",
@@ -1147,8 +1147,8 @@
       "about": "T6",
       "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
       "unverified": false,
-      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's retention is not zdr, so it does not show one.",
-      "fix": "Confirm with the customer that a separate Enterprise org with ZDR holds this work and record it in the profile, or lower the task's data class with the customer's compliance owner."
+      "message": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's compliance.zdr_cover is planned or still open, so no signed zero-data-retention agreement covers this work yet.",
+      "fix": "Get the zero-data-retention agreement signed for the org this work runs in and set compliance.zdr_cover to in-place, or lower the task's data class with the customer's compliance owner."
     }
   ],
   "complete": false

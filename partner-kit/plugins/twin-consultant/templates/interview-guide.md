@@ -1,6 +1,6 @@
 # Role interview guide
 
-You read this aloud to someone who does the job every day and is not technical. Say the **Ask** line as written, use a probe if the answer is thin, and write what they say in their words in the notes file ([interview-notes.md](interview-notes.md)). The other lines are for you: **Why we ask**, **Fills** (the card fields the answer feeds) and **Listen for** (what people say, and which allowed value it means).
+You read this aloud to someone who does the job every day and is not technical. Say the **Ask** line as written, and the **Also ask** line where a question has one, use a probe if the answer is thin, and write what they say in their words in the notes file ([interview-notes.md](interview-notes.md)). The other lines are for you: **Why we ask**, **Fills** (the card fields the answer feeds) and **Listen for** (what people say, and which allowed value it means).
 
 Design of record: [partner-kit/docs/design.md](../../../docs/design.md), section 6.
 
@@ -25,7 +25,7 @@ Ask each once per person.
 
 **Why we ask:** It names the role and team, the places the role holder works, and whether their device is company-managed.
 
-**Fills:** `id`, `role.name`, `role.team`, `role.works_in`, `role.device`
+**Fills:** `id`, `role.name`, `role.team`, `role.works_in`, `role.wanted_surfaces`, `role.device`
 
 **Listen for:**
 - `claude-ai` for the Claude website or app in a browser; `desktop` for the Claude desktop app.
@@ -137,7 +137,9 @@ Ask F1 to F9 once for each task. Start with F1 for all the tasks, then go task b
 
 **Why we ask:** The examples become the checks we run on the assistant, and the judge becomes its owner.
 
-**Fills:** `tasks[].examples.good`, `tasks[].examples.bad`, `tasks[].examples.where`, `tasks[].skill_owner`
+**Also ask:** "Is there anything you would change about how this task is done today?"
+
+**Fills:** `tasks[].examples.good`, `tasks[].examples.bad`, `tasks[].examples.where`, `tasks[].skill_owner`, `tasks[].wanted_change`
 
 ### F4. If it goes wrong
 
@@ -149,7 +151,9 @@ Ask F1 to F9 once for each task. Start with F1 for all the tasks, then go task b
 
 **Why we ask:** It sets how much freedom the assistant gets on this task.
 
-**Fills:** `tasks[].cost_of_mistake.level`, `tasks[].cost_of_mistake.what_happens`
+**Also ask:** "Is there a rule or a deadline this task must always keep, such as a time limit or a step that is never skipped?"
+
+**Fills:** `tasks[].cost_of_mistake.level`, `tasks[].cost_of_mistake.what_happens`, `tasks[].constraints`
 
 **Listen for:**
 - `low` for "I'd fix it in a minute, nobody would know".
@@ -166,7 +170,7 @@ Ask F1 to F9 once for each task. Start with F1 for all the tasks, then go task b
 
 **Why we ask:** It decides whether the assistant waits for you or works on its own.
 
-**Fills:** `tasks[].trigger`
+**Fills:** `tasks[].trigger`, `tasks[].wanted_change`
 
 **Listen for:**
 - `person` for "I start it when I need it".
@@ -199,7 +203,7 @@ Ask F1 to F9 once for each task. Start with F1 for all the tasks, then go task b
 
 **Why we ask:** Things that cannot be undone, or that move money, need a person to approve them.
 
-**Fills:** `tasks[].writes[].action`, `tasks[].reversible`, `tasks[].touches_money`, `voice.ask_before`
+**Fills:** `tasks[].writes[].action`, `tasks[].reversible`, `tasks[].touches_money`, `voice.ask_before`, `tasks[].constraints`
 
 **Listen for:**
 - `create` for "add a new one"; `update` for "change an existing one"; `delete` for "remove"; `send` for "send out".

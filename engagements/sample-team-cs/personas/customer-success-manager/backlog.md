@@ -131,13 +131,15 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
 | Output and audience | Draft follow-up email, which the manager sends, and a call note on the HubSpot record, external; to a draft in the conversation; the HubSpot company record |
 | Skill owner | Marisol Quenby |
 | Baseline | 6 per week x 25 minutes each x 8 users |
+| Constraints | I want to approve the note before it's created. |
 
 **Acceptance criteria:**
 
 1. Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.
 2. Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.
 3. Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.
-4. Plus: every write carries the twin marker.
+4. Keeps: I want to approve the note before it's created.
+5. Plus: every write carries the twin marker.
 
 **Gated by:**
 
@@ -165,6 +167,7 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
   7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
+  10. Make the skill keep these rules from the interviews, in the interviewee's words: I want to approve the note before it's created..
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
 - [ ] **S-C4.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
@@ -394,12 +397,14 @@ Part A2. In pilot: no. Priority: 4. Status: todo.
 | Output and audience | Draft renewal quote email, which the manager checks and sends from Gmail, external; to none (a draft in the conversation) |
 | Skill owner | Marisol Quenby |
 | Baseline | 2 per week x 40 minutes each x 8 users |
+| Constraints | I check the figures before I send. |
 
 **Acceptance criteria:**
 
 1. Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.
 2. Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.
 3. Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.
+4. Keeps: I check the figures before I send.
 
 **Gated by:**
 
@@ -427,6 +432,7 @@ Part A2. In pilot: no. Priority: 4. Status: todo.
   7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
+  10. Make the skill keep these rules from the interviews, in the interviewee's words: I check the figures before I send..
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
 - [ ] **S-C3.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
@@ -480,6 +486,7 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
 | Output and audience | Summary of the customer's open tickets, internal; to none (the conversation) |
 | Skill owner | Marisol Quenby |
 | Baseline | 2 per week x 30 minutes each x 8 users |
+| Wanted change | Asked for, not planned: Something happening: the escalation itself, ideally. Today I start it when I'm told. |
 
 **Acceptance criteria:**
 

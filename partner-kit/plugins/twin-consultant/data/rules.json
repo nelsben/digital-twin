@@ -1239,13 +1239,20 @@
       "decides": "blocker",
       "when": {
         "task.data_class": "highly-sensitive",
-        "capability.zdr": "no"
+        "any": [
+          {
+            "capability.zdr": "no"
+          },
+          {
+            "compliance.zdr_cover": "none"
+          }
+        ]
       },
       "then": "highly-sensitive-needs-zdr-org",
       "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
       "unverified": false,
       "basis": "our-recommendation",
-      "reason": "The task is highly sensitive, and this plan has no Enterprise org with ZDR.",
+      "reason": "The task is highly sensitive, and either this plan has no Enterprise org with ZDR or the profile's compliance.zdr_cover is none: the customer has no zero-data-retention agreement and does not plan one.",
       "fix": "Set up a separate Enterprise org with ZDR for this work, or lower the task's data class with the customer's compliance owner."
     },
     {
@@ -1661,17 +1668,17 @@
       "decides": "warning",
       "when": {
         "task.data_class": "highly-sensitive",
-        "compliance.retention": [
-          "standard",
-          "custom-30-day"
+        "compliance.zdr_cover": [
+          "planned",
+          null
         ]
       },
       "then": "zdr-org-not-confirmed",
       "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
       "unverified": false,
       "basis": "compendium",
-      "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's retention is not zdr, so it does not show one.",
-      "fix": "Confirm with the customer that a separate Enterprise org with ZDR holds this work and record it in the profile, or lower the task's data class with the customer's compliance owner."
+      "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, and the profile's compliance.zdr_cover is planned or still open, so no signed zero-data-retention agreement covers this work yet.",
+      "fix": "Get the zero-data-retention agreement signed for the org this work runs in and set compliance.zdr_cover to in-place, or lower the task's data class with the customer's compliance owner."
     },
     {
       "id": "warn-private-network-inside-only",

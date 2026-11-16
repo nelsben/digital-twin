@@ -75,7 +75,9 @@ Overrides are allowed for `runtime`, `identity`, `autonomy.start`,
 `plan_fit` follow from the others: overriding either raises blocker `override-not-allowed`
 and is not applied, so blocker `connector-cannot-write` has no override way
 out. Never propose an override yourself to make a blocker disappear; offer
-the ways out and let the consultant choose.
+the ways out and let the consultant choose. Blocker `highly-sensitive-needs-zdr-org`
+and warning `zdr-org-not-confirmed` read the profile's `compliance.zdr_cover`:
+it changes only when the customer says their agreement's state has changed.
 
 ## Recording an override
 

@@ -70,7 +70,8 @@ NOT_OVERRIDABLE = ("connectors", "plan_fit")
 # Facts. Card and profile facts read the field at that path; the rest are derived.
 CARD_FACTS = ("role.works_in", "role.device", "role.plugin_name", "memory.personal_memory_wanted")
 PROFILE_FACTS = ("plan.tier", "identity.sso", "identity.scim", "devices.mdm", "compliance.retention",
-                 "compliance.phi", "compliance.baa", "compliance.mnpi", "governance.action_log_required",
+                 "compliance.zdr_cover", "compliance.phi", "compliance.baa", "compliance.mnpi",
+                 "governance.action_log_required",
                  "runtime_preferences.self_hosting_required", "network.can_allowlist_anthropic_ips")
 DERIVED_PERSONA_FACTS = ("systems.kinds", "systems.products", "pack.id", "pack.settings_baseline",
                          "persona.data_classes", "persona.products")
@@ -187,6 +188,9 @@ def _match(when, facts):
         else:
             value = facts[key]
             if isinstance(value, Open):
+                # An open field has no value yet: a want that lists null (no value) matches it.
+                if _test(None, want):
+                    continue
                 raise FactOpen(key, value)
             if not _test(value, want):
                 return False
@@ -200,7 +204,8 @@ def matches(when, facts, known=None):
     list-valued fact matches when any of its items does. 'any' and 'all' take lists of conditions
     and 'not' takes one. Keys are checked in order and the first that fails ends the check. Every
     fact name is checked before anything is evaluated, so an unknown name always raises LevelError.
-    A fact whose field is open raises FactOpen when it is reached.
+    A fact whose field is open raises FactOpen when it is reached, unless the wanted values include
+    null: an open field has no value, so a want of null matches it.
     """
     names = set(known) if known is not None else set(facts)
     for name in fact_names(when):

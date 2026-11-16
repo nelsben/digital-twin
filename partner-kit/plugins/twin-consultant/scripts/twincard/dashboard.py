@@ -51,7 +51,8 @@ PANELS = (
                        "voice.escalate_to")),
     ("A2", "Skills", ("tasks.client_skills", "tasks.skill_owner", "persona.starting_points")),
     ("A3", "Connectors", ("tools", "systems")),
-    ("A4", "Runtime", ("tasks.runtime", "role.works_in", "runtime_preferences.self_hosting_required")),
+    ("A4", "Runtime", ("tasks.runtime", "role.works_in", "role.wanted_surfaces",
+                       "runtime_preferences.self_hosting_required")),
     ("A5", "Identity", ("tasks.identity", "connectors.identity", "identity.sign_in")),
     ("A6", "Memory", ("memory.personal_memory_wanted", "tasks.memory", "memory.notes")),
     ("A7", "Guardrails", ("persona.settings_baseline", "tasks.web_tools", "tasks.autonomy", "tasks.data_class",
@@ -559,6 +560,17 @@ def _item_works_in(ctx):
     return "Works in", esc(fmt((ctx["card"].get("role") or {}).get("works_in")))
 
 
+def _item_wanted_surfaces(ctx):
+    """Where the role would rather work, beside the planned surfaces; None (no row) when the card names none."""
+    role = ctx["card"].get("role") or {}
+    wanted = [s for s in role.get("wanted_surfaces") or [] if isinstance(s, str) and s]
+    if not wanted:
+        return None
+    planned = set(role.get("works_in") or [])
+    return ("Would rather work in", '<span data-field="role.wanted_surfaces">%s</span>' % "; ".join(
+        esc(s) if s in planned else "%s (a wish, not planned)" % esc(s) for s in wanted))
+
+
 def _item_self_hosting(ctx):
     value = (ctx["profile"].get("runtime_preferences") or {}).get("self_hosting_required")
     return "Self-hosting required", esc(fmt(value, "not given"))
@@ -707,6 +719,7 @@ PANEL_ITEMS = {
     "systems": _item_systems,
     "tasks.runtime": _item_runtime,
     "role.works_in": _item_works_in,
+    "role.wanted_surfaces": _item_wanted_surfaces,
     "runtime_preferences.self_hosting_required": _item_self_hosting,
     "tasks.identity": _item_identity,
     "connectors.identity": _item_connector_identity,
@@ -740,7 +753,8 @@ def render_anatomy(ctx):
         satisfied, required = counts.get(part, [0, 0])
         part_tasks = [t for t in tasks if t.get("part") == part]
         done = sum(1 for t in part_tasks if t["status"] == "done")
-        rows = "".join("<dt>%s</dt><dd>%s</dd>" % PANEL_ITEMS[key](ctx) for key in items)
+        shown = [PANEL_ITEMS[key](ctx) for key in items]
+        rows = "".join("<dt>%s</dt><dd>%s</dd>" % item for item in shown if item is not None)
         out.append('<div class="panel" data-part="%s"><h3>%s %s</h3><dl>%s</dl>'
                    '<p class="counts">Required fields answered: %d of %d. Backlog tasks done: %d of %d.</p></div>'
                    % (part, part, esc(name), rows, satisfied, required, done, len(part_tasks)))
@@ -781,7 +795,7 @@ def render_features(ctx):
                          esc(fmt(task.get("minutes_each"), "unknown")), esc(fmt(task.get("users"), "unknown")),
                          esc(fmt(cost.get("level"), "unknown")),
                          " (%s)" % esc(cost["what_happens"]) if cost.get("what_happens") else ""))
-            out.append('<div class="task">%s%s' % (head, facts))
+            out.append('<div class="task">%s%s%s' % (head, facts, _interview_notes(task)))
             if lt is None:
                 out.append("<p>Not levelled.</p></div>")
                 continue
@@ -804,6 +818,21 @@ def render_features(ctx):
         out.append("</div>")
     out.append("</section>")
     return "\n".join(out)
+
+
+def _interview_notes(task):
+    """The task's constraints as a list and its wanted change as one line marked a wish; empty when absent."""
+    tid = task.get("id")
+    out = ""
+    constraints = [c for c in task.get("constraints") or [] if isinstance(c, str) and c.strip()]
+    if constraints:
+        out += ('<div class="task-rules" data-field="%s.constraints"><p>Rules it must keep:</p><ul class="plain">%s'
+                '</ul></div>' % (esc(tid), "".join("<li>%s</li>" % esc(c) for c in constraints)))
+    wanted = task.get("wanted_change")
+    if isinstance(wanted, str) and wanted.strip():
+        out += ('<p class="task-wish" data-field="%s.wanted_change">Wish (asked for, not planned): %s</p>'
+                % (esc(tid), esc(wanted.strip())))
+    return out
 
 
 def _about_order(ctx, items):

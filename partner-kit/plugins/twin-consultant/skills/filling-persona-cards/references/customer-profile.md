@@ -27,6 +27,14 @@ reads it from `../../customer-profile.json` beside the persona folder.
   `{"status": "answered", "source": "discovery.md#B1"}`. An answer always
   cites a row of `discovery.md`. An answer
   that two rows give together cites both: `"discovery.md#D2; discovery.md#D3"`.
+- `compliance.zdr_cover` comes from discovery C3 ("Is zero-data-retention
+  cover in place, planned or not available?"): `in-place` when a
+  zero-data-retention agreement covers the org or workspace the highly
+  sensitive work will run in today, `planned` when the customer intends to
+  get one and it is not signed, `none` when the customer has none and does
+  not plan one. Record the answer even when the plan cannot have that
+  cover (a Team plan): levelling weighs it, not you. No answer in C3 makes
+  it `open`, with an owner and a due date.
 - A pack's `compliance_defaults` entry fills its field with
   `{"status": "default", "source": "data/industry-packs/<id>.json"}` until
   the customer confirms or overrides it.

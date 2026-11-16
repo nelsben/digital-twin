@@ -28,6 +28,7 @@
     "baa": false,
     "mnpi": false,
     "retention": "standard",
+    "zdr_cover": "none",
     "walls": "none"
   },
   "systems": [
@@ -138,6 +139,10 @@
       "source": "discovery.md#C5"
     },
     "compliance.retention": {
+      "status": "answered",
+      "source": "discovery.md#C3"
+    },
+    "compliance.zdr_cover": {
       "status": "answered",
       "source": "discovery.md#C3"
     },

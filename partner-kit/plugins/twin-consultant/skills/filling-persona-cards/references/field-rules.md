@@ -11,6 +11,8 @@ question ids whose answers may fill it. Design of record:
 - Where a value may come from
 - Keys and paths
 - Values and conversions
+- When the notes differ
+- Rules, wished changes and wished surfaces
 - Pack defaults
 - Worked examples
 
@@ -78,13 +80,52 @@ question ids whose answers may fill it. Design of record:
   the notes show the task reading what outsiders wrote (tickets customers
   write, a call transcript with the customer's words, an inbound document),
   the value is `true`, `assumed`, with an owner the consultant names. Ask
-  the consultant who; do not pick one.
+  the consultant who; do not pick one. The same holds when the "No" comes
+  with a caveat that names documents written outside the company ("No,
+  apart from the target's data-room files"): `true`, `assumed`, and the
+  caveat is quoted, in the interviewee's words, in an open question for
+  that owner (`blocks` `[]`) so they confirm it.
 - `tasks[].reversible`: a split answer under question F7 ("the draft can be
   thrown away, the sent email cannot") is `open` unless the notes say which
   part the twin does. When they say the twin only drafts, it is `true`.
 - Lists that the template gives one placeholder entry (`features`,
   `overrides`, `open_questions`, `outcome.scorecard_targets`) become `[]`
   when nothing fills them.
+
+## When the notes differ
+
+- **A task under two features.** When two notes files put the same task
+  under different features in their closing tables, `tasks[].feature` is
+  the feature in the first file (files in name order, which is date
+  order). Add an `open_questions` entry that quotes both closing-table rows
+  with their file names and names who decides (the owner from the notes'
+  open-questions table or from the consultant; ask if neither gives one).
+  `blocks` is `[]`: the feature only groups tasks.
+- **Two tones.** Two interviewees' answers to question P4 are never a
+  disagreement. `voice.tone` combines them, and its source names both files
+  with `; `. Do not keep only one of them.
+
+## Rules, wished changes and wished surfaces
+
+Three card fields hold only what an interviewee said, in their words.
+Nothing is inferred: not from a process, a regulation you know of, a pack
+or another task. None is required; with nothing said, the value stays empty
+(`[]` or `""`) and has no `provenance` entry.
+
+- `tasks[].constraints`: a rule or deadline the task must always keep,
+  from questions F4 and F7 in that task's block. One item per rule, quoted
+  as the interviewee said it ("I check the figures before I send."). Cite
+  every file that gave an item, with `; `. A rule said outside the task
+  block (under question P6, say) cannot be cited as answered, because the
+  validator looks for the heading inside the task block: record it
+  `assumed`, citing where it was said, with an owner to confirm it.
+- `tasks[].wanted_change`: what the interviewee would change about how the
+  task is done today, from questions F3 and F5, quoted. The wish half of an
+  F5 trigger answer ("the escalation itself, ideally") goes here as well;
+  the open question about the trigger stays.
+- `role.wanted_surfaces`: where the interviewees say they would rather
+  work, from question P1, as `role.works_in` values. Where they work today
+  is `role.works_in`, not this. It is a wish: levelling does not read it.
 
 ## Pack defaults
 
@@ -104,8 +145,13 @@ From the Team sample (`engagements/sample-team-cs`):
 "tasks.C1.reads_untrusted_input": {"status": "answered", "source": "interviews/2026-11-10-team-lead.md#F8"},
 "voice.tone": {"status": "answered",
   "source": "interviews/2026-11-06-csm.md#P4; interviews/2026-11-07-senior-csm.md#P4"},
-"role.headcount": {"status": "answered", "source": "discovery.md#A3"}
+"role.headcount": {"status": "answered", "source": "discovery.md#A3"},
+"tasks.C3.constraints": {"status": "answered", "source": "interviews/2026-11-07-senior-csm.md#F4"},
+"tasks.C5.wanted_change": {"status": "answered", "source": "interviews/2026-11-07-senior-csm.md#F5"}
 ```
+
+C3's constraint is the senior CSM's "I check the figures before I send.",
+one item, as said.
 
 C5's notes say "the escalation itself, ideally. Today I start it when I'm
 told", so the trigger is `person` and the wish is open question OQ-1 with

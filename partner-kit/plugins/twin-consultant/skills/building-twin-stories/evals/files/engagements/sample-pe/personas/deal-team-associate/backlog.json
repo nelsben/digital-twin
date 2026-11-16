@@ -5,7 +5,8 @@
   "source": {
     "card_sha256": "971d5d87691e1a0647cf08a7e4d67ab5e2f64e1c10bc0d3cf5e9ac8c6d82937f",
     "levelled_sha256": "cadbfe6b988fe9f8cf3883cc9266f18d7f30591f5a2e20baa0ee8cff98c6e3d1",
-    "library_version": 1
+    "library_version": 1,
+    "build_sha256": "9559df3b706816232c786332659c73c4589e3055436acdaa8481b9fa7d140fe1"
   },
   "unnamed_roles": [
     {
@@ -215,7 +216,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T1",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/preparing-company-briefs",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T1.write-skill",
@@ -268,7 +274,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T1",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/preparing-company-briefs",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T1.trigger-evals",
@@ -293,7 +304,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T1",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/preparing-company-briefs",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T1.second-review",
@@ -335,7 +351,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T1",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/preparing-company-briefs",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T1.owner-handover",
@@ -763,7 +784,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T5",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/prepare-for-a-management-or-expert-call",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T5.write-skill",
@@ -816,7 +842,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T5",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/prepare-for-a-management-or-expert-call",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T5.trigger-evals",
@@ -841,7 +872,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T5",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/prepare-for-a-management-or-expert-call",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T5.second-review",
@@ -883,7 +919,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T5",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/prepare-for-a-management-or-expert-call",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T5.owner-handover",
@@ -1361,7 +1402,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T2",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/drafting-crm-updates",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T2.write-skill",
@@ -1414,7 +1460,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T2",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/drafting-crm-updates",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T2.trigger-evals",
@@ -1439,7 +1490,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T2",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/drafting-crm-updates",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T2.second-review",
@@ -1481,7 +1537,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T2",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/drafting-crm-updates",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T2.owner-handover",
@@ -2047,7 +2108,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T3",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/skills/weekly-pipeline-summary-for-the-monday-deal-meeting",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T3.write-skill",
@@ -2096,7 +2162,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T3",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/skills/weekly-pipeline-summary-for-the-monday-deal-meeting",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T3.trigger-evals",
@@ -2121,7 +2192,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T3",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/skills/weekly-pipeline-summary-for-the-monday-deal-meeting",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T3.second-review",
@@ -2208,7 +2284,12 @@
                 "owner_role": "integration-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T3",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/agents/T3",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T3.start-wiring",
@@ -2233,7 +2314,12 @@
                 "owner_role": "integration-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T3",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/agents/T3",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T3.credentials-api-key-vault",
@@ -2784,7 +2870,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T4",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/screen-an-inbound-cim-or-teaser",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T4.write-skill",
@@ -2837,7 +2928,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T4",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/screen-an-inbound-cim-or-teaser",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T4.trigger-evals",
@@ -2862,7 +2958,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T4",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/screen-an-inbound-cim-or-teaser",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T4.second-review",
@@ -2904,7 +3005,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T4",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/screen-an-inbound-cim-or-teaser",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T4.owner-handover",
@@ -3371,7 +3477,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T6",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/draft-a-section-of-an-investment-committee-memo-from-diligence-n",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T6.write-skill",
@@ -3428,7 +3539,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T6",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/draft-a-section-of-an-investment-committee-memo-from-diligence-n",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T6.trigger-evals",
@@ -3453,7 +3569,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T6",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/draft-a-section-of-an-investment-committee-memo-from-diligence-n",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T6.second-review",
@@ -3495,7 +3616,12 @@
                 "owner_role": "skill-engineer",
                 "owner_name": null,
                 "acting_owner": null,
-                "status": "todo"
+                "status": "todo",
+                "artifact": {
+                  "id": "T6",
+                  "path": "engagements/sample-pe/personas/deal-team-associate/build/plugin/twin-pe-deal-team/skills/draft-a-section-of-an-investment-committee-memo-from-diligence-n",
+                  "status": "scaffolded"
+                }
               },
               {
                 "id": "S-T6.owner-handover",

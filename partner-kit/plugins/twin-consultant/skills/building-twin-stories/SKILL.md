@@ -63,7 +63,7 @@ its tasks, owners and steps). Task templates: `${CLAUDE_PLUGIN_ROOT}/data/task-l
    value, and only forward: `todo` to `in-progress` to `done`. Story, feature
    and epic statuses are derived; never set them. Then run the `backlog`
    command and the `dashboard` command, so `backlog.md` and `dashboard.html`
-   agree.
+   agree. `backlog` raises a task with an `artifact` key from `build.json`.
 6. **End the session** with the summary below.
 
 ## Rules while building

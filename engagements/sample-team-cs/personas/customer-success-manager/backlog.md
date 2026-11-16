@@ -2,7 +2,7 @@
 
 Generated from card.json and levelled.json by `python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py backlog engagements/sample-team-cs/personas/customer-success-manager`; never edit it by hand. To mark a task, change only its status in backlog.json, then run the command again.
 
-Status: todo. 4 features, 12 stories, 113 tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done.
+Status: in-progress. 4 features, 12 stories, 113 tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done.
 
 Roles with no named person: security, 1 task, acting owner Teodor Amsel (IT and operations lead); source-system-admin, 3 tasks, acting owner Teodor Amsel (IT and operations lead).
 
@@ -10,13 +10,13 @@ Stories ready to build: 5 of 5.
 
 ## F-call-preparation-and-follow-up: Call preparation and follow-up
 
-Kind: capability. Status: todo. 2 stories.
+Kind: capability. Status: in-progress. 2 stories.
 
 ### S-C1: Account brief before a customer call
 
 As a customer success manager, I want my twin to brief me on the account before each call so that I walk into the call already knowing the account.
 
-Part A2. In pilot: yes. Priority: 1. Status: todo.
+Part A2. In pilot: yes. Priority: 1. Status: in-progress.
 
 | Field | Value |
 |---|---|
@@ -58,7 +58,8 @@ Ready to build: yes
   2. Put the eval cases in the files the kit expects, next to the skill. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
-- [ ] **S-C1.write-skill** Write the skill from the kit template until the evals pass (owner: skill-engineer, part A2)
+  - Artifact: C1, drafted, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/account-brief-before-a-customer-call
+- [~] **S-C1.write-skill** Write the skill from the kit template until the evals pass (owner: skill-engineer, part A2)
   1. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Rename the copy to the skill's name. See [starter-kit/templates/skill/README.md#rename-it](../../../../starter-kit/templates/skill/README.md#rename-it).
   3. Fill in the description and the body, then rerun the evals until they pass. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
@@ -69,11 +70,13 @@ Ready to build: yes
   8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
+  - Artifact: C1, drafted, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/account-brief-before-a-customer-call
 - [ ] **S-C1.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the trigger evals and tighten the description until they pass. See [docs/compendium/03-skills-authoring.md#writing-a-good-description](../../../../docs/compendium/03-skills-authoring.md#writing-a-good-description).
   - Done when: The skill starts on every should-trigger prompt and on none of the should-not prompts.
+  - Artifact: C1, drafted, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/account-brief-before-a-customer-call
 - [ ] **S-C1.second-review** Have a second person review the skill and its evals (owner: skill-owner, Marisol Quenby, part A8)
   1. Open a pull request with the skill and its evals. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   2. Have someone other than the author review it against the definition of done. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
@@ -83,6 +86,7 @@ Ready to build: yes
   2. Add the role plugin to the one organisation-wide configuration, so every member gets the new version. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   3. Write the skill's description so it says which role it is for, because there is no group target on Team. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   - Done when: A pilot user in the role sees the skill after the plugin updates, and its description names the role.
+  - Artifact: C1, drafted, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/account-brief-before-a-customer-call
 - [ ] **S-C1.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
   1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
@@ -182,6 +186,7 @@ Ready to build: yes
   2. Put the eval cases in the files the kit expects, next to the skill. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
+  - Artifact: C4, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/follow-up-email-after-a-customer-call-and-a-call-note-in-hubspot
 - [ ] **S-C4.write-skill** Write the skill from draft-response until the evals pass (owner: skill-engineer, part A2)
   1. Start from draft-response (knowledge-work-plugins: customer-support): Adapt, for C3 and C4. See [docs/compendium/18-customer-success.md#whats-in-customer-support](../../../../docs/compendium/18-customer-success.md#whats-in-customer-support).
   2. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
@@ -195,11 +200,13 @@ Ready to build: yes
   10. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
   11. Make the skill keep these rules from the interviews, in the interviewee's words: I want to approve the note before it's created.. See [partner-kit/docs/design.md#42-persona-card-cardjson](../../../../partner-kit/docs/design.md#42-persona-card-cardjson).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
+  - Artifact: C4, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/follow-up-email-after-a-customer-call-and-a-call-note-in-hubspot
 - [ ] **S-C4.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the trigger evals and tighten the description until they pass. See [docs/compendium/03-skills-authoring.md#writing-a-good-description](../../../../docs/compendium/03-skills-authoring.md#writing-a-good-description).
   - Done when: The skill starts on every should-trigger prompt and on none of the should-not prompts.
+  - Artifact: C4, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/follow-up-email-after-a-customer-call-and-a-call-note-in-hubspot
 - [ ] **S-C4.second-review** Have a second person review the skill and its evals (owner: skill-owner, Marisol Quenby, part A8)
   1. Open a pull request with the skill and its evals. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   2. Have someone other than the author review it against the definition of done. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
@@ -209,6 +216,7 @@ Ready to build: yes
   2. Add the role plugin to the one organisation-wide configuration, so every member gets the new version. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   3. Write the skill's description so it says which role it is for, because there is no group target on Team. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   - Done when: A pilot user in the role sees the skill after the plugin updates, and its description names the role.
+  - Artifact: C4, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/follow-up-email-after-a-customer-call-and-a-call-note-in-hubspot
 - [ ] **S-C4.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
   1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
@@ -328,6 +336,7 @@ Ready to build: yes
   2. Put the eval cases in the files the kit expects, next to the skill. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
+  - Artifact: C2, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/weekly-renewal-risk-digest
 - [ ] **S-C2.write-skill** Write the skill from the kit template until the evals pass (owner: skill-engineer, part A2)
   1. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Rename the copy to the skill's name. See [starter-kit/templates/skill/README.md#rename-it](../../../../starter-kit/templates/skill/README.md#rename-it).
@@ -339,11 +348,13 @@ Ready to build: yes
   8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
+  - Artifact: C2, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/weekly-renewal-risk-digest
 - [ ] **S-C2.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the trigger evals and tighten the description until they pass. See [docs/compendium/03-skills-authoring.md#writing-a-good-description](../../../../docs/compendium/03-skills-authoring.md#writing-a-good-description).
   - Done when: The skill starts on every should-trigger prompt and on none of the should-not prompts.
+  - Artifact: C2, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/weekly-renewal-risk-digest
 - [ ] **S-C2.second-review** Have a second person review the skill and its evals (owner: skill-owner, Marisol Quenby, part A8)
   1. Open a pull request with the skill and its evals. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   2. Have someone other than the author review it against the definition of done. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
@@ -361,6 +372,7 @@ Ready to build: yes
   4. Run it once by hand and check that it posted in the channel. See [starter-kit/runbooks/claude-tag-routine.md#check-it-worked](../../../../starter-kit/runbooks/claude-tag-routine.md#check-it-worked).
   5. Hand the routine over to the person who answers for it in the channel. See [starter-kit/runbooks/claude-tag-routine.md#hand-over](../../../../starter-kit/runbooks/claude-tag-routine.md#hand-over).
   - Done when: The routine has posted once on its schedule in a channel whose members fit the data class.
+  - Artifact: C2, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/routines/C2
 - [ ] **S-C2.credentials-service-account** Create the service account the plan names, with only the access the task needs (owner: technical-owner, Teodor Amsel (IT and operations lead), part A5)
   1. Create the service account in each system the task reads or writes. See [docs/compendium/11-connectors.md#what-exists-for-our-systems](../../../../docs/compendium/11-connectors.md#what-exists-for-our-systems).
   2. Grant it only the objects and actions the card lists for the task. See [docs/compendium/06-autonomy.md#how-a-level-is-enforced](../../../../docs/compendium/06-autonomy.md#how-a-level-is-enforced).
@@ -488,6 +500,7 @@ Ready to build: yes
   2. Put the eval cases in the files the kit expects, next to the skill. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
+  - Artifact: C3, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/renewal-quote-email-to-the-customer
 - [ ] **S-C3.write-skill** Write the skill from draft-response until the evals pass (owner: skill-engineer, part A2)
   1. Start from draft-response (knowledge-work-plugins: customer-support): Adapt, for C3 and C4. See [docs/compendium/18-customer-success.md#whats-in-customer-support](../../../../docs/compendium/18-customer-success.md#whats-in-customer-support).
   2. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
@@ -501,11 +514,13 @@ Ready to build: yes
   10. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
   11. Make the skill keep these rules from the interviews, in the interviewee's words: I check the figures before I send.. See [partner-kit/docs/design.md#42-persona-card-cardjson](../../../../partner-kit/docs/design.md#42-persona-card-cardjson).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
+  - Artifact: C3, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/renewal-quote-email-to-the-customer
 - [ ] **S-C3.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the trigger evals and tighten the description until they pass. See [docs/compendium/03-skills-authoring.md#writing-a-good-description](../../../../docs/compendium/03-skills-authoring.md#writing-a-good-description).
   - Done when: The skill starts on every should-trigger prompt and on none of the should-not prompts.
+  - Artifact: C3, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/renewal-quote-email-to-the-customer
 - [ ] **S-C3.second-review** Have a second person review the skill and its evals (owner: skill-owner, Marisol Quenby, part A8)
   1. Open a pull request with the skill and its evals. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   2. Have someone other than the author review it against the definition of done. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
@@ -515,6 +530,7 @@ Ready to build: yes
   2. Add the role plugin to the one organisation-wide configuration, so every member gets the new version. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   3. Write the skill's description so it says which role it is for, because there is no group target on Team. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   - Done when: A pilot user in the role sees the skill after the plugin updates, and its description names the role.
+  - Artifact: C3, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/renewal-quote-email-to-the-customer
 - [ ] **S-C3.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
   1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
@@ -591,6 +607,7 @@ Ready to build: yes
   2. Put the eval cases in the files the kit expects, next to the skill. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the evals once before any skill exists and keep the failing baseline. See [docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate](../../../../docs/compendium/03-skills-authoring.md#evaluate-first-then-iterate).
   - Done when: Every acceptance criterion has at least one eval, and the evals run and fail without the skill.
+  - Artifact: C5, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/open-ticket-summary-when-a-ticket-is-escalated
 - [ ] **S-C5.write-skill** Write the skill from customer-escalation until the evals pass (owner: skill-engineer, part A2)
   1. Start from customer-escalation (knowledge-work-plugins: customer-support): Adapt, for C5. See [docs/compendium/18-customer-success.md#whats-in-customer-support](../../../../docs/compendium/18-customer-success.md#whats-in-customer-support).
   2. Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
@@ -603,11 +620,13 @@ Ready to build: yes
   9. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   10. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
+  - Artifact: C5, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/open-ticket-summary-when-a-ticket-is-escalated
 - [ ] **S-C5.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
   2. Write prompts that should and should not start the skill, as trigger evals. See [starter-kit/docs/authoring-skills.md#the-eval-files](../../../../starter-kit/docs/authoring-skills.md#the-eval-files).
   3. Run the trigger evals and tighten the description until they pass. See [docs/compendium/03-skills-authoring.md#writing-a-good-description](../../../../docs/compendium/03-skills-authoring.md#writing-a-good-description).
   - Done when: The skill starts on every should-trigger prompt and on none of the should-not prompts.
+  - Artifact: C5, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/open-ticket-summary-when-a-ticket-is-escalated
 - [ ] **S-C5.second-review** Have a second person review the skill and its evals (owner: skill-owner, Marisol Quenby, part A8)
   1. Open a pull request with the skill and its evals. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   2. Have someone other than the author review it against the definition of done. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
@@ -617,6 +636,7 @@ Ready to build: yes
   2. Add the role plugin to the one organisation-wide configuration, so every member gets the new version. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   3. Write the skill's description so it says which role it is for, because there is no group target on Team. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   - Done when: A pilot user in the role sees the skill after the plugin updates, and its description names the role.
+  - Artifact: C5, scaffolded, engagements/sample-team-cs/personas/customer-success-manager/build/plugin/twin-customer-success-manager/skills/open-ticket-summary-when-a-ticket-is-escalated
 - [ ] **S-C5.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
   1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
   2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).

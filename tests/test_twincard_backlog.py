@@ -530,6 +530,7 @@ def data_id(data, index):
 class BuildTests(unittest.TestCase):
     def test_build_never_writes_and_has_the_shape(self):
         with Scenario(TEAM) as persona:
+            shutil.rmtree(persona / "build")  # the shape without build status; tests/test_twincard_build_status.py has the rest
             result = B.build(str(persona))
             self.assertTrue(result["ok"], result)
             self.assertFalse((persona / "backlog.json").exists())
@@ -732,6 +733,7 @@ class StatusTests(unittest.TestCase):
 
     def test_status_is_kept_and_parents_are_derived(self):
         with Scenario(TEAM) as persona:
+            shutil.rmtree(persona / "build")  # this test is about a person's statuses; build.json raises its own
             B.write_backlog(str(persona))
             first = load(persona / "backlog.json")
             c1 = next(s for s in stories_of(first) if s["id"] == "S-C1")

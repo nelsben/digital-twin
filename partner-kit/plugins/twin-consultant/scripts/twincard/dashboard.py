@@ -48,7 +48,9 @@ SECTIONS = (
     ("Open questions", "open-questions"),
     ("Where each answer came from", "where-each-answer-came-from"),
 )
-SECTION_IDS = dict(SECTIONS)
+# The Build section follows the Backlog, and only when the persona has a build/build.json.
+BUILD_SECTION = ("Build", "build")
+SECTION_IDS = dict(SECTIONS + (BUILD_SECTION,))
 
 # The anatomy panels: which decisions and fields sit in which panel (design section 9). Each item is
 # rendered by the function of the same name in PANEL_ITEMS below.
@@ -178,7 +180,10 @@ def load_inputs(persona_dir):
     if stale:
         raise DashboardError("backlog.json is out of date: it is not what backlog gives for the current card.json, "
                              "levelled.json and task library. Next: run the backlog command.", validation)
+    manifest = _backlog.read_build(persona)[0]
     return {
+        "persona_dir": persona,
+        "build": manifest,
         "card": json.loads(card_bytes.decode("utf-8")),
         "profile": json.loads(profile_bytes.decode("utf-8")),
         "levelled": levelled,
@@ -537,8 +542,11 @@ def render_header(ctx, date):
     return "\n".join(out)
 
 
-def render_contents():
-    links = "".join('<li><a href="#%s">%s</a></li>' % (esc(sid), esc(name)) for name, sid in SECTIONS)
+def render_contents(has_build=False):
+    names = list(SECTIONS)
+    if has_build:
+        names.insert([n for n, _ in names].index("Backlog") + 1, BUILD_SECTION)
+    links = "".join('<li><a href="#%s">%s</a></li>' % (esc(sid), esc(name)) for name, sid in names)
     return '<nav aria-label="Contents"><p class="toc-title">Contents</p><ol class="toc">%s</ol></nav>' % links
 
 
@@ -1217,6 +1225,58 @@ def render_backlog(ctx):
     return "\n".join(out)
 
 
+# --- Build -------------------------------------------------------------------------------------------------
+
+BUILD_COLUMNS = ("Artifact", "Kind", "Skill", "Location", "Status", "Runbook", "Recorded by", "Pass rate", "Baseline")
+NO_RECORD = "no record yet"
+NOT_RECORDED = "not recorded"
+
+
+def _percent(value):
+    """A recorded rate (0 to 1) as a percentage, or the words for a rate the record does not have."""
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return NOT_RECORDED
+    return "%s%%" % fmt(round(value * 100, 2))
+
+
+def build_counts_line(manifest):
+    """One line: the number of artifacts at each status, in build order, zeros included."""
+    counts = dict((status, 0) for status in _backlog.BUILD_STATUSES)
+    for item in manifest["artifacts"]:
+        counts[item["status"]] += 1
+    return "Build status: %s." % ", ".join("%s %d" % (status, counts[status]) for status in _backlog.BUILD_STATUSES)
+
+
+def _build_row(ctx, item):
+    skill, wrapper = _backlog.artifact_paths(ctx["persona_dir"], ctx["build"], item)
+    where = "; ".join(p for p in (skill, wrapper) if p) or "nothing built"
+    history = item.get("history") or []
+    last = history[-1] if history else {}
+    cells = [esc(item["id"]), esc(item.get("kind")), esc(item.get("skill_name") if skill or wrapper else "none"),
+             esc(where), _status_word(item["status"]), esc(item.get("runbook") or "none"),
+             esc(fmt(last.get("by"), NO_RECORD if not history else "not recorded")),
+             esc(_percent(last.get("pass_rate")) if history else NOT_RECORDED),
+             esc(_percent(last.get("baseline_rate")) if history else NOT_RECORDED)]
+    return '<tr data-artifact="%s"><th scope="row"><code>%s</code></th>%s</tr>' % (
+        esc(item["id"]), esc(item["id"]), "".join("<td>%s</td>" % c for c in cells[1:]))
+
+
+def _status_word(status):
+    return '<span class="status">%s</span>' % esc(status)
+
+
+def render_build(ctx):
+    manifest = ctx["build"]
+    out = [section_open("Build"), "<h2>Build</h2>",
+           '<p class="note">One row per artifact in build/build.json: its status, where it is and the last record '
+           'of its evals (who, and the pass rate with the skill and without it). Run the build, record and package '
+           'commands, then the backlog and dashboard commands again, to change it. %s</p>' % esc(PATHS_NOTE),
+           '<p data-field="build-counts">%s</p>' % esc(build_counts_line(manifest)),
+           table(BUILD_COLUMNS, [_build_row(ctx, item) for item in manifest["artifacts"]],
+                 ' data-part="build" class="build"'), "</section>"]
+    return "\n".join(out)
+
+
 # --- Open questions ---------------------------------------------------------------------------------------
 
 def render_questions(ctx):
@@ -1379,12 +1439,13 @@ def build_page(inputs, date):
         "<main>",
         render_header(ctx, date),
         render_blocked(ctx),
-        render_contents(),
+        render_contents(bool(ctx.get("build"))),
         render_anatomy(ctx),
         render_features(ctx),
         render_blockers(ctx),
         render_overrides(ctx),
         render_backlog(ctx),
+    ] + ([render_build(ctx)] if ctx.get("build") else []) + [
         render_questions(ctx),
         render_provenance(ctx),
         "</main>",

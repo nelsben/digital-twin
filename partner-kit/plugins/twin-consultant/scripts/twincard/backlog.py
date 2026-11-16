@@ -69,6 +69,24 @@ FOUNDATION_IDS = tuple(sid for sid, _, _ in FOUNDATION)
 # A persona-level code whose template serves task stories lands in this foundation story.
 PERSONA_CODE_STORY = "S-guardrails-and-settings"
 
+# Build status (design section 8): a task story's artifact in build/build.json links to its authoring, publish
+# and runtime setup tasks and raises (never lowers) their status.
+AUTHORING_TEMPLATES = ("write-skill", "write-evals", "trigger-evals")
+PUBLISH_TEMPLATES = ("publish-in-role-plugin", "publish-in-role-plugin-team")
+SETUP_TEMPLATES = ("setup-scheduled-task", "setup-tag-routine", "setup-managed-agents",
+                   "setup-managed-agents-self-hosted", "setup-agent-sdk")
+WIRING_TEMPLATES = ("start-wiring",)  # linked to the artifact, never raised: wiring a trigger is a person's call
+WRAPPER_DIRS = ("scheduled", "routines", "agents", "sdk")  # build's wrapper folders (design 8a, kinds)
+# The artifact status at which a template's task is raised, and to what: {template: ((status, task status), ...)},
+# lowest first. The statuses are build.STATUSES in order; not-built links nothing.
+BUILD_ORDER = ("scaffolded", "drafted", "evals-passing", "packaged", "deployed", "verified")
+BUILD_STATUSES = BUILD_ORDER + ("not-built",)
+RAISE = {"write-skill": (("drafted", "in-progress"), ("evals-passing", "done")),
+         "write-evals": (("evals-passing", "done"),),
+         "trigger-evals": (("evals-passing", "done"),)}
+for _template in PUBLISH_TEMPLATES + SETUP_TEMPLATES:
+    RAISE[_template] = (("packaged", "in-progress"), ("deployed", "done"))
+
 FOUNDATION_ACCEPTANCE = {
     "S-persona-voice": ["persona.md is filled in from the card's voice section, with a reason for every rule.",
                         "The output style and the system prompt match persona.md.",
@@ -928,6 +946,70 @@ def _tasks_for(story_id, facts, library, foundation, tid=None, decisions=None, l
     return out
 
 
+def read_build(persona_dir):
+    """(manifest, sha256 of build.json's bytes) when <persona-dir>/build/build.json exists, else (None, None).
+
+    A build.json that cannot be used is build.UsageError, as in every command that reads it.
+    """
+    from . import build as _build  # build imports this module, so import it when it is needed
+    path = Path(persona_dir) / _build.BUILD_DIR / _build.MANIFEST
+    if not path.is_file():
+        return None, None
+    return _build.read_manifest(persona_dir), _sha(path.read_bytes())
+
+
+def artifact_paths(persona_dir, manifest, item):
+    """(skill path, wrapper path) of one build.json artifact, as repository paths; None for what it lacks."""
+    from . import build as _build
+    folder = _build.skill_folder(manifest, item)
+    skill = _build._repo_path(persona_dir, folder.rstrip("/")) if folder else None
+    prefix = _build._repo_path(persona_dir, "")
+    wrapper = None
+    for entry in item["files"]:
+        if entry["path"].startswith(prefix):
+            parts = Path(entry["path"][len(prefix):]).parts
+            if len(parts) > 2 and parts[0] in WRAPPER_DIRS and parts[1] == item["id"]:
+                wrapper = prefix + "/".join(parts[:2])
+                break
+    return skill, wrapper
+
+
+def build_links(persona_dir, manifest):
+    """{task id: (skill path, wrapper path, status)} for every artifact the build made (not-built links nothing)."""
+    out = {}
+    for item in manifest["artifacts"] if manifest else []:
+        if item["status"] == "not-built":
+            continue
+        skill, wrapper = artifact_paths(persona_dir, manifest, item)
+        out[item["id"]] = (skill, wrapper, item["status"])
+    return out
+
+
+def _raised(current, template, status):
+    """The task's status after the artifact reaches status: never lower than current."""
+    want = current
+    if status in BUILD_ORDER:
+        for floor, target in RAISE.get(template, ()):
+            if BUILD_ORDER.index(status) >= BUILD_ORDER.index(floor):
+                want = target
+    return want if STATUSES.index(want) > STATUSES.index(current) else current
+
+
+def _link_artifacts(story, links):
+    """Give the story's authoring, publish and setup tasks the story's artifact, and raise their status."""
+    link = links.get(story["id"][2:]) if "ready" in story else None
+    if link is None:
+        return
+    skill, wrapper, status = link
+    for item in story["tasks"]:
+        template = item["template"]
+        if template not in AUTHORING_TEMPLATES + PUBLISH_TEMPLATES + SETUP_TEMPLATES + WIRING_TEMPLATES:
+            continue
+        path = (wrapper or skill) if template in SETUP_TEMPLATES + WIRING_TEMPLATES else skill
+        item["artifact"] = {"id": story["id"][2:], "path": path or "", "status": status}
+        item["status"] = _raised(item["status"], template, status)
+
+
 def derive_status(statuses):
     """done when every status is done, todo when every one is todo, otherwise in-progress."""
     statuses = list(statuses)
@@ -1115,7 +1197,7 @@ def _foundation_stories(role, base, levelled, persona_blockers, library):
     return out
 
 
-def _apply_statuses(features, old_tasks, old_retired, spikes=()):
+def _apply_statuses(features, old_tasks, old_retired, spikes=(), links=None):
     """Keep each task's and spike's status from the last run, derive the parents', and retire started items
     no longer made."""
     retired_by_id = dict((r["id"], r) for r in old_retired)
@@ -1134,6 +1216,7 @@ def _apply_statuses(features, old_tasks, old_retired, spikes=()):
                     item["status"] = old_tasks[item["id"]][1]
                 elif item["id"] in retired_by_id:
                     item["status"] = retired_by_id[item["id"]]["status"]
+            _link_artifacts(story, links or {})
             story["status"] = derive_status(t["status"] for t in story["tasks"])
         feature["status"] = derive_status(s["status"] for s in feature["stories"])
     retired = [r for r in old_retired if r["id"] not in generated]
@@ -1185,7 +1268,9 @@ def assemble(persona_dir, validation, card, profile, levelled, library=None):
                      "status": "todo", "stories": _foundation_stories(role, base, levelled, persona_blockers,
                                                                       library)})
     spikes = _spikes(questions)
-    retired, retired_now = _apply_statuses(features, old_tasks, old_retired, spikes)
+    manifest, build_sha = read_build(persona_dir)
+    retired, retired_now = _apply_statuses(features, old_tasks, old_retired, spikes,
+                                           build_links(persona_dir, manifest))
     _sign_offs(features, card)
     unnamed = _name_owners(features, card, profile, library)
 
@@ -1202,6 +1287,8 @@ def assemble(persona_dir, validation, card, profile, levelled, library=None):
         "spikes": spikes,
         "retired": retired,
     }
+    if build_sha:
+        backlog["source"]["build_sha256"] = build_sha
     return _result(True, validation, None, backlog, retired_now)
 
 
@@ -1376,6 +1463,9 @@ def _md_story(story):
                 text += " See [%s](%s%s)." % (_md(step["link"]), MD_LINK_PREFIX, _md(step["link"]))
             lines.append("  %d. %s" % (i, text))
         lines.append("  - Done when: %s" % _md(item["done_when"]))
+        if item.get("artifact"):
+            lines.append("  - Artifact: %s, %s, %s" % (_md(item["artifact"]["id"]), _md(item["artifact"]["status"]),
+                                                      _md(item["artifact"]["path"])))
     return lines
 
 

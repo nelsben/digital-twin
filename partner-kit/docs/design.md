@@ -52,7 +52,7 @@ partner-kit/
       task-library.json                    # implementation task templates per anatomy part (section 8)
       industry-packs/<industry>.json
     templates/
-      card.json  customer-profile.json  interview-guide.md  interview-notes.md
+      card.json  customer-profile.json  discovery.md  interview-guide.md  interview-notes.md
 ```
 
 A plugin is copied to a cache when installed, so **everything the scripts read sits inside the plugin folder**. Scripts find data relative to their own file, never by repo path.
@@ -62,6 +62,7 @@ Per customer, in the engagement folder:
 ```
 engagements/<customer>/
   customer-profile.json
+  discovery.md                             # the discovery answers, one table row per question id (from templates/discovery.md)
   personas/<persona-id>/
     interviews/<yyyy-mm-dd>-<who>.md       # notes or transcript
     card.json
@@ -195,7 +196,14 @@ Enumerations:
 
 `provenance` maps a field path to `{"status", "source", "owner"?, "due"?}`.
 
-- `status`: `answered` (a person said it; `source` points at the interview file and question id, or a discovery question id), `default` (taken from a named default; `source` is the compendium page or pack that sets it), `assumed` (the consultant's guess; needs an `owner` to confirm), `open` (no answer yet; needs `owner` and `due`; the value may be null).
+- `status`: `answered` (a person said it; `source` points at the interview notes and question id, or at the discovery row), `default` (taken from a named default; `source` is the compendium page or pack that sets it), `assumed` (the consultant's working guess; needs an `owner` to confirm), `open` (no answer yet; needs `owner` and `due`; **the field is empty**: null, `""` or `[]`, and `false` counts as a value). A working guess is never open: it is `assumed`, with an owner.
+- `source` is one source, or several separated by `; ` when more than one person gave the answer (`interviews/2026-11-06-csm.md#P2; interviews/2026-11-07-senior-csm.md#P2`). Each source is `<file>` or `<file>#<anchor>`. The file is looked up in the record's own folder (the persona folder for the card, the customer folder for the profile), then in the customer folder, and never outside the customer folder: a source with `..` or an absolute path is an error. So both records cite `discovery.md#A1`, and the card cites `interviews/<date>-<who>.md#F2`.
+- `validate` opens every source of an `answered` entry. `default`, `assumed` and `open` entries are not opened.
+  - A file under `interviews/` needs a question-id anchor and a heading line `## <id>.` to `###### <id>.` for it. For a `tasks.<id>.*` path the heading must sit inside that task's block, which runs from its `Task id: <id>` line to the next `Task id:` line or level-2 heading.
+  - `discovery.md` needs a question-id anchor and a table row whose first cell is that id.
+  - Any other file must exist, and an anchor, when given, must equal the GitHub slug of one of its headings (`stakeholders.md#customer-roles`).
+  - A source that does not open is an error, one per source: `<record>:<path>: source <source> does not open: it <what is wrong>. Next: Point the source at the notes or discovery line that holds the answer, or set the status to assumed with an owner`.
+- An `open` entry whose field holds a value is an error: `<record>:<path>: is open but holds the value <value>; an open field is empty. Next: Empty the value, or set the status to assumed with an owner if the value is your working guess`.
 - Paths use ids, not array positions: `tasks.T1.minutes_each`, `voice.tone`, `systems.salesforce.edition`. Lists with no key (`inputs[]`, `writes[]`, `overrides[]`) use the position: `tasks.T1.writes[0].action`.
 - A required field with no provenance entry is a validation error. This is what makes "every field traces to a source" checkable.
 - **Completeness** = required fields whose status is `answered` or `default`, over all required fields, as a percentage. `assumed` and `open` count against it.
@@ -474,8 +482,8 @@ The generated date comes from `--date YYYY-MM-DD` (default: today); a date that 
 
 ## 10. Fixtures (both fictional)
 
-- `engagements/sample-pe/personas/deal-team-associate/` on Enterprise with ZDR. New files only: do not edit `discovery.md`, `design.md`, `backlog.md`.
-- `engagements/sample-team-cs/`: an invented 60-person software company on a **Team** plan (Google Workspace, HubSpot, Slack, no MDM), persona `customer-success-manager`. It proves the Team path.
+- `engagements/sample-pe/personas/deal-team-associate/` on Enterprise with ZDR. Do not edit `design.md` or `backlog.md`. `discovery.md` changes only in the cells a task card names (OPS-46 changed the G1 answer and the T4 trigger).
+- `engagements/sample-team-cs/`: an invented 60-person software company on a **Team** plan (Google Workspace, HubSpot, Slack, no MDM), persona `customer-success-manager`. It proves the Team path. Its discovery answers are in `discovery.md`, every row answered, and its follow-up notes with the team lead are `interviews/2026-11-10-team-lead.md`.
 
 ## 11. Rules for contributors
 

@@ -24,7 +24,7 @@ separate step; do not run it.
 | Persona folder | `engagements/<customer>/personas/<persona-id>/` | yes |
 | Interview notes | `interviews/*.md` in that folder, one or more | yes |
 | Customer profile | `../../customer-profile.json` from the persona folder | yes (see step 1) |
-| Discovery answers | `../../discovery.md`, if the customer folder has one | no |
+| Discovery answers | `discovery.md` in the customer folder, if there is one | no |
 | Existing card | `card.json` in the persona folder | no |
 
 From this kit: the card template `${CLAUDE_PLUGIN_ROOT}/templates/card.json`,
@@ -40,7 +40,10 @@ No notes files, or no persona folder: say which is missing and ask.
 1. **Check the customer profile.** If `../../customer-profile.json` is
    missing, say so and offer to create it from
    `${CLAUDE_PLUGIN_ROOT}/templates/customer-profile.json` and the
-   engagement's discovery answers. Follow
+   engagement's discovery answers. If `discovery.md` is missing and the
+   consultant gives discovery answers, offer to create it from
+   `${CLAUDE_PLUGIN_ROOT}/templates/discovery.md` and write the answers in
+   its rows first. Follow
    [references/customer-profile.md](references/customer-profile.md). Do not
    guess plan, identity, device or compliance answers.
 2. **Start the card.** No `card.json`: copy the template and set `id` (the
@@ -72,10 +75,10 @@ No notes files, or no persona folder: say which is missing and ask.
 
 | Status | When | Entry |
 |---|---|---|
-| `answered` | The notes say it, under a question id that `asked_by` lists, or a discovery answer does | `{"status": "answered", "source": "interviews/<file>#F2"}` or `"source": "discovery.md#A1"` |
+| `answered` | The notes say it, under a question id that `asked_by` lists, or a discovery row does | `{"status": "answered", "source": "interviews/<file>#F2"}` or `"source": "discovery.md#A1"` |
 | `default` | The notes are silent and a pack typical task with the same task, or a catalogue default, gives the value | `"source"`: the pack file, such as `data/industry-packs/b2b-software.json`, or the compendium page |
-| `assumed` | The consultant tells you their own guess, or the sponsor-goal rule below applies | adds `"owner"`: who must confirm it |
-| `open` | The notes do not say, or two people disagree | value `null` (or empty), adds `"owner"` and `"due"`, plus an `open_questions` entry |
+| `assumed` | A working guess: the consultant's own, or one a rule below calls for | the value, and `"owner"`: who must confirm it |
+| `open` | The notes do not say, or two people disagree | the field is empty (`null`, `""` or `[]`; `false` is a value), adds `"owner"` and `"due"`, plus an `open_questions` entry |
 
 Every `open` field gets an `open_questions` entry: the question in plain
 words, `blocks` naming every task id it holds up, `owner`, `due`. Take
@@ -91,10 +94,20 @@ if neither gives them, ask. Never make them up.
   consultant says the sponsor confirmed it.
 - **Disagreement.** When two interviewees give answers that cannot both be
   true (a different number, allowed value or yes/no), do not pick one or
-  average them. The field is `open`, value `null`, and the open question
-  quotes both answers with their file names. Answers that add to each other
-  (two descriptions of tone) are not a disagreement: combine or keep the
-  first, and cite it.
+  average them. The field is `open` and empty, and the open question quotes
+  both answers with their file names. Answers that add to each other (two
+  descriptions of tone) are not a disagreement: combine them.
+- **Several sources.** An answer from more than one person cites each, with
+  `; `: `"interviews/a.md#P2; interviews/b.md#P2"`.
+- **Said in conversation.** An answer the consultant gives in the chat is
+  written first, to its row in `discovery.md` (questions A1 to G4) or to a
+  dated notes file `interviews/<yyyy-mm-dd>-<who>.md` under the question's
+  heading, then cited there.
+- **Open is empty.** A working guess is `assumed`, with an owner, not `open`.
+- **Today, not the wish.** `tasks[].trigger` is how the task starts now;
+  "ideally" or "later" goes in an open question. The rules for question F8,
+  question F7 and per-something rates are in
+  [references/field-rules.md](references/field-rules.md).
 - **Only what was said.** No figure, name or system that is not in the
   notes, the profile, the discovery answers or the consultant's message. A
   field the notes do not touch stays empty; if it is required it is `open`.
@@ -120,8 +133,10 @@ Next step: level the card (a separate step; not run here).
   `fictional` is true in the profile and any name you write is invented or
   from the notes.
 - **No web search or fetch.** Notes can hold confidential or deal material.
-- **Write only** `card.json`, and the profile when the consultant agrees in
-  step 1. Never the notes, the persona voice file or a task card.
+- **Write only** `card.json`; the profile and `discovery.md` when the
+  consultant agrees in step 1; a discovery row or a new dated notes file for
+  an answer given in conversation. Never change what existing notes say,
+  the persona voice file or a task card.
 
 ## Reference files
 

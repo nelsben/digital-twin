@@ -98,6 +98,11 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
   2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
   3. Record the answer with its source and level the card again. See [docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss](../../../../docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss).
   - Done when: The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.
+- [ ] **S-C1.warning-memory-poisoning-risk** Resolve warning memory-poisoning-risk: keep memory writes to controlled steps for the task that reads untrusted input (owner: solution-architect, part A6)
+  1. Explain how untrusted input can poison memory, and that memory on claude.ai is one org-wide switch. See [docs/compendium/02-persona.md#memory](../../../../docs/compendium/02-persona.md#memory).
+  2. Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it. See [docs/compendium/02-persona.md#memory](../../../../docs/compendium/02-persona.md#memory).
+  3. If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide. See [docs/compendium/09-plans-and-it-controls.md#feature-matrix](../../../../docs/compendium/09-plans-and-it-controls.md#feature-matrix).
+  - Done when: The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.
 - [ ] **S-C1.warning-confidential-standard-retention** Resolve warning confidential-standard-retention: set custom retention or record the customer's acceptance (owner: compliance, part A7)
   1. Explain that page 10 requires custom retention for confidential data, otherwise local sessions are kept 6 years. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
   2. On Enterprise, set custom retention; on Team, record that the customer accepts standard retention. See [docs/compendium/10-sensitive-data.md#other-controls](../../../../docs/compendium/10-sensitive-data.md#other-controls).
@@ -205,6 +210,11 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
   1. Explain why confidential data on an unmanaged device calls for read-only connectors. See [docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation](../../../../docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation).
   2. Set the task's write tools to Blocked for people on unmanaged devices so the connectors are read-only, or get the customer's written acceptance of the write. See [docs/compendium/06-autonomy.md#how-a-level-is-enforced](../../../../docs/compendium/06-autonomy.md#how-a-level-is-enforced).
   - Done when: The write tools are Blocked for people on unmanaged devices, or the customer's written acceptance is recorded.
+- [ ] **S-C4.warning-memory-poisoning-risk** Resolve warning memory-poisoning-risk: keep memory writes to controlled steps for the task that reads untrusted input (owner: solution-architect, part A6)
+  1. Explain how untrusted input can poison memory, and that memory on claude.ai is one org-wide switch. See [docs/compendium/02-persona.md#memory](../../../../docs/compendium/02-persona.md#memory).
+  2. Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it. See [docs/compendium/02-persona.md#memory](../../../../docs/compendium/02-persona.md#memory).
+  3. If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide. See [docs/compendium/09-plans-and-it-controls.md#feature-matrix](../../../../docs/compendium/09-plans-and-it-controls.md#feature-matrix).
+  - Done when: The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.
 - [ ] **S-C4.warning-confidential-standard-retention** Resolve warning confidential-standard-retention: set custom retention or record the customer's acceptance (owner: compliance, part A7)
   1. Explain that page 10 requires custom retention for confidential data, otherwise local sessions are kept 6 years. See [docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above](../../../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above).
   2. On Enterprise, set custom retention; on Team, record that the customer accepts standard retention. See [docs/compendium/10-sensitive-data.md#other-controls](../../../../docs/compendium/10-sensitive-data.md#other-controls).
@@ -445,7 +455,7 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
 
 **Gated by:**
 
-- open-question OQ-1: What would start C5 when a ticket is escalated: a Zendesk trigger calling a hosted agent, or a Slack alert? Until then the manager starts it.
+- Nothing.
 
 **Tasks:**
 
@@ -495,11 +505,6 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
   2. Show a stable eval pass rate, a low edit rate and few rejections at level 2. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
   3. List the tools to set to Always allow and keep every other tool on Needs approval. See [docs/compendium/06-autonomy.md#the-ladder-our-recommendation](../../../../docs/compendium/06-autonomy.md#the-ladder-our-recommendation).
   - Done when: The business owner has approved the allowlist on scorecard evidence, and only those tools are Always allow.
-- [ ] **S-C5.confirm-unverified-decision.runtime** Confirm the unverified fact behind this decision with Anthropic or the vendor before build (runtime) (owner: solution-architect, part A9)
-  1. Find the Unverified mark on the page the decision cites in levelled.json. See [partner-kit/docs/design.md#72-decision-values](../../../../partner-kit/docs/design.md#72-decision-values).
-  2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
-  3. Record the answer with its source and level the card again. See [docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss](../../../../docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss).
-  - Done when: The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.
 - [ ] **S-C5.confirm-unverified-decision.plan_fit** Confirm the unverified fact behind this decision with Anthropic or the vendor before build (plan_fit) (owner: solution-architect, part A9)
   1. Find the Unverified mark on the page the decision cites in levelled.json. See [partner-kit/docs/design.md#72-decision-values](../../../../partner-kit/docs/design.md#72-decision-values).
   2. Ask Anthropic or the vendor in writing, using the partner questions list. See [docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner](../../../../docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner).
@@ -515,10 +520,6 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
   2. Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it. See [docs/compendium/02-persona.md#memory](../../../../docs/compendium/02-persona.md#memory).
   3. If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide. See [docs/compendium/09-plans-and-it-controls.md#feature-matrix](../../../../docs/compendium/09-plans-and-it-controls.md#feature-matrix).
   - Done when: The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.
-- [ ] **S-C5.warning-event-source-unverified** Resolve warning event-source-unverified: confirm what would start the task on its event (owner: solution-architect, part A4)
-  1. Ask Anthropic and the vendor what can fire the event. See [docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation](../../../../docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation).
-  2. Let a person start the task until the event source is confirmed, then level again. See [partner-kit/docs/design.md#72-decision-values](../../../../partner-kit/docs/design.md#72-decision-values).
-  - Done when: The event source is confirmed in writing, or the task stays person-started.
 - [ ] **S-C5.warning-connector-early-access** Resolve warning connector-early-access: confirm the early-access connector with the vendor (owner: integration-engineer, part A3)
   1. Ask the vendor about the connector's plan support and per-user checks. See [docs/compendium/11-connectors.md#what-exists-for-our-systems](../../../../docs/compendium/11-connectors.md#what-exists-for-our-systems).
   2. Record the answer with its source before the build. See [docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it](../../../../docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it).

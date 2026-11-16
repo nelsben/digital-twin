@@ -13,7 +13,7 @@ There are four skills, one per step, and five commands: `validate`, `level`, `ba
 
 ## Phase 0: Qualify
 
-Start `customer-profile.json` from the [template](../../partner-kit/plugins/twin-consultant/templates/customer-profile.json), in `engagements/<customer>/` ([starting a real customer folder](../../engagements/README.md#starting-a-real-customer-folder)). It is the fit note from the phase table: the plan, the data classes, the systems and the sponsor. Fill what you know. Leave the rest open, with an owner.
+Start `customer-profile.json` from the [template](../../partner-kit/plugins/twin-consultant/templates/customer-profile.json), in `engagements/<customer>/` ([starting a real customer folder](../../engagements/README.md#starting-a-real-customer-folder)). It is the fit note from the phase table: the plan, the data classes, the systems and the sponsor. Fill what you know. Leave the rest open, with an owner. Write the discovery answers in `discovery.md` beside it, started from the [discovery template](../../partner-kit/plugins/twin-consultant/templates/discovery.md), so the profile can cite each row (`discovery.md#A1`).
 
 - Skill: none. `filling-persona-cards` offers to create a missing profile in Phase 1.
 - Command: none. `validate` checks the profile together with the first card.
@@ -60,6 +60,7 @@ The two samples under [engagements/](../../engagements/README.md#the-samples) sh
 | File | What it is | Who writes it |
 |---|---|---|
 | `../../customer-profile.json` | The customer profile, shared by all that customer's personas | A person, from discovery |
+| `../../discovery.md` | The discovery answers, one row per question id; the profile and the card cite its rows | A person |
 | `interviews/<date>-<who>.md` | Interview notes, one file per interviewee | A person |
 | `card.json` | The persona card, with its overrides and open questions | A person, or Claude with the consultant from the notes. Overrides only by the consultant. |
 | `levelled.json` | The levelled plan: each task's decisions with rule, source page and reason, plus blockers and warnings | A command (`level`) |

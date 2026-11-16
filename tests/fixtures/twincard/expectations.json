@@ -12,7 +12,7 @@
       },
       "validate": {
         "exit": 0,
-        "completeness_pct": 94,
+        "completeness_pct": 92,
         "complete": false
       },
       "persona": {
@@ -641,9 +641,9 @@
             "unverified": false
           },
           "memory": {
-            "expected": "on",
+            "expected": "off",
             "cite": "docs/compendium/02-persona.md#memory",
-            "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on for it. Memory on claude.ai is one org-wide switch, so this says only that the task does not need it off; our choice.",
+            "reason": "The task reads untrusted input. Memory on claude.ai is one org-wide switch, so a per-task 'off' is a build instruction, not a setting: the task's skill writes nothing to memory, and only controlled steps write it. Our choice, from page 02's advice on memory poisoning.",
             "unverified": false
           },
           "plan_fit": {
@@ -845,9 +845,9 @@
             "unverified": false
           },
           "memory": {
-            "expected": "on",
+            "expected": "off",
             "cite": "docs/compendium/02-persona.md#memory",
-            "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on for it. Memory on claude.ai is one org-wide switch, so this says only that the task does not need it off; our choice.",
+            "reason": "The task reads untrusted input. Memory on claude.ai is one org-wide switch, so a per-task 'off' is a build instruction, not a setting: the task's skill writes nothing to memory, and only controlled steps write it. Our choice, from page 02's advice on memory poisoning.",
             "unverified": false
           },
           "plan_fit": {
@@ -877,9 +877,9 @@
         "C5": {
           "runtime": {
             "expected": "client-skill",
-            "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
-            "reason": "What would start the task on an escalation is Unverified, so the manager starts it in a conversation until that is confirmed.",
-            "unverified": true
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+            "unverified": false
           },
           "identity": {
             "expected": "user",
@@ -895,8 +895,8 @@
           },
           "autonomy.ceiling": {
             "expected": 3,
-            "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
-            "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it until the event source is confirmed, so it may not run unattended.",
+            "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+            "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
             "unverified": false
           },
           "data_controls": {
@@ -977,6 +977,12 @@
           "unverified": false
         },
         {
+          "code": "memory-poisoning-risk",
+          "about": "C1",
+          "cite": "docs/compendium/02-persona.md#memory",
+          "unverified": false
+        },
+        {
           "code": "confidential-standard-retention",
           "about": "C1",
           "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
@@ -1025,6 +1031,12 @@
           "unverified": false
         },
         {
+          "code": "memory-poisoning-risk",
+          "about": "C4",
+          "cite": "docs/compendium/02-persona.md#memory",
+          "unverified": false
+        },
+        {
           "code": "unmanaged-connectors-read-only",
           "about": "C4",
           "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
@@ -1041,12 +1053,6 @@
           "about": "C5",
           "cite": "docs/compendium/02-persona.md#memory",
           "unverified": false
-        },
-        {
-          "code": "event-source-unverified",
-          "about": "C5",
-          "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
-          "unverified": true
         },
         {
           "code": "connector-early-access",
@@ -1116,7 +1122,6 @@
             "confidential-on-team",
             "confidential-standard-retention",
             "connector-early-access",
-            "event-source-unverified",
             "hubspot-super-admin-approval",
             "memory-poisoning-risk",
             "private-network-allowlist",
@@ -1133,11 +1138,9 @@
             "C1.connectors",
             "C2.connectors",
             "C4.connectors",
-            "C5.runtime",
             "C5.plan_fit",
             "C5.connectors",
             "slack-directory-send-unverified:C2",
-            "event-source-unverified:C5",
             "connector-early-access:C5"
           ]
         }
@@ -1454,6 +1457,12 @@
             "code": "mail-read-only",
             "about": "C4",
             "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "unverified": false
+          },
+          {
+            "code": "untrusted-input-with-send",
+            "about": "C4",
+            "cite": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it",
             "unverified": false
           }
         ],

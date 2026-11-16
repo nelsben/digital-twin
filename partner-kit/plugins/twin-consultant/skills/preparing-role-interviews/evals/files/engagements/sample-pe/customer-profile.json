@@ -52,7 +52,7 @@
       "id": "sharepoint",
       "kind": "documents",
       "product": "Microsoft 365 (SharePoint and OneDrive)",
-      "edition": "Microsoft 365 (plan not recorded in discovery)",
+      "edition": "",
       "access_model": "Site and library permissions",
       "private_network": false
     },
@@ -60,7 +60,7 @@
       "id": "teams",
       "kind": "messaging",
       "product": "Microsoft Teams",
-      "edition": "Microsoft 365 (plan not recorded in discovery)",
+      "edition": "",
       "access_model": "",
       "private_network": false
     },
@@ -68,7 +68,7 @@
       "id": "slack-connect",
       "kind": "messaging",
       "product": "Slack (Slack Connect with portfolio companies)",
-      "edition": "Not recorded in discovery",
+      "edition": "",
       "access_model": "",
       "private_network": false
     }
@@ -80,9 +80,9 @@
     "self_hosting_required": null
   },
   "governance": {
-    "log_destination": "Splunk (candidate)",
+    "log_destination": "Splunk",
     "existing_source_audit": "",
-    "spend_owner": "IT (Director of IT)",
+    "spend_owner": "IT",
     "spend_limits": "",
     "action_log_required": true
   },
@@ -136,14 +136,14 @@
     },
     "devices.unmanaged_users": {
       "status": "answered",
-      "source": "discovery.md#D3"
+      "source": "discovery.md#D2; discovery.md#D3"
     },
     "compliance.data_classes": {
       "status": "answered",
       "source": "discovery.md#C1"
     },
     "compliance.phi": {
-      "status": "open",
+      "status": "assumed",
       "source": "discovery.md#C2",
       "owner": "Compliance / legal",
       "due": "2026-11-27"
@@ -157,10 +157,8 @@
       "source": "discovery.md#C5"
     },
     "compliance.retention": {
-      "status": "open",
-      "source": "discovery.md#C3",
-      "owner": "Compliance / legal",
-      "due": "2026-12-04"
+      "status": "default",
+      "source": "data/industry-packs/private-equity.json"
     },
     "compliance.walls": {
       "status": "answered",
@@ -179,7 +177,7 @@
       "source": "discovery.md#E1"
     },
     "systems.salesforce.access_model": {
-      "status": "open",
+      "status": "assumed",
       "source": "discovery.md#E4",
       "owner": "Source-system admins (Salesforce admin and HubSpot admin)",
       "due": "2026-11-27"
@@ -201,7 +199,7 @@
       "source": "discovery.md#E1"
     },
     "systems.hubspot.access_model": {
-      "status": "open",
+      "status": "assumed",
       "source": "discovery.md#E4",
       "owner": "Source-system admins (Salesforce admin and HubSpot admin)",
       "due": "2026-11-27"
@@ -219,9 +217,10 @@
       "source": "discovery.md#E2"
     },
     "systems.sharepoint.edition": {
-      "status": "assumed",
-      "source": "discovery.md#E2 (E1 asks the edition of the CRM only)",
-      "owner": "Hiroshi Delacroix"
+      "status": "open",
+      "source": "discovery.md#E1",
+      "owner": "Hiroshi Delacroix",
+      "due": "2026-11-27"
     },
     "systems.sharepoint.access_model": {
       "status": "answered",
@@ -240,9 +239,10 @@
       "source": "discovery.md#E3"
     },
     "systems.teams.edition": {
-      "status": "assumed",
-      "source": "discovery.md#E3 (E1 asks the edition of the CRM only)",
-      "owner": "Hiroshi Delacroix"
+      "status": "open",
+      "source": "discovery.md#E1",
+      "owner": "Hiroshi Delacroix",
+      "due": "2026-11-27"
     },
     "systems.teams.private_network": {
       "status": "answered",
@@ -257,9 +257,10 @@
       "source": "discovery.md#E3"
     },
     "systems.slack-connect.edition": {
-      "status": "assumed",
-      "source": "discovery.md#E3 (E1 asks the edition of the CRM only)",
-      "owner": "Tomasz Hadjiev"
+      "status": "open",
+      "source": "discovery.md#E1",
+      "owner": "Tomasz Hadjiev",
+      "due": "2026-11-27"
     },
     "systems.slack-connect.private_network": {
       "status": "answered",
@@ -272,7 +273,7 @@
       "due": "2026-11-27"
     },
     "governance.log_destination": {
-      "status": "open",
+      "status": "assumed",
       "source": "discovery.md#G1",
       "owner": "Technical owner (Director of IT)",
       "due": "2026-12-04"
@@ -312,6 +313,10 @@
     "owners.backup_owner": {
       "status": "answered",
       "source": "discovery.md#G4"
+    },
+    "owners.compliance": {
+      "status": "answered",
+      "source": "stakeholders.md"
     }
   }
 }

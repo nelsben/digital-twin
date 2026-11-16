@@ -18,7 +18,7 @@
     "scorecard_targets": []
   },
   "voice": {
-    "serves": "The deal team: associates first, and the principals and partners who read their work.",
+    "serves": "The deal team: the principal on each deal first, then the partners; the associates a principal reviews; and, through the memos, the investment committee.",
     "jobs": [
       "Draft one-page company briefs",
       "Draft CRM updates after meetings",
@@ -35,7 +35,8 @@
     "never": [
       "Use web search or fetch on a live deal",
       "Bring investor-relations or fundraising data into deal work",
-      "Send anything outside the firm"
+      "Send anything outside the firm",
+      "Read or summarise portfolio-company health files until compliance has ruled on PHI"
     ],
     "ask_before": [
       "Changing any Salesforce field",
@@ -102,7 +103,7 @@
       },
       "reversible": true,
       "touches_money": false,
-      "reads_untrusted_input": false,
+      "reads_untrusted_input": true,
       "examples": {
         "good": null,
         "bad": null,
@@ -238,7 +239,7 @@
       },
       "reversible": true,
       "touches_money": false,
-      "reads_untrusted_input": false,
+      "reads_untrusted_input": true,
       "examples": {
         "good": null,
         "bad": null,
@@ -319,7 +320,7 @@
       },
       "reversible": true,
       "touches_money": false,
-      "reads_untrusted_input": false,
+      "reads_untrusted_input": true,
       "examples": {
         "good": null,
         "bad": null,
@@ -363,6 +364,7 @@
       "blocks": [
         "T1",
         "T2",
+        "T3",
         "T4",
         "T5",
         "T6"
@@ -442,11 +444,11 @@
     },
     "role.headcount": {
       "status": "answered",
-      "source": "../../discovery.md#A3"
+      "source": "discovery.md#A3"
     },
     "role.pilot_users": {
       "status": "answered",
-      "source": "../../discovery.md#A3"
+      "source": "discovery.md#A3"
     },
     "role.works_in": {
       "status": "answered",
@@ -458,11 +460,11 @@
     },
     "outcome.sponsor_goal": {
       "status": "answered",
-      "source": "../../discovery.md#A1"
+      "source": "discovery.md#A1"
     },
     "voice.serves": {
       "status": "answered",
-      "source": "interviews/2026-11-12-associate.md#P2"
+      "source": "interviews/2026-11-10-partner.md#P2; interviews/2026-11-11-principal.md#P2; interviews/2026-11-12-associate.md#P2"
     },
     "voice.jobs": {
       "status": "answered",
@@ -478,7 +480,7 @@
     },
     "voice.never": {
       "status": "answered",
-      "source": "interviews/2026-11-10-partner.md#P5"
+      "source": "interviews/2026-11-10-partner.md#P5; discovery.md#C2"
     },
     "voice.ask_before": {
       "status": "answered",
@@ -557,8 +559,9 @@
       "source": "interviews/2026-11-12-associate.md#F7"
     },
     "tasks.T1.reads_untrusted_input": {
-      "status": "answered",
-      "source": "interviews/2026-11-12-associate.md#F8"
+      "status": "assumed",
+      "source": "interviews/2026-11-12-associate.md#F8",
+      "owner": "Eleanor Osei-Whitcombe"
     },
     "tasks.T1.examples.good": {
       "status": "open",
@@ -793,8 +796,9 @@
       "source": "interviews/2026-11-12-associate.md#F7"
     },
     "tasks.T4.reads_untrusted_input": {
-      "status": "answered",
-      "source": "interviews/2026-11-12-associate.md#F8"
+      "status": "assumed",
+      "source": "interviews/2026-11-12-associate.md#F8",
+      "owner": "Eleanor Osei-Whitcombe"
     },
     "tasks.T4.examples.good": {
       "status": "open",
@@ -893,8 +897,9 @@
       "source": "interviews/2026-11-10-partner.md#F1"
     },
     "tasks.T6.frequency_per_week": {
-      "status": "answered",
-      "source": "interviews/2026-11-10-partner.md#F1"
+      "status": "assumed",
+      "source": "interviews/2026-11-10-partner.md#F1",
+      "owner": "Eleanor Osei-Whitcombe"
     },
     "tasks.T6.minutes_each": {
       "status": "answered",
@@ -941,8 +946,9 @@
       "source": "interviews/2026-11-10-partner.md#F7"
     },
     "tasks.T6.reads_untrusted_input": {
-      "status": "answered",
-      "source": "interviews/2026-11-10-partner.md#F8"
+      "status": "assumed",
+      "source": "interviews/2026-11-10-partner.md#F8",
+      "owner": "Eleanor Osei-Whitcombe"
     },
     "tasks.T6.examples.good": {
       "status": "open",
@@ -962,7 +968,7 @@
     },
     "role.plugin_name": {
       "status": "assumed",
-      "source": "../../design.md#the-marketplace",
+      "source": "design.md#the-marketplace",
       "owner": "Eleanor Osei-Whitcombe"
     }
   }

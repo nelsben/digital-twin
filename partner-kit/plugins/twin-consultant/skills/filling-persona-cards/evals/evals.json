@@ -3,12 +3,14 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Fill the persona card for engagements/sample-team-cs/personas/customer-success-manager from the two notes files in its interviews folder. There is no card.json yet. One thing the notes don't show: Odalys Fenwick, the sponsor, joined the discovery call for section A and stated the six-month goal there (discovery answer A1); the profile's provenance already names that call's answers.",
-      "expected_output": "Claude creates card.json from the template, fills every field from the notes under the question ids the catalogue allows, writes a provenance entry per field, runs validate until it passes, and reports completeness 100% (104 of 104), as the fixture card does, then names levelling as the next step without running it.",
+      "prompt": "Fill the persona card for engagements/sample-team-cs/personas/customer-success-manager from the notes files in its interviews folder and the customer's discovery.md. There is no card.json yet.",
+      "expected_output": "Claude creates card.json from the template, fills every field from the notes and discovery.md under the question ids the catalogue allows, writes a provenance entry per field, runs validate until it passes, and reports completeness 100% (104 of 104), as the fixture card does, then names levelling as the next step without running it.",
       "files": [
         "evals/files/engagements/sample-team-cs/customer-profile.json",
+        "evals/files/engagements/sample-team-cs/discovery.md",
         "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-06-csm.md",
-        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-07-senior-csm.md"
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-07-senior-csm.md",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-10-team-lead.md"
       ],
       "expectations": [
         "card.json is created in engagements/sample-team-cs/personas/customer-success-manager with id customer-success-manager and customer example-software-co",
@@ -18,15 +20,16 @@
         "tasks.C1.inputs lists hubspot and google-drive, both with access read; provenance.tasks.C1.inputs[0].access.source names interviews/2026-11-06-csm.md and question F2",
         "tasks.C2.trigger is schedule-team, and provenance.tasks.C2.trigger is answered with source interviews/2026-11-07-senior-csm.md#F5",
         "tasks.C2.writes[0] is a send to slack, and tasks.C4.writes[0] is a create in hubspot",
-        "tasks.C3.touches_money is true; tasks.C2.reads_untrusted_input and tasks.C5.reads_untrusted_input are true; the same fields are false for C1 and C4",
+        "tasks.C3.touches_money is true; tasks.C1, C2, C4 and C5 reads_untrusted_input are true and C3's is false; provenance.tasks.C1.reads_untrusted_input and provenance.tasks.C4.reads_untrusted_input are answered from interviews/2026-11-10-team-lead.md#F8, the follow-up that overturns the first 'No'",
         "tasks.C1.in_pilot and tasks.C4.in_pilot are true; tasks.C2.in_pilot, tasks.C3.in_pilot and tasks.C5.in_pilot are false",
         "tasks.C3.output.audience and tasks.C4.output.audience are external; C1, C2 and C5 are internal",
         "tasks.C1.data_class through tasks.C5.data_class are all confidential with status answered, each from the F2 answer in its own notes file (interviews/2026-11-07-senior-csm.md#F2 for C2, C3 and C5; interviews/2026-11-06-csm.md#F2 for C1 and C4), because those answers state how sensitive the material is",
         "memory.personal_memory_wanted is true with source interviews/2026-11-06-csm.md#F9",
-        "outcome.sponsor_goal is answered with source discovery#A1, because the prompt says the sponsor stated the goal on the discovery call; the senior CSM's P3 answer only relays it",
-        "voice.tone is answered, not open: the two answers to question P4 add to each other and do not contradict",
+        "outcome.sponsor_goal is answered with source discovery.md#A1, because row A1 of discovery.md records the sponsor's own goal; the senior CSM's P3 answer only relays it",
+        "voice.tone is answered, not open, and its source names both notes files' P4 separated by '; ': the two answers add to each other and do not contradict",
         "The feature ids are call-preparation-and-follow-up, renewals and escalations",
-        "open_questions has an entry about what starts C5 that blocks C5, with owner Teodor Amsel and due 2026-12-11, from the senior CSM's notes",
+        "tasks.C5.trigger is person, answered from interviews/2026-11-07-senior-csm.md#F5, because a person starts it today; open_questions has an entry about what could start C5 without a person, with blocks [], owner Teodor Amsel and due 2026-12-11",
+        "tasks.C3.reversible is true, answered from interviews/2026-11-10-team-lead.md#F7, because the follow-up says the twin only drafts",
         "No figure or person's name appears in card.json that is not in the notes, the profile or the prompt",
         "customer-profile.json is unchanged",
         "The response ends with the completeness percentage, the fields still open or assumed with their owners, and levelling the card as the next step; no levelled.json is written"
@@ -34,11 +37,13 @@
     },
     {
       "id": 2,
-      "prompt": "Fill the deal-team-associate card at engagements/sample-pe/personas/deal-team-associate from its three interview notes. There's no card.json yet. Where the notes give no owner or date for something open, use Skill owners and 2026-12-04, as the other notes do.",
+      "prompt": "Fill the deal-team-associate card at engagements/sample-pe/personas/deal-team-associate from its three interview notes. There's no card.json yet. Where the notes give no owner or date for something open or assumed, use Skill owners and 2026-12-04, as the other notes do.",
       "expected_output": "Claude builds card.json from the three notes and discovery.md, leaves open the same items the fixture card.json leaves open (the good and bad examples for every task), keeps the sponsor goal answered because discovery A1 records the sponsor's own goal, validates, and names levelling as the next step.",
       "files": [
         "evals/files/engagements/sample-pe/customer-profile.json",
         "evals/files/engagements/sample-pe/discovery.md",
+        "evals/files/engagements/sample-pe/stakeholders.md",
+        "evals/files/engagements/sample-pe/design.md",
         "evals/files/engagements/sample-pe/personas/deal-team-associate/interviews/2026-11-10-partner.md",
         "evals/files/engagements/sample-pe/personas/deal-team-associate/interviews/2026-11-11-principal.md",
         "evals/files/engagements/sample-pe/personas/deal-team-associate/interviews/2026-11-12-associate.md"
@@ -55,7 +60,8 @@
         "tasks.T2.writes[0] is an update to salesforce; tasks.T3.writes[0] is a send to teams",
         "role.works_in is claude-code only and role.device is managed, both answered from interviews/2026-11-12-associate.md#P1",
         "memory.personal_memory_wanted is false",
-        "The completeness line names the same six profile fields the fixture leaves unanswered (compliance.phi, compliance.retention, the editions of sharepoint, teams and slack-connect, and network.can_allowlist_anthropic_ips) and no card field",
+        "The completeness line names the same eight fields the fixture leaves unanswered: five in the profile (compliance.phi, the editions of sharepoint, teams and slack-connect, and network.can_allowlist_anthropic_ips) and three in the card (tasks.T1, tasks.T4 and tasks.T6 reads_untrusted_input)",
+        "tasks.T1.reads_untrusted_input, tasks.T4.reads_untrusted_input and tasks.T6.reads_untrusted_input are true with status assumed and an owner, because the associate answers 'No' to question F8 but those tasks read documents outsiders wrote",
         "No person's name appears in card.json that is not in the notes, discovery.md, the profile or the prompt; tasks[].skill_owner is not filled with a name from anywhere else",
         "No web search or web fetch was used",
         "The response names levelling the card as the next step and does not run it"
@@ -67,6 +73,7 @@
       "expected_output": "The notes have no answer to question F4 for D1. Claude leaves tasks.D1.cost_of_mistake.level null with status open, owner and due, adds an open question that blocks D1, and does not invent a level. The sponsor goal comes only from the interviewee's P3 answer, so it is assumed with the sponsor as owner.",
       "files": [
         "evals/files/engagements/sample-freight-co/customer-profile.json",
+        "evals/files/engagements/sample-freight-co/discovery.md",
         "evals/files/engagements/sample-freight-co/personas/dispatch-coordinator/interviews/2026-11-03-dispatcher.md"
       ],
       "expectations": [
@@ -86,6 +93,7 @@
       "expected_output": "The two planners disagree on what starts L1 (question F5). Claude does not pick one or blend them: tasks.L1.trigger is null with status open, and an open question quotes both answers. Fields where they agree are answered.",
       "files": [
         "evals/files/engagements/sample-freight-co/customer-profile.json",
+        "evals/files/engagements/sample-freight-co/discovery.md",
         "evals/files/engagements/sample-freight-co/personas/load-planner/interviews/2026-11-04-planner.md",
         "evals/files/engagements/sample-freight-co/personas/load-planner/interviews/2026-11-05-senior-planner.md"
       ],
@@ -131,14 +139,16 @@
       "expected_output": "Claude updates the existing card in place. Every field that already has an answered provenance entry keeps its value, status and source; the card still validates at 100%.",
       "files": [
         "evals/files/engagements/sample-team-cs/customer-profile.json",
+        "evals/files/engagements/sample-team-cs/discovery.md",
         "evals/files/engagements/sample-team-cs/personas/customer-success-manager/card.json",
         "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-06-csm.md",
-        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-07-senior-csm.md"
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-07-senior-csm.md",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-10-team-lead.md"
       ],
       "expectations": [
         "Every provenance entry that had status answered in the original card.json is still present with the same status and source",
         "The values of those fields are unchanged, for example voice.tone and tasks.C1.minutes_each",
-        "open_questions still holds OQ-1, blocking C5, with owner Teodor Amsel",
+        "open_questions still holds OQ-1, blocking nothing (blocks []), with owner Teodor Amsel",
         "The validate command's last run prints Valid with completeness 100%"
       ]
     }

@@ -225,6 +225,11 @@ def cite_text(cite):
     return name + ("#" + anchor if anchor else "")
 
 
+def source_text(source):
+    """A provenance source as text: each of its sources ('; ' between them) as cite_text gives it."""
+    return _validate.SOURCE_SEPARATOR.join(cite_text(one) for one in _validate.split_sources(source))
+
+
 def cite(cite_value):
     return '<span class="cite">Cite: <code>%s</code></span>' % esc(cite_text(cite_value)) if cite_value else ""
 
@@ -978,11 +983,12 @@ def render_provenance(ctx):
                 pending.append("<li><code>%s:%s</code> %s. Owner: %s. Due: %s.%s</li>" % (
                     record, esc(path), esc(p["status"]), esc(fmt(p.get("owner"), "not named")),
                     esc(fmt(p.get("due"), "not set")),
-                    " Source: <code>%s</code>." % esc(cite_text(p["source"])) if p.get("source") else ""))
+                    " Source: <code>%s</code>." % esc(source_text(p["source"])) if p.get("source") else ""))
     out.append('<ul class="plain">%s</ul>' % "".join(pending) if pending else "<p>Nothing is assumed or open.</p>")
     out.append("<h3>Interview files the card cites</h3>")
-    files = sorted(set(str(p.get("source")).split("#", 1)[0] for p in (ctx["card"].get("provenance") or {}).values()
-                       if isinstance(p, dict) and str(p.get("source") or "").startswith("interviews/")))
+    files = sorted(set(one.split("#", 1)[0] for p in (ctx["card"].get("provenance") or {}).values()
+                       if isinstance(p, dict) for one in _validate.split_sources(p.get("source"))
+                       if one.startswith("interviews/")))
     out.append('<ul class="plain">%s</ul>' % "".join("<li><code>%s</code></li>" % esc(f) for f in files)
                if files else "<p>The card cites no interview file.</p>")
     out.append("</section>")

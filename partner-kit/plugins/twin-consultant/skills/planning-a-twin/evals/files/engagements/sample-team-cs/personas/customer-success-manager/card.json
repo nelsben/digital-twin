@@ -18,7 +18,7 @@
     "scorecard_targets": []
   },
   "voice": {
-    "serves": "Customer success managers, each looking after about 40 accounts.",
+    "serves": "Customer success managers, each looking after about 40 accounts, and the VP Customer Success when a renewal is at risk.",
     "jobs": [
       "Brief me before a customer call",
       "Draft the follow-up email and log the call",
@@ -26,7 +26,7 @@
       "Flag renewal risk each week",
       "Summarise open tickets on an escalation"
     ],
-    "tone": "Warm and direct with customers; brief and factual with the team.",
+    "tone": "Warm and direct with customers; brief and factual with the team; plain, with no marketing words.",
     "norms": [
       "Say which HubSpot record or Drive file each fact came from",
       "Use the customer's name and our product names exactly"
@@ -95,7 +95,7 @@
       },
       "reversible": true,
       "touches_money": false,
-      "reads_untrusted_input": false,
+      "reads_untrusted_input": true,
       "examples": {
         "good": 2,
         "bad": 1,
@@ -226,7 +226,7 @@
       },
       "reversible": true,
       "touches_money": false,
-      "reads_untrusted_input": false,
+      "reads_untrusted_input": true,
       "examples": {
         "good": 2,
         "bad": 1,
@@ -243,7 +243,7 @@
       "frequency_per_week": 2,
       "minutes_each": 30,
       "users": 8,
-      "trigger": "event",
+      "trigger": "person",
       "inputs": [
         {
           "system": "zendesk",
@@ -283,10 +283,8 @@
   "open_questions": [
     {
       "id": "OQ-1",
-      "question": "What would start C5 when a ticket is escalated: a Zendesk trigger calling a hosted agent, or a Slack alert? Until then the manager starts it.",
-      "blocks": [
-        "C5"
-      ],
+      "question": "What could start C5 on the escalation itself, without a person: a Zendesk trigger calling a hosted agent, or a Slack alert? Until then the manager starts it.",
+      "blocks": [],
       "owner": "Teodor Amsel",
       "due": "2026-12-11"
     }
@@ -302,11 +300,11 @@
     },
     "role.headcount": {
       "status": "answered",
-      "source": "discovery#A3"
+      "source": "discovery.md#A3"
     },
     "role.pilot_users": {
       "status": "answered",
-      "source": "discovery#A3"
+      "source": "discovery.md#A3"
     },
     "role.works_in": {
       "status": "answered",
@@ -318,11 +316,11 @@
     },
     "outcome.sponsor_goal": {
       "status": "answered",
-      "source": "discovery#A1"
+      "source": "discovery.md#A1"
     },
     "voice.serves": {
       "status": "answered",
-      "source": "interviews/2026-11-06-csm.md#P2"
+      "source": "interviews/2026-11-06-csm.md#P2; interviews/2026-11-07-senior-csm.md#P2"
     },
     "voice.jobs": {
       "status": "answered",
@@ -330,7 +328,7 @@
     },
     "voice.tone": {
       "status": "answered",
-      "source": "interviews/2026-11-06-csm.md#P4"
+      "source": "interviews/2026-11-06-csm.md#P4; interviews/2026-11-07-senior-csm.md#P4"
     },
     "voice.norms": {
       "status": "answered",
@@ -414,7 +412,7 @@
     },
     "tasks.C1.reads_untrusted_input": {
       "status": "answered",
-      "source": "interviews/2026-11-06-csm.md#F8"
+      "source": "interviews/2026-11-10-team-lead.md#F8"
     },
     "tasks.C1.examples.good": {
       "status": "answered",
@@ -550,7 +548,7 @@
     },
     "tasks.C3.reversible": {
       "status": "answered",
-      "source": "interviews/2026-11-07-senior-csm.md#F7"
+      "source": "interviews/2026-11-10-team-lead.md#F7"
     },
     "tasks.C3.touches_money": {
       "status": "answered",
@@ -630,7 +628,7 @@
     },
     "tasks.C4.reads_untrusted_input": {
       "status": "answered",
-      "source": "interviews/2026-11-06-csm.md#F8"
+      "source": "interviews/2026-11-10-team-lead.md#F8"
     },
     "tasks.C4.examples.good": {
       "status": "answered",

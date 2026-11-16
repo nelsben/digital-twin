@@ -469,22 +469,9 @@ class BacklogAndDashboardTests(unittest.TestCase):
 
 class FixtureRecordTests(unittest.TestCase):
     def test_interview_provenance_names_a_file_with_that_question(self):
+        # validate opens every answered source (design 4.3); tests/test_twincard_sources.py has the cases.
         for fid, fixture in load_expectations()["fixtures"].items():
-            persona_dir = ROOT / fixture["persona_dir"]
-            for path, prov in card_of(fixture)["provenance"].items():
-                source = (prov or {}).get("source") or ""
-                if not source.startswith("interviews/"):
-                    continue
-                where = "%s %s" % (fid, path)
-                self.assertIn("#", source, where)
-                name, qid = source.split("#", 1)
-                notes = persona_dir / name
-                self.assertTrue(notes.is_file(), "%s: %s does not exist" % (where, name))
-                text = notes.read_text(encoding="utf-8")
-                self.assertRegex(text, r"(?m)^#{2,6}\s+%s\." % re.escape(qid), where)
-                m = re.match(r"tasks\.([^.]+)\.", path)
-                if m:
-                    self.assertIn("Task id: %s" % m.group(1), text, where)
+            self.assertEqual(validate(str(ROOT / fixture["persona_dir"]))["errors"], [], fid)
 
     def test_no_sample_pe_stakeholder_appears_under_sample_team_cs(self):
         text = (ROOT / "engagements" / "sample-pe" / "stakeholders.md").read_text(encoding="utf-8")

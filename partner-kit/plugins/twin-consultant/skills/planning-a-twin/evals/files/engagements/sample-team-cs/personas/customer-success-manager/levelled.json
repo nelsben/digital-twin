@@ -3,8 +3,8 @@
   "customer": "example-software-co",
   "persona": "customer-success-manager",
   "source": {
-    "card_sha256": "faa81239442dc52f210f6519f29fd6946fc48cf7455368bddedc29ac7e516e5e",
-    "profile_sha256": "c6fe7a6eea9eed0087bcd354c0f8f7a70bc72c788acf5e1deb79d140560f9f2a",
+    "card_sha256": "e2ad4ae934c6b70149a6569c4ddbe2571889e8701c7495a6189629e49a34c0bb",
+    "profile_sha256": "e5a94d961782cde63d8b72380ba1d3d9fe1f013c31891203644a0aa2cd8e84a6",
     "rules_version": 1,
     "pack": "b2b-software"
   },
@@ -182,10 +182,10 @@
         }
       ],
       "memory": {
-        "value": "on",
-        "rule": "memory-on",
+        "value": "off",
+        "rule": "memory-off-untrusted-input",
         "cite": "docs/compendium/02-persona.md#memory",
-        "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on for it. Memory on claude.ai is one org-wide switch, so this says only that the task does not need it off; our choice.",
+        "reason": "The task reads untrusted input. Memory on claude.ai is one org-wide switch, so a per-task 'off' is a build instruction, not a setting: the task's skill writes nothing to memory, and only controlled steps write it. Our choice, from page 02's advice on memory poisoning.",
         "unverified": false,
         "basis": "our-recommendation",
         "overridden": null
@@ -542,10 +542,10 @@
         }
       ],
       "memory": {
-        "value": "on",
-        "rule": "memory-on",
+        "value": "off",
+        "rule": "memory-off-untrusted-input",
         "cite": "docs/compendium/02-persona.md#memory",
-        "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on for it. Memory on claude.ai is one org-wide switch, so this says only that the task does not need it off; our choice.",
+        "reason": "The task reads untrusted input. Memory on claude.ai is one org-wide switch, so a per-task 'off' is a build instruction, not a setting: the task's skill writes nothing to memory, and only controlled steps write it. Our choice, from page 02's advice on memory poisoning.",
         "unverified": false,
         "basis": "our-recommendation",
         "overridden": null
@@ -563,10 +563,10 @@
     "C5": {
       "runtime": {
         "value": "client-skill",
-        "rule": "runtime-event-source-unverified",
-        "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
-        "reason": "What would start the task on an escalation is Unverified, so the manager starts it in a conversation until that is confirmed.",
-        "unverified": true,
+        "rule": "runtime-person-client-skill",
+        "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+        "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+        "unverified": false,
         "basis": "our-recommendation",
         "overridden": null
       },
@@ -591,11 +591,11 @@
         },
         "ceiling": {
           "value": 3,
-          "rule": "ceiling-event-person-until-confirmed",
-          "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
-          "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it until the event source is confirmed, so it may not run unattended.",
+          "rule": "ceiling-person-started",
+          "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+          "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
           "unverified": false,
-          "basis": "our-recommendation",
+          "basis": "compendium",
           "overridden": null
         }
       },
@@ -844,6 +844,14 @@
       "fix": "Name the customer's HubSpot Super Admin, or a user with App Marketplace access, in the profile's owners and book the approval."
     },
     {
+      "code": "memory-poisoning-risk",
+      "about": "C1",
+      "cite": "docs/compendium/02-persona.md#memory",
+      "unverified": false,
+      "message": "The task reads untrusted input while personal memory is wanted. Memory on claude.ai is one org-wide switch, so it cannot be turned off for this task alone: the task's skill must write nothing to memory, and only controlled steps write it.",
+      "fix": "Keep role knowledge in reviewed skills and build the task so it never writes memory; if the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide."
+    },
+    {
       "code": "confidential-standard-retention",
       "about": "C1",
       "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
@@ -916,6 +924,14 @@
       "fix": "Make the task's connectors read-only for people on unmanaged devices (set the write tools to Blocked), or have the customer accept the write in writing."
     },
     {
+      "code": "memory-poisoning-risk",
+      "about": "C4",
+      "cite": "docs/compendium/02-persona.md#memory",
+      "unverified": false,
+      "message": "The task reads untrusted input while personal memory is wanted. Memory on claude.ai is one org-wide switch, so it cannot be turned off for this task alone: the task's skill must write nothing to memory, and only controlled steps write it.",
+      "fix": "Keep role knowledge in reviewed skills and build the task so it never writes memory; if the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide."
+    },
+    {
       "code": "confidential-standard-retention",
       "about": "C4",
       "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
@@ -930,14 +946,6 @@
       "unverified": false,
       "message": "The task reads untrusted input while personal memory is wanted. Memory on claude.ai is one org-wide switch, so it cannot be turned off for this task alone: the task's skill must write nothing to memory, and only controlled steps write it.",
       "fix": "Keep role knowledge in reviewed skills and build the task so it never writes memory; if the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide."
-    },
-    {
-      "code": "event-source-unverified",
-      "about": "C5",
-      "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
-      "unverified": true,
-      "message": "Nothing confirmed can start the task on its event, so a person starts it until that is confirmed.",
-      "fix": "Confirm with Anthropic and the vendor what would fire the event, then level the task again."
     },
     {
       "code": "connector-early-access",

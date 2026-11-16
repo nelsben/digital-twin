@@ -79,175 +79,175 @@
   "provenance": {
     "display_name": {
       "status": "answered",
-      "source": "discovery#A1"
+      "source": "discovery.md#A1"
     },
     "industry": {
       "status": "answered",
-      "source": "discovery#A2"
+      "source": "discovery.md#A2"
     },
     "plan.tier": {
       "status": "answered",
-      "source": "discovery#B1"
+      "source": "discovery.md#B1"
     },
     "plan.seats": {
       "status": "answered",
-      "source": "discovery#B1"
+      "source": "discovery.md#B1"
     },
     "plan.individual_accounts_on_domain": {
       "status": "answered",
-      "source": "discovery#B2"
+      "source": "discovery.md#B2"
     },
     "identity.idp": {
       "status": "answered",
-      "source": "discovery#D1"
+      "source": "discovery.md#D1"
     },
     "identity.sso": {
       "status": "answered",
-      "source": "discovery#D1"
+      "source": "discovery.md#D1"
     },
     "identity.scim": {
       "status": "answered",
-      "source": "discovery#D1"
+      "source": "discovery.md#D1"
     },
     "devices.mdm": {
       "status": "answered",
-      "source": "discovery#D2"
+      "source": "discovery.md#D2"
     },
     "devices.managed_share": {
       "status": "answered",
-      "source": "discovery#D2"
+      "source": "discovery.md#D2"
     },
     "devices.unmanaged_users": {
       "status": "answered",
-      "source": "discovery#D2"
+      "source": "discovery.md#D2"
     },
     "compliance.data_classes": {
       "status": "answered",
-      "source": "discovery#C1"
+      "source": "discovery.md#C1"
     },
     "compliance.phi": {
       "status": "answered",
-      "source": "discovery#C2"
+      "source": "discovery.md#C2"
     },
     "compliance.baa": {
       "status": "answered",
-      "source": "discovery#C2"
+      "source": "discovery.md#C2"
     },
     "compliance.mnpi": {
       "status": "answered",
-      "source": "discovery#C5"
+      "source": "discovery.md#C5"
     },
     "compliance.retention": {
       "status": "answered",
-      "source": "discovery#C3"
+      "source": "discovery.md#C3"
     },
     "compliance.walls": {
       "status": "answered",
-      "source": "discovery#C4"
+      "source": "discovery.md#C4"
     },
     "network.can_allowlist_anthropic_ips": {
       "status": "answered",
-      "source": "discovery#E6"
+      "source": "discovery.md#E6"
     },
     "governance.log_destination": {
       "status": "answered",
-      "source": "discovery#G1"
+      "source": "discovery.md#G1"
     },
     "governance.existing_source_audit": {
       "status": "answered",
-      "source": "discovery#G2"
+      "source": "discovery.md#G2"
     },
     "governance.spend_owner": {
       "status": "answered",
-      "source": "discovery#G3"
+      "source": "discovery.md#G3"
     },
     "governance.spend_limits": {
       "status": "answered",
-      "source": "discovery#G3"
+      "source": "discovery.md#G3"
     },
     "governance.action_log_required": {
       "status": "answered",
-      "source": "discovery#G1"
+      "source": "discovery.md#G1"
     },
     "owners.sponsor": {
       "status": "answered",
-      "source": "discovery#A1"
+      "source": "discovery.md#A1"
     },
     "owners.technical_owner": {
       "status": "answered",
-      "source": "discovery#G4"
+      "source": "discovery.md#G4"
     },
     "owners.business_owner": {
       "status": "answered",
-      "source": "discovery#G4"
+      "source": "discovery.md#G4"
     },
     "owners.backup_owner": {
       "status": "answered",
-      "source": "discovery#G4"
+      "source": "discovery.md#G4"
     },
     "owners.compliance": {
       "status": "answered",
-      "source": "discovery#C3"
+      "source": "discovery.md#C3"
     },
     "systems.tms.kind": {
       "status": "answered",
-      "source": "discovery#E1"
+      "source": "discovery.md#E1"
     },
     "systems.tms.product": {
       "status": "answered",
-      "source": "discovery#E1"
+      "source": "discovery.md#E1"
     },
     "systems.tms.edition": {
       "status": "answered",
-      "source": "discovery#E1"
+      "source": "discovery.md#E1"
     },
     "systems.tms.access_model": {
       "status": "answered",
-      "source": "discovery#E4"
+      "source": "discovery.md#E4"
     },
     "systems.tms.private_network": {
       "status": "answered",
-      "source": "discovery#E5"
+      "source": "discovery.md#E5"
     },
     "systems.slack.kind": {
       "status": "answered",
-      "source": "discovery#E3"
+      "source": "discovery.md#E3"
     },
     "systems.slack.product": {
       "status": "answered",
-      "source": "discovery#E3"
+      "source": "discovery.md#E3"
     },
     "systems.slack.edition": {
       "status": "answered",
-      "source": "discovery#E3"
+      "source": "discovery.md#E3"
     },
     "systems.slack.access_model": {
       "status": "answered",
-      "source": "discovery#E4"
+      "source": "discovery.md#E4"
     },
     "systems.slack.private_network": {
       "status": "answered",
-      "source": "discovery#E5"
+      "source": "discovery.md#E5"
     },
     "systems.google-drive.kind": {
       "status": "answered",
-      "source": "discovery#E2"
+      "source": "discovery.md#E2"
     },
     "systems.google-drive.product": {
       "status": "answered",
-      "source": "discovery#E2"
+      "source": "discovery.md#E2"
     },
     "systems.google-drive.edition": {
       "status": "answered",
-      "source": "discovery#E2"
+      "source": "discovery.md#E2"
     },
     "systems.google-drive.access_model": {
       "status": "answered",
-      "source": "discovery#E4"
+      "source": "discovery.md#E4"
     },
     "systems.google-drive.private_network": {
       "status": "answered",
-      "source": "discovery#E5"
+      "source": "discovery.md#E5"
     }
   }
 }

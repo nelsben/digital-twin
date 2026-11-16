@@ -171,7 +171,7 @@ class EndToEndTest(unittest.TestCase):
                 self.assertEqual(read_generated(persona), before)
 
     def test_blocker_still_writes_every_file(self):
-        variant = next(v for v in self.expectations["variants"] if v["id"] == "team-c4-gmail-send")
+        variant = next(v for v in self.expectations["variants"] if v["id"] == "team-no-ip-allowlist")
         persona = self.fresh_copy(variant["base"])
         apply_changes(persona, variant["change"])
         result = run_all(persona, "--date", DATE)
@@ -179,8 +179,8 @@ class EndToEndTest(unittest.TestCase):
         for name in GENERATED:
             self.assertTrue((persona / name).is_file(), "%s was not written" % name)
         levelled = json.loads((persona / "levelled.json").read_text(encoding="utf-8"))
-        self.assertIn("connector-cannot-write", [b["code"] for b in levelled["blockers"]])
-        self.assertIn('data-code="connector-cannot-write"', (persona / "dashboard.html").read_text(encoding="utf-8"))
+        self.assertIn("private-network-unreachable", [b["code"] for b in levelled["blockers"]])
+        self.assertIn('data-code="private-network-unreachable"', (persona / "dashboard.html").read_text(encoding="utf-8"))
         self.assertIn("blocked", result.stdout)
 
     def test_validation_failure_writes_nothing(self):

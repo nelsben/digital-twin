@@ -132,4 +132,4 @@ The **Runner owner** owns the container, the API key and the log pipeline after 
 - **A run stops with no answer.** Its subtype is `error_max_turns` or `error_max_budget_usd`, and the `result` field is empty ([B]).
 - **The log has gaps.** A container restart loses local transcripts; send the log to our system, not the container's disk ([G]).
 - **Two containers for one event.** The dedupe row was written after the start, or removed too early (step 13).
-- **The customer needs ZDR or PHI.** The Agent SDK's cover is unverified (step 15 and Inputs); Claude Code is not covered under HIPAA readiness ([J]).
+- **The customer needs ZDR or PHI.** The Agent SDK's cover is unverified (step 15 and Inputs); the API data-retention page says Claude Code is not covered under HIPAA readiness ([J]), but other vendor pages disagree (see [10](../../docs/compendium/10-sensitive-data.md#what-hipaa-covers)). Get the answer from Anthropic in writing before the runner touches PHI.

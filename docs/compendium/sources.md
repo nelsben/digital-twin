@@ -80,6 +80,15 @@ All fetched on 2026-11-14. Anthropic's documentation now lives on three sites:
 - Consumer terms: https://www.anthropic.com/legal/consumer-terms
 - Commercial terms: https://www.anthropic.com/legal/commercial-terms
 - Regional compliance: https://claude.com/regional-compliance
+- Use Claude Code with your Team or Enterprise plan (seat condition, fetched 2026-11-16): https://support.claude.com/en/articles/11845131
+- How do usage and length limits work? (fetched 2026-11-16): https://support.claude.com/en/articles/11647753
+- Manage usage credits for paid Claude plans (fetched 2026-11-16): https://support.claude.com/en/articles/12429409
+- Manage usage credits for Team and seat-based Enterprise plans (fetched 2026-11-16): https://support.claude.com/en/articles/12005970
+- How am I billed for my Enterprise plan? (fetched 2026-11-16): https://support.claude.com/en/articles/11526368
+- Manage groups and group spend limits on Enterprise plans (fetched 2026-11-16): https://support.claude.com/en/articles/13799932
+- View usage analytics for Team and Enterprise plans (fetched 2026-11-16): https://support.claude.com/en/articles/12883420
+- Claude docs index (llms.txt, fetched 2026-11-16): https://claude.com/docs/llms.txt
+- Claude connectors directory (fetched 2026-11-16): https://claude.com/connectors
 
 ## Sensitive data (second round)
 - API and data retention (ZDR and HIPAA feature eligibility): https://platform.claude.com/docs/en/manage-claude/api-and-data-retention

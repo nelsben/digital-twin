@@ -94,7 +94,7 @@ A Team customer with no MDM runs its twin in claude.ai on the web ([13](13-devic
 | Every model release | Rerun all evals before switching models | Technical owner |
 | Monthly | Twin scorecards; decisions to promote or demote autonomy | **RevOps manager** (business owner), with the Director of IT |
 | Quarterly | Access review: Owners, group membership, connector scopes; retention review | **Director of IT** (technical owner), with compliance for the private-equity org |
-| Ongoing | **Tooling and spend:** choosing the log destination and monitoring tools; budgets, Claude spend controls and per-user limits, usage alerts; cost per task on the scorecard | **IT** (Director of IT) |
+| Ongoing | **Tooling and spend:** choosing the log destination and monitoring tools; budgets, Claude spend controls and per-user limits, usage alerts ([what each plan offers](09-plans-and-it-controls.md#spend-and-usage-limits)); cost per task on the scorecard | **IT** (Director of IT) |
 | On offboarding | Revoke access, "Stop sharing" items they shared, purge the laptop, reassign skills they owned | Director of IT |
 
 **Later phase:** build a governance dashboard on top of the log.

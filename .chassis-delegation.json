@@ -23,7 +23,7 @@
     "shared"
   ],
   "_maxWorkers": "Briefed workers at once; past it /dispatch says queued, and the hand-back that frees a slot says ready: <id>, and the brain makes the spawn.",
-  "maxWorkers": 2,
+  "maxWorkers": 4,
   "_maxWorkersByTier": "A lower limit on the briefed workers of one tier (economy, standard, frontier, premium), under maxWorkers; a tier not named takes maxWorkers alone. Example: {\"frontier\": 2}.",
   "maxWorkersByTier": {},
   "_worktreeRoot": "Folder for the workers' worktrees; empty = sibling folders <repo>-<id>.",

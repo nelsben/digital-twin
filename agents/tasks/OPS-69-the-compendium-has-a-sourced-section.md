@@ -1,0 +1,36 @@
+---
+id: OPS-69
+title: The compendium has a sourced section on spend and usage limits, page 09 gives the older-Enterprise seat condition for Claude Code, and page 11 points to the Google Docs, Sheets and Slides runbook
+domain: ops
+tier: standard
+tier_reason: docs-only compendium edit with fetched sources and a structural test
+status: merged
+issue: 240
+parent: 228
+fixes: []
+scope: [docs/compendium/09-plans-and-it-controls.md, docs/compendium/11-connectors.md, docs/compendium/15-governance-and-performance.md, docs/compendium/sources.md, tests/test_compendium_spend_and_seats.py]
+forbid: [starter-kit/**, partner-kit/**, engagements/**, CLAUDE.md, agents/**, .claude-plugin/**, docs/playbook/**, docs/compendium/README.md, partner-kit/plugins/twin-consultant/data/rules.json, partner-kit/plugins/twin-consultant/data/task-library.json, partner-kit/plugins/twin-consultant/data/industry-packs/general.json, partner-kit/plugins/twin-consultant/skills/**/evals/**, partner-kit/docs/design.md, engagements/sample-pe/design.md, engagements/sample-pe/personas/**, engagements/sample-team-cs/personas/**, tests/fixtures/twincard/**, tests/test_twincard_followups.py, tests/test_twincard_rule_audit.py, tests/test_twincard_backlog_consistency.py, tests/test_twincard_walk_rules.py, tests/test_twincard_backlog.py]
+red_test: python3 -m unittest tests.test_compendium_spend_and_seats
+gate: test
+budget: 3-attempts
+spend: 10
+---
+## Why
+
+Three compendium facts fell behind the runbooks merged on 2026-11-16 (OPS-65, OPS-66) and the spend-limits task added by OPS-57: the task links the nearest section because the compendium has no spend section, page 09 shows Claude Code "Y" on Enterprise without saying older Enterprise plans need a seat type that includes it, and page 11 still says "Our runbooks don't cover these connectors" for Google Docs, Sheets and Slides. The compendium is our source of facts, so each must carry a source link or the unverified marker.
+
+## Done when
+
+- Read first: docs/compendium/README.md (markers: **⚠ Unverified:**, **⚠ Conflict:**, **(Our recommendation):**, **(Our reading):**), docs/compendium/09-plans-and-it-controls.md, docs/compendium/11-connectors.md (the Google Drive / Sheets row), docs/compendium/15-governance-and-performance.md (the Ongoing 'Tooling and spend' row), docs/compendium/sources.md, starter-kit/runbooks/claude-code-for-a-role.md (step 1 and source [A]) and starter-kit/runbooks/google-docs-sheets-slides-connectors.md (the 'Pages that do not exist' paragraph and sources [F], [G]).
+- SPEND SECTION. Page 09 gains a section headed exactly '## Spend and usage limits' (anchor #spend-and-usage-limits), placed after '## What IT can do on each plan'. It says, per plan (Free/Pro, Team, Enterprise), what spend controls and usage limits an Owner can set (org-wide, per-user, per-group if any), where in the admin screens they are set, what happens when a limit is reached, and whether usage reports or alerts exist; plus one line on Claude Tag using the org's balance (link the existing trap bullet, do not copy it) and one line on the Console/API (link page 09's existing API paragraph). Every fact comes from a page you download yourself with curl (generic user agent, no project details), strip of tags and search for the quoted words; start from claude.com/pricing and support.claude.com articles on usage limits, extra usage and spend controls. A fact no downloaded page states carries **⚠ Unverified:**. Do not confirm from memory or from a summarising fetch. The 'Spend controls' row in the feature matrix links the new section.
+- SEAT CONDITION. Page 09's Claude Code row keeps 'Y' for Team and changes the Enterprise cell so it says Claude Code is included with the seat on new and self-serve Enterprise plans and that on older Enterprise plans the user needs a Chat + Claude Code or Premium seat, citing https://support.claude.com/en/articles/11845131 (download it and check the words; if the page says otherwise, write what it says and report it).
+- PAGE 11. In the Google Drive / Sheets row, the sentence 'Our runbooks don't cover these connectors.' is replaced by a link to starter-kit/runbooks/google-docs-sheets-slides-connectors.md plus one sentence saying that, on 2026-11-16, neither the connectors directory index nor the connectors docs index listed a separate Docs, Sheets or Slides entry, citing the two pages the runbook cites as [F] and [G] (download both and check). The existing **⚠ Unverified:** for tool names and plans stays. Nothing else in the row changes.
+- Page 15's 'Tooling and spend' row links the new section; no other text on page 15 changes. sources.md gains every page you cited that it does not already list, under the right heading.
+- No compendium heading is renamed or removed; only the new heading is added. Nothing outside docs/compendium/ and the new test changes: the task library's spend-limits link is re-pointed by a later card, not here.
+- TEST FIRST. New file tests/test_compendium_spend_and_seats.py, committed alone and run failing first: page 09 has the heading '## Spend and usage limits'; every non-blank line in that section either contains a markdown link to an http(s) source or a compendium page, or contains '⚠ Unverified'; the feature matrix's Spend controls row links #spend-and-usage-limits; the Claude Code row's Enterprise cell mentions 'Premium' and links 11845131; page 11 no longer contains "Our runbooks don't cover these connectors" and links google-docs-sheets-slides-connectors.md; every URL cited in the new section appears in sources.md. The whole suite passes: python3 -m unittest discover -s tests.
+- Hand-back lists: each new fact with the URL and the exact quoted words that support it; each item marked unverified and why; the pages downloaded (URL and date); any place where a page contradicts something already on pages 09, 11 or 15 (report it, change only what this card names).
+- Test runs: the shared Mac test lease may be held by another project for hours. Run tests through `node /Users/bennelsen/WorkflowBridge/bin/wb lease gate-mac --wait 600 -- <command>`; never bypass the hook and never run tests on a scratch copy outside the lease. If the lease is not granted within 20 minutes in total, write the red test file first, commit it alone, then build, commit and hand back with gate=fail and the words 'gate not run: lease blocked'. Do not end your turn while a queued run is pending. Keep any saved failing-run output under 1 MB.
+
+## Review
+
+Standard tier, no reviewer agent. Brain downloaded all 7 cited help-center articles, the pricing page and claude.com/docs/llms.txt with curl, stripped tags and searched every quoted phrase in the new spend section and the seat cell: all found word for word after attempt 2 fixed two misquotes (11647753 "you can wait for it to reset or upgrade your plan"; 11526368 seat fee "doesn't include any usage") and replaced the "in arrears" paraphrase with 12005970's words. llms.txt lists only google/calendar, drive, gmail connector pages. Left for later (reported by worker, not changed): page 09 Team "Spend controls: Y" vs per-user limits not on every Team org; Team spend-limit alerts unverified; Console spend limits unverified.

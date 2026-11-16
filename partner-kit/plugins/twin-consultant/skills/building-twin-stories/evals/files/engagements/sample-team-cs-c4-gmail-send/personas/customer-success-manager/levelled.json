@@ -3,7 +3,7 @@
   "customer": "example-software-co",
   "persona": "customer-success-manager",
   "source": {
-    "card_sha256": "d0dbd2c679d4ab2cfcdcf34e348f3cc418bbb292e0471ee1ff3a71692c7c810a",
+    "card_sha256": "d1ea72cd65ac0607dae9edffdc75db1ee499860a3991b46e1083c560ca7abf12",
     "profile_sha256": "08e869baf79b64fbaf463247a9ee26a118fac87ce17313b37ed5c073abb1a3ce",
     "rules_version": 1,
     "pack": "b2b-software"
@@ -164,7 +164,7 @@
           "system": "hubspot",
           "access": "read",
           "identity": "user",
-          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
+          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic); an Owner adds it on Team and Enterprise. Super Admins and users with App Marketplace access permissions can connect it without prior app approval; for all other users a Super Admin approves it first and, while approving, selects the data permissions it may reach and who in the account can install it. With HubSpot's Sensitive Data settings on, a Super Admin can grant the connector read-only access to Sensitive Data properties and engagements during installation or reauthentication, and the user also needs the matching CRM object or property-level permissions. HubSpot recommends setting write tools to Needs approval.",
           "runbook": "starter-kit/runbooks/hubspot-connector.md",
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -174,7 +174,7 @@
           "system": "google-drive",
           "access": "read",
           "identity": "user",
-          "how": "The Google Drive directory connector, built and run by Google. An Owner adds it on Team and Enterprise. It reads and creates files.",
+          "how": "The Google Drive directory connector, built and run by Google; an Owner adds it on Team and Enterprise. It searches, reads and creates files; the help-center article adds sharing, moving and trashing files, and the listing names share_file and trash_file among its tools. (Our recommendation) set each of those tools to Blocked or Needs approval. Shared-drive support is unverified.",
           "runbook": "starter-kit/runbooks/google-workspace-connectors.md",
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -284,7 +284,7 @@
           "system": "hubspot",
           "access": "read",
           "identity": "service-account",
-          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
+          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic); an Owner adds it on Team and Enterprise. Super Admins and users with App Marketplace access permissions can connect it without prior app approval; for all other users a Super Admin approves it first and, while approving, selects the data permissions it may reach and who in the account can install it. With HubSpot's Sensitive Data settings on, a Super Admin can grant the connector read-only access to Sensitive Data properties and engagements during installation or reauthentication, and the user also needs the matching CRM object or property-level permissions. HubSpot recommends setting write tools to Needs approval.",
           "runbook": "starter-kit/runbooks/hubspot-connector.md",
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -304,7 +304,7 @@
           "system": "slack",
           "access": "write",
           "identity": "service-account",
-          "how": "The Slack directory connector (Team and Enterprise; the Claude in Slack app installed first). An Owner enables it. Whether it can post is unconfirmed; the Slack MCP server can.",
+          "how": "The Slack directory connector (Team and Enterprise; the Claude in Slack app installed first); an Owner enables it. Its listing names slack_send_message, slack_create_canvas and slack_update_canvas beside its search and read tools, while its connector page documents only search. The Slack MCP server can send and schedule messages.",
           "runbook": "starter-kit/runbooks/slack-connector.md",
           "permission": "blocked",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -414,7 +414,7 @@
           "system": "hubspot",
           "access": "read",
           "identity": "user",
-          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
+          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic); an Owner adds it on Team and Enterprise. Super Admins and users with App Marketplace access permissions can connect it without prior app approval; for all other users a Super Admin approves it first and, while approving, selects the data permissions it may reach and who in the account can install it. With HubSpot's Sensitive Data settings on, a Super Admin can grant the connector read-only access to Sensitive Data properties and engagements during installation or reauthentication, and the user also needs the matching CRM object or property-level permissions. HubSpot recommends setting write tools to Needs approval.",
           "runbook": "starter-kit/runbooks/hubspot-connector.md",
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -524,7 +524,7 @@
           "system": "google-drive",
           "access": "read",
           "identity": "user",
-          "how": "The Google Drive directory connector, built and run by Google. An Owner adds it on Team and Enterprise. It reads and creates files.",
+          "how": "The Google Drive directory connector, built and run by Google; an Owner adds it on Team and Enterprise. It searches, reads and creates files; the help-center article adds sharing, moving and trashing files, and the listing names share_file and trash_file among its tools. (Our recommendation) set each of those tools to Blocked or Needs approval. Shared-drive support is unverified.",
           "runbook": "starter-kit/runbooks/google-workspace-connectors.md",
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -534,18 +534,8 @@
           "system": "hubspot",
           "access": "write",
           "identity": "user",
-          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
+          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic); an Owner adds it on Team and Enterprise. Super Admins and users with App Marketplace access permissions can connect it without prior app approval; for all other users a Super Admin approves it first and, while approving, selects the data permissions it may reach and who in the account can install it. With HubSpot's Sensitive Data settings on, a Super Admin can grant the connector read-only access to Sensitive Data properties and engagements during installation or reauthentication, and the user also needs the matching CRM object or property-level permissions. HubSpot recommends setting write tools to Needs approval.",
           "runbook": "starter-kit/runbooks/hubspot-connector.md",
-          "permission": "blocked",
-          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-          "unverified": false
-        },
-        {
-          "system": "gmail",
-          "access": "write",
-          "identity": "user",
-          "how": "The Gmail directory connector. An Owner or Primary Owner enables it on Team and Enterprise. Read and search only: it can't draft, send or change mail.",
-          "runbook": "starter-kit/runbooks/google-workspace-connectors.md",
           "permission": "blocked",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
           "unverified": false
@@ -654,7 +644,7 @@
           "system": "zendesk",
           "access": "read",
           "identity": "user",
-          "how": "Zendesk's External AI connection (early access), https://<subdomain>.zendesk.com/mcp, added by an Owner as a custom connector. A Zendesk admin creates the connection and limits it to agent groups.",
+          "how": "Zendesk's External AI connection (early access), https://<subdomain>.zendesk.com/mcp, added by an Owner as a custom connector. A Zendesk admin creates the connection and limits it to agent groups. Zendesk's pages conflict over whether it asks a person before each change, so don't count on Zendesk asking, and set each write tool to Needs approval in Claude.",
           "runbook": "starter-kit/runbooks/zendesk-connector.md",
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -784,25 +774,6 @@
       }
     },
     {
-      "system": "gmail",
-      "use": "send",
-      "tasks": [
-        "C4"
-      ],
-      "permission": {
-        "value": "blocked",
-        "rule": "permission-write-draft-blocked",
-        "cite": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation",
-        "reason": "At levels 0 and 1 the twin only drafts, so write tools are Blocked.",
-        "unverified": false,
-        "basis": "our-recommendation",
-        "overridden": null
-      },
-      "wanted": {
-        "C4": "needs-approval"
-      }
-    },
-    {
       "system": "zendesk",
       "use": "read",
       "tasks": [
@@ -822,16 +793,7 @@
       }
     }
   ],
-  "blockers": [
-    {
-      "code": "connector-cannot-write",
-      "about": "C4",
-      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-      "unverified": false,
-      "message": "The task writes to Gmail or Google Calendar, whose directory connectors read only: they cannot create, send or change mail or events.",
-      "fix": "End the task in a draft that a person sends, and remove the write from the card."
-    }
-  ],
+  "blockers": [],
   "warnings": [
     {
       "code": "team-no-group-targeting",
@@ -962,22 +924,6 @@
       "fix": "Make the task's connectors read-only for people on unmanaged devices (set the write tools to Blocked), or have the customer accept the write in writing."
     },
     {
-      "code": "mail-read-only",
-      "about": "C4",
-      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-      "unverified": false,
-      "message": "The task sends email or puts an event on a calendar through Gmail or Google Calendar, and both directory connectors read only, so the task ends in a draft a person sends.",
-      "fix": "Write the skill so it ends with a draft in the conversation that the person copies and sends, or adds to the calendar."
-    },
-    {
-      "code": "untrusted-input-with-send",
-      "about": "C4",
-      "cite": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it",
-      "unverified": false,
-      "message": "The task reads untrusted content and can send it out, so a person approves each send.",
-      "fix": "Set the send tool to Needs approval and keep the task at level 2 or below."
-    },
-    {
       "code": "memory-poisoning-risk",
       "about": "C4",
       "cite": "docs/compendium/02-persona.md#memory",
@@ -1018,5 +964,5 @@
       "fix": "On Enterprise, set custom retention for the org. On Team, where custom retention is not offered, record that the customer accepts standard retention, under which, page 10 says, \"otherwise local sessions are kept 6 years\"."
     }
   ],
-  "complete": false
+  "complete": true
 }

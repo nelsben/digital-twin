@@ -73,8 +73,8 @@ ways out the design allows:
 Overrides are allowed for `runtime`, `identity`, `autonomy.start`,
 `autonomy.ceiling`, `data_controls` and `memory` only. `connectors` and
 `plan_fit` follow from the others: overriding either raises blocker `override-not-allowed`
-and is not applied, so blocker `connector-cannot-write` has no override way
-out. Never propose an override yourself to make a blocker disappear; offer
+and is not applied; blocker `plan-below-team` has no override way out at
+all. Never propose an override yourself to make a blocker disappear; offer
 the ways out and let the consultant choose. Blocker `highly-sensitive-needs-zdr-org`
 and warning `zdr-org-not-confirmed` read the profile's `compliance.zdr_cover`:
 it changes only when the customer says their agreement's state has changed.
@@ -112,7 +112,7 @@ one line for each retired item).
 ```markdown
 ## Plan for <role> at <customer>
 ### Blockers
-- connector-cannot-write (C4): <one plain sentence>. Cite: <page#anchor>. Ways out: <each>
+- plan-below-team (persona): <one plain sentence>. Cite: <page#anchor>. Ways out: <each>
 ### Rests on an unverified fact
 - C5 runtime: <what>. Confirm <what> with <whom>. Cite: <page#anchor>
 ### Undecided: a person decides, recorded as an override

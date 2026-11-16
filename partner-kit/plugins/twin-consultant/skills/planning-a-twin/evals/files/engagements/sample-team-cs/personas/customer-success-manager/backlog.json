@@ -4,7 +4,7 @@
   "persona": "customer-success-manager",
   "source": {
     "card_sha256": "faa81239442dc52f210f6519f29fd6946fc48cf7455368bddedc29ac7e516e5e",
-    "levelled_sha256": "7ebb8ed2bcd48e41a32b8e579c308275d26ea07fab4547097a72d4a27a39fb79",
+    "levelled_sha256": "3ef0f5e31b407538083f9bf6517efbf7c4aa3aef726b8c1ed7a9d9f794a2fe8d",
     "library_version": 1
   },
   "epic": {
@@ -321,6 +321,25 @@
                 ],
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
                 "owner_role": "solution-architect",
+                "status": "todo"
+              },
+              {
+                "id": "S-C1.warning-confidential-standard-retention",
+                "template": "warning-confidential-standard-retention",
+                "title": "Resolve warning confidential-standard-retention: set custom retention or record the customer's acceptance",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Explain that page 10 requires custom retention for confidential data, otherwise local sessions are kept 6 years.",
+                    "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+                  },
+                  {
+                    "text": "On Enterprise, set custom retention; on Team, record that the customer accepts standard retention.",
+                    "link": "docs/compendium/10-sensitive-data.md#other-controls"
+                  }
+                ],
+                "done_when": "Custom retention is set, or the customer's acceptance of standard retention is recorded.",
+                "owner_role": "compliance",
                 "status": "todo"
               }
             ]
@@ -668,7 +687,7 @@
               {
                 "id": "S-C4.warning-unmanaged-connectors-read-only",
                 "template": "warning-unmanaged-connectors-read-only",
-                "title": "Resolve warning unmanaged-connectors-read-only: limit the write on an unmanaged device",
+                "title": "Resolve warning unmanaged-connectors-read-only: make the connectors read-only on an unmanaged device",
                 "part": "A7",
                 "how": [
                   {
@@ -676,31 +695,31 @@
                     "link": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation"
                   },
                   {
-                    "text": "Set the write tool to Needs approval at most, or get the customer's written acceptance of the write.",
+                    "text": "Set the task's write tools to Blocked for people on unmanaged devices so the connectors are read-only, or get the customer's written acceptance of the write.",
                     "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
                   }
                 ],
-                "done_when": "The write tool is Needs approval or Blocked, or the customer's written acceptance is recorded.",
+                "done_when": "The write tools are Blocked for people on unmanaged devices, or the customer's written acceptance is recorded.",
                 "owner_role": "technical-owner",
                 "status": "todo"
               },
               {
-                "id": "S-C4.warning-mail-read-only",
-                "template": "warning-mail-read-only",
-                "title": "Resolve warning mail-read-only: end the email in a draft the person sends",
-                "part": "A2",
+                "id": "S-C4.warning-confidential-standard-retention",
+                "template": "warning-confidential-standard-retention",
+                "title": "Resolve warning confidential-standard-retention: set custom retention or record the customer's acceptance",
+                "part": "A7",
                 "how": [
                   {
-                    "text": "Note that the mail connector reads only.",
-                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+                    "text": "Explain that page 10 requires custom retention for confidential data, otherwise local sessions are kept 6 years.",
+                    "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
                   },
                   {
-                    "text": "Write the skill so it ends with a draft in the conversation that the person copies and sends.",
-                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                    "text": "On Enterprise, set custom retention; on Team, record that the customer accepts standard retention.",
+                    "link": "docs/compendium/10-sensitive-data.md#other-controls"
                   }
                 ],
-                "done_when": "The evals show the task ends in a draft and never tries to send.",
-                "owner_role": "skill-engineer",
+                "done_when": "Custom retention is set, or the customer's acceptance of standard retention is recorded.",
+                "owner_role": "compliance",
                 "status": "todo"
               }
             ]
@@ -1139,20 +1158,43 @@
               {
                 "id": "S-C2.warning-memory-poisoning-risk",
                 "template": "warning-memory-poisoning-risk",
-                "title": "Resolve warning memory-poisoning-risk: keep memory off for the task that reads untrusted input",
+                "title": "Resolve warning memory-poisoning-risk: keep memory writes to controlled steps for the task that reads untrusted input",
                 "part": "A6",
                 "how": [
                   {
-                    "text": "Explain how untrusted input can poison memory.",
+                    "text": "Explain how untrusted input can poison memory, and that memory on claude.ai is one org-wide switch.",
                     "link": "docs/compendium/02-persona.md#memory"
                   },
                   {
-                    "text": "Keep role knowledge in reviewed skills and let only controlled steps write memory.",
+                    "text": "Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it.",
                     "link": "docs/compendium/02-persona.md#memory"
+                  },
+                  {
+                    "text": "If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide.",
+                    "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
                   }
                 ],
-                "done_when": "Memory stays off for the task and its role knowledge lives in reviewed skills.",
+                "done_when": "The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.",
                 "owner_role": "solution-architect",
+                "status": "todo"
+              },
+              {
+                "id": "S-C2.warning-confidential-standard-retention",
+                "template": "warning-confidential-standard-retention",
+                "title": "Resolve warning confidential-standard-retention: set custom retention or record the customer's acceptance",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Explain that page 10 requires custom retention for confidential data, otherwise local sessions are kept 6 years.",
+                    "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+                  },
+                  {
+                    "text": "On Enterprise, set custom retention; on Team, record that the customer accepts standard retention.",
+                    "link": "docs/compendium/10-sensitive-data.md#other-controls"
+                  }
+                ],
+                "done_when": "Custom retention is set, or the customer's acceptance of standard retention is recorded.",
+                "owner_role": "compliance",
                 "status": "todo"
               }
             ]
@@ -1375,22 +1417,22 @@
                 "status": "todo"
               },
               {
-                "id": "S-C3.warning-mail-read-only",
-                "template": "warning-mail-read-only",
-                "title": "Resolve warning mail-read-only: end the email in a draft the person sends",
-                "part": "A2",
+                "id": "S-C3.warning-confidential-standard-retention",
+                "template": "warning-confidential-standard-retention",
+                "title": "Resolve warning confidential-standard-retention: set custom retention or record the customer's acceptance",
+                "part": "A7",
                 "how": [
                   {
-                    "text": "Note that the mail connector reads only.",
-                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+                    "text": "Explain that page 10 requires custom retention for confidential data, otherwise local sessions are kept 6 years.",
+                    "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
                   },
                   {
-                    "text": "Write the skill so it ends with a draft in the conversation that the person copies and sends.",
-                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                    "text": "On Enterprise, set custom retention; on Team, record that the customer accepts standard retention.",
+                    "link": "docs/compendium/10-sensitive-data.md#other-controls"
                   }
                 ],
-                "done_when": "The evals show the task ends in a draft and never tries to send.",
-                "owner_role": "skill-engineer",
+                "done_when": "Custom retention is set, or the customer's acceptance of standard retention is recorded.",
+                "owner_role": "compliance",
                 "status": "todo"
               }
             ]
@@ -1721,19 +1763,23 @@
               {
                 "id": "S-C5.warning-memory-poisoning-risk",
                 "template": "warning-memory-poisoning-risk",
-                "title": "Resolve warning memory-poisoning-risk: keep memory off for the task that reads untrusted input",
+                "title": "Resolve warning memory-poisoning-risk: keep memory writes to controlled steps for the task that reads untrusted input",
                 "part": "A6",
                 "how": [
                   {
-                    "text": "Explain how untrusted input can poison memory.",
+                    "text": "Explain how untrusted input can poison memory, and that memory on claude.ai is one org-wide switch.",
                     "link": "docs/compendium/02-persona.md#memory"
                   },
                   {
-                    "text": "Keep role knowledge in reviewed skills and let only controlled steps write memory.",
+                    "text": "Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it.",
                     "link": "docs/compendium/02-persona.md#memory"
+                  },
+                  {
+                    "text": "If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide.",
+                    "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
                   }
                 ],
-                "done_when": "Memory stays off for the task and its role knowledge lives in reviewed skills.",
+                "done_when": "The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.",
                 "owner_role": "solution-architect",
                 "status": "todo"
               },
@@ -1773,6 +1819,25 @@
                 ],
                 "done_when": "The vendor's answer is recorded with its source.",
                 "owner_role": "integration-engineer",
+                "status": "todo"
+              },
+              {
+                "id": "S-C5.warning-confidential-standard-retention",
+                "template": "warning-confidential-standard-retention",
+                "title": "Resolve warning confidential-standard-retention: set custom retention or record the customer's acceptance",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Explain that page 10 requires custom retention for confidential data, otherwise local sessions are kept 6 years.",
+                    "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+                  },
+                  {
+                    "text": "On Enterprise, set custom retention; on Team, record that the customer accepts standard retention.",
+                    "link": "docs/compendium/10-sensitive-data.md#other-controls"
+                  }
+                ],
+                "done_when": "Custom retention is set, or the customer's acceptance of standard retention is recorded.",
+                "owner_role": "compliance",
                 "status": "todo"
               }
             ]
@@ -1892,11 +1957,11 @@
               {
                 "id": "S-connectors-and-identity.warning-hubspot-super-admin-approval",
                 "template": "warning-hubspot-super-admin-approval",
-                "title": "Resolve warning hubspot-super-admin-approval: book the HubSpot Super Admin's approval",
+                "title": "Resolve warning hubspot-super-admin-approval: book the HubSpot approval",
                 "part": "A3",
                 "how": [
                   {
-                    "text": "Name the customer's HubSpot Super Admin in the profile's owners.",
+                    "text": "Name the customer's HubSpot Super Admin, or a user with App Marketplace access, in the profile's owners.",
                     "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
                   },
                   {
@@ -1904,7 +1969,7 @@
                     "link": "starter-kit/runbooks/identity-devices-publishing.md#getting-people-in-and-setting-roles"
                   }
                 ],
-                "done_when": "The HubSpot Super Admin has approved the connector.",
+                "done_when": "A HubSpot Super Admin, or a user with App Marketplace access, has approved the connector.",
                 "owner_role": "source-system-admin",
                 "status": "todo"
               },

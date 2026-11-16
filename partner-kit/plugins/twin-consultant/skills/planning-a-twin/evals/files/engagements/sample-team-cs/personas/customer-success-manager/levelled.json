@@ -74,7 +74,7 @@
         "name": "sales",
         "where": "knowledge-work-plugins",
         "use": "reference",
-        "cite": "docs/compendium/16-oob-skills-and-references.md#2-anthropic-plugin-marketplaces-and-plugins",
+        "cite": "docs/compendium/18-customer-success.md#the-short-answer",
         "unverified": false
       }
     ]
@@ -93,8 +93,8 @@
       "identity": {
         "value": "user",
         "rule": "identity-client-user",
-        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "cite": "docs/compendium/05-decision-matrix.md#the-options",
+        "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
         "unverified": false,
         "basis": "compendium",
         "overridden": null
@@ -113,7 +113,7 @@
           "value": 3,
           "rule": "ceiling-person-started",
           "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-          "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+          "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
           "unverified": false,
           "basis": "compendium",
           "overridden": null
@@ -153,9 +153,9 @@
           "value": "standard",
           "rule": "retention-profile",
           "cite": "docs/compendium/10-sensitive-data.md#other-controls",
-          "reason": "Retention follows the customer profile's compliance.retention.",
+          "reason": "Retention passes the customer's own compliance.retention setting through; our choice, as the page states no rule for it. Warnings say where that setting falls short for the task.",
           "unverified": false,
-          "basis": "compendium",
+          "basis": "our-recommendation",
           "overridden": null
         }
       },
@@ -164,7 +164,7 @@
           "system": "hubspot",
           "access": "read",
           "identity": "user",
-          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin approves it and sets its data permissions. Set write tools to Needs approval.",
+          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
           "runbook": null,
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -185,9 +185,9 @@
         "value": "on",
         "rule": "memory-on",
         "cite": "docs/compendium/02-persona.md#memory",
-        "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on.",
+        "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on for it. Memory on claude.ai is one org-wide switch, so this says only that the task does not need it off; our choice.",
         "unverified": false,
-        "basis": "compendium",
+        "basis": "our-recommendation",
         "overridden": null
       },
       "plan_fit": {
@@ -205,7 +205,7 @@
         "value": "claude-tag-routine",
         "rule": "runtime-team-slack-tag-routine",
         "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
-        "reason": "Shared team work that runs on a schedule and lives in Slack is a Claude Tag channel routine.",
+        "reason": "Shared team work that runs on a schedule and lives in Slack is a Claude Tag channel routine. Keeping it to internal and confidential data is our choice, because page 10 allows Claude Tag for those classes only; it is not used under ZDR, which turns Claude Tag off, or when the customer requires self-hosting.",
         "unverified": false,
         "basis": "our-recommendation",
         "overridden": null
@@ -243,10 +243,10 @@
         "settings_baseline": {
           "value": null,
           "rule": "baseline-tag-none",
-          "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
-          "reason": "The task runs in Slack through Claude Tag, which takes no managed settings file.",
+          "cite": "docs/compendium/13-devices.md#what-mdm-is",
+          "reason": "Claude Tag runs in Slack, not on a device, so the managed settings file that Claude Code reads does not apply to it; our reading of page 13.",
           "unverified": false,
-          "basis": "compendium",
+          "basis": "our-recommendation",
           "overridden": null
         },
         "web_tools": {
@@ -273,9 +273,9 @@
           "value": "standard",
           "rule": "retention-profile",
           "cite": "docs/compendium/10-sensitive-data.md#other-controls",
-          "reason": "Retention follows the customer profile's compliance.retention.",
+          "reason": "Retention passes the customer's own compliance.retention setting through; our choice, as the page states no rule for it. Warnings say where that setting falls short for the task.",
           "unverified": false,
-          "basis": "compendium",
+          "basis": "our-recommendation",
           "overridden": null
         }
       },
@@ -284,7 +284,7 @@
           "system": "hubspot",
           "access": "read",
           "identity": "service-account",
-          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin approves it and sets its data permissions. Set write tools to Needs approval.",
+          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
           "runbook": null,
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -315,16 +315,16 @@
         "value": "off",
         "rule": "memory-off-untrusted-input",
         "cite": "docs/compendium/02-persona.md#memory",
-        "reason": "The task reads untrusted input while personal memory is wanted, a memory-poisoning risk, so memory stays off for it.",
+        "reason": "The task reads untrusted input. Memory on claude.ai is one org-wide switch, so a per-task 'off' is a build instruction, not a setting: the task's skill writes nothing to memory, and only controlled steps write it. Our choice, from page 02's advice on memory poisoning.",
         "unverified": false,
-        "basis": "compendium",
+        "basis": "our-recommendation",
         "overridden": null
       },
       "plan_fit": {
         "value": "ok-with-limits",
         "rule": "plan-fit-private-network-allowlist",
         "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-        "reason": "The private network has no MCP tunnel here, and this customer can allowlist Anthropic's IP range, so it is reachable at the edge.",
+        "reason": "This customer can allowlist Anthropic's IP range, so the private network is reachable at the edge.",
         "unverified": false,
         "basis": "compendium",
         "overridden": null
@@ -343,8 +343,8 @@
       "identity": {
         "value": "user",
         "rule": "identity-client-user",
-        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "cite": "docs/compendium/05-decision-matrix.md#the-options",
+        "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
         "unverified": false,
         "basis": "compendium",
         "overridden": null
@@ -403,9 +403,9 @@
           "value": "standard",
           "rule": "retention-profile",
           "cite": "docs/compendium/10-sensitive-data.md#other-controls",
-          "reason": "Retention follows the customer profile's compliance.retention.",
+          "reason": "Retention passes the customer's own compliance.retention setting through; our choice, as the page states no rule for it. Warnings say where that setting falls short for the task.",
           "unverified": false,
-          "basis": "compendium",
+          "basis": "our-recommendation",
           "overridden": null
         }
       },
@@ -414,7 +414,7 @@
           "system": "hubspot",
           "access": "read",
           "identity": "user",
-          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin approves it and sets its data permissions. Set write tools to Needs approval.",
+          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
           "runbook": null,
           "permission": "always-allow",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -425,9 +425,9 @@
         "value": "on",
         "rule": "memory-on",
         "cite": "docs/compendium/02-persona.md#memory",
-        "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on.",
+        "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on for it. Memory on claude.ai is one org-wide switch, so this says only that the task does not need it off; our choice.",
         "unverified": false,
-        "basis": "compendium",
+        "basis": "our-recommendation",
         "overridden": null
       },
       "plan_fit": {
@@ -453,8 +453,8 @@
       "identity": {
         "value": "user",
         "rule": "identity-client-user",
-        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "cite": "docs/compendium/05-decision-matrix.md#the-options",
+        "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
         "unverified": false,
         "basis": "compendium",
         "overridden": null
@@ -513,9 +513,9 @@
           "value": "standard",
           "rule": "retention-profile",
           "cite": "docs/compendium/10-sensitive-data.md#other-controls",
-          "reason": "Retention follows the customer profile's compliance.retention.",
+          "reason": "Retention passes the customer's own compliance.retention setting through; our choice, as the page states no rule for it. Warnings say where that setting falls short for the task.",
           "unverified": false,
-          "basis": "compendium",
+          "basis": "our-recommendation",
           "overridden": null
         }
       },
@@ -534,7 +534,7 @@
           "system": "hubspot",
           "access": "write",
           "identity": "user",
-          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin approves it and sets its data permissions. Set write tools to Needs approval.",
+          "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
           "runbook": null,
           "permission": "blocked",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -545,9 +545,9 @@
         "value": "on",
         "rule": "memory-on",
         "cite": "docs/compendium/02-persona.md#memory",
-        "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on.",
+        "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on for it. Memory on claude.ai is one org-wide switch, so this says only that the task does not need it off; our choice.",
         "unverified": false,
-        "basis": "compendium",
+        "basis": "our-recommendation",
         "overridden": null
       },
       "plan_fit": {
@@ -573,8 +573,8 @@
       "identity": {
         "value": "user",
         "rule": "identity-client-user",
-        "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-        "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+        "cite": "docs/compendium/05-decision-matrix.md#the-options",
+        "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
         "unverified": false,
         "basis": "compendium",
         "overridden": null
@@ -633,9 +633,9 @@
           "value": "standard",
           "rule": "retention-profile",
           "cite": "docs/compendium/10-sensitive-data.md#other-controls",
-          "reason": "Retention follows the customer profile's compliance.retention.",
+          "reason": "Retention passes the customer's own compliance.retention setting through; our choice, as the page states no rule for it. Warnings say where that setting falls short for the task.",
           "unverified": false,
-          "basis": "compendium",
+          "basis": "our-recommendation",
           "overridden": null
         }
       },
@@ -655,9 +655,9 @@
         "value": "off",
         "rule": "memory-off-untrusted-input",
         "cite": "docs/compendium/02-persona.md#memory",
-        "reason": "The task reads untrusted input while personal memory is wanted, a memory-poisoning risk, so memory stays off for it.",
+        "reason": "The task reads untrusted input. Memory on claude.ai is one org-wide switch, so a per-task 'off' is a build instruction, not a setting: the task's skill writes nothing to memory, and only controlled steps write it. Our choice, from page 02's advice on memory poisoning.",
         "unverified": false,
-        "basis": "compendium",
+        "basis": "our-recommendation",
         "overridden": null
       },
       "plan_fit": {
@@ -840,8 +840,16 @@
       "about": "persona",
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": false,
-      "message": "The HubSpot connector needs a HubSpot Super Admin's approval as well as an Owner.",
-      "fix": "Name the customer's HubSpot Super Admin in the profile's owners and book the approval."
+      "message": "The HubSpot connector needs approval from a HubSpot Super Admin (or a user with App Marketplace access) as well as an Owner.",
+      "fix": "Name the customer's HubSpot Super Admin, or a user with App Marketplace access, in the profile's owners and book the approval."
+    },
+    {
+      "code": "confidential-standard-retention",
+      "about": "C1",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "message": "Page 10 requires custom retention for confidential data, and the profile's retention is standard.",
+      "fix": "On Enterprise, set custom retention for the org. On Team, where custom retention is not offered, record that the customer accepts standard retention, under which, page 10 says, \"otherwise local sessions are kept 6 years\"."
     },
     {
       "code": "private-network-allowlist",
@@ -880,40 +888,48 @@
       "about": "C2",
       "cite": "docs/compendium/02-persona.md#memory",
       "unverified": false,
-      "message": "The task reads untrusted input while personal memory is wanted, so memory stays off for it.",
-      "fix": "Keep role knowledge in reviewed skills; let only controlled steps write memory."
+      "message": "The task reads untrusted input while personal memory is wanted. Memory on claude.ai is one org-wide switch, so it cannot be turned off for this task alone: the task's skill must write nothing to memory, and only controlled steps write it.",
+      "fix": "Keep role knowledge in reviewed skills and build the task so it never writes memory; if the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide."
     },
     {
-      "code": "mail-read-only",
-      "about": "C3",
-      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "code": "confidential-standard-retention",
+      "about": "C2",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
       "unverified": false,
-      "message": "The mail and calendar connectors read only, so an email task ends in a draft a person sends.",
-      "fix": "Write the skill so it ends with a draft in the conversation that the person copies and sends."
+      "message": "Page 10 requires custom retention for confidential data, and the profile's retention is standard.",
+      "fix": "On Enterprise, set custom retention for the org. On Team, where custom retention is not offered, record that the customer accepts standard retention, under which, page 10 says, \"otherwise local sessions are kept 6 years\"."
+    },
+    {
+      "code": "confidential-standard-retention",
+      "about": "C3",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "message": "Page 10 requires custom retention for confidential data, and the profile's retention is standard.",
+      "fix": "On Enterprise, set custom retention for the org. On Team, where custom retention is not offered, record that the customer accepts standard retention, under which, page 10 says, \"otherwise local sessions are kept 6 years\"."
     },
     {
       "code": "unmanaged-connectors-read-only",
       "about": "C4",
       "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
       "unverified": false,
-      "message": "Confidential data on an unmanaged device calls for read-only connectors, and the task writes.",
-      "fix": "Set the write tool to Needs approval at most, or have the customer accept the write in writing."
+      "message": "Confidential data on an unmanaged device calls for read-only connectors, and the task writes; on a mixed fleet this holds for the people on unmanaged devices.",
+      "fix": "Make the task's connectors read-only for people on unmanaged devices (set the write tools to Blocked), or have the customer accept the write in writing."
     },
     {
-      "code": "mail-read-only",
+      "code": "confidential-standard-retention",
       "about": "C4",
-      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
       "unverified": false,
-      "message": "The mail and calendar connectors read only, so an email task ends in a draft a person sends.",
-      "fix": "Write the skill so it ends with a draft in the conversation that the person copies and sends."
+      "message": "Page 10 requires custom retention for confidential data, and the profile's retention is standard.",
+      "fix": "On Enterprise, set custom retention for the org. On Team, where custom retention is not offered, record that the customer accepts standard retention, under which, page 10 says, \"otherwise local sessions are kept 6 years\"."
     },
     {
       "code": "memory-poisoning-risk",
       "about": "C5",
       "cite": "docs/compendium/02-persona.md#memory",
       "unverified": false,
-      "message": "The task reads untrusted input while personal memory is wanted, so memory stays off for it.",
-      "fix": "Keep role knowledge in reviewed skills; let only controlled steps write memory."
+      "message": "The task reads untrusted input while personal memory is wanted. Memory on claude.ai is one org-wide switch, so it cannot be turned off for this task alone: the task's skill must write nothing to memory, and only controlled steps write it.",
+      "fix": "Keep role knowledge in reviewed skills and build the task so it never writes memory; if the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide."
     },
     {
       "code": "event-source-unverified",
@@ -930,6 +946,14 @@
       "unverified": true,
       "message": "The task's connector is in an early-access programme, with Unverified points.",
       "fix": "Confirm the connection's plan support and per-user checks with the vendor before the build."
+    },
+    {
+      "code": "confidential-standard-retention",
+      "about": "C5",
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "unverified": false,
+      "message": "Page 10 requires custom retention for confidential data, and the profile's retention is standard.",
+      "fix": "On Enterprise, set custom retention for the org. On Team, where custom retention is not offered, record that the customer accepts standard retention, under which, page 10 says, \"otherwise local sessions are kept 6 years\"."
     }
   ],
   "complete": true

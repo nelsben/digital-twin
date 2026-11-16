@@ -30,8 +30,8 @@
         },
         "settings_baseline": {
           "expected": "pe-zdr",
-          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-          "reason": "Highly sensitive deal work runs on a ZDR sign-in, the pe-zdr baseline.",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "reason": "Highly sensitive work needs the controls page 10 requires for it (org lock via MDM, a sandbox that fails closed, allowlists, redaction hooks), and the industry pack's settings baseline is where we keep them; our choice. A pack with no baseline leaves this undecided.",
           "unverified": false
         }
       },
@@ -45,8 +45,8 @@
           },
           "identity": {
             "expected": "user",
-            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "cite": "docs/compendium/05-decision-matrix.md#the-options",
+            "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
             "unverified": false
           },
           "autonomy.start": {
@@ -81,9 +81,9 @@
             "unverified": false
           },
           "plan_fit": {
-            "expected": "ok",
+            "expected": "ok-with-limits",
             "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
-            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR (qualified orgs, Claude Code only); confirm the customer has one.",
             "unverified": false
           },
           "connectors": {
@@ -113,8 +113,8 @@
           },
           "identity": {
             "expected": "user",
-            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "cite": "docs/compendium/05-decision-matrix.md#the-options",
+            "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
             "unverified": false
           },
           "autonomy.start": {
@@ -149,9 +149,9 @@
             "unverified": false
           },
           "plan_fit": {
-            "expected": "ok",
+            "expected": "ok-with-limits",
             "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
-            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR (qualified orgs, Claude Code only); confirm the customer has one.",
             "unverified": false
           },
           "connectors": {
@@ -181,8 +181,8 @@
           },
           "identity": {
             "expected": "api-key-vault",
-            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
-            "reason": "The self-hosted Managed Agents deployment runs with nobody present, so it holds its credentials in a vault instead of a user's sign-in.",
+            "cite": "docs/compendium/05-decision-matrix.md#the-options",
+            "reason": "Managed Agents acts with an API key plus a per-user vault of credentials, not a user's sign-in.",
             "unverified": false
           },
           "autonomy.start": {
@@ -247,8 +247,8 @@
           },
           "identity": {
             "expected": "user",
-            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "cite": "docs/compendium/05-decision-matrix.md#the-options",
+            "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
             "unverified": false
           },
           "autonomy.start": {
@@ -258,9 +258,9 @@
             "unverified": false
           },
           "autonomy.ceiling": {
-            "expected": null,
+            "expected": 3,
             "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-            "reason": "Undecided: page 06 sets the ceiling from audience, reversibility, money, deletes and trigger, but has no rule for a high cost of a mistake, so a person must decide it.",
+            "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
             "unverified": false
           },
           "data_controls": {
@@ -283,9 +283,9 @@
             "unverified": false
           },
           "plan_fit": {
-            "expected": "ok",
+            "expected": "ok-with-limits",
             "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
-            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR (qualified orgs, Claude Code only); confirm the customer has one.",
             "unverified": false
           },
           "connectors": {
@@ -315,8 +315,8 @@
           },
           "identity": {
             "expected": "user",
-            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "cite": "docs/compendium/05-decision-matrix.md#the-options",
+            "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
             "unverified": false
           },
           "autonomy.start": {
@@ -351,9 +351,9 @@
             "unverified": false
           },
           "plan_fit": {
-            "expected": "ok",
+            "expected": "ok-with-limits",
             "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
-            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR (qualified orgs, Claude Code only); confirm the customer has one.",
             "unverified": false
           },
           "connectors": {
@@ -383,8 +383,8 @@
           },
           "identity": {
             "expected": "user",
-            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "cite": "docs/compendium/05-decision-matrix.md#the-options",
+            "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
             "unverified": false
           },
           "autonomy.start": {
@@ -394,9 +394,9 @@
             "unverified": false
           },
           "autonomy.ceiling": {
-            "expected": null,
+            "expected": 3,
             "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
-            "reason": "Undecided: page 06 sets the ceiling from audience, reversibility, money, deletes and trigger, but has no rule for a high cost of a mistake, so a person must decide it.",
+            "reason": "No rule on page 06 caps this task lower, so it may rise to level 3 once evals support it; a person starts it, so not to unattended level 4.",
             "unverified": false
           },
           "data_controls": {
@@ -419,9 +419,9 @@
             "unverified": false
           },
           "plan_fit": {
-            "expected": "ok",
+            "expected": "ok-with-limits",
             "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
-            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR (qualified orgs, Claude Code only); confirm the customer has one.",
             "unverified": false
           },
           "connectors": {
@@ -441,21 +441,57 @@
       "blockers": [],
       "warnings": [
         {
+          "code": "zdr-org-not-confirmed",
+          "about": "T1",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "unverified": false
+        },
+        {
+          "code": "zdr-org-not-confirmed",
+          "about": "T2",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "unverified": false
+        },
+        {
           "code": "agent-sdk-cover-unverified",
           "about": "T3",
           "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
           "unverified": true
         },
         {
-          "code": "decision-undecided",
+          "code": "zdr-org-not-confirmed",
+          "about": "T3",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "unverified": false
+        },
+        {
+          "code": "high-cost-ceiling-unconfirmed",
           "about": "T4",
           "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
           "unverified": false
         },
         {
-          "code": "decision-undecided",
+          "code": "zdr-org-not-confirmed",
+          "about": "T4",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "unverified": false
+        },
+        {
+          "code": "zdr-org-not-confirmed",
+          "about": "T5",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "unverified": false
+        },
+        {
+          "code": "high-cost-ceiling-unconfirmed",
           "about": "T6",
           "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+          "unverified": false
+        },
+        {
+          "code": "zdr-org-not-confirmed",
+          "about": "T6",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
           "unverified": false
         }
       ],
@@ -514,7 +550,8 @@
         "must_show": {
           "codes": [
             "agent-sdk-cover-unverified",
-            "decision-undecided"
+            "high-cost-ceiling-unconfirmed",
+            "zdr-org-not-confirmed"
           ],
           "unverified": [
             "T1.connectors",
@@ -574,8 +611,8 @@
           },
           "identity": {
             "expected": "user",
-            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "cite": "docs/compendium/05-decision-matrix.md#the-options",
+            "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
             "unverified": false
           },
           "autonomy.start": {
@@ -667,7 +704,7 @@
               ],
               "retention": "standard"
             },
-            "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+            "cite": "docs/compendium/13-devices.md#what-mdm-is",
             "reason": "The digest runs in Slack through Claude Tag, which has no managed settings file on Team.",
             "unverified": false
           },
@@ -715,8 +752,8 @@
           },
           "identity": {
             "expected": "user",
-            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "cite": "docs/compendium/05-decision-matrix.md#the-options",
+            "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
             "unverified": false
           },
           "autonomy.start": {
@@ -778,8 +815,8 @@
           },
           "identity": {
             "expected": "user",
-            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "cite": "docs/compendium/05-decision-matrix.md#the-options",
+            "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
             "unverified": false
           },
           "autonomy.start": {
@@ -846,8 +883,8 @@
           },
           "identity": {
             "expected": "user",
-            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "cite": "docs/compendium/05-decision-matrix.md#the-options",
+            "reason": "A client skill runs as the signed-in user: their own permissions, with connectors each person signs in to. A connector whose page-11 row says otherwise (Intercom acts as the admin who authorized it; Dynamics uses a custom Entra app) is listed in connectors[], where its identity is checked against that row.",
             "unverified": false
           },
           "autonomy.start": {
@@ -940,6 +977,12 @@
           "unverified": false
         },
         {
+          "code": "confidential-standard-retention",
+          "about": "C1",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "unverified": false
+        },
+        {
           "code": "private-network-allowlist",
           "about": "C2",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -970,21 +1013,27 @@
           "unverified": false
         },
         {
-          "code": "mail-read-only",
-          "about": "C3",
-          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "code": "confidential-standard-retention",
+          "about": "C2",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
           "unverified": false
         },
         {
-          "code": "mail-read-only",
-          "about": "C4",
-          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "code": "confidential-standard-retention",
+          "about": "C3",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
           "unverified": false
         },
         {
           "code": "unmanaged-connectors-read-only",
           "about": "C4",
           "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+          "unverified": false
+        },
+        {
+          "code": "confidential-standard-retention",
+          "about": "C4",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
           "unverified": false
         },
         {
@@ -1004,6 +1053,12 @@
           "about": "C5",
           "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
           "unverified": true
+        },
+        {
+          "code": "confidential-standard-retention",
+          "about": "C5",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "unverified": false
         }
       ],
       "backlog": {
@@ -1059,10 +1114,10 @@
         "must_show": {
           "codes": [
             "confidential-on-team",
+            "confidential-standard-retention",
             "connector-early-access",
             "event-source-unverified",
             "hubspot-super-admin-approval",
-            "mail-read-only",
             "memory-poisoning-risk",
             "private-network-allowlist",
             "slack-directory-send-unverified",
@@ -1152,8 +1207,22 @@
           }
         ],
         "blockers_removed": [],
-        "warnings_added": [],
-        "warnings_removed": [],
+        "warnings_added": [
+          {
+            "code": "zdr-org-not-confirmed",
+            "about": "C1",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "unverified": false
+          }
+        ],
+        "warnings_removed": [
+          {
+            "code": "confidential-standard-retention",
+            "about": "C1",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "unverified": false
+          }
+        ],
         "still_valid": true
       },
       "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
@@ -1180,27 +1249,27 @@
             "expected": "none",
             "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
             "reason": "Work wired into systems that holds PHI has no hosted agent runtime.",
-            "unverified": false
+            "unverified": true
           },
           "T3.plan_fit": {
             "expected": "not-supported",
             "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
             "reason": "PHI needs a dedicated HIPAA org, and no hosted agent runtime is covered for it.",
-            "unverified": false
+            "unverified": true
           }
         },
         "blockers_added": [
-          {
-            "code": "phi-no-hosted-runtime",
-            "about": "T3",
-            "cite": "docs/compendium/10-sensitive-data.md#what-hipaa-covers",
-            "unverified": false
-          },
           {
             "code": "phi-needs-hipaa-org",
             "about": "persona",
             "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
             "unverified": false
+          },
+          {
+            "code": "phi-no-hosted-runtime",
+            "about": "T3",
+            "cite": "docs/compendium/10-sensitive-data.md#what-hipaa-covers",
+            "unverified": true
           }
         ],
         "blockers_removed": [],
@@ -1211,6 +1280,12 @@
             "about": "T3",
             "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
             "unverified": true
+          },
+          {
+            "code": "zdr-org-not-confirmed",
+            "about": "T3",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "unverified": false
           }
         ],
         "still_valid": true
@@ -1374,7 +1449,14 @@
           }
         ],
         "blockers_removed": [],
-        "warnings_added": [],
+        "warnings_added": [
+          {
+            "code": "mail-read-only",
+            "about": "C4",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "unverified": false
+          }
+        ],
         "warnings_removed": [],
         "still_valid": true
       },

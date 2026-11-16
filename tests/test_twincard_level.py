@@ -32,6 +32,9 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from twincard import level as L  # noqa: E402
 
+# Plan-fit entries that are Unverified because no compendium section states their per-plan value (design 7.3).
+NO_PER_PLAN_VALUE = {"managed-settings-and-hooks", "governance-action-log", "managed-agents-hosted",
+                     "managed-agents-self-hosted", "agent-sdk"}
 UNVERIFIED_MARKER = re.compile(r"unverified|not confirmed", re.IGNORECASE)
 TOP_KEYS = ["levelled_version", "customer", "persona", "source", "persona_plan", "tasks", "tools",
             "blockers", "warnings", "complete"]
@@ -191,6 +194,26 @@ def pe_override_agent_sdk(profile, card):
     override(card, "T3", "runtime", "agent-sdk")
 
 
+def chain(*changes):
+    def change(profile, card):
+        for c in changes:
+            c(profile, card)
+    return change
+
+
+def team_c1_reads_usage_db(profile, card):
+    inputs = task(card, "C1")["inputs"]
+    inputs.append({"system": "usage-db", "objects": "usage aggregates", "access": "read"})
+    card["provenance"]["tasks.C1.inputs[%d].access" % (len(inputs) - 1)] = {
+        "status": "answered", "source": "interviews/2026-11-06-csm.md#F7"}
+
+
+def role_device(value):
+    def change(profile, card):
+        card["role"]["device"] = value
+    return change
+
+
 SCENARIOS = [
     ("pe", PE, None),
     ("team", TEAM, None),
@@ -215,6 +238,12 @@ SCENARIOS = [
     ("pe all confidential", PE, all_tasks("confidential")),
     ("pe all internal", PE, all_tasks("internal")),
     ("pe T3 override agent-sdk", PE, pe_override_agent_sdk),
+    ("pe private Salesforce, all confidential", PE, chain(pe_private_salesforce, all_tasks("confidential"))),
+    ("team no IP allowlist, C1 reads usage-db", TEAM,
+     chain(profile_set("network", "can_allowlist_anthropic_ips", False), team_c1_reads_usage_db)),
+    ("pe T1 schedule-own", PE, set_task("T1", trigger="schedule-own")),
+    ("pe T1 PHI schedule-own", PE, chain(pe_t1_phi, set_task("T1", trigger="schedule-own"))),
+    ("pe mixed devices", PE, role_device("mixed")),
 ]
 
 
@@ -426,11 +455,19 @@ class CombineTests(unittest.TestCase):
         decision, _ = run.decide("autonomy.ceiling", {"x": None}, "T1")
         self.assertEqual(decision["value"], 2)
 
-    def test_strictest_undecided_wins(self):
+    def test_strictest_real_value_beats_undecided(self):
         run = self.run_for({"autonomy.ceiling": {"combine": "strictest"}}, [
             self.rule("r-one", "autonomy.ceiling", {}, 1),
             self.rule("r-undecided", "autonomy.ceiling", {}, "undecided")])
         decision, undecided = run.decide("autonomy.ceiling", {}, "T1")
+        self.assertEqual((decision["value"], decision["rule"], undecided), (1, "r-one", False))
+        self.assertEqual(run.last_outranked["id"], "r-undecided")
+
+    def test_strictest_undecided_alone_stays_undecided(self):
+        run = self.run_for({"autonomy.ceiling": {"combine": "strictest"}}, [
+            self.rule("r-undecided", "autonomy.ceiling", {}, "undecided"),
+            self.rule("r-fact", "autonomy.ceiling", {}, {"fact": "x"})])
+        decision, undecided = run.decide("autonomy.ceiling", {"x": None}, "T1")
         self.assertEqual((decision["value"], decision["rule"], undecided), (None, "r-undecided", True))
 
     def test_strictest_with_an_order(self):
@@ -515,11 +552,11 @@ class OverrideTests(unittest.TestCase):
         for _, blocker in problems:
             self.assertEqual(list(blocker), ITEM_KEYS)
 
-    def test_overriding_an_undecided_ceiling_removes_the_warning(self):
+    def test_overriding_a_high_cost_ceiling_removes_the_warning(self):
         out = run_level(PE, lambda p, c: override(c, "T4", "autonomy.ceiling", 2))
-        self.assertNotIn(("decision-undecided", "T4"), codes(out, "warnings"))
-        self.assertIn(("decision-undecided", "T6"), codes(out, "warnings"))
-        self.assertIsNone(out["tasks"]["T4"]["autonomy"]["ceiling"]["overridden"]["rule_result"])
+        self.assertNotIn(("high-cost-ceiling-unconfirmed", "T4"), codes(out, "warnings"))
+        self.assertIn(("high-cost-ceiling-unconfirmed", "T6"), codes(out, "warnings"))
+        self.assertEqual(out["tasks"]["T4"]["autonomy"]["ceiling"]["overridden"]["rule_result"], 3)
 
     def test_agent_sdk_override_rests_on_an_unverified_fact(self):
         out = run_level(PE, pe_override_agent_sdk)
@@ -676,7 +713,7 @@ class CiteTests(unittest.TestCase):
         for cap in load(PLAN_FIT)["capabilities"]:
             text = section(cap["cite"])
             self.assertIsNotNone(text, "%s: %s does not resolve" % (cap["id"], cap["cite"]))
-            if cap["unverified"]:
+            if cap["unverified"] and cap["id"] not in NO_PER_PLAN_VALUE:
                 self.assertRegex(text, UNVERIFIED_MARKER, cap["id"])
 
     def test_engine_cites_resolve(self):

@@ -39,7 +39,7 @@
       "individual": "limited",
       "lost_on_team": "Without device management a Team twin lives in claude.ai on the web, which gets no managed settings file and no hooks.",
       "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
-      "unverified": false
+      "unverified": true
     },
     {
       "id": "governance-action-log",
@@ -49,7 +49,7 @@
       "individual": "no",
       "lost_on_team": "The governance log is a Claude Code hook, so a Team twin in claude.ai on the web has none; it needs Claude Code on managed devices.",
       "cite": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management",
-      "unverified": false
+      "unverified": true
     },
     {
       "id": "audit-log-and-compliance-api",
@@ -64,7 +64,7 @@
     {
       "id": "analytics-api",
       "name": "Analytics API",
-      "team": "limited",
+      "team": "no",
       "enterprise": "yes",
       "individual": "no",
       "lost_on_team": "Team has the usage dashboard and adoption per plugin, but no Analytics API.",
@@ -149,7 +149,7 @@
       "individual": "no",
       "lost_on_team": null,
       "cite": "docs/compendium/05-decision-matrix.md#the-options",
-      "unverified": false
+      "unverified": true
     },
     {
       "id": "managed-agents-self-hosted",
@@ -159,7 +159,7 @@
       "individual": "no",
       "lost_on_team": null,
       "cite": "docs/compendium/13-devices.md#a-hosted-twin-for-unmanaged-devices-our-recommendation",
-      "unverified": false
+      "unverified": true
     },
     {
       "id": "agent-sdk",

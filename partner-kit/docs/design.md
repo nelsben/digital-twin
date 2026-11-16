@@ -286,10 +286,10 @@ The vocabulary that `tests/fixtures/twincard/expectations.json` and the levellin
 | Decision | Values |
 |---|---|
 | `runtime` | `client-skill`, `claude-code-scheduled-task`, `claude-tag-routine`, `managed-agents` (the Anthropic-hosted form), `managed-agents-self-hosted` (Managed Agents with the harness and sandbox self-hosted; the only Managed Agents form the ZDR branch of the compendium 05 decision flow allows), `agent-sdk`, `none` (no runtime is allowed for this task) |
-| `identity` | `user`, `service-account`, `api-key-vault` |
+| `identity` | `user`, `service-account`, `api-key-vault`, or `null` when the runtime is `none` (a task with no runtime has no identity) |
 | `autonomy.start`, `autonomy.ceiling` | an integer from 0 to 4 (the ladder in compendium 06) |
 | `data_controls` | `{settings_baseline, web_tools, surfaces, retention}`: `settings_baseline` is a file stem in `starter-kit/settings/` (`general`, `confidential`, `pe-zdr`, `hipaa`) or `null`; `web_tools` is `on` or `off`; `surfaces` is a list of `role.works_in` values (empty for a hosted runtime); `retention` is a value of `compliance.retention` |
-| `connectors` | a list of `{system, access, identity}`: `system` is a profile system id, `access` is `read` or `write`, `identity` is an `identity` value |
+| `connectors` | a list of `{system, access, identity}`: `system` is a profile system id, `access` is `read` or `write`, `identity` is an `identity` value (`null` when the runtime is `none`) |
 | `memory` | `on` or `off` |
 | `plan_fit` | `ok`, `ok-with-limits`, `needs-enterprise`, `not-supported` |
 | `persona.distribution` | `group-targeted` (Enterprise), `everyone` (Team), `manual` (a plan that cannot publish plugins, so users install them by hand) |
@@ -301,7 +301,7 @@ Each decision in the expectations file is `{expected, cite, reason, unverified}`
 Blocker codes (the task cannot be built as asked on this plan or data class):
 
 - `plan-below-team`: the plan is an individual plan; Team is the minimum for company data.
-- `private-network-unreachable`: a task reads a system on a private network that its runtime cannot reach on this plan (no MCP tunnel, no allowlisting, not run inside the network).
+- `private-network-unreachable`: a task on an Anthropic-hosted runtime (Claude Tag or hosted Managed Agents) reads a system on a private network that it cannot reach on this plan (no MCP tunnel, no allowlisting).
 - `log-every-action-not-met`: the customer requires a log of every action, and the twin runs where no governance hook can run (claude.ai on the web, no device management).
 - `highly-sensitive-needs-zdr-org`: a task is highly sensitive, and the customer has no Enterprise org with ZDR.
 - `unmanaged-device-no-access`: a highly sensitive or PHI task would run on an unmanaged device, which gets no direct access.
@@ -315,7 +315,8 @@ Blocker codes (the task cannot be built as asked on this plan or data class):
 Warning codes (the task can be built, with a limit someone must see):
 
 - `agent-sdk-cover-unverified`: a task wired into systems needs ZDR or HIPAA cover, and the Agent SDK cannot be used for it until Anthropic confirms that cover in writing (Unverified, compendium 05 decision flow), so the plan uses the route the page does confirm; when the page confirms no route (PHI), `phi-no-hosted-runtime` is raised instead of this warning.
-- `decision-undecided`: the compendium does not decide one of the task's decisions, so a person must.
+- `decision-undecided`: the compendium does not decide one of the task's decisions, or the fact a rule takes its value from is empty, so a person must.
+- `high-cost-ceiling-unconfirmed`: the cost of a mistake is high and page 06 has no rule for cost, so the ceiling another rule set (named in the message) applies until a person confirms it or lowers it by override.
 - `shared-tool-strictest`: two tasks share a connector tool, so both run at the stricter task's setting.
 - `override-applied`: a card override replaced a rule's result; the result is shown as overridden, with the reason.
 - `field-open`: a decision or a rule needs a field whose status is `open` and which has no value yet, so that decision is `null` until the field is answered.
@@ -324,16 +325,22 @@ Warning codes (the task can be built, with a limit someone must see):
 - `team-no-governance-log`: the governance log is a Claude Code hook, so a Team twin on the web has none.
 - `team-no-audit-log`: Team has no audit log and no Compliance API.
 - `confidential-on-team`: confidential data on Team is acceptable only where the audit need is lower.
-- `unmanaged-connectors-read-only`: confidential data on an unmanaged device calls for read-only connectors, and the task writes.
-- `mail-read-only`: the mail and calendar connectors read only, so an email task ends in a draft a person sends.
+- `unmanaged-connectors-read-only`: confidential data on an unmanaged device (or the unmanaged share of a mixed fleet) calls for read-only connectors, and the task writes.
+- `mail-read-only`: the task sends email or puts an event on a calendar through Gmail or Google Calendar, whose directory connectors read only, so it ends in a draft a person sends.
 - `private-network-allowlist`: a system on a private network must be reachable from Anthropic's IP range, allowlisted at the edge.
 - `tag-private-channel-only`: Claude Tag on confidential data belongs only in scoped private channels.
 - `slack-directory-send-unverified`: whether the Slack directory connector can post is Unverified; post through Claude Tag or the Slack MCP server.
 - `untrusted-input-with-send`: a task reads untrusted content and can send it out, so a person approves each send.
-- `memory-poisoning-risk`: a task reads untrusted input while personal memory is wanted, so memory stays off for it.
+- `memory-poisoning-risk`: a task reads untrusted input while personal memory is wanted; memory on claude.ai is one org-wide switch, so the task's skill must write nothing to memory and only controlled steps write it.
 - `event-source-unverified`: nothing confirmed can start the task on its event, so a person starts it until that is confirmed.
 - `connector-early-access`: the task's connector is in an early-access programme, with Unverified points.
-- `hubspot-super-admin-approval`: the HubSpot connector needs a HubSpot Super Admin's approval as well as an Owner.
+- `hubspot-super-admin-approval`: the HubSpot connector needs approval from a HubSpot Super Admin (or a user with App Marketplace access) as well as an Owner.
+- `scheduled-task-own-environment-only`: a highly sensitive or PHI task is a Claude Code scheduled task, and ZDR and the HIPAA configuration turn cloud sessions off, so it runs in the customer's own environment on a managed device.
+- `zdr-org-not-confirmed`: a task is highly sensitive and the profile's retention is not `zdr`, so it does not show the separate Enterprise org with ZDR the work needs.
+- `private-network-inside-only`: a client skill or Claude Code scheduled task reads a system on a private network with no allowlisting and no MCP tunnel, so only Claude Code on a device inside the network (a local MCP server) reaches it.
+- `unmanaged-share-no-access`: a highly sensitive or PHI task's role has a mixed device fleet, and the people on unmanaged devices get no direct access.
+- `confidential-standard-retention`: a task is confidential and the profile's retention is standard, where page 10 requires custom retention.
+- `retention-not-covered`: the profile's retention is custom, and the task runs on Claude Tag or Managed Agents, which custom retention does not cover.
 
 ### 7.3 Rules, plan fit and `levelled.json`
 
@@ -342,15 +349,15 @@ Warning codes (the task can be built, with a limit someone must see):
 | Part | Meaning |
 |---|---|
 | `decisions` | One entry per decision the engine makes: the task decisions (`runtime`, `identity`, `autonomy.start`, `autonomy.ceiling`, `data_controls.settings_baseline`, `data_controls.web_tools`, `data_controls.surfaces`, `data_controls.retention`, `memory`, `plan_fit`), the connector decisions (`connectors.identity` per task, `connectors.permission` per tool and level) and the persona decisions (`persona.distribution`, `persona.settings_baseline`). `blocker` and `warning` rules need no entry: every one that holds is raised. |
-| `combine` | `first`: rules are tried in file order and the first that holds decides. `strictest`: every rule that holds is a candidate and the strictest wins: the lowest number, or the value earliest in `order`; ties go to the first rule. |
+| `combine` | `first`: rules are tried in file order and the first that holds decides. `strictest`: every rule that holds is a candidate and the strictest real value wins: the lowest number, or the value earliest in `order`; ties go to the first rule. A rule that gives `"undecided"` (or an empty fact, below) loses to any real value, so a cap the page states still applies; the engine remembers the undecided rule it outranked, and on `autonomy.ceiling` with `task.cost_of_mistake.level` high and no override it raises `high-cost-ceiling-unconfirmed`, citing the undecided rule and naming the cap that applied. When only undecided rules hold, the decision is `null` with a `decision-undecided` warning. A literal `null` is not a candidate under `strictest`. |
 | `when` | Data only: an object whose keys are fact names, each mapped to a value or a list of allowed values (a list-valued fact matches when any of its items does), plus `any` and `all` (lists of conditions) and `not` (one condition). Keys are checked in order and the first that fails ends the check. `{}` always holds. |
-| `then` | The decision's value; `"undecided"` (the result is `null` with a `decision-undecided` warning; `null` itself is a real value, such as no settings baseline); `{"fact": <name>}` to take a fact's value; or, on a blocker or warning rule, its code from 7.2. |
+| `then` | The decision's value; `"undecided"` (the result is `null` with a `decision-undecided` warning; `null` itself is a real value, such as no settings baseline, and raises no warning); `{"fact": <name>}` to take a fact's value; or, on a blocker or warning rule, its code from 7.2. When the named fact is `null` or absent, the rule still holds but the decision is undecided: the value is `null`, the rule's id, cite and basis are kept, and a `decision-undecided` warning names the decision and the empty fact (a highly sensitive task under a pack with no settings baseline, for example). When the named fact's field is `open`, it is treated like an open field in `when`: the decision is `null` with a `field-open` warning. |
 | `reason`, `fix` | The sentence shown with the result; a blocker or warning rule's `reason` is its message and `fix` says what to do. |
 | Ids | Kebab-case and unique. |
 
 Facts are flat names. Card and profile fields keep their paths (`role.device`, `plan.tier`, `devices.mdm`, `compliance.retention`, `network.can_allowlist_anthropic_ips`, `runtime_preferences.self_hosting_required`, and others). Task fields are `task.<path>` (`task.trigger`, `task.data_class`, `task.output.audience`, `task.cost_of_mistake.level`, and so on), with derived `task.write_actions`, `task.write_products`, `task.input_products`, `task.products` (the pack's product name where a pack connector default matches the system), `task.reads_private_network` and `task.shared_tool_ceiling`. Persona-wide: `systems.kinds`, `systems.products`, `pack.id`, `pack.settings_baseline`, `persona.data_classes`, `persona.products`, and `capability.<id>` (the `plan-fit.json` value for the profile's plan). Each decision already made is a fact under its own name, and a rule may read only the decisions made before its own. Tool rules also read `tool.use` (`read` or the write action), `tool.level` and `tool.wanted_differs`. An unset field takes its catalogue default. A field that is `open` with no value yet stops the rule that reaches it: the decision is `null` and a `field-open` warning names the field. A rule that names an unknown fact or decision, a duplicate id, or a code not listed in 7.2 is a load error that names the rule.
 
-**`data/plan-fit.json`**: `{"plan_fit_version": 1, "capabilities": [{"id", "name", "team", "enterprise", "individual", "lost_on_team", "cite", "unverified"}]}`. Each plan value is `yes`, `no` or `limited`; `lost_on_team` is one sentence or `null`; `cite` and `unverified` follow the rule for rules.
+**`data/plan-fit.json`**: `{"plan_fit_version": 1, "capabilities": [{"id", "name", "team", "enterprise", "individual", "lost_on_team", "cite", "unverified"}]}`. Each plan value is `yes`, `no` or `limited`; `lost_on_team` is one sentence or `null`; `cite` and `unverified` follow the rule for rules. `unverified` is also `true` when no compendium section states the per-plan value, so the value is our reading until a page does.
 
 **`levelled.json`**, written by `level` next to `card.json` (keys in this order, two-space indent, UTF-8, a trailing newline; the same input gives the same bytes):
 

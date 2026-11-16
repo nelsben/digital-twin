@@ -52,7 +52,7 @@
       "where": "knowledge-work-plugins",
       "use": "reference",
       "note": "Reference. Its account-context, call-prep, renewal-radar, customer-health, call-summary and log-activity skills match C1 to C4. Not reviewed on page 18; review it before taking any skill from it.",
-      "cite": "docs/compendium/16-oob-skills-and-references.md#2-anthropic-plugin-marketplaces-and-plugins",
+      "cite": "docs/compendium/18-customer-success.md#the-short-answer",
       "unverified": false
     }
   ],
@@ -61,7 +61,7 @@
     {
       "system_kind": "crm",
       "product": "HubSpot",
-      "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin approves it and sets its data permissions. Set write tools to Needs approval.",
+      "how": "The HubSpot directory connector (mcp.hubspot.com/anthropic). An Owner adds it on Team and Enterprise, and a HubSpot Super Admin (or a user with App Marketplace access) approves it and sets its data permissions. Set write tools to Needs approval.",
       "identity": "Per user, via OAuth, within the user's HubSpot permissions.",
       "runbook": null,
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
@@ -92,13 +92,13 @@
       "identity": "Per user, via OAuth with the user's own Google account.",
       "runbook": null,
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-      "unverified": true
+      "unverified": false
     },
     {
       "system_kind": "messaging",
       "product": "Slack",
       "how": "The Slack directory connector (Team and Enterprise; the Claude in Slack app installed first). An Owner enables it. Whether it can post is unconfirmed; the Slack MCP server can.",
-      "identity": "Per user: each member connects their own account. Slack admin approval required.",
+      "identity": "Per user: each member connects their own account.",
       "runbook": null,
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
       "unverified": true

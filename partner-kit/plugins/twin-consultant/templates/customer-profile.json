@@ -1,0 +1,57 @@
+{
+  "profile_version": 1,
+  "customer": "",
+  "display_name": "",
+  "fictional": null,
+  "industry": "",
+  "plan": {
+    "tier": "",
+    "seats": null,
+    "individual_accounts_on_domain": null
+  },
+  "identity": {
+    "idp": "",
+    "sso": null,
+    "scim": null
+  },
+  "devices": {
+    "mdm": "",
+    "managed_share": "",
+    "unmanaged_users": ""
+  },
+  "compliance": {
+    "data_classes": [],
+    "phi": null,
+    "baa": null,
+    "mnpi": null,
+    "retention": "",
+    "walls": ""
+  },
+  "systems": [
+    {
+      "id": "",
+      "kind": "",
+      "product": "",
+      "edition": "",
+      "access_model": "",
+      "private_network": null
+    }
+  ],
+  "network": {
+    "can_allowlist_anthropic_ips": null
+  },
+  "governance": {
+    "log_destination": "",
+    "existing_source_audit": "",
+    "spend_owner": "",
+    "spend_limits": ""
+  },
+  "owners": {
+    "sponsor": "",
+    "technical_owner": "",
+    "business_owner": "",
+    "backup_owner": "",
+    "compliance": ""
+  },
+  "provenance": {}
+}

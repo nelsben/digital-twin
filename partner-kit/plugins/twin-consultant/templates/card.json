@@ -1,0 +1,107 @@
+{
+  "card_version": 1,
+  "id": "",
+  "customer": "",
+  "role": {
+    "name": "",
+    "team": "",
+    "headcount": null,
+    "pilot_users": null,
+    "works_in": [],
+    "device": ""
+  },
+  "outcome": {
+    "sponsor_goal": "",
+    "scorecard_targets": [
+      {
+        "metric": "",
+        "value": null
+      }
+    ]
+  },
+  "voice": {
+    "serves": "",
+    "jobs": [],
+    "tone": "",
+    "norms": [],
+    "never": [],
+    "ask_before": [],
+    "escalate_to": []
+  },
+  "features": [
+    {
+      "id": "",
+      "name": "",
+      "why": ""
+    }
+  ],
+  "tasks": [
+    {
+      "id": "",
+      "feature": "",
+      "name": "",
+      "frequency_per_week": null,
+      "minutes_each": null,
+      "users": null,
+      "trigger": "",
+      "inputs": [
+        {
+          "system": "",
+          "objects": "",
+          "access": ""
+        }
+      ],
+      "output": {
+        "what": "",
+        "audience": "",
+        "destination": ""
+      },
+      "writes": [
+        {
+          "system": "",
+          "objects": "",
+          "action": ""
+        }
+      ],
+      "data_class": "",
+      "cost_of_mistake": {
+        "level": "",
+        "what_happens": ""
+      },
+      "reversible": null,
+      "touches_money": null,
+      "reads_untrusted_input": null,
+      "examples": {
+        "good": null,
+        "bad": null,
+        "where": ""
+      },
+      "skill_owner": "",
+      "priority": null,
+      "in_pilot": null
+    }
+  ],
+  "memory": {
+    "personal_memory_wanted": null,
+    "notes": ""
+  },
+  "overrides": [
+    {
+      "task": "",
+      "decision": "",
+      "value": null,
+      "reason": "",
+      "approved_by": ""
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "",
+      "question": "",
+      "blocks": [],
+      "owner": "",
+      "due": ""
+    }
+  ],
+  "provenance": {}
+}

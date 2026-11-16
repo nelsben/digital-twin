@@ -4,7 +4,7 @@
 
 Scope: the **deal team**, the first role. Section order and numbering follow the questionnaire (A1 to G4). Status is **answered** or **open**; every open item has an owner (a role from [03 Stakeholders](../../docs/playbook/03-stakeholders.md)) and a due date. Where our playbook has a default stance, the answer says whether the customer confirms or changes it.
 
-Discovery date: 2026-11-14. Roles are used instead of names here; the named people go in `stakeholders.md` (coming, #26).
+Discovery date: 2026-11-14. Roles are used instead of names here; the named people go in [stakeholders.md](stakeholders.md) (#26).
 
 ## A. Sponsor and scope
 
@@ -81,7 +81,7 @@ Run from three interviews with deal-team members (a partner, a principal, an ass
 | G1 | Which security log system or warehouse? | Splunk is the security log system. Whether the governance log goes there is not decided. Hosting (cloud or self-managed) and who may read the log are not yet known. **Confirms the default:** the destination is a customer discussion. | The design (what is recorded, metadata only for private equity, one log for all twins) is fixed. Only the destination changes. See [15](../../docs/compendium/15-governance-and-performance.md). | open | Technical owner (Director of IT) | 2026-12-04 |
 | G2 | Salesforce logging; any Salesforce-Anthropic integration? | No Salesforce-Anthropic integration exists today. What they log in Salesforce (Event Monitoring, Field Audit Trail, Setup Audit Trail) is unknown; the Salesforce admin has not checked which are licensed and on. | If Event Monitoring is on, it may cover the Salesforce part of the audit trail. See [15](../../docs/compendium/15-governance-and-performance.md). | open | Source-system admins (Salesforce admin) | 2026-11-27 |
 | G3 | Who owns tooling and spend; budget and limits? | IT owns tooling and spend. **Confirms the default.** The pilot budget and the per-user spend limits are not yet set. | Spend controls, per-user limits and alerts follow the budget. See [15](../../docs/compendium/15-governance-and-performance.md). | open | Executive sponsor | 2026-12-04 |
-| G4 | Technical owner, business owner, backup Owner? | Technical owner: the Director of IT. Business owner: the RevOps manager. Backup Owner: an IT administrator. **Confirms the defaults.** | One Owner pair for the org; compliance signs off on retention and walls. Names go in `stakeholders.md` (coming, #26). See [12](../../docs/compendium/12-orgs-and-ownership.md) and [03](../../docs/playbook/03-stakeholders.md). | answered | | |
+| G4 | Technical owner, business owner, backup Owner? | Technical owner: the Director of IT. Business owner: the RevOps manager. Backup Owner: an IT administrator. **Confirms the defaults.** | One Owner pair for the org; compliance signs off on retention and walls. Names go in [stakeholders.md](stakeholders.md) (#26). See [12](../../docs/compendium/12-orgs-and-ownership.md) and [03](../../docs/playbook/03-stakeholders.md). | answered | | |
 
 ## Discovery summary
 

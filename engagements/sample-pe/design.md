@@ -4,7 +4,7 @@
 
 Phase 2 deliverable for the deal-team twin. Author: Mateo Ferreira (solution architect). Sign-off collected by Eleanor Osei-Whitcombe (engagement lead). Status: draft for sign-off, 2026-11-14.
 
-Every decision below cites the [discovery](discovery.md) question it answers (A1 to G4) and the compendium page that explains the options. People are named as in [stakeholders.md](stakeholders.md). Items marked **open** wait on a discovery answer; section 12 lists them with an owner and a date. The prioritized story backlog is a separate Phase 2 deliverable (`backlog.md`, coming) and is signed off with this document.
+Every decision below cites the [discovery](discovery.md) question it answers (A1 to G4) and the compendium page that explains the options. People are named as in [stakeholders.md](stakeholders.md). Items marked **open** wait on a discovery answer; section 12 lists them with an owner and a date. The prioritized story backlog is a separate Phase 2 deliverable ([backlog.md](backlog.md)) and is signed off with this document.
 
 ## 1. Summary
 
@@ -211,7 +211,7 @@ Cross-cutting points:
 
 ### Proof before the pilot: spike #30
 
-Discovery E4 is answered but not confirmed: the Salesforce and HubSpot admins have not yet said that deal-team and investor-relations roles are fully separated. **Spike #30 is the proof, and it must pass before any pilot user connects.** It follows the spike template in [04 Stories](../../docs/playbook/04-stories.md) and produces `wall-test-protocol.md` (coming). In outline:
+Discovery E4 is answered but not confirmed: the Salesforce and HubSpot admins have not yet said that deal-team and investor-relations roles are fully separated. **Spike #30 is the proof, and it must pass before any pilot user connects.** It follows the spike template in [04 Stories](../../docs/playbook/04-stories.md) and produces [wall-test-protocol.md](wall-test-protocol.md). In outline:
 
 1. Joaquin Lindahl and Imani Petrov each confirm in writing that the deal-team and investor-relations roles are fully separated in their systems.
 2. A test user on each side of the wall signs in to the twin and tries to read the other side's records, through Salesforce Hosted MCP and, for the test only, through HubSpot.

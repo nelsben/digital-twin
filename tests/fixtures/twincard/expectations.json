@@ -548,7 +548,7 @@
         "plugin_name": {
           "expected": "twin-customer-success-manager",
           "cite": "starter-kit/templates/role-plugin/README.md#steps",
-          "reason": "The card leaves role.plugin_name empty, so the role plugin is named twin-<persona id>.",
+          "reason": "The card leaves role.plugin_name empty, so the engine uses the persona id as the role in twin-<role> (design 4.2).",
           "unverified": false
         },
         "distribution": {

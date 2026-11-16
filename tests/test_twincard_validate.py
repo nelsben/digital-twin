@@ -222,7 +222,7 @@ class CatalogueTests(unittest.TestCase):
                 default = entry["default"]
                 self.assertIsInstance(default, dict, "no asked_by, so a default with a source")
                 source = default.get("source", "")
-                # role.plugin_name's default (twin-<persona id>) is stated only by the role-plugin template.
+                # The role-plugin template states the twin-<role> form; the persona-id fallback is design 4.2.
                 allowed = ("docs/compendium/", "docs/playbook/")
                 if entry["path"] == "role.plugin_name":
                     allowed = ("starter-kit/templates/role-plugin/README.md",)

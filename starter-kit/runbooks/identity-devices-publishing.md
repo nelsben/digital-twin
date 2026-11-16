@@ -22,17 +22,65 @@ Roles use the names in [03-stakeholders](../../docs/playbook/03-stakeholders.md)
 | **Partner integration engineer** | Integration engineer (partner role). Builds and tests the marketplace and the settings files |
 | **RevOps manager** | Business owner. Names the pilot users and approves who is in the pilot group |
 
-Sources are marked [S1] to [S14] and listed at the end. Repo files are cited by path.
+Sources are marked [S1] to [S19] and listed at the end. Repo files are cited by path.
 
 ## Before you start
 
 | # | Step | Who | Source |
 |---|---|---|---|
-| 0.1 | Confirm the Claude org is Enterprise or Console. SCIM is not available on Team plans, which use JIT provisioning instead, or on Console organizations joined to a Team plan's parent organization. | Director of IT | [S1] |
-| 0.2 | Confirm SSO is set up first, including domain verification. SCIM assumes SSO is complete. | Director of IT | [S1] |
+| 0.1 | Find out which plan the Claude org is on, then pick a path. **Enterprise** (or a Console organization) with SCIM: follow steps 1 to 6. **Team**: follow [Team plan: no SCIM, no group targeting](#team-plan-no-scim-no-group-targeting), which points back to steps 4 to 6 where they apply. SCIM is not available on Team plans, which use JIT provisioning instead, or on Console organizations joined to a Team plan's parent organization. | Director of IT | [S1]; [S3] |
+| 0.2 | Confirm SSO is set up first, including domain verification. SCIM assumes SSO is complete. (On Team, SSO is optional: see step T2.) | Director of IT | [S1] |
 | 0.3 | Pick the managed-settings baseline for each data class. Do not choose it from this runbook. | Director of IT, with Compliance | [starter-kit/settings/README.md](../settings/README.md) |
-| 0.4 | Replace the placeholders in the chosen baseline files before any device gets them: `REPLACE-WITH-ORG-UUID` (copy it from the claude.ai admin settings; a wrong value makes Claude Code exit at startup [S11]), `REPLACE-WITH-GITHUB-ORG` (the repo that holds this kit's marketplace; it appears twice in each file, under `strictKnownMarketplaces` and `extraKnownMarketplaces`), `REPLACE-WITH-GOVERNANCE-SALT` (confidential, pe-zdr and hipaa: a secret per customer), and in the pe-zdr file the two MCP host placeholders. The README lists every key and placeholder. | Partner integration engineer | [starter-kit/settings/README.md](../settings/README.md) |
-| 0.5 | Make sure at least one Owner is in a group that is mapped to the Owner role (step 3.4). Otherwise the next sync can remove the Owner. Make a Backup Owner, so one person cannot lock everyone out. | Director of IT, Backup Owner | [S1]; [03-stakeholders](../../docs/playbook/03-stakeholders.md) |
+| 0.4 | Replace the placeholders in the chosen baseline files before any device gets them: `REPLACE-WITH-ORG-UUID` (copy it from the claude.ai admin settings; a wrong value makes Claude Code exit at startup [S11]), `REPLACE-WITH-GITHUB-ORG` (the repo that holds this kit's marketplace; it appears twice in each file, under `strictKnownMarketplaces` and `extraKnownMarketplaces`), `REPLACE-WITH-GOVERNANCE-SALT` (confidential, pe-zdr and hipaa: a secret per customer), and in the pe-zdr file the two MCP host placeholders. The value for each is in the connector runbooks: Salesforce, [the line that says to paste `api.salesforce.com`](salesforce-hosted-mcp.md#L87); Microsoft 365, [the line that says which host to paste and that it is still **⚠ Unverified:**](microsoft-365-connector.md#L80) (until it is confirmed, the pe-zdr allowlist matches no Microsoft 365 server). The README lists every key and placeholder. | Partner integration engineer | [starter-kit/settings/README.md](../settings/README.md) |
+| 0.5 | Make sure at least one Owner is in a group that is mapped to the Owner role (step 3.4). Otherwise the next sync can remove the Owner. Make a Backup Owner, so one person cannot lock everyone out. (On Team there is no group mapping: make the Backup Owner by hand, step T4.) | Director of IT, Backup Owner | [S1]; [03-stakeholders](../../docs/playbook/03-stakeholders.md) |
+
+## Team plan: no SCIM, no group targeting
+
+Use this section when step 0.1 finds a **Team** plan. Team has no SCIM and no per-group configuration, so steps 1 to 3 do not apply and step 6 shrinks to one organisation-wide rollout. What a Team customer gets is a working deployment with honest limits. The facts behind it are in compendium [09](../../docs/compendium/09-plans-and-it-controls.md), [12](../../docs/compendium/12-orgs-and-ownership.md#team-plan-variant-a-non-regulated-role-our-recommendation) and [13](../../docs/compendium/13-devices.md#team-plan-with-no-device-management).
+
+**Who: Director of IT** (Owner in Claude), with the roles in the table at the top.
+
+### Getting people in and setting roles
+
+| # | Step | Who | Source |
+|---|---|---|---|
+| T1 | Choose how people join. **Invite only** is the default: an Owner or Admin adds and removes members directly in Claude, and members sign in with the claude.ai account the admin invited. **Just-in-time (JIT)** provisions a user the first time they sign in through the identity provider app. JIT is listed for Team plans in the article's introduction, but the same article says the JIT mode is available to all plans: confirm with Anthropic before relying on either. | Director of IT | [S1]; [S19] |
+| T2 | SSO is optional on Team. If the console offers it, set it up: **Organization settings > Organization and access**, **Authentication** section, **Setup SSO**. For Okta, follow steps 1.1, 1.2 and 1.5 (SAML only) and assign the people who should have access on the app's **Assignments** tab (step 1.8, first sentence). Skip 1.3, 1.4 and 1.6 to 1.8: they are SCIM and group steps. **⚠ Conflict:** [S15] and [S19] say SSO is available for Team plans; [S16] lists \"Manage SSO / auth\" under Enterprise-only security controls (compendium 09 records the same conflict). If **Setup SSO** is not shown, use invites (T1) and raise it with the Anthropic account team. | Director of IT (with Source-system admins) | [S15]; [S3]; [S16] |
+| T3 | Set the provisioning mode under **Organization settings > Organization and access > User provisioning**: **Invite only** or **Just-in-time (JIT)**. Do not choose SCIM directory sync: it is not available on Team. A JIT user is provisioned at login with the **User** role. | Director of IT | [S1]; [S3] |
+| T4 | Set roles by hand in the admin console, because there is no group mapping on Team. The roles are User, Admin, Owner and Primary Owner [S16]. Give the Owner role to the Director of IT and to a Backup Owner (step 0.5), and to nobody else: only Owners can edit managed settings [S17], and the Admin role cannot manage Plugins & skills ([compendium 09](../../docs/compendium/09-plans-and-it-controls.md)). Change a role under **Organization settings > Members**. **⚠ Unverified:** [S16] does not describe how a role is changed, so confirm the menu path at setup. | Director of IT, Backup Owner | [S16]; [S17]; **⚠ Unverified:** menu path |
+
+### Managed settings: one configuration for the whole organisation
+
+| # | Step | Who | Source |
+|---|---|---|---|
+| T5 | Pick the one baseline for the whole organisation, because Team gets one configuration and every member receives it. Use `general` for internal data. Use `confidential` only if every member may handle confidential data. `pe-zdr` and `hipaa` are Enterprise only (ZDR and HIPAA need Enterprise), so a Team customer with those roles needs Enterprise, not this section. Replace the placeholders (step 0.4) and run `python3 starter-kit/settings/preflight.py <file>` on the file ([settings README](../settings/README.md)). | Director of IT, with Compliance; Partner integration engineer | [compendium 09](../../docs/compendium/09-plans-and-it-controls.md); [starter-kit/settings/README.md](../settings/README.md) |
+| T6 | Paste the file as JSON in claude.ai under **Organization settings > Claude Code > Managed settings**. It needs the Owner or Primary Owner role, and server-managed settings are available on Team and Enterprise. Members' Claude Code clients fetch it when they sign in to the organization. | Director of IT (Owner) | [S17] |
+| T7 | Tell the business owner what this is: a **client-side control, not a security boundary**. On a device the organisation does not manage, a user needs no admin rights to bypass it, for example by signing in to a personal or other organisation, using a Console API key or a third-party provider or a non-default `ANTHROPIC_BASE_URL`, running an older version, or running a modified binary. Keep confidential data off unmanaged devices (compendium 13). | Director of IT | [S17]; [compendium 13](../../docs/compendium/13-devices.md) |
+| T8 | The sign-in lock (`forceLoginOrgUUID`) is enforced only by a device-management file. Anthropic says to deploy it with device management tooling, because a user receives server-managed settings only after signing in to your organisation, so those settings cannot redirect a first sign-in. Pasting the key in the console does not give a lock on its own. Without device management there is no sign-in lock. | Director of IT | [S11] |
+| T9 | If the customer does have device management (Intune, Jamf, Kandji) on some or all devices, use step 4 on those devices unchanged. Do not also paste a configuration for them unless you have read the [settings README](../settings/README.md) paragraph on two sources: by default Claude Code uses the first managed source that delivers a policy key, server-managed settings first, and skips the device file's policy keys. | Director of IT, Backup Owner | [S18]; [starter-kit/settings/README.md](../settings/README.md) |
+
+### Plugins: one set for every member
+
+| # | Step | Who | Source |
+|---|---|---|---|
+| T10 | Know that Team has no per-group configuration: the one configuration, with its `extraKnownMarketplaces` and `enabledPlugins`, reaches every member, and every plugin key applies to every user who receives the settings. Add the role plugin to the `enabledPlugins` of the file from T5 (step 6.3), and set `TWIN_GOVERNANCE_TWIN_ID` there. | Partner integration engineer | [S17]; [S4] |
+| T11 | **(Our recommendation)** Because there is no group target: ship one role plugin, for the pilot role, and write each skill's description so it says which role it is for, so a member outside the role is not offered it by mistake. Where there is device management, split plugin sets with device groups (step 6, device groups). Do not add a second role plugin to the one file until the customer is on Enterprise or has device groups. | Director of IT, Skill owners | Our recommendation; [S4] for the device-group path |
+| T12 | Set the claude.ai plugin toggles under **Organization settings > Plugins & skills** (step 6.8). On Team an Owner shares an org plugin to everyone; there is no group target there either. | Director of IT | [S4]; [compendium 13](../../docs/compendium/13-devices.md#team-plan-with-no-device-management) |
+
+### Which steps apply on Team
+
+| Runbook step | Applies on Team? | What to do instead | Source |
+|---|---|---|---|
+| 1 | No | Create no SCIM groups. SCIM is not available on Team; use T1 to T3. | [S1]; [S3] |
+| 2 | No | Do not connect SCIM. Set the provisioning mode in T3. | [S1] |
+| 3 | No | No group mapping, no seat-tier mapping and no custom roles: set roles by hand (T4). | [S1]; [compendium 09](../../docs/compendium/09-plans-and-it-controls.md) |
+| 4 | Only with device management | Deploy the file to devices under Intune, Jamf or Kandji. Without device management, paste the file in claude.ai (T6) and accept the limits in T7 and T8. | [S5]; [S17] |
+| 5 | Wherever settings were delivered | Run it on each pilot device. For settings delivered by server-managed settings, the **Setting sources** line shows `(remote)`. | [S5] |
+| 6 | Organisation-wide only | Steps 6.1, 6.3 to 6.8 apply with one role plugin in the one file (T10). No per-group configuration and no per-group device targeting unless there are device groups. | [S4]; [S17] |
+
+### What a Team twin does not get
+
+A Team twin does not get group targeting, SCIM, audit logs, the Compliance API, custom retention, ZDR or HIPAA, and without device management it gets no managed settings file, no sign-in lock and no governance hook ([compendium 13](../../docs/compendium/13-devices.md#team-plan-with-no-device-management) and [15](../../docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management) list what it does get and what it cannot record). A customer who needs every action logged needs Enterprise and managed devices: the managed hook on each device, and the Enterprise audit log and Compliance API beside it, neither of which is a log of each tool call.
 
 ## 1. Create the SCIM groups in the identity provider
 
@@ -45,13 +93,13 @@ Groups in the identity provider decide two things in Claude: the role each user 
 | # | Step | Who | Source |
 |---|---|---|---|
 | 1.1 | In the Okta Admin Console, go to **Applications and Resources > Applications**, select **Create App Integration**, then **Classic experience**, and choose **SAML 2.0** as the sign-in method. Anthropic recommends SAML over OIDC. Name the app `Claude`. Anthropic's guide shows the older menu name **Applications > Applications**. | Director of IT (with Source-system admins if they run Okta) | [S7]; [S3] |
-| 1.2 | Configure SAML as the SSO guide describes. Set the Name ID format to EmailAddress and Application username to Email, and add an attribute statement named `email` with the value `user.email`. The ACS URL and Audience URI (Entity ID) are per organization: copy them from the WorkOS setup flow in the Claude **Identity and access** settings (`claude.ai/admin-settings/identity`). | Director of IT (with Source-system admins) | [S3] |
+| 1.2 | Configure SAML as the SSO guide describes. Set the Name ID format to EmailAddress and Application username to Email, and add an attribute statement named `email` with the value `user.email`. The ACS URL and Audience URI (Entity ID) are per organization: copy them from the WorkOS setup flow in the Claude **Identity and access** settings (`claude.ai/admin-settings/identity`; [S3] gives this URL for Team and Enterprise). **⚠ Conflict:** [S1] and [S15] name `claude.ai/admin-settings/organization` (**Organization and access**) for the same settings. Use whichever your console shows. | Director of IT (with Source-system admins) | [S3]; [S15] |
 | 1.3 | Add a group attribute statement named `groups`, with a filter that covers every Okta group mapped to a Claude role or seat type. Without it, users cannot receive mapped roles. In Okta it is on the **Sign On** tab, under **Attribute Statements** > **Show legacy configuration**; Okta's newer alternative is custom claims. | Director of IT (with Source-system admins) | [S3]; [S9] |
 | 1.4 | Turn on SCIM for the app. For an app built with **Create App Integration**, Okta's steps are: on the **General** tab, edit **App Settings** and set **Provisioning** to **SCIM**; then on the **Provisioning** tab, under **Settings > Integration**, click **Edit** and enter the SCIM connector base URL and the API token (HTTP Header) from the WorkOS setup flow. Anthropic's guide calls this step **Configure API Integration** > **Enable API integration**, Okta's label for catalog apps. Then under **To App**, click **Edit** and enable **Create Users**, **Update User Attributes**, and **Deactivate Users**. | Director of IT (with Source-system admins) | [S8]; [S10]; [S3] |
 | 1.5 | Make sure the SAML email field and the SCIM email field are the same Okta attribute. A mismatch, for example `user.login` for SCIM and `user.email` for SAML, can block logins. | Director of IT (with Source-system admins) | [S3] |
 | 1.6 | Create one Okta group per role, plus one per seat type where the plan has seat tiers. Use a prefix such as `anthropic-claude-` for easy search. The docs recommend a prefix but do not require one. | Director of IT | [S1] |
 | 1.7 | Create the pilot group as a separate Okta group, for example `anthropic-claude-pilot-<role>`. Add the pilot users, chosen by the RevOps manager. **(Our recommendation): the docs do not describe pilot groups.** Each pilot user still needs a role group. A pilot group alone does not give a role. | Director of IT, RevOps manager | [S1]; **⚠ Unverified:** confirm the pilot design at setup |
-| 1.8 | Assign the Okta groups to the Claude app on the **Assignments** tab. Users not assigned to the app when the provisioning mode is saved are removed from the organization. Check the assignment list before step 2.4, which saves it. | Source-system admins | [S3]; [S1] step 2 |
+| 1.8 | Assign the Okta groups to the Claude app on the **Assignments** tab ([S3] step 4: "In the **Assignments** tab, assign the people or Okta groups that should access Claude"). Users not assigned to the app when the provisioning mode is saved are removed from the organization. Check the assignment list before step 2.4, which saves it. | Source-system admins | [S3]; [S1] step 2 |
 
 ## 2. Connect SCIM in Claude
 
@@ -150,6 +198,8 @@ The managed settings do not target users. Anthropic's docs say every plugin key 
 - **Device groups.** Assign each plugin set's managed settings to a device group in Intune or Jamf. A device in the group gets its plugin set. Use this path for MDM-managed devices.
 - **Server-managed settings.** On an Enterprise plan, give each group its own configuration in the claude.ai admin console, under **Organization settings > Claude Code > Managed settings**, with **Add configuration**. Requires the Owner or Primary Owner role [S4]; [S12]. Each group must already exist in Claude, synced through SCIM or created as a custom group. Group configurations do not merge with each other or with the organization-wide one, so each must hold the whole baseline. They are not yet available to organizations with HIPAA enabled [S12]. This path covers devices that are not under MDM, and cloud sessions, which only read server-managed settings [S4].
 
+Per-group server-managed configurations need Enterprise: on a Team plan one configuration applies to every user [S17]. A Team reader follows [Team plan: no SCIM, no group targeting](#team-plan-no-scim-no-group-targeting) instead.
+
 On the device-group path, SCIM groups (step 1) decide the role and seat in Claude, not which plugins a device gets: keep the device groups separate from the SCIM groups, and name them so they are not confused. On the server-managed path, the configuration is chosen by Claude group, so a SCIM-synced group can carry a plugin set [S12]. Use a group your identity provider syncs, so no one can add themselves to it in the admin console [S12].
 
 ### Steps
@@ -185,3 +235,8 @@ On the device-group path, SCIM groups (step 1) decide the role and seat in Claud
 - [S12] Configure server-managed settings, give groups different settings. https://code.claude.com/docs/en/server-managed-settings#give-groups-different-settings
 - [S13] Claude Code permissions, deny rules and Read path patterns. https://code.claude.com/docs/en/permissions
 - [S14] Microsoft Intune Management Extension (scripts and Win32 apps assigned to a user or device). https://learn.microsoft.com/en-us/intune/device-management/tools/management-extension-windows
+- [S15] Setting up single sign-on (SSO), plans and admin location. https://support.claude.com/en/articles/13132885-setting-up-single-sign-on-sso
+- [S16] Roles in Team and Enterprise plans. https://support.claude.com/en/articles/9267276
+- [S17] Configure server-managed settings (requirements, current limitations, security considerations). https://code.claude.com/docs/en/server-managed-settings
+- [S18] Deploy managed settings, how Claude Code combines managed sources. https://code.claude.com/docs/en/managed-settings#how-claude-code-combines-managed-sources
+- [S19] Claude Code authentication, Claude for Teams or Enterprise (invite members). https://code.claude.com/docs/en/authentication#claude-for-teams-or-enterprise

@@ -64,6 +64,11 @@ GOVERNANCE_LABELS = {
 }
 SALT_PLACEHOLDER = "REPLACE-WITH-GOVERNANCE-SALT"
 
+README_LINE_LIMIT = 90
+RUNBOOK = ROOT / "starter-kit" / "runbooks" / "identity-devices-publishing.md"
+TEAM_HEADING = "Team plan: no SCIM, no group targeting"
+TEAM_ANCHOR = "team-plan-no-scim-no-group-targeting"
+
 
 def load(name):
     return json.loads((SETTINGS_DIR / name).read_text(encoding="utf-8"))
@@ -218,10 +223,37 @@ class ManagedSettingsTests(unittest.TestCase):
         self.assertNotIn("TODO", text)
         self.assertNotIn("(placeholder)", text)
 
-    def test_readme_under_80_lines(self):
+    def test_readme_under_line_limit(self):
+        # 90, up from 80: the Plan column, the delivery-paths paragraph, the
+        # preflight section, the version check and the pilot-device check add
+        # about 10 lines (65 now). 90 leaves a few lines of room and keeps the
+        # README a one-page reference.
         readme = SETTINGS_DIR / "README.md"
         self.assertTrue(readme.exists())
-        self.assertLess(len(readme.read_text(encoding="utf-8").splitlines()), 80)
+        self.assertLess(len(readme.read_text(encoding="utf-8").splitlines()), README_LINE_LIMIT)
+
+    def test_readme_baseline_table_has_a_plan_column(self):
+        text = (SETTINGS_DIR / "README.md").read_text(encoding="utf-8")
+        header = next(
+            (l for l in text.splitlines() if l.startswith("| File ")), ""
+        )
+        self.assertIn("| Plan ", header)
+
+    def test_readme_names_preflight_the_version_floor_and_the_team_section(self):
+        text = (SETTINGS_DIR / "README.md").read_text(encoding="utf-8")
+        self.assertIn("preflight.py", text)
+        self.assertIn("2.1.285", text)
+        self.assertIn(f"identity-devices-publishing.md#{TEAM_ANCHOR}", text)
+
+    def test_runbook_has_the_team_section_with_a_row_for_steps_1_to_6(self):
+        text = RUNBOOK.read_text(encoding="utf-8")
+        self.assertIn(f"\n## {TEAM_HEADING}\n", text)
+        start = text.index(f"## {TEAM_HEADING}")
+        end = text.index("\n## 1.", start)
+        section = text[start:end]
+        for step in range(1, 7):
+            with self.subTest(step=step):
+                self.assertRegex(section, rf"(?m)^\|\s*{step}\s*\|")
 
 
 if __name__ == "__main__":

@@ -16,7 +16,7 @@ No single Anthropic feature answers all three, and none covers every org. ZDR se
 | **Compliance API** | Chats, files, Projects, and Cowork, Claude Code and Claude Tag sessions, including tool results | **Doesn't capture ZDR sessions** | Enterprise (a Console org gets the activity feed only) |
 | **Skills analytics API** | Skill use by user, group and product, a day behind | Skills uploaded to an API workspace | Enterprise |
 | **Plugins & skills inventory** | Users and activity over 30 days | No export | Team, Enterprise |
-| **Claude Code / Agent SDK OpenTelemetry** | Per-session metrics and events, exported to our monitoring | Prompts and tool inputs are off by default. ⚠ Check the exact metric list. | Any (configured through managed settings) |
+| **Claude Code / Agent SDK OpenTelemetry** | Per-session metrics and events, exported to our monitoring | Prompts and tool inputs are off by default. **⚠ Unverified:** the exact metric list. | Any (configured through managed settings) |
 | **Managed Agents events and webhooks** | A stream of session events | Webhooks give up after 3 attempts and "aren't a durable log" | Platform |
 | **Scheduled task run history** | Each run and its transcript | "Succeeded" means the session ended, not that the task got done | Team, Enterprise |
 | **Source-system audit** (Salesforce, HubSpot, Microsoft 365) | Every change the twin made in that system | The twin acts *as the user*, so its changes look like the user's | Per vendor |

@@ -4,7 +4,7 @@ A digital twin is a bundle of seven parts. Each part has its own Anthropic mecha
 
 | Part | What it is | Claude mechanisms | Covered in |
 |---|---|---|---|
-| **Persona** | The role, purpose, audience, tone and boundaries | API: system prompt. Claude Code: output style plus CLAUDE.md. Claude.ai: Project instructions ⚠ Unverified | [02](02-persona.md) |
+| **Persona** | The role, purpose, audience, tone and boundaries | API: system prompt. Claude Code: output style plus CLAUDE.md. Claude.ai: Project instructions (**⚠ Unverified:** see [02](02-persona.md)) | [02](02-persona.md) |
 | **Skills** | Know-how: procedures, templates, domain knowledge, scripts | Agent Skills (`SKILL.md` folders) | [03](03-skills-authoring.md), [04](04-distribution-governance.md) |
 | **Connectors** | Access to systems: CRM, ticketing, email, files | MCP servers (claude.ai org connectors, Claude Code MCP, Managed Agents MCP) | [05](05-decision-matrix.md) |
 | **Runtime** | Where the twin runs and what starts it | Client (claude.ai, Desktop, Claude Code) or hosted (Agent SDK, Messages API, Managed Agents, Claude Tag in Slack, scheduled tasks) | [05](05-decision-matrix.md) |

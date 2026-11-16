@@ -16,7 +16,7 @@ Y = yes, N = no, L = limited. Free, Pro, Max and Ultra share one column; where F
 |---|---|---|---|
 | **Terms** | Consumer | Commercial | Commercial |
 | **Used for model training by default** | **Yes, unless the user opts out** | No | No |
-| Custom skills (personal) | Y on Pro and up. ⚠ Conflict for Free | Y (an Owner must turn on code execution) | Y |
+| Custom skills (personal) | Y on Pro and up. **⚠ Conflict:** for Free | Y (an Owner must turn on code execution) | Y |
 | Org-provisioned skills and plugins | N | Y | Y |
 | Targeting skills and plugins at groups | N | N | **Y** (via SCIM groups) |
 | Connectors | Y, the user adds them (Free: 1 custom) | L: only an Owner adds custom connectors; members sign in | L: Owner, or a custom role with the Libraries permission |

@@ -76,7 +76,7 @@ To iterate, use **"Claude A / Claude B"**: write the skill with one Claude, test
 - The **`skill-creator`** plugin for Claude Code. It stores test cases in `evals/evals.json`, compares results with and without the skill, runs blind A/B tests between versions, tunes the description for triggering, and shows results in an HTML viewer.
 - **`claude plugin eval`**, which runs evaluation suites from the command line or in CI.
 
-⚠ The best-practices page still says there is "not currently a built-in way" to run evaluations. That statement predates these tools. Whether skill-creator works inside claude.ai is unverified.
+**⚠ Conflict:** the best-practices page still says there is "not currently a built-in way" to run evaluations; that statement predates these tools. **⚠ Unverified:** whether skill-creator works inside claude.ai.
 
 Sources: [Claude Code skills](https://code.claude.com/docs/en/skills.md), [Plugin evals](https://code.claude.com/docs/en/plugin-evals.md).
 

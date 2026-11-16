@@ -721,6 +721,24 @@ class CiteTests(unittest.TestCase):
                      "starter-kit/templates/role-plugin/README.md#steps"):
             self.assertIsNotNone(section(cite), cite)
 
+    def test_worked_example_cites_into_engagements_name_files_that_exist(self):
+        def cites(node):
+            if isinstance(node, dict):
+                for key, value in node.items():
+                    if key == "cite" and isinstance(value, str):
+                        yield value
+                    else:
+                        yield from cites(value)
+            elif isinstance(node, list):
+                for value in node:
+                    yield from cites(value)
+
+        for persona in (PE, TEAM):
+            for cite in cites(load(persona / "levelled.json")):
+                if cite.startswith("engagements/"):
+                    path = cite.partition("#")[0]
+                    self.assertTrue((ROOT / path).is_file(), "%s: %s names no file" % (persona.name, cite))
+
     def test_the_05_decision_flow_is_cited_both_ways(self):
         flow = "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation"
         flags = {rule["unverified"] for rule in load(RULES)["rules"] if rule["cite"] == flow}

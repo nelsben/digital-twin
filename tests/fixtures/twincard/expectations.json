@@ -1,0 +1,1505 @@
+{
+  "expectations_version": 1,
+  "about": "Expected levelling results for the two fictional fixtures, fixed before the levelling engine exists. Values come from the compendium pages cited; the vocabulary is in partner-kit/docs/design.md section 7.2. Later cards may not edit this file.",
+  "fixtures": {
+    "pe": {
+      "persona_dir": "engagements/sample-pe/personas/deal-team-associate",
+      "pack": "private-equity",
+      "pack_products": {
+        "salesforce": "Salesforce",
+        "sharepoint": "Microsoft 365 (SharePoint and OneDrive)",
+        "teams": "Microsoft 365 (Teams)"
+      },
+      "validate": {
+        "exit": 0,
+        "completeness_pct": 94,
+        "complete": false
+      },
+      "persona": {
+        "plugin_name": {
+          "expected": "twin-pe-deal-team",
+          "cite": "engagements/sample-pe/design.md#the-marketplace",
+          "reason": "The sample's design names the deal-team role plugin twin-pe-deal-team.",
+          "unverified": false
+        },
+        "distribution": {
+          "expected": "group-targeted",
+          "cite": "docs/compendium/09-plans-and-it-controls.md#what-it-can-do-on-each-plan",
+          "reason": "On Enterprise a plugin can be shared per group, so the deal-team plugin reaches the deal-team group only.",
+          "unverified": false
+        },
+        "settings_baseline": {
+          "expected": "pe-zdr",
+          "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+          "reason": "Highly sensitive deal work runs on a ZDR sign-in, the pe-zdr baseline.",
+          "unverified": false
+        }
+      },
+      "tasks": {
+        "T1": {
+          "runtime": {
+            "expected": "client-skill",
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+            "unverified": false
+          },
+          "identity": {
+            "expected": "user",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "unverified": false
+          },
+          "autonomy.start": {
+            "expected": 1,
+            "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+            "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+            "unverified": false
+          },
+          "autonomy.ceiling": {
+            "expected": 3,
+            "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+            "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+            "unverified": false
+          },
+          "data_controls": {
+            "expected": {
+              "settings_baseline": "pe-zdr",
+              "web_tools": "off",
+              "surfaces": [
+                "claude-code"
+              ],
+              "retention": "zdr"
+            },
+            "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+            "reason": "Highly sensitive deal work runs in Claude Code on a ZDR sign-in on a managed device, with web tools off.",
+            "unverified": false
+          },
+          "memory": {
+            "expected": "off",
+            "cite": "docs/compendium/02-persona.md#memory",
+            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+            "unverified": false
+          },
+          "plan_fit": {
+            "expected": "ok",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+            "unverified": false
+          },
+          "connectors": {
+            "expected": [
+              {
+                "system": "salesforce",
+                "access": "read",
+                "identity": "user"
+              },
+              {
+                "system": "sharepoint",
+                "access": "read",
+                "identity": "user"
+              }
+            ],
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "Salesforce's directory connector is not confirmed on page 11, so the connector choice rests on an unverified fact.",
+            "unverified": true
+          }
+        },
+        "T2": {
+          "runtime": {
+            "expected": "client-skill",
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+            "unverified": false
+          },
+          "identity": {
+            "expected": "user",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "unverified": false
+          },
+          "autonomy.start": {
+            "expected": 1,
+            "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+            "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+            "unverified": false
+          },
+          "autonomy.ceiling": {
+            "expected": 3,
+            "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+            "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+            "unverified": false
+          },
+          "data_controls": {
+            "expected": {
+              "settings_baseline": "pe-zdr",
+              "web_tools": "off",
+              "surfaces": [
+                "claude-code"
+              ],
+              "retention": "zdr"
+            },
+            "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+            "reason": "Highly sensitive deal work runs in Claude Code on a ZDR sign-in on a managed device, with web tools off.",
+            "unverified": false
+          },
+          "memory": {
+            "expected": "off",
+            "cite": "docs/compendium/02-persona.md#memory",
+            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+            "unverified": false
+          },
+          "plan_fit": {
+            "expected": "ok",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+            "unverified": false
+          },
+          "connectors": {
+            "expected": [
+              {
+                "system": "teams",
+                "access": "read",
+                "identity": "user"
+              },
+              {
+                "system": "salesforce",
+                "access": "write",
+                "identity": "user"
+              }
+            ],
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "Salesforce's directory connector is not confirmed on page 11, so the connector choice rests on an unverified fact.",
+            "unverified": true
+          }
+        },
+        "T3": {
+          "runtime": {
+            "expected": "managed-agents",
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "reason": "A scheduled team job that needs ZDR runs on fully self-hosted Managed Agents, and the Agent SDK's ZDR cover is Unverified.",
+            "unverified": true
+          },
+          "identity": {
+            "expected": "api-key-vault",
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "reason": "A hosted agent runs with nobody present, so it holds its credentials in a vault instead of a user's sign-in.",
+            "unverified": false
+          },
+          "autonomy.start": {
+            "expected": 1,
+            "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+            "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+            "unverified": false
+          },
+          "autonomy.ceiling": {
+            "expected": 4,
+            "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+            "reason": "The post is internal and reversible and runs on a schedule, so it may rise to unattended level 4 once evals support it.",
+            "unverified": false
+          },
+          "data_controls": {
+            "expected": {
+              "settings_baseline": null,
+              "web_tools": "off",
+              "surfaces": [],
+              "retention": "zdr"
+            },
+            "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+            "reason": "A hosted runtime has no client surface or settings file, and deal data keeps ZDR and web tools off.",
+            "unverified": false
+          },
+          "memory": {
+            "expected": "off",
+            "cite": "docs/compendium/02-persona.md#memory",
+            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+            "unverified": false
+          },
+          "plan_fit": {
+            "expected": "ok-with-limits",
+            "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+            "reason": "Hosted agents need org 3, a Platform org with ZDR, besides the people's Enterprise org.",
+            "unverified": true
+          },
+          "connectors": {
+            "expected": [
+              {
+                "system": "salesforce",
+                "access": "read",
+                "identity": "api-key-vault"
+              },
+              {
+                "system": "teams",
+                "access": "write",
+                "identity": "api-key-vault"
+              }
+            ],
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "Salesforce's directory connector is not confirmed on page 11, so the connector choice rests on an unverified fact.",
+            "unverified": true
+          }
+        },
+        "T4": {
+          "runtime": {
+            "expected": "client-skill",
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+            "unverified": false
+          },
+          "identity": {
+            "expected": "user",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "unverified": false
+          },
+          "autonomy.start": {
+            "expected": 1,
+            "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+            "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+            "unverified": false
+          },
+          "autonomy.ceiling": {
+            "expected": null,
+            "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+            "reason": "Undecided: page 06 sets the ceiling from audience, reversibility, money, deletes and trigger, but has no rule for a high cost of a mistake, so a person must decide it.",
+            "unverified": false
+          },
+          "data_controls": {
+            "expected": {
+              "settings_baseline": "pe-zdr",
+              "web_tools": "off",
+              "surfaces": [
+                "claude-code"
+              ],
+              "retention": "zdr"
+            },
+            "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+            "reason": "Highly sensitive deal work runs in Claude Code on a ZDR sign-in on a managed device, with web tools off.",
+            "unverified": false
+          },
+          "memory": {
+            "expected": "off",
+            "cite": "docs/compendium/02-persona.md#memory",
+            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+            "unverified": false
+          },
+          "plan_fit": {
+            "expected": "ok",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+            "unverified": false
+          },
+          "connectors": {
+            "expected": [
+              {
+                "system": "sharepoint",
+                "access": "read",
+                "identity": "user"
+              },
+              {
+                "system": "salesforce",
+                "access": "read",
+                "identity": "user"
+              }
+            ],
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "Salesforce's directory connector is not confirmed on page 11, so the connector choice rests on an unverified fact.",
+            "unverified": true
+          }
+        },
+        "T5": {
+          "runtime": {
+            "expected": "client-skill",
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+            "unverified": false
+          },
+          "identity": {
+            "expected": "user",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "unverified": false
+          },
+          "autonomy.start": {
+            "expected": 1,
+            "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+            "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+            "unverified": false
+          },
+          "autonomy.ceiling": {
+            "expected": 3,
+            "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+            "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+            "unverified": false
+          },
+          "data_controls": {
+            "expected": {
+              "settings_baseline": "pe-zdr",
+              "web_tools": "off",
+              "surfaces": [
+                "claude-code"
+              ],
+              "retention": "zdr"
+            },
+            "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+            "reason": "Highly sensitive deal work runs in Claude Code on a ZDR sign-in on a managed device, with web tools off.",
+            "unverified": false
+          },
+          "memory": {
+            "expected": "off",
+            "cite": "docs/compendium/02-persona.md#memory",
+            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+            "unverified": false
+          },
+          "plan_fit": {
+            "expected": "ok",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+            "unverified": false
+          },
+          "connectors": {
+            "expected": [
+              {
+                "system": "salesforce",
+                "access": "read",
+                "identity": "user"
+              },
+              {
+                "system": "sharepoint",
+                "access": "read",
+                "identity": "user"
+              }
+            ],
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "Salesforce's directory connector is not confirmed on page 11, so the connector choice rests on an unverified fact.",
+            "unverified": true
+          }
+        },
+        "T6": {
+          "runtime": {
+            "expected": "client-skill",
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+            "unverified": false
+          },
+          "identity": {
+            "expected": "user",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "unverified": false
+          },
+          "autonomy.start": {
+            "expected": 1,
+            "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+            "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+            "unverified": false
+          },
+          "autonomy.ceiling": {
+            "expected": null,
+            "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+            "reason": "Undecided: page 06 sets the ceiling from audience, reversibility, money, deletes and trigger, but has no rule for a high cost of a mistake, so a person must decide it.",
+            "unverified": false
+          },
+          "data_controls": {
+            "expected": {
+              "settings_baseline": "pe-zdr",
+              "web_tools": "off",
+              "surfaces": [
+                "claude-code"
+              ],
+              "retention": "zdr"
+            },
+            "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
+            "reason": "Highly sensitive deal work runs in Claude Code on a ZDR sign-in on a managed device, with web tools off.",
+            "unverified": false
+          },
+          "memory": {
+            "expected": "off",
+            "cite": "docs/compendium/02-persona.md#memory",
+            "reason": "Personal memory is not wanted on this card, so role knowledge stays in skills and memory is off.",
+            "unverified": false
+          },
+          "plan_fit": {
+            "expected": "ok",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR, which this Enterprise customer has.",
+            "unverified": false
+          },
+          "connectors": {
+            "expected": [
+              {
+                "system": "sharepoint",
+                "access": "read",
+                "identity": "user"
+              }
+            ],
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "SharePoint is read through the Microsoft 365 connector per user, which page 11 confirms.",
+            "unverified": false
+          }
+        }
+      },
+      "blockers": [],
+      "warnings": [
+        {
+          "code": "agent-sdk-cover-unverified",
+          "about": "T3",
+          "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+          "unverified": true
+        },
+        {
+          "code": "decision-undecided",
+          "about": "T4",
+          "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+          "unverified": false
+        },
+        {
+          "code": "decision-undecided",
+          "about": "T6",
+          "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+          "unverified": false
+        }
+      ],
+      "backlog": {
+        "epic": "Deal-team associate twin for Example Capital Partners",
+        "feature_ids": [
+          "F-pre-meeting-preparation",
+          "F-pipeline-upkeep-and-reporting",
+          "F-deal-screening",
+          "F-investment-committee-drafting",
+          "F-twin-foundation"
+        ],
+        "story_ids": [
+          "S-T1",
+          "S-T2",
+          "S-T3",
+          "S-T4",
+          "S-T5",
+          "S-T6",
+          "S-persona-voice",
+          "S-connectors-and-identity",
+          "S-guardrails-and-settings",
+          "S-distribution",
+          "S-governance-log",
+          "S-memory-policy",
+          "S-pilot-rollout-and-scorecard"
+        ],
+        "must_have_tasks": [
+          {
+            "story": "S-T1",
+            "task": "collect 3 examples",
+            "cite": "partner-kit/docs/design.md#8-backlog-backlogpy-datatask-libraryjson"
+          },
+          {
+            "story": "S-T2",
+            "task": "twin marker",
+            "cite": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+          },
+          {
+            "story": "S-T5",
+            "task": "write the evals",
+            "cite": "partner-kit/docs/design.md#8-backlog-backlogpy-datatask-libraryjson"
+          }
+        ]
+      },
+      "dashboard": {
+        "sections": [
+          "Header",
+          "Anatomy grid",
+          "Feature list",
+          "Blockers and warnings",
+          "Backlog",
+          "Open questions",
+          "Where each answer came from"
+        ],
+        "must_show": {
+          "codes": [
+            "agent-sdk-cover-unverified",
+            "decision-undecided"
+          ],
+          "unverified": [
+            "T1.connectors",
+            "T2.connectors",
+            "T3.runtime",
+            "T3.plan_fit",
+            "T3.connectors",
+            "T4.connectors",
+            "T5.connectors",
+            "agent-sdk-cover-unverified:T3"
+          ]
+        }
+      }
+    },
+    "team": {
+      "persona_dir": "engagements/sample-team-cs/personas/customer-success-manager",
+      "pack": "b2b-software",
+      "pack_products": {
+        "hubspot": "HubSpot",
+        "google-drive": "Google Drive",
+        "gmail": "Gmail",
+        "google-calendar": "Google Calendar",
+        "slack": "Slack",
+        "zendesk": "Zendesk",
+        "usage-db": "Internal usage database"
+      },
+      "validate": {
+        "exit": 0,
+        "completeness_pct": 100,
+        "complete": true
+      },
+      "persona": {
+        "plugin_name": {
+          "expected": "twin-customer-success-manager",
+          "cite": "starter-kit/templates/role-plugin/README.md#steps",
+          "reason": "A role plugin is named twin-<role>, here the persona id, because a twin is a role template and not a person.",
+          "unverified": false
+        },
+        "distribution": {
+          "expected": "everyone",
+          "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+          "reason": "On Team an Owner shares skills and plugins to everyone; group targeting needs Enterprise.",
+          "unverified": false
+        },
+        "settings_baseline": {
+          "expected": null,
+          "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+          "reason": "Claude.ai on the web with no device management takes no managed settings file, so there is no baseline.",
+          "unverified": false
+        }
+      },
+      "tasks": {
+        "C1": {
+          "runtime": {
+            "expected": "client-skill",
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+            "unverified": false
+          },
+          "identity": {
+            "expected": "user",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "unverified": false
+          },
+          "autonomy.start": {
+            "expected": 1,
+            "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+            "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+            "unverified": false
+          },
+          "autonomy.ceiling": {
+            "expected": 3,
+            "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+            "reason": "The task is internal and reversible and a person starts it, so it may rise to level 3 but not to unattended level 4.",
+            "unverified": false
+          },
+          "data_controls": {
+            "expected": {
+              "settings_baseline": null,
+              "web_tools": "on",
+              "surfaces": [
+                "claude-ai"
+              ],
+              "retention": "standard"
+            },
+            "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+            "reason": "On Team with no device management the twin lives in claude.ai on the web, which has no managed settings file.",
+            "unverified": false
+          },
+          "memory": {
+            "expected": "on",
+            "cite": "docs/compendium/02-persona.md#memory",
+            "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on.",
+            "unverified": false
+          },
+          "plan_fit": {
+            "expected": "ok-with-limits",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "reason": "Confidential data is acceptable on Team only where the audit need is lower, so the fit has limits.",
+            "unverified": false
+          },
+          "connectors": {
+            "expected": [
+              {
+                "system": "hubspot",
+                "access": "read",
+                "identity": "user"
+              },
+              {
+                "system": "google-drive",
+                "access": "read",
+                "identity": "user"
+              }
+            ],
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "Google Drive's shared-drive support is unconfirmed on page 11.",
+            "unverified": true
+          }
+        },
+        "C2": {
+          "runtime": {
+            "expected": "claude-tag-routine",
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "reason": "Shared team work that runs on a schedule and lives in Slack is a Claude Tag channel routine.",
+            "unverified": false
+          },
+          "identity": {
+            "expected": "service-account",
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "reason": "A Claude Tag routine acts as a service account, so it survives turnover.",
+            "unverified": false
+          },
+          "autonomy.start": {
+            "expected": 1,
+            "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+            "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+            "unverified": false
+          },
+          "autonomy.ceiling": {
+            "expected": 2,
+            "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+            "reason": "The task reads untrusted usage data next to a Slack send, so a person approves each post and it stays at level 2.",
+            "unverified": false
+          },
+          "data_controls": {
+            "expected": {
+              "settings_baseline": null,
+              "web_tools": "on",
+              "surfaces": [
+                "slack"
+              ],
+              "retention": "standard"
+            },
+            "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+            "reason": "The digest runs in Slack through Claude Tag, which has no managed settings file on Team.",
+            "unverified": false
+          },
+          "memory": {
+            "expected": "off",
+            "cite": "docs/compendium/02-persona.md#memory",
+            "reason": "The task reads untrusted input while personal memory is wanted, a memory-poisoning risk, so memory stays off for it.",
+            "unverified": false
+          },
+          "plan_fit": {
+            "expected": "ok-with-limits",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "On Team the usage database has no MCP tunnel, and this customer can allowlist Anthropic's IP range, so it is reachable at the edge.",
+            "unverified": false
+          },
+          "connectors": {
+            "expected": [
+              {
+                "system": "hubspot",
+                "access": "read",
+                "identity": "service-account"
+              },
+              {
+                "system": "usage-db",
+                "access": "read",
+                "identity": "service-account"
+              },
+              {
+                "system": "slack",
+                "access": "write",
+                "identity": "service-account"
+              }
+            ],
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "Whether the Slack directory connector can post is Unverified; the Slack MCP server can send.",
+            "unverified": true
+          }
+        },
+        "C3": {
+          "runtime": {
+            "expected": "client-skill",
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+            "unverified": false
+          },
+          "identity": {
+            "expected": "user",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "unverified": false
+          },
+          "autonomy.start": {
+            "expected": 1,
+            "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+            "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+            "unverified": false
+          },
+          "autonomy.ceiling": {
+            "expected": 2,
+            "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+            "reason": "The email reaches the customer and is about money, so the task stays at level 1 or 2.",
+            "unverified": false
+          },
+          "data_controls": {
+            "expected": {
+              "settings_baseline": null,
+              "web_tools": "on",
+              "surfaces": [
+                "claude-ai"
+              ],
+              "retention": "standard"
+            },
+            "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+            "reason": "On Team with no device management the twin lives in claude.ai on the web, which has no managed settings file.",
+            "unverified": false
+          },
+          "memory": {
+            "expected": "on",
+            "cite": "docs/compendium/02-persona.md#memory",
+            "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on.",
+            "unverified": false
+          },
+          "plan_fit": {
+            "expected": "ok-with-limits",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "reason": "Confidential data is acceptable on Team only where the audit need is lower, so the fit has limits.",
+            "unverified": false
+          },
+          "connectors": {
+            "expected": [
+              {
+                "system": "hubspot",
+                "access": "read",
+                "identity": "user"
+              }
+            ],
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "The task reads the renewal deal from HubSpot per user; the email is a draft the manager sends.",
+            "unverified": false
+          }
+        },
+        "C4": {
+          "runtime": {
+            "expected": "client-skill",
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "reason": "A person starts the task in a conversation and reviews the result, so it is a client skill.",
+            "unverified": false
+          },
+          "identity": {
+            "expected": "user",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "unverified": false
+          },
+          "autonomy.start": {
+            "expected": 1,
+            "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+            "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+            "unverified": false
+          },
+          "autonomy.ceiling": {
+            "expected": 2,
+            "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+            "reason": "The follow-up email reaches the customer, so the task stays at level 1 or 2.",
+            "unverified": false
+          },
+          "data_controls": {
+            "expected": {
+              "settings_baseline": null,
+              "web_tools": "on",
+              "surfaces": [
+                "claude-ai"
+              ],
+              "retention": "standard"
+            },
+            "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+            "reason": "On Team with no device management the twin lives in claude.ai on the web, which has no managed settings file.",
+            "unverified": false
+          },
+          "memory": {
+            "expected": "on",
+            "cite": "docs/compendium/02-persona.md#memory",
+            "reason": "Personal memory is wanted and the task reads no untrusted input, so memory may be on.",
+            "unverified": false
+          },
+          "plan_fit": {
+            "expected": "ok-with-limits",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "reason": "Confidential data is acceptable on Team only where the audit need is lower, so the fit has limits.",
+            "unverified": false
+          },
+          "connectors": {
+            "expected": [
+              {
+                "system": "google-drive",
+                "access": "read",
+                "identity": "user"
+              },
+              {
+                "system": "hubspot",
+                "access": "write",
+                "identity": "user"
+              }
+            ],
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "Google Drive's shared-drive support is unconfirmed on page 11.",
+            "unverified": true
+          }
+        },
+        "C5": {
+          "runtime": {
+            "expected": "client-skill",
+            "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+            "reason": "Nothing confirmed starts the task on an escalation, so the manager starts it in a conversation until that is confirmed.",
+            "unverified": true
+          },
+          "identity": {
+            "expected": "user",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "The connectors this task uses act per user, through each user's own sign-in.",
+            "unverified": false
+          },
+          "autonomy.start": {
+            "expected": 1,
+            "cite": "docs/compendium/06-autonomy.md#the-trade-off-in-one-line",
+            "reason": "Every task starts at level 1 and earns each level with evidence from evals.",
+            "unverified": false
+          },
+          "autonomy.ceiling": {
+            "expected": 3,
+            "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+            "reason": "The summary is internal and reversible, and a person starts it until the event source is confirmed, so it may not run unattended.",
+            "unverified": false
+          },
+          "data_controls": {
+            "expected": {
+              "settings_baseline": null,
+              "web_tools": "on",
+              "surfaces": [
+                "claude-ai"
+              ],
+              "retention": "standard"
+            },
+            "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+            "reason": "On Team with no device management the twin lives in claude.ai on the web, which has no managed settings file.",
+            "unverified": false
+          },
+          "memory": {
+            "expected": "off",
+            "cite": "docs/compendium/02-persona.md#memory",
+            "reason": "The task reads untrusted input while personal memory is wanted, a memory-poisoning risk, so memory stays off for it.",
+            "unverified": false
+          },
+          "plan_fit": {
+            "expected": "ok-with-limits",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "The Zendesk connection is in early access and which Claude plans it supports is Unverified.",
+            "unverified": true
+          },
+          "connectors": {
+            "expected": [
+              {
+                "system": "zendesk",
+                "access": "read",
+                "identity": "user"
+              }
+            ],
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "The Zendesk connection is early access, and whether each call is checked against the user's Zendesk role is Unverified.",
+            "unverified": true
+          }
+        }
+      },
+      "blockers": [],
+      "warnings": [
+        {
+          "code": "team-no-group-targeting",
+          "about": "persona",
+          "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+          "unverified": false
+        },
+        {
+          "code": "team-no-managed-settings",
+          "about": "persona",
+          "cite": "docs/compendium/13-devices.md#team-plan-with-no-device-management",
+          "unverified": false
+        },
+        {
+          "code": "team-no-governance-log",
+          "about": "persona",
+          "cite": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management",
+          "unverified": false
+        },
+        {
+          "code": "team-no-audit-log",
+          "about": "persona",
+          "cite": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management",
+          "unverified": false
+        },
+        {
+          "code": "confidential-on-team",
+          "about": "persona",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "unverified": false
+        },
+        {
+          "code": "hubspot-super-admin-approval",
+          "about": "persona",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        },
+        {
+          "code": "private-network-allowlist",
+          "about": "C2",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        },
+        {
+          "code": "tag-private-channel-only",
+          "about": "C2",
+          "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+          "unverified": false
+        },
+        {
+          "code": "slack-directory-send-unverified",
+          "about": "C2",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": true
+        },
+        {
+          "code": "untrusted-input-with-send",
+          "about": "C2",
+          "cite": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it",
+          "unverified": false
+        },
+        {
+          "code": "memory-poisoning-risk",
+          "about": "C2",
+          "cite": "docs/compendium/02-persona.md#memory",
+          "unverified": false
+        },
+        {
+          "code": "mail-read-only",
+          "about": "C3",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        },
+        {
+          "code": "mail-read-only",
+          "about": "C4",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": false
+        },
+        {
+          "code": "unmanaged-connectors-read-only",
+          "about": "C4",
+          "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+          "unverified": false
+        },
+        {
+          "code": "memory-poisoning-risk",
+          "about": "C5",
+          "cite": "docs/compendium/02-persona.md#memory",
+          "unverified": false
+        },
+        {
+          "code": "event-source-unverified",
+          "about": "C5",
+          "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
+          "unverified": true
+        },
+        {
+          "code": "connector-early-access",
+          "about": "C5",
+          "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+          "unverified": true
+        }
+      ],
+      "backlog": {
+        "epic": "Customer success manager twin for Example Software Co",
+        "feature_ids": [
+          "F-call-preparation-and-follow-up",
+          "F-renewals",
+          "F-escalations",
+          "F-twin-foundation"
+        ],
+        "story_ids": [
+          "S-C1",
+          "S-C2",
+          "S-C3",
+          "S-C4",
+          "S-C5",
+          "S-persona-voice",
+          "S-connectors-and-identity",
+          "S-guardrails-and-settings",
+          "S-distribution",
+          "S-governance-log",
+          "S-memory-policy",
+          "S-pilot-rollout-and-scorecard"
+        ],
+        "must_have_tasks": [
+          {
+            "story": "S-C1",
+            "task": "collect 3 examples",
+            "cite": "partner-kit/docs/design.md#8-backlog-backlogpy-datatask-libraryjson"
+          },
+          {
+            "story": "S-C4",
+            "task": "twin marker",
+            "cite": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
+          },
+          {
+            "story": "S-C3",
+            "task": "write the evals",
+            "cite": "partner-kit/docs/design.md#8-backlog-backlogpy-datatask-libraryjson"
+          }
+        ]
+      },
+      "dashboard": {
+        "sections": [
+          "Header",
+          "Anatomy grid",
+          "Feature list",
+          "Blockers and warnings",
+          "Backlog",
+          "Open questions",
+          "Where each answer came from"
+        ],
+        "must_show": {
+          "codes": [
+            "confidential-on-team",
+            "connector-early-access",
+            "event-source-unverified",
+            "hubspot-super-admin-approval",
+            "mail-read-only",
+            "memory-poisoning-risk",
+            "private-network-allowlist",
+            "slack-directory-send-unverified",
+            "tag-private-channel-only",
+            "team-no-audit-log",
+            "team-no-governance-log",
+            "team-no-group-targeting",
+            "team-no-managed-settings",
+            "unmanaged-connectors-read-only",
+            "untrusted-input-with-send"
+          ],
+          "unverified": [
+            "C1.connectors",
+            "C2.connectors",
+            "C4.connectors",
+            "C5.runtime",
+            "C5.plan_fit",
+            "C5.connectors",
+            "slack-directory-send-unverified:C2",
+            "event-source-unverified:C5",
+            "connector-early-access:C5"
+          ]
+        }
+      }
+    }
+  },
+  "variants": [
+    {
+      "id": "team-action-log-required",
+      "base": "team",
+      "change": [
+        {
+          "record": "profile",
+          "path": "governance.action_log_required",
+          "value": true
+        }
+      ],
+      "expect": {
+        "decisions": {},
+        "blockers_added": [
+          {
+            "code": "log-every-action-not-met",
+            "about": "persona",
+            "cite": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management",
+            "unverified": false
+          }
+        ],
+        "blockers_removed": [],
+        "warnings_added": [],
+        "warnings_removed": [],
+        "still_valid": true
+      },
+      "cite": "docs/compendium/15-governance-and-performance.md#team-plan-with-no-device-management",
+      "reason": "A Team twin on the web has no governance hook, so it cannot meet a requirement to log every action."
+    },
+    {
+      "id": "team-highly-sensitive-task",
+      "base": "team",
+      "change": [
+        {
+          "record": "card",
+          "path": "tasks.C1.data_class",
+          "value": "highly-sensitive"
+        }
+      ],
+      "expect": {
+        "decisions": {
+          "C1.plan_fit": {
+            "expected": "needs-enterprise",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "reason": "Highly sensitive data needs a separate Enterprise org with ZDR.",
+            "unverified": false
+          }
+        },
+        "blockers_added": [
+          {
+            "code": "highly-sensitive-needs-zdr-org",
+            "about": "C1",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "unverified": false
+          },
+          {
+            "code": "unmanaged-device-no-access",
+            "about": "C1",
+            "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+            "unverified": false
+          }
+        ],
+        "blockers_removed": [],
+        "warnings_added": [],
+        "warnings_removed": [],
+        "still_valid": true
+      },
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "reason": "Highly sensitive data needs an Enterprise org with ZDR and gets no direct access from an unmanaged device."
+    },
+    {
+      "id": "pe-phi-hosted-task",
+      "base": "pe",
+      "change": [
+        {
+          "record": "profile",
+          "path": "compliance.phi",
+          "value": true
+        },
+        {
+          "record": "card",
+          "path": "tasks.T3.data_class",
+          "value": "phi"
+        }
+      ],
+      "expect": {
+        "decisions": {
+          "T3.runtime": {
+            "expected": "none",
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "reason": "Work wired into systems that holds PHI has no hosted agent runtime.",
+            "unverified": false
+          },
+          "T3.plan_fit": {
+            "expected": "not-supported",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "reason": "PHI needs a dedicated HIPAA org, and no hosted agent runtime is covered for it.",
+            "unverified": false
+          }
+        },
+        "blockers_added": [
+          {
+            "code": "phi-no-hosted-runtime",
+            "about": "T3",
+            "cite": "docs/compendium/10-sensitive-data.md#what-hipaa-covers",
+            "unverified": false
+          },
+          {
+            "code": "phi-needs-hipaa-org",
+            "about": "persona",
+            "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+            "unverified": false
+          }
+        ],
+        "blockers_removed": [],
+        "warnings_added": [],
+        "warnings_removed": [
+          {
+            "code": "agent-sdk-cover-unverified",
+            "about": "T3",
+            "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
+            "unverified": true
+          }
+        ],
+        "still_valid": true
+      },
+      "cite": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above",
+      "reason": "PHI needs a dedicated HIPAA org with a signed BAA, and a hosted PHI task has no covered runtime."
+    },
+    {
+      "id": "team-override-c1-ceiling",
+      "base": "team",
+      "change": [
+        {
+          "record": "card",
+          "path": "overrides[0].task",
+          "value": "C1"
+        },
+        {
+          "record": "card",
+          "path": "overrides[0].decision",
+          "value": "autonomy.ceiling"
+        },
+        {
+          "record": "card",
+          "path": "overrides[0].value",
+          "value": 2
+        },
+        {
+          "record": "card",
+          "path": "overrides[0].reason",
+          "value": "The team lead wants every brief approved during the first quarter (invented)."
+        },
+        {
+          "record": "card",
+          "path": "overrides[0].approved_by",
+          "value": "Marisol Quenby"
+        }
+      ],
+      "expect": {
+        "decisions": {
+          "C1.autonomy.ceiling": {
+            "expected": 2,
+            "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+            "reason": "A card override replaces the rule's result of 3.",
+            "unverified": false,
+            "overridden": true,
+            "rule_result": 3,
+            "override_reason": "The team lead wants every brief approved during the first quarter (invented)."
+          }
+        },
+        "blockers_added": [],
+        "blockers_removed": [],
+        "warnings_added": [
+          {
+            "code": "override-applied",
+            "about": "C1",
+            "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+            "unverified": false
+          }
+        ],
+        "warnings_removed": [],
+        "still_valid": true
+      },
+      "cite": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level",
+      "reason": "An override replaces one rule result, and the result is shown as overridden with its reason."
+    },
+    {
+      "id": "team-individual-plan",
+      "base": "team",
+      "change": [
+        {
+          "record": "profile",
+          "path": "plan.tier",
+          "value": "individual"
+        }
+      ],
+      "expect": {
+        "decisions": {
+          "C1.plan_fit": {
+            "expected": "not-supported",
+            "cite": "docs/compendium/09-plans-and-it-controls.md#what-this-means-for-the-rollout-our-recommendation",
+            "reason": "Individual plans are not for company data; Team is the minimum.",
+            "unverified": false
+          },
+          "C2.plan_fit": {
+            "expected": "not-supported",
+            "cite": "docs/compendium/09-plans-and-it-controls.md#what-this-means-for-the-rollout-our-recommendation",
+            "reason": "Individual plans are not for company data; Team is the minimum.",
+            "unverified": false
+          },
+          "C3.plan_fit": {
+            "expected": "not-supported",
+            "cite": "docs/compendium/09-plans-and-it-controls.md#what-this-means-for-the-rollout-our-recommendation",
+            "reason": "Individual plans are not for company data; Team is the minimum.",
+            "unverified": false
+          },
+          "C4.plan_fit": {
+            "expected": "not-supported",
+            "cite": "docs/compendium/09-plans-and-it-controls.md#what-this-means-for-the-rollout-our-recommendation",
+            "reason": "Individual plans are not for company data; Team is the minimum.",
+            "unverified": false
+          },
+          "C5.plan_fit": {
+            "expected": "not-supported",
+            "cite": "docs/compendium/09-plans-and-it-controls.md#what-this-means-for-the-rollout-our-recommendation",
+            "reason": "Individual plans are not for company data; Team is the minimum.",
+            "unverified": false
+          }
+        },
+        "blockers_added": [
+          {
+            "code": "plan-below-team",
+            "about": "persona",
+            "cite": "docs/compendium/09-plans-and-it-controls.md#what-this-means-for-the-rollout-our-recommendation",
+            "unverified": false
+          }
+        ],
+        "blockers_removed": [],
+        "warnings_added": [],
+        "warnings_removed": [],
+        "still_valid": true
+      },
+      "cite": "docs/compendium/09-plans-and-it-controls.md#what-this-means-for-the-rollout-our-recommendation",
+      "reason": "Team is the minimum plan for a company twin."
+    },
+    {
+      "id": "team-c4-gmail-send",
+      "base": "team",
+      "change": [
+        {
+          "record": "card",
+          "path": "tasks.C4.writes[1].system",
+          "value": "gmail"
+        },
+        {
+          "record": "card",
+          "path": "tasks.C4.writes[1].objects",
+          "value": "follow-up email to the customer"
+        },
+        {
+          "record": "card",
+          "path": "tasks.C4.writes[1].action",
+          "value": "send"
+        },
+        {
+          "record": "card",
+          "path": "provenance.tasks.C4.writes[1].action",
+          "value": {
+            "status": "answered",
+            "source": "interviews/2026-11-06-csm.md#F7"
+          }
+        }
+      ],
+      "expect": {
+        "decisions": {},
+        "blockers_added": [
+          {
+            "code": "connector-cannot-write",
+            "about": "C4",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "unverified": false
+          }
+        ],
+        "blockers_removed": [],
+        "warnings_added": [],
+        "warnings_removed": [],
+        "still_valid": true
+      },
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "reason": "The Gmail connector reads and searches only; it cannot create, send or change mail."
+    },
+    {
+      "id": "team-no-ip-allowlist",
+      "base": "team",
+      "change": [
+        {
+          "record": "profile",
+          "path": "network.can_allowlist_anthropic_ips",
+          "value": false
+        }
+      ],
+      "expect": {
+        "decisions": {
+          "C2.plan_fit": {
+            "expected": "needs-enterprise",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "Without allowlisting, the only hosted route to a private network is an MCP tunnel, which is Enterprise only.",
+            "unverified": false
+          }
+        },
+        "blockers_added": [
+          {
+            "code": "private-network-unreachable",
+            "about": "C2",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "unverified": false
+          }
+        ],
+        "blockers_removed": [],
+        "warnings_added": [],
+        "warnings_removed": [
+          {
+            "code": "private-network-allowlist",
+            "about": "C2",
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "unverified": false
+          }
+        ],
+        "still_valid": true
+      },
+      "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+      "reason": "The usage database must be reachable from Anthropic's IP range, or the job must run inside the network; a tunnel needs Enterprise."
+    },
+    {
+      "id": "team-shared-hubspot-write",
+      "base": "team",
+      "change": [
+        {
+          "record": "card",
+          "path": "tasks.C1.writes[0].system",
+          "value": "hubspot"
+        },
+        {
+          "record": "card",
+          "path": "tasks.C1.writes[0].objects",
+          "value": "note on the company record"
+        },
+        {
+          "record": "card",
+          "path": "tasks.C1.writes[0].action",
+          "value": "create"
+        },
+        {
+          "record": "card",
+          "path": "provenance.tasks.C1.writes[0].action",
+          "value": {
+            "status": "answered",
+            "source": "interviews/2026-11-06-csm.md#F7"
+          }
+        }
+      ],
+      "expect": {
+        "decisions": {
+          "C1.autonomy.ceiling": {
+            "expected": 2,
+            "cite": "docs/compendium/06-autonomy.md#how-a-level-is-enforced",
+            "reason": "C1 and C4 share the HubSpot create tool, so both run at the stricter task's level, 2.",
+            "unverified": false
+          },
+          "C1.connectors": {
+            "expected": [
+              {
+                "system": "hubspot",
+                "access": "write",
+                "identity": "user"
+              },
+              {
+                "system": "google-drive",
+                "access": "read",
+                "identity": "user"
+              }
+            ],
+            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
+            "reason": "Google Drive's shared-drive support is unconfirmed on page 11.",
+            "unverified": true
+          }
+        },
+        "blockers_added": [],
+        "blockers_removed": [],
+        "warnings_added": [
+          {
+            "code": "shared-tool-strictest",
+            "about": "C1",
+            "cite": "docs/compendium/06-autonomy.md#how-a-level-is-enforced",
+            "unverified": false
+          },
+          {
+            "code": "unmanaged-connectors-read-only",
+            "about": "C1",
+            "cite": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation",
+            "unverified": false
+          }
+        ],
+        "warnings_removed": [],
+        "still_valid": true
+      },
+      "cite": "docs/compendium/06-autonomy.md#how-a-level-is-enforced",
+      "reason": "Two tasks that share a tool share that tool's setting, so both run at the stricter level."
+    }
+  ]
+}

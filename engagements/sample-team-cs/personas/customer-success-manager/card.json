@@ -1,0 +1,676 @@
+{
+  "card_version": 1,
+  "id": "customer-success-manager",
+  "customer": "example-software-co",
+  "role": {
+    "name": "Customer success manager",
+    "team": "Customer success",
+    "headcount": 8,
+    "pilot_users": 4,
+    "works_in": [
+      "claude-ai",
+      "slack"
+    ],
+    "device": "unmanaged"
+  },
+  "outcome": {
+    "sponsor_goal": "In 6 months each customer success manager spends less time preparing for calls and writing follow-ups, and no renewal is missed for lack of warning.",
+    "scorecard_targets": []
+  },
+  "voice": {
+    "serves": "Customer success managers, each looking after about 40 accounts.",
+    "jobs": [
+      "Brief me before a customer call",
+      "Draft the follow-up email and log the call",
+      "Draft renewal quote emails",
+      "Flag renewal risk each week",
+      "Summarise open tickets on an escalation"
+    ],
+    "tone": "Warm and direct with customers; brief and factual with the team.",
+    "norms": [
+      "Say which HubSpot record or Drive file each fact came from",
+      "Use the customer's name and our product names exactly"
+    ],
+    "never": [
+      "Send an email to a customer",
+      "Quote a price that is not on the HubSpot deal"
+    ],
+    "ask_before": [
+      "Creating anything in HubSpot",
+      "Posting in a Slack channel"
+    ],
+    "escalate_to": [
+      "The customer success team lead",
+      "The finance and legal lead for any contract question"
+    ]
+  },
+  "features": [
+    {
+      "id": "call-preparation-and-follow-up",
+      "name": "Call preparation and follow-up",
+      "why": "Briefs and follow-ups are most of a manager's week."
+    },
+    {
+      "id": "renewals",
+      "name": "Renewals",
+      "why": "A missed renewal is the most expensive mistake on the team."
+    },
+    {
+      "id": "escalations",
+      "name": "Escalations",
+      "why": "Escalation calls need the full ticket picture fast."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "C1",
+      "feature": "call-preparation-and-follow-up",
+      "name": "Account brief before a customer call",
+      "frequency_per_week": 6,
+      "minutes_each": 30,
+      "users": 8,
+      "trigger": "person",
+      "inputs": [
+        {
+          "system": "hubspot",
+          "objects": "company, contacts, deals, open tickets, notes",
+          "access": "read"
+        },
+        {
+          "system": "google-drive",
+          "objects": "account plan, last QBR deck, contract",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "One-page account brief",
+        "audience": "internal",
+        "destination": "none (the conversation)"
+      },
+      "writes": [],
+      "data_class": "confidential",
+      "cost_of_mistake": {
+        "level": "medium",
+        "what_happens": "A wrong renewal date or contact in front of the customer."
+      },
+      "reversible": true,
+      "touches_money": false,
+      "reads_untrusted_input": false,
+      "examples": {
+        "good": 2,
+        "bad": 1,
+        "where": "Shared drive 'CS examples' (invented)"
+      },
+      "skill_owner": "Marisol Quenby",
+      "priority": 1,
+      "in_pilot": true
+    },
+    {
+      "id": "C2",
+      "feature": "renewals",
+      "name": "Weekly renewal-risk digest",
+      "frequency_per_week": 1,
+      "minutes_each": 90,
+      "users": 8,
+      "trigger": "schedule-team",
+      "inputs": [
+        {
+          "system": "hubspot",
+          "objects": "renewal dates, deal stage, contacts",
+          "access": "read"
+        },
+        {
+          "system": "usage-db",
+          "objects": "usage trend per account",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "Renewal-risk digest",
+        "audience": "internal",
+        "destination": "The team's Slack channel"
+      },
+      "writes": [
+        {
+          "system": "slack",
+          "objects": "one post in the team's channel",
+          "action": "send"
+        }
+      ],
+      "data_class": "confidential",
+      "cost_of_mistake": {
+        "level": "medium",
+        "what_happens": "An at-risk account is missed, or a healthy one is flagged."
+      },
+      "reversible": true,
+      "touches_money": false,
+      "reads_untrusted_input": true,
+      "examples": {
+        "good": 2,
+        "bad": 1,
+        "where": "Shared drive 'CS examples' (invented)"
+      },
+      "skill_owner": "Marisol Quenby",
+      "priority": 3,
+      "in_pilot": false
+    },
+    {
+      "id": "C3",
+      "feature": "renewals",
+      "name": "Renewal quote email to the customer",
+      "frequency_per_week": 2,
+      "minutes_each": 40,
+      "users": 8,
+      "trigger": "person",
+      "inputs": [
+        {
+          "system": "hubspot",
+          "objects": "renewal deal, line items, products, quote",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "Draft renewal quote email, which the manager checks and sends from Gmail",
+        "audience": "external",
+        "destination": "none (a draft in the conversation)"
+      },
+      "writes": [],
+      "data_class": "confidential",
+      "cost_of_mistake": {
+        "level": "medium",
+        "what_happens": "A wrong price would reach the customer, but the manager checks the figures before sending."
+      },
+      "reversible": true,
+      "touches_money": true,
+      "reads_untrusted_input": false,
+      "examples": {
+        "good": 2,
+        "bad": 1,
+        "where": "Shared drive 'CS examples' (invented)"
+      },
+      "skill_owner": "Marisol Quenby",
+      "priority": 4,
+      "in_pilot": false
+    },
+    {
+      "id": "C4",
+      "feature": "call-preparation-and-follow-up",
+      "name": "Follow-up email after a customer call, and a call note in HubSpot",
+      "frequency_per_week": 6,
+      "minutes_each": 25,
+      "users": 8,
+      "trigger": "person",
+      "inputs": [
+        {
+          "system": "google-drive",
+          "objects": "call notes or transcript",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "Draft follow-up email, which the manager sends, and a call note on the HubSpot record",
+        "audience": "external",
+        "destination": "a draft in the conversation; the HubSpot company record"
+      },
+      "writes": [
+        {
+          "system": "hubspot",
+          "objects": "call engagement (note) on the company record",
+          "action": "create"
+        }
+      ],
+      "data_class": "confidential",
+      "cost_of_mistake": {
+        "level": "medium",
+        "what_happens": "A wrong commitment in the email, or a note on the wrong record."
+      },
+      "reversible": true,
+      "touches_money": false,
+      "reads_untrusted_input": false,
+      "examples": {
+        "good": 2,
+        "bad": 1,
+        "where": "Shared drive 'CS examples' (invented)"
+      },
+      "skill_owner": "Marisol Quenby",
+      "priority": 2,
+      "in_pilot": true
+    },
+    {
+      "id": "C5",
+      "feature": "escalations",
+      "name": "Open-ticket summary when a ticket is escalated",
+      "frequency_per_week": 2,
+      "minutes_each": 30,
+      "users": 8,
+      "trigger": "event",
+      "inputs": [
+        {
+          "system": "zendesk",
+          "objects": "the customer's open tickets",
+          "access": "read"
+        }
+      ],
+      "output": {
+        "what": "Summary of the customer's open tickets",
+        "audience": "internal",
+        "destination": "none (the conversation)"
+      },
+      "writes": [],
+      "data_class": "confidential",
+      "cost_of_mistake": {
+        "level": "medium",
+        "what_happens": "A missed ticket in an escalation call."
+      },
+      "reversible": true,
+      "touches_money": false,
+      "reads_untrusted_input": true,
+      "examples": {
+        "good": 2,
+        "bad": 1,
+        "where": "Shared drive 'CS examples' (invented)"
+      },
+      "skill_owner": "Marisol Quenby",
+      "priority": 5,
+      "in_pilot": false
+    }
+  ],
+  "memory": {
+    "personal_memory_wanted": true,
+    "notes": "Remember each manager's accounts and how they like briefs laid out."
+  },
+  "overrides": [],
+  "open_questions": [
+    {
+      "id": "OQ-1",
+      "question": "What would start C5 when a ticket is escalated: a Zendesk trigger calling a hosted agent, or a Slack alert? Until then the manager starts it.",
+      "blocks": [
+        "C5"
+      ],
+      "owner": "Teodor Amsel",
+      "due": "2026-12-11"
+    }
+  ],
+  "provenance": {
+    "role.name": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#P1"
+    },
+    "role.team": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#P1"
+    },
+    "role.headcount": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#P1"
+    },
+    "role.pilot_users": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#P1"
+    },
+    "role.works_in": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#P1"
+    },
+    "role.device": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#P1"
+    },
+    "outcome.sponsor_goal": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#P3"
+    },
+    "voice.serves": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#P2"
+    },
+    "voice.jobs": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#P3"
+    },
+    "voice.tone": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#P4"
+    },
+    "voice.norms": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#P3"
+    },
+    "voice.never": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#P5"
+    },
+    "voice.ask_before": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#P5"
+    },
+    "voice.escalate_to": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#P6"
+    },
+    "memory.personal_memory_wanted": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F9"
+    },
+    "memory.notes": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F9"
+    },
+    "tasks.C1.name": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F1"
+    },
+    "tasks.C1.frequency_per_week": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F1"
+    },
+    "tasks.C1.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F1"
+    },
+    "tasks.C1.in_pilot": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F1"
+    },
+    "tasks.C1.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F5"
+    },
+    "tasks.C1.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F2"
+    },
+    "tasks.C1.inputs[1].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F2"
+    },
+    "tasks.C1.output.what": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F2"
+    },
+    "tasks.C1.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F6"
+    },
+    "tasks.C1.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F2"
+    },
+    "tasks.C1.cost_of_mistake.level": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F4"
+    },
+    "tasks.C1.reversible": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F7"
+    },
+    "tasks.C1.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F7"
+    },
+    "tasks.C1.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F8"
+    },
+    "tasks.C1.examples.good": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F3"
+    },
+    "tasks.C1.examples.bad": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F3"
+    },
+    "tasks.C2.name": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C2.frequency_per_week": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C2.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C2.in_pilot": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C2.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F5"
+    },
+    "tasks.C2.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F2"
+    },
+    "tasks.C2.inputs[1].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F2"
+    },
+    "tasks.C2.output.what": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F2"
+    },
+    "tasks.C2.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F6"
+    },
+    "tasks.C2.writes[0].action": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F7"
+    },
+    "tasks.C2.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F2"
+    },
+    "tasks.C2.cost_of_mistake.level": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F4"
+    },
+    "tasks.C2.reversible": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F7"
+    },
+    "tasks.C2.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F7"
+    },
+    "tasks.C2.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F8"
+    },
+    "tasks.C2.examples.good": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F3"
+    },
+    "tasks.C2.examples.bad": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F3"
+    },
+    "tasks.C3.name": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C3.frequency_per_week": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C3.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C3.in_pilot": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C3.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F5"
+    },
+    "tasks.C3.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F2"
+    },
+    "tasks.C3.output.what": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F2"
+    },
+    "tasks.C3.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F6"
+    },
+    "tasks.C3.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F2"
+    },
+    "tasks.C3.cost_of_mistake.level": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F4"
+    },
+    "tasks.C3.reversible": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F7"
+    },
+    "tasks.C3.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F7"
+    },
+    "tasks.C3.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F8"
+    },
+    "tasks.C3.examples.good": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F3"
+    },
+    "tasks.C3.examples.bad": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F3"
+    },
+    "tasks.C4.name": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F1"
+    },
+    "tasks.C4.frequency_per_week": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F1"
+    },
+    "tasks.C4.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F1"
+    },
+    "tasks.C4.in_pilot": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F1"
+    },
+    "tasks.C4.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F5"
+    },
+    "tasks.C4.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F2"
+    },
+    "tasks.C4.output.what": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F2"
+    },
+    "tasks.C4.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F6"
+    },
+    "tasks.C4.writes[0].action": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F7"
+    },
+    "tasks.C4.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F2"
+    },
+    "tasks.C4.cost_of_mistake.level": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F4"
+    },
+    "tasks.C4.reversible": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F7"
+    },
+    "tasks.C4.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F7"
+    },
+    "tasks.C4.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F8"
+    },
+    "tasks.C4.examples.good": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F3"
+    },
+    "tasks.C4.examples.bad": {
+      "status": "answered",
+      "source": "interviews/2026-11-06-csm.md#F3"
+    },
+    "tasks.C5.name": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C5.frequency_per_week": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C5.minutes_each": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C5.in_pilot": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F1"
+    },
+    "tasks.C5.trigger": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F5"
+    },
+    "tasks.C5.inputs[0].access": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F2"
+    },
+    "tasks.C5.output.what": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F2"
+    },
+    "tasks.C5.output.audience": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F6"
+    },
+    "tasks.C5.data_class": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F2"
+    },
+    "tasks.C5.cost_of_mistake.level": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F4"
+    },
+    "tasks.C5.reversible": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F7"
+    },
+    "tasks.C5.touches_money": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F7"
+    },
+    "tasks.C5.reads_untrusted_input": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F8"
+    },
+    "tasks.C5.examples.good": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F3"
+    },
+    "tasks.C5.examples.bad": {
+      "status": "answered",
+      "source": "interviews/2026-11-07-senior-csm.md#F3"
+    }
+  }
+}

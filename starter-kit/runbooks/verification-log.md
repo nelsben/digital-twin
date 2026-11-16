@@ -5,6 +5,7 @@
 - **Updated 2026-11-15 (OPS-24):** rows marked OPS-24 below were added or changed after the review; the summary counts above were not recomputed.
 - **Runbooks:** [identity-devices-publishing.md](identity-devices-publishing.md), [salesforce-hosted-mcp.md](salesforce-hosted-mcp.md), [microsoft-365-connector.md](microsoft-365-connector.md)
 - **Updated 2026-11-16 (OPS-59):** sections for the four runtime runbooks were added by a second reader, Claude Opus 5.5 (`claude-opus-5-5`); their rows are in the summary table below.
+- **Updated 2026-11-16 (OPS-60):** sections for the four connector runbooks were added by a second reader, Claude Opus 5.5 (`claude-opus-5-5`); their rows are in the summary table below.
 
 | Runbook | Confirmed | Corrected | Unverified | Total |
 |---|---|---|---|---|
@@ -25,6 +26,7 @@
 - Every runbook was treated as untrusted. A source tag did not count as proof. Each numbered step, table row and factual product sentence was checked against the page it cites. Where there was no citation, or the citation did not support the claim, it was checked against the vendor's own docs.
 - Accepted vendor domains: code.claude.com, platform.claude.com, claude.com/docs, support.claude.com and support.anthropic.com for Anthropic; help.salesforce.com, developer.salesforce.com and Salesforce's official GitHub for Salesforce; learn.microsoft.com for Microsoft; help.okta.com and developer.okta.com for Okta. Blogs, forums, search snippets and other third-party pages were not counted as confirmation.
 - For the four runtime runbooks (OPS-59), the accepted domains were platform.claude.com, code.claude.com, claude.com (docs and connectors pages), support.claude.com, and github.com under the anthropics, anthropic-ai or modelcontextprotocol organisations.
+- For the four connector runbooks (OPS-60), the accepted domains were claude.com (docs and connectors pages), support.claude.com, platform.claude.com and code.claude.com for Anthropic; knowledge.hubspot.com and developers.hubspot.com for HubSpot; support.google.com, knowledge.workspace.google.com and developers.google.com for Google; docs.slack.dev, api.slack.com and slack.com/help for Slack; support.zendesk.com and developer.zendesk.com for Zendesk; and github.com under the anthropics, anthropic-ai or modelcontextprotocol organisations.
 - Exact strings (keys, menu paths, roles, scopes, URLs, IP ranges, file paths, registry keys, CLI commands) were compared character by character with the vendor page.
 - Repo statements were checked against the branch: `starter-kit/settings/*.json`, [starter-kit/settings/README.md](../settings/README.md), `.claude-plugin/marketplace.json` and `starter-kit/plugins/twin-governance/hooks/`.
 - **States.** Confirmed: the vendor page supports the claim, and the link is kept or added. Corrected: the runbook was changed to match the vendor page, and the link is given. Unverified: no accepted page confirmed it, so the runbook now carries the compendium's `**⚠ Unverified:**` marker ([Conventions](../../docs/compendium/README.md)) and words it as something to confirm at setup. Where two vendor pages disagree, the runbook also carries `**⚠ Conflict:**`.
@@ -757,3 +759,4 @@
 | https://github.com/anthropics/claude-code/tree/main/examples/mdm | Not opened: github.com/anthropics is not on the accepted Anthropic domain list |
 | Jamf and Kandji (Iru) documentation | Not read: neither vendor is on the accepted domain list |
 | https://support.microsoft.com/en-us/office/edit-permissions-for-a-list-library-or-individual-item-02d770f3-59eb-4910-a608-5f84cc297782 | Read, but support.microsoft.com is not on the accepted Microsoft domain list, so it does not confirm |
+| https://claude.com/connectors/zendesk | HTTP 404 on both tries, 2026-11-16 (OPS-60); zendesk-connector.md keeps the directory status unverified |

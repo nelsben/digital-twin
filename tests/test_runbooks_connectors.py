@@ -38,9 +38,10 @@ HEADINGS = [
     "What can go wrong",
 ]
 
-CHECKED_SENTENCE = (
-    "Checked 2026-11-16 by the author against the pages listed. "
-    "Not yet independently verified: verification-log.md has no rows for this runbook."
+CHECKED_SENTENCE = re.compile(
+    r"Checked 2026-11-16 by the author against the pages listed\. "
+    r"Every claim was checked again on \d{4}-\d{2}-\d{2} by a second reader; "
+    r"the results are in the \[verification log\]\(verification-log\.md\)\."
 )
 
 BANNED = ("partner-kit", "levelled")
@@ -151,7 +152,7 @@ class ConnectorRunbookTests(unittest.TestCase):
         for name, text in self.each():
             _, body = sections(prose(text))
             first = " ".join(" ".join(body.get("Read this first", [])).split())
-            self.assertIn(CHECKED_SENTENCE, first, f"{name}: the 'Checked 2026-11-16' sentence is not in 'Read this first'")
+            self.assertRegex(first, CHECKED_SENTENCE, f"{name}: the 'Checked 2026-11-16' sentence is not in 'Read this first'")
 
     def test_banned_words(self):
         for name, text in self.each():

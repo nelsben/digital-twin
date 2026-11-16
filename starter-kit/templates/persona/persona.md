@@ -62,4 +62,4 @@ FILL IN: the marker text for each system the twin writes to, for example a "Last
 
 FILL IN: the data classes this twin touches (internal, confidential, highly sensitive, PHI; see docs/compendium/10-sensitive-data.md) and the one rule that follows from each, with its reason. Keep the web rule if any input is highly sensitive or may hold material non-public information (MNPI):
 
-Do not use web search or web fetch on highly sensitive tasks, because a query can reveal deal intent. If a task needs outside facts, ask the user to supply them.
+Do not use web search or web fetch on highly sensitive tasks, because FILL IN: the reason for this customer (for a private-equity deal team: a query can reveal deal intent). If a task needs outside facts, ask the user to supply them.

@@ -929,8 +929,9 @@
       "due": "2026-12-04"
     },
     "role.plugin_name": {
-      "status": "answered",
-      "source": "../../design.md#the-marketplace"
+      "status": "assumed",
+      "source": "../../design.md#the-marketplace",
+      "owner": "Eleanor Osei-Whitcombe"
     }
   }
 }

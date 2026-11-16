@@ -15,7 +15,7 @@ Example Capital Partners is a mid-market private-equity firm with about $4B in a
 | [wall-test-protocol.md](wall-test-protocol.md) | How we test that the soft walls hold | Protocol written. Dry run: #82. Live run needs a customer org. |
 | [backlog.md](backlog.md) | The prioritized story backlog | Draft, awaiting sign-off |
 
-For T3, the [persona card](personas/deal-team-associate/card.json)'s expected plan in [expectations.json](../../tests/fixtures/twincard/expectations.json) follows the ZDR branch of the [compendium 05 decision flow](../../docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation): self-hosted Managed Agents. The hand-written [design](design.md) and [backlog](backlog.md) still name the Agent SDK for T3, and this difference stays open until those two files are revised.
+For T3, the [persona card](personas/deal-team-associate/card.json)'s expected plan in [expectations.json](../../tests/fixtures/twincard/expectations.json) is self-hosted Managed Agents, the ZDR branch of the [compendium 05 decision flow](../../docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation). The hand-written [backlog](backlog.md) still names the Agent SDK for T3, and this difference stays open until the backlog is revised. The [design](design.md) names no runtime for T3 beyond a hosted agent.
 
 ## What this sample is for, and when it is done
 

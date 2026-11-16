@@ -180,7 +180,7 @@ Enumerations:
 
 - `role.works_in[]`: `claude-ai`, `desktop`, `claude-code`, `cowork`, `slack`, `teams`.
 - `role.device`: `managed`, `unmanaged`, `mixed`.
-- `role.plugin_name` (optional): when it is empty the role plugin is named `twin-<persona id>`; when it is given it must match `^twin-[a-z0-9-]+$` (the levelling engine checks the pattern; the validator treats it as a string).
+- `role.plugin_name` (optional): the role plugin is named `twin-<role>` ([role-plugin template](../../starter-kit/templates/role-plugin/README.md#steps)). When `role.plugin_name` is empty, the levelling engine uses the persona id as the role, which is a decision of this design. When it is given it must match `^twin-[a-z0-9-]+$` (the levelling engine checks the pattern; the validator treats it as a string).
 - `tasks[].trigger`: `person`, `schedule-own` (one person's recurring task), `schedule-team` (shared, lives in a channel), `event` (a system event or webhook).
 - `tasks[].inputs[].system` and `tasks[].writes[].system`: system ids from the customer profile. A system the profile does not list is a validation error.
 - `tasks[].inputs[]`: `{"system": "<profile system id>", "objects": "account", "access": "read"}`; `access` is `read` or `write`.

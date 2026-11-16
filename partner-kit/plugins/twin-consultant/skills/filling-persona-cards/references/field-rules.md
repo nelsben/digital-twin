@@ -19,9 +19,15 @@ question ids whose answers may fill it. Design of record:
 - Only from the answer under a question id in the field's `asked_by`. An
   interview-guide id (P1 to P6, F1 to F9) is read from the notes file's
   heading of that id; a task question from the task block whose "Task id:"
-  line names the task. A discovery id (A1 to G4) is read from the
-  engagement's discovery answers (`../../discovery.md`), cited as
-  `discovery.md#<id>`.
+  line names the task. A discovery id (A1 to G4) is read from the row of
+  that id in `discovery.md` in the customer folder, cited as
+  `discovery.md#<id>` (never `../../discovery.md#<id>`: the validator looks
+  in the customer folder itself).
+- An answer the consultant gives in conversation is written first: a
+  discovery answer to its row in `discovery.md` (create the file from
+  `templates/discovery.md` if there is none), an interview answer to a new
+  dated notes file `interviews/<yyyy-mm-dd>-<who>.md` under the question's
+  heading (inside the task block for a task question). Then cite that line.
 - `role.headcount` and `role.pilot_users` are asked by discovery A3. A head
   count heard in P1 is not their source; leave them for A3 or the
   consultant.
@@ -31,8 +37,9 @@ question ids whose answers may fill it. Design of record:
 - A field the notes leave out entirely is empty. If it is required it is
   `open`; if not, leave it empty with no entry.
 - When several notes answer the same field without contradicting each
-  other, cite the one the value is taken from. For a list (`voice.never`),
-  you may combine items from several notes; cite the file that gave most.
+  other, combine what they say and cite every file the value draws on,
+  separated by `; `. For a list (`voice.never`), cite each file that gave an
+  item, and a discovery row too when one item comes from it.
 
 ## Keys and paths
 
@@ -51,14 +58,30 @@ question ids whose answers may fill it. Design of record:
 - Enumerations: map the interviewee's words with the guide's "Listen for"
   lines. "I start it when I need it" is `person`; "the team does it on a
   schedule" is `schedule-team`.
+- `tasks[].trigger` records how the task starts today. "Something
+  happening, ideally. Today I start it when I'm told" is `person`, answered;
+  the wish ("ideally", "later", "really it is") becomes an open question
+  that blocks nothing until it is decided.
 - `frequency_per_week`: a number per week. "About eight a month" is
   8 x 12 / 52 = 1.85; "about two a month" is 0.46; round to two decimals.
   "Every morning, five days a week" is 5.
+- A rate per something else ("twice per deal", "once per account") is the
+  rate for one deal or account, `assumed` with an owner until the count per
+  week is known. Say so in the report.
 - `minutes_each`: minutes. "Half an hour" is 30; "an hour and a half" is
   90; "four hours" is 240.
 - `in_pilot`: true only when the interviewee says to pilot it.
 - Booleans (`reversible`, `touches_money`, `reads_untrusted_input`,
-  `memory.personal_memory_wanted`) need a yes or no in the answer.
+  `memory.personal_memory_wanted`) need a yes or no in the answer. `false`
+  is a value, so an `open` boolean is `null`.
+- `tasks[].reads_untrusted_input`: when question F8 is answered "No" but
+  the notes show the task reading what outsiders wrote (tickets customers
+  write, a call transcript with the customer's words, an inbound document),
+  the value is `true`, `assumed`, with an owner the consultant names. Ask
+  the consultant who; do not pick one.
+- `tasks[].reversible`: a split answer under question F7 ("the draft can be
+  thrown away, the sent email cannot") is `open` unless the notes say which
+  part the twin does. When they say the twin only drafts, it is `true`.
 - Lists that the template gives one placeholder entry (`features`,
   `overrides`, `open_questions`, `outcome.scorecard_targets`) become `[]`
   when nothing fills them.
@@ -77,7 +100,27 @@ From the Team sample (`engagements/sample-team-cs`):
 
 ```json
 "tasks.C1.minutes_each": {"status": "answered", "source": "interviews/2026-11-06-csm.md#F1"},
-"tasks.C2.trigger": {"status": "answered", "source": "interviews/2026-11-07-senior-csm.md#F5"}
+"tasks.C5.trigger": {"status": "answered", "source": "interviews/2026-11-07-senior-csm.md#F5"},
+"tasks.C1.reads_untrusted_input": {"status": "answered", "source": "interviews/2026-11-10-team-lead.md#F8"},
+"voice.tone": {"status": "answered",
+  "source": "interviews/2026-11-06-csm.md#P4; interviews/2026-11-07-senior-csm.md#P4"},
+"role.headcount": {"status": "answered", "source": "discovery.md#A3"}
+```
+
+C5's notes say "the escalation itself, ideally. Today I start it when I'm
+told", so the trigger is `person` and the wish is open question OQ-1 with
+`blocks` `[]`. C1's first answer under question F8 was "No"; the follow-up
+notes file `2026-11-10-team-lead.md` records the team lead's "Yes", so the
+value is `true` and answered from that file.
+
+A working guess, from the private-equity sample: the associate answers "No"
+under question F8 for T1, but the same answer says the data-room files are
+the target's documents, which outsiders wrote. So the value is `true`,
+assumed, with the owner the consultant named:
+
+```json
+"tasks.T1.reads_untrusted_input": {"status": "assumed",
+  "source": "interviews/2026-11-12-associate.md#F8", "owner": "Eleanor Osei-Whitcombe"}
 ```
 
 A pack default, as a general example (task D1 stands for any card task). It
@@ -97,7 +140,7 @@ A missing answer (F4 was not asked for task D1):
   "owner": "<same>", "due": "<same>"}}
 ```
 
-A disagreement (two planners on what starts L1): value `null`, status
-`open`, and the open question quotes both: "Planner (2026-11-04): 'I start
+A disagreement (two planners on what starts L1): value `null` (an open
+field is empty), status `open`, and the open question quotes both: "Planner (2026-11-04): 'I start
 it myself on Thursday afternoon'. Senior planner (2026-11-05): 'It runs on
 a schedule every Thursday'. Which is it?"

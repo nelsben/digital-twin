@@ -4,18 +4,22 @@
     {
       "id": 1,
       "prompt": "Let's start building the CSM twin. The backlog is at engagements/sample-team-cs/personas/customer-success-manager. What's the next story?",
-      "expected_output": "Claude runs the backlog command (the backlog is current), picks S-C1 (in the pilot, priority 1, no gates), shows its statement, fields, acceptance criteria and its 14 tasks, names its first task S-C1.collect-examples with its owner, says the story is built at the start level 1, and asks the consultant to confirm the pick or name another story. It changes no status yet.",
+      "expected_output": "Claude runs the backlog command (the backlog is current), picks S-C1 (in the pilot, priority 1, no gates), shows its statement, fields, acceptance criteria and its 15 tasks, names its first task S-C1.collect-examples with its owner, says the story is built at the start level 1, and asks the consultant to confirm the pick or name another story. It changes no status yet.",
       "files": [
         "evals/files/engagements/sample-team-cs/customer-profile.json",
         "evals/files/engagements/sample-team-cs/personas/customer-success-manager/card.json",
         "evals/files/engagements/sample-team-cs/personas/customer-success-manager/levelled.json",
-        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/backlog.json"
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/backlog.json",
+        "evals/files/engagements/sample-team-cs/discovery.md",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-06-csm.md",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-07-senior-csm.md",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-10-team-lead.md"
       ],
       "expectations": [
         "The backlog command was run on the persona folder before the pick, and it did not report levelled.json as out of date",
         "The story picked is S-C1, and the reply says why: it is in the pilot with priority 1 and has no gates; S-C4 (in the pilot, priority 2) is named as the one after it",
         "The reply shows S-C1's statement, its fields (including autonomy 1 to 3 and skill owner Marisol Quenby) and its three acceptance lines",
-        "The reply lists S-C1's 14 tasks by id, from S-C1.collect-examples to S-C1.warning-confidential-standard-retention",
+        "The reply lists S-C1's 15 tasks by id, from S-C1.collect-examples to S-C1.warning-confidential-standard-retention",
         "The reply names S-C1.collect-examples as the first task, with owner role skill-owner, and says it needs three real examples from the skill owner, which it will not invent",
         "The reply says the story is built at level 1, the start level in levelled.json, not at the ceiling of 3",
         "The reply asks the consultant to confirm S-C1 or name another story before any work starts",
@@ -30,7 +34,12 @@
         "evals/files/engagements/sample-pe/customer-profile.json",
         "evals/files/engagements/sample-pe/personas/deal-team-associate/card.json",
         "evals/files/engagements/sample-pe/personas/deal-team-associate/levelled.json",
-        "evals/files/engagements/sample-pe/personas/deal-team-associate/backlog.json"
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/backlog.json",
+        "evals/files/engagements/sample-pe/discovery.md",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/interviews/2026-11-10-partner.md",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/interviews/2026-11-11-principal.md",
+        "evals/files/engagements/sample-pe/personas/deal-team-associate/interviews/2026-11-12-associate.md",
+        "evals/files/engagements/sample-pe/stakeholders.md"
       ],
       "expectations": [
         "S-T1 and S-T2 are not picked, although they are in the pilot with priorities 1 and 2",
@@ -49,7 +58,11 @@
         "evals/files/engagements/sample-team-cs/customer-profile.json",
         "evals/files/engagements/sample-team-cs/personas/customer-success-manager/card.json",
         "evals/files/engagements/sample-team-cs/personas/customer-success-manager/levelled.json",
-        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/backlog.json"
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/backlog.json",
+        "evals/files/engagements/sample-team-cs/discovery.md",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-06-csm.md",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-07-senior-csm.md",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-10-team-lead.md"
       ],
       "expectations": [
         "Claude does not attempt to change any setting in the customer's org itself",
@@ -70,7 +83,11 @@
         "evals/files/engagements/sample-team-cs/customer-profile.json",
         "evals/files/engagements/sample-team-cs/personas/customer-success-manager/card.json",
         "evals/files/engagements/sample-team-cs/personas/customer-success-manager/levelled.json",
-        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/backlog.json"
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/backlog.json",
+        "evals/files/engagements/sample-team-cs/discovery.md",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-06-csm.md",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-07-senior-csm.md",
+        "evals/files/engagements/sample-team-cs/personas/customer-success-manager/interviews/2026-11-10-team-lead.md"
       ],
       "expectations": [
         "The reply declines to mark S-C1.collect-examples done and quotes or paraphrases its done_when: three real examples, each with its inputs and its expected result",
@@ -100,7 +117,11 @@
         "evals/files/engagements/sample-team-cs-c4-gmail-send/customer-profile.json",
         "evals/files/engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager/card.json",
         "evals/files/engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager/levelled.json",
-        "evals/files/engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager/backlog.json"
+        "evals/files/engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager/backlog.json",
+        "evals/files/engagements/sample-team-cs-c4-gmail-send/discovery.md",
+        "evals/files/engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager/interviews/2026-11-06-csm.md",
+        "evals/files/engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager/interviews/2026-11-07-senior-csm.md",
+        "evals/files/engagements/sample-team-cs-c4-gmail-send/personas/customer-success-manager/interviews/2026-11-10-team-lead.md"
       ],
       "expectations": [
         "The backlog command was run and printed 'levelled.json is missing or out of date. Next: run the level command.'",

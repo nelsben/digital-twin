@@ -6,15 +6,16 @@ entry whose status is answered:
 
 * a source under interviews/ must name a file that exists, a question id that the field
   catalogue (partner-kit/plugins/twin-consultant/data/fields.json) lists in asked_by for the
-  field, a heading for that question (in the section for the task, for a task field), and an
-  answer under it that is not empty and not a 'not asked' placeholder. For a task field whose
+  field (but see the multi-source point below), a heading for that question (in the section
+  for the task, for a task field), and an answer under it that is not empty and not a 'not asked' placeholder. For a task field whose
   catalogue type is enum, the answer must also contain the card's value (case-insensitive,
   hyphens read as spaces) or one of the words the interview guide's 'Listen for' lines map to
   that value (ENUM_WORDS below).
-* a source that names a discovery answer (discovery#A1, or ../../discovery.md#A1 for a file
-  above the persona folder) must name a question id in asked_by; when the discovery file is
-  there, the question must have a non-empty answer in it, and an integer field's number must
-  appear in that answer.
+* a source that names a discovery answer (discovery.md#A1, the file in the customer folder)
+  must have a non-empty answer in that file's row, and an integer field's number must appear
+  in that answer.
+* a source can hold several sources separated by '; '. Each is checked as above, and at least
+  one of them must name a question id that the catalogue lists in asked_by for the field.
 * any other source on an answered entry fails: an answered field cites an interview or a
   discovery answer.
 
@@ -78,7 +79,8 @@ ENUM_WORDS = {
 
 PLACEHOLDER = re.compile(r"^\W*(?:not asked|not applicable|n/?a|skipped|tbd|todo)\b", re.IGNORECASE)
 INTERVIEW_HEADING = re.compile(r"^#{3,4}\s+([PF]\d+)\b")
-DISCOVERY_SOURCE = re.compile(r"^(?:(?:\.\./)+discovery\.md|discovery(?:\.md)?)#([A-G]\d+)$")
+DISCOVERY_SOURCE = re.compile(r"^discovery\.md#([A-G]\d+)$")
+SEPARATOR = "; "
 TOKEN = re.compile(r"[^.\[\]]+|\[\d+\]")
 
 
@@ -194,70 +196,70 @@ def check_card(persona_dir, card=None, catalogue=None):
     for path, prov in sorted(card["provenance"].items()):
         if prov.get("status") != "answered":
             continue
-        source = prov.get("source", "")
-        where = "%s (%s)" % (path, source)
         cpath = catalogue_path(path, lists)
         entry = fields.get(cpath)
         if entry is None:
-            problems.append("%s: no catalogue field %s" % (where, cpath))
+            problems.append("%s: no catalogue field %s" % (path, cpath))
             continue
-        if "#" not in source:
-            problems.append("%s: an answered entry must cite a question id after #" % where)
+        # One source, or several separated by '; ' (one per interviewee who gave the answer).
+        sources = [one.strip() for one in prov.get("source", "").split(SEPARATOR) if one.strip()]
+        asked = [one for one in sources if "#" in one and one.rsplit("#", 1)[1] in entry["asked_by"]]
+        if not asked:
+            problems.append("%s (%s): no source's question is in asked_by %s for %s; one must be"
+                            % (path, prov.get("source", ""), entry["asked_by"], cpath))
             continue
-        target, qid = source.rsplit("#", 1)
-        if qid not in entry["asked_by"]:
-            problems.append("%s: question %s is not in asked_by %s for %s" % (where, qid, entry["asked_by"], cpath))
-            continue
-
-        discovery = DISCOVERY_SOURCE.match(source)
-        if source.startswith("interviews/"):
-            notes = persona_dir / target
-            if not notes.is_file():
-                problems.append("%s: file does not exist" % where)
-                continue
-            if notes not in cache:
-                cache[notes] = interview_sections(notes.read_text(encoding="utf-8"))
-            sections = cache[notes]
-            if cpath.startswith("tasks[]"):
-                task = path.split(".")[1]
-                answers = [sections.get((task, qid))]
-                missing = "no heading %s under task %s" % (qid, task)
-            elif qid.startswith("F"):
-                answers = [text for (task, q), text in sections.items() if q == qid and task is not None]
-                answers = [text for text in answers if text.strip()] or [None]
-                missing = "no heading %s in any task block" % qid
-            else:
-                answers = [sections.get((None, qid))]
-                missing = "no heading %s" % qid
-            if answers == [None]:
-                problems.append("%s: %s" % (where, missing))
-                continue
-            text = " ".join(answer for answer in answers if answer)
-            if not text.strip() or PLACEHOLDER.match(text):
-                problems.append("%s: the answer under %s is empty or a 'not asked' placeholder" % (where, qid))
-                continue
-            if entry["type"] == "enum" and cpath.startswith("tasks[]"):
-                value = card_value(card, path)
-                if not states_enum_value(cpath, value, text):
-                    problems.append("%s: the answer under %s does not state %r: %s" % (where, qid, value, text))
-        elif discovery:
-            file_part = target
-            if file_part.endswith(".md"):
-                discovery_file = (persona_dir / file_part).resolve()
-                if not discovery_file.is_file():
-                    problems.append("%s: discovery file does not exist" % where)
-                    continue
-                answer = discovery_answer(discovery_file.read_text(encoding="utf-8"), qid)
-                if not answer or PLACEHOLDER.match(answer):
-                    problems.append("%s: discovery has no answer for %s" % (where, qid))
-                    continue
-                if entry["type"] == "integer":
-                    value = card_value(card, path)
-                    if not re.search(r"(?<!\d)%d(?!\d)" % value, answer):
-                        problems.append("%s: the discovery answer does not state %r: %s" % (where, value, answer))
-        else:
-            problems.append("%s: an answered entry cites an interview or a discovery answer" % where)
+        for source in sources:
+            problems.extend(check_source(persona_dir, card, path, cpath, entry, source, cache))
     return problems
+
+
+def check_source(persona_dir, card, path, cpath, entry, source, cache):
+    """Problems with one source of an answered entry; the entry already names a question in asked_by."""
+    where = "%s (%s)" % (path, source)
+    if "#" not in source:
+        return ["%s: an answered entry must cite a question id after #" % where]
+    target, qid = source.rsplit("#", 1)
+    if source.startswith("interviews/"):
+        notes = persona_dir / target
+        if not notes.is_file():
+            return ["%s: file does not exist" % where]
+        if notes not in cache:
+            cache[notes] = interview_sections(notes.read_text(encoding="utf-8"))
+        sections = cache[notes]
+        if cpath.startswith("tasks[]"):
+            task = path.split(".")[1]
+            answers = [sections.get((task, qid))]
+            missing = "no heading %s under task %s" % (qid, task)
+        elif qid.startswith("F"):
+            answers = [text for (task, q), text in sections.items() if q == qid and task is not None]
+            answers = [text for text in answers if text.strip()] or [None]
+            missing = "no heading %s in any task block" % qid
+        else:
+            answers = [sections.get((None, qid))]
+            missing = "no heading %s" % qid
+        if answers == [None]:
+            return ["%s: %s" % (where, missing)]
+        text = " ".join(answer for answer in answers if answer)
+        if not text.strip() or PLACEHOLDER.match(text):
+            return ["%s: the answer under %s is empty or a 'not asked' placeholder" % (where, qid)]
+        if entry["type"] == "enum" and cpath.startswith("tasks[]"):
+            value = card_value(card, path)
+            if not states_enum_value(cpath, value, text):
+                return ["%s: the answer under %s does not state %r: %s" % (where, qid, value, text)]
+        return []
+    if DISCOVERY_SOURCE.match(source):
+        discovery_file = persona_dir.parent.parent / "discovery.md"  # the customer folder
+        if not discovery_file.is_file():
+            return ["%s: discovery file does not exist" % where]
+        answer = discovery_answer(discovery_file.read_text(encoding="utf-8"), qid)
+        if not answer or PLACEHOLDER.match(answer):
+            return ["%s: discovery has no answer for %s" % (where, qid)]
+        if entry["type"] == "integer":
+            value = card_value(card, path)
+            if not re.search(r"(?<!\d)%d(?!\d)" % value, answer):
+                return ["%s: the discovery answer does not state %r: %s" % (where, value, answer)]
+        return []
+    return ["%s: an answered entry cites an interview or a discovery answer" % where]
 
 
 class ProvenanceTests(unittest.TestCase):
@@ -296,7 +298,7 @@ class ProvenanceTests(unittest.TestCase):
         wrong = copy.deepcopy(card)
         wrong["provenance"]["tasks.C1.data_class"]["source"] = "interviews/2026-11-06-csm.md#F4"
         problems = check_card(persona_dir, card=wrong)
-        self.assertTrue(any("tasks.C1.data_class" in p and "not in asked_by" in p for p in problems), problems)
+        self.assertTrue(any("tasks.C1.data_class" in p and "in asked_by" in p for p in problems), problems)
         # The unchanged card has no such problem for that entry.
         self.assertFalse(any("tasks.C1.data_class" in p for p in check_card(persona_dir, card=card)))
 

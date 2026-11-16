@@ -3,8 +3,8 @@
   "customer": "example-software-co",
   "persona": "customer-success-manager",
   "source": {
-    "card_sha256": "faa81239442dc52f210f6519f29fd6946fc48cf7455368bddedc29ac7e516e5e",
-    "levelled_sha256": "a5c3f8c259226821b38165ea77580f41bd0ea009bedc9bc419377c764f598cd4",
+    "card_sha256": "e2ad4ae934c6b70149a6569c4ddbe2571889e8701c7495a6189629e49a34c0bb",
+    "levelled_sha256": "3a1a394be709df0edf573049af4c26a6fcc1dc06323f29003d6b54980bff6a75",
     "library_version": 1
   },
   "epic": {
@@ -320,6 +320,29 @@
                   }
                 ],
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
+                "owner_role": "solution-architect",
+                "status": "todo"
+              },
+              {
+                "id": "S-C1.warning-memory-poisoning-risk",
+                "template": "warning-memory-poisoning-risk",
+                "title": "Resolve warning memory-poisoning-risk: keep memory writes to controlled steps for the task that reads untrusted input",
+                "part": "A6",
+                "how": [
+                  {
+                    "text": "Explain how untrusted input can poison memory, and that memory on claude.ai is one org-wide switch.",
+                    "link": "docs/compendium/02-persona.md#memory"
+                  },
+                  {
+                    "text": "Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it.",
+                    "link": "docs/compendium/02-persona.md#memory"
+                  },
+                  {
+                    "text": "If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide.",
+                    "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
+                  }
+                ],
+                "done_when": "The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.",
                 "owner_role": "solution-architect",
                 "status": "todo"
               },
@@ -701,6 +724,29 @@
                 ],
                 "done_when": "The write tools are Blocked for people on unmanaged devices, or the customer's written acceptance is recorded.",
                 "owner_role": "technical-owner",
+                "status": "todo"
+              },
+              {
+                "id": "S-C4.warning-memory-poisoning-risk",
+                "template": "warning-memory-poisoning-risk",
+                "title": "Resolve warning memory-poisoning-risk: keep memory writes to controlled steps for the task that reads untrusted input",
+                "part": "A6",
+                "how": [
+                  {
+                    "text": "Explain how untrusted input can poison memory, and that memory on claude.ai is one org-wide switch.",
+                    "link": "docs/compendium/02-persona.md#memory"
+                  },
+                  {
+                    "text": "Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it.",
+                    "link": "docs/compendium/02-persona.md#memory"
+                  },
+                  {
+                    "text": "If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide.",
+                    "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
+                  }
+                ],
+                "done_when": "The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.",
+                "owner_role": "solution-architect",
                 "status": "todo"
               },
               {
@@ -1469,13 +1515,7 @@
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake."
             ],
-            "gated_by": [
-              {
-                "kind": "open-question",
-                "id": "OQ-1",
-                "text": "What would start C5 when a ticket is escalated: a Zendesk trigger calling a hosted agent, or a Slack alert? Until then the manager starts it."
-              }
-            ],
+            "gated_by": [],
             "tasks": [
               {
                 "id": "S-C5.collect-examples",
@@ -1692,29 +1732,6 @@
                 "status": "todo"
               },
               {
-                "id": "S-C5.confirm-unverified-decision.runtime",
-                "template": "confirm-unverified-decision",
-                "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (runtime)",
-                "part": "A9",
-                "how": [
-                  {
-                    "text": "Find the Unverified mark on the page the decision cites in levelled.json.",
-                    "link": "partner-kit/docs/design.md#72-decision-values"
-                  },
-                  {
-                    "text": "Ask Anthropic or the vendor in writing, using the partner questions list.",
-                    "link": "docs/compendium/12-orgs-and-ownership.md#questions-to-bring-to-anthropic-as-a-partner"
-                  },
-                  {
-                    "text": "Record the answer with its source and level the card again.",
-                    "link": "docs/compendium/08-open-questions.md#questions-most-first-time-builders-miss"
-                  }
-                ],
-                "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
-                "owner_role": "solution-architect",
-                "status": "todo"
-              },
-              {
                 "id": "S-C5.confirm-unverified-decision.plan_fit",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (plan_fit)",
@@ -1780,25 +1797,6 @@
                   }
                 ],
                 "done_when": "The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.",
-                "owner_role": "solution-architect",
-                "status": "todo"
-              },
-              {
-                "id": "S-C5.warning-event-source-unverified",
-                "template": "warning-event-source-unverified",
-                "title": "Resolve warning event-source-unverified: confirm what would start the task on its event",
-                "part": "A4",
-                "how": [
-                  {
-                    "text": "Ask Anthropic and the vendor what can fire the event.",
-                    "link": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation"
-                  },
-                  {
-                    "text": "Let a person start the task until the event source is confirmed, then level again.",
-                    "link": "partner-kit/docs/design.md#72-decision-values"
-                  }
-                ],
-                "done_when": "The event source is confirmed in writing, or the task stays person-started.",
                 "owner_role": "solution-architect",
                 "status": "todo"
               },

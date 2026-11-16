@@ -400,6 +400,7 @@ Part A4. In pilot: no. Priority: 6. Status: todo.
 **Gated by:**
 
 - open-question E6: Can Anthropic's range 160.79.104.0/21 be allowlisted?
+- open-question F3: Two to three real good and bad examples per skill, redacted.
 - open-question OD-8: Identity for the hosted Monday summary, whether it may post to Teams, and whether a wrapper server is needed. Due: before T3 is built (after the pilot).
 - open-question OD-9: ZDR addendum on the existing Enterprise org, which models qualify for ZDR, and the seat count.
 

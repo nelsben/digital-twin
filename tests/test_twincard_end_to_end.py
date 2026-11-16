@@ -1,6 +1,6 @@
 """End-to-end check of the 'all' command on the two fictional worked examples.
 
-Each test copies a customer folder (customer-profile.json and the persona folder with card.json and
+Each test copies a customer folder (its own files, such as customer-profile.json and discovery.md, and the persona folder with card.json and
 interviews/) into a temporary folder, runs cli.py as a subprocess the way a consultant runs it, and
 compares what it writes with the files committed under engagements/. Nothing is written outside the
 temporary folder.
@@ -52,7 +52,9 @@ def copy_customer(fixture, dest_root):
     customer_dst = Path(dest_root) / customer_src.name
     persona_dst = customer_dst / "personas" / persona_src.name
     persona_dst.mkdir(parents=True)
-    shutil.copy2(customer_src / "customer-profile.json", customer_dst / "customer-profile.json")
+    for item in customer_src.iterdir():  # the profile and the files its sources name (discovery.md)
+        if item.is_file():
+            shutil.copy2(item, customer_dst / item.name)
     shutil.copy2(persona_src / "card.json", persona_dst / "card.json")
     shutil.copytree(persona_src / "interviews", persona_dst / "interviews")
     return persona_dst

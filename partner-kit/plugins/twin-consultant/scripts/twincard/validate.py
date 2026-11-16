@@ -236,6 +236,169 @@ def _check_provenance_entry(record, path, entry, rules, report):
     return status if ok else None
 
 
+# --- Sources -------------------------------------------------------------------------------------------
+#
+# A provenance source is one source or several separated by SOURCE_SEPARATOR. Each is '<file>' or
+# '<file>#<anchor>'. The file is looked up in the record's own folder (the persona folder for a card,
+# the customer folder for a profile), then in the customer folder, and never outside the customer
+# folder. Only entries whose status is answered are opened (OPENED_STATUSES).
+
+SOURCE_SEPARATOR = "; "
+OPENED_STATUSES = ("answered",)
+INTERVIEWS_DIR = "interviews"
+DISCOVERY_FILE = "discovery.md"
+SOURCE_FIX = ("Point the source at the notes or discovery line that holds the answer, "
+              "or set the status to assumed with an owner")
+OPEN_VALUE_FIX = "Empty the value, or set the status to assumed with an owner if the value is your working guess"
+
+_QUESTION_ID = re.compile(r"^[A-Z]\d+$")
+_TASK_LINE = re.compile(r"^\s*Task id:\s*(\S+)")
+_LEVEL_TWO = re.compile(r"^##\s")
+_HEADING = re.compile(r"^ {0,3}(#{1,6})\s+(.*?)\s*#*\s*$")
+_FENCE = re.compile(r"^\s*(```|~~~)")
+
+
+def split_sources(source):
+    """The sources of one provenance source string, in order: 'a.md#P2; b.md#P2' -> ['a.md#P2', 'b.md#P2']."""
+    if not isinstance(source, str):
+        return []
+    return [part.strip() for part in source.split(SOURCE_SEPARATOR) if part.strip()]
+
+
+def github_slug(heading):
+    """GitHub's heading-to-anchor rule: lower case, spaces to hyphens, punctuation dropped."""
+    text = re.sub(r"!?\[([^\]]*)\]\([^)]*\)", r"\1", heading)
+    text = text.replace("`", "").replace("*", "").strip().lower()
+    text = re.sub(r"[^\w\- ]", "", text)
+    return text.replace(" ", "-")
+
+
+class _Sources:
+    """Opens source files for one validation run; each file is read once."""
+
+    def __init__(self, persona_dir, customer_dir):
+        self.folders = {"card": persona_dir.resolve(), "profile": customer_dir.resolve()}
+        self.customer = customer_dir.resolve()
+        self._text = {}
+
+    def find(self, record, name):
+        """Return (Path or None, problem or None) for a source's file part."""
+        parts = Path(name).parts
+        if not name or Path(name).is_absolute() or ".." in parts:
+            return None, ("names its file with '..' or an absolute path; name a file in the record's folder or "
+                          "the customer folder instead (discovery.md#A1, not ../../discovery.md#A1)")
+        for folder in (self.folders[record], self.customer):
+            candidate = folder / name
+            if candidate.is_file():
+                return candidate, None
+        return None, "names a file that is not in the %s folder or the customer folder" % (
+            "persona" if record == "card" else "customer")
+
+    def text(self, path):
+        if path not in self._text:
+            try:
+                self._text[path] = path.read_text(encoding="utf-8")
+            except (OSError, UnicodeDecodeError):
+                self._text[path] = ""
+        return self._text[path]
+
+    def anchors(self, path):
+        key = ("anchors", path)
+        if key not in self._text:
+            seen, found, fence = {}, set(), None
+            for line in self.text(path).splitlines():
+                match = _FENCE.match(line)
+                if match:
+                    fence = match.group(1) if fence is None else (None if fence == match.group(1) else fence)
+                    continue
+                heading = _HEADING.match(line) if fence is None else None
+                if heading:
+                    base = github_slug(heading.group(2))
+                    count = seen.get(base, 0)
+                    seen[base] = count + 1
+                    found.add(base if count == 0 else "%s-%d" % (base, count))
+            self._text[key] = found
+        return self._text[key]
+
+
+def _question_heading(qid):
+    return re.compile(r"^#{2,6}\s+%s\." % re.escape(qid))
+
+
+def _task_block(text, task_id):
+    """The lines of the block whose 'Task id:' line names task_id, or None when there is none.
+
+    A block runs from its 'Task id:' line to the next 'Task id:' line or the next level-2 heading.
+    """
+    lines, inside, found = [], False, False
+    for line in text.splitlines():
+        task = _TASK_LINE.match(line)
+        if task:
+            inside = task.group(1) == task_id
+            found = found or inside
+            continue
+        if _LEVEL_TWO.match(line):
+            inside = False
+            continue
+        if inside:
+            lines.append(line)
+    return lines if found else None
+
+
+def _source_problem(record, path, one, sources):
+    """Return why one source of an answered entry does not open, or None when it opens."""
+    name, hash_mark, anchor = one.partition("#")
+    found, problem = sources.find(record, name)
+    if found is None:
+        return problem
+    under_interviews = Path(name).parts[:1] == (INTERVIEWS_DIR,)
+    if under_interviews:
+        if not hash_mark or not _QUESTION_ID.match(anchor):
+            return "names an interview file with no question id after # (write it as %s#F2)" % name
+        heading = _question_heading(anchor)
+        lines = sources.text(found).splitlines()
+        task = re.match(r"^tasks\.([^.\[]+)\.", path)
+        if task:
+            lines = _task_block(sources.text(found), task.group(1))
+            if lines is None:
+                return "names a file with no 'Task id: %s' block" % task.group(1)
+            if not any(heading.match(line) for line in lines):
+                return "has no heading %s. inside the task block for %s" % (anchor, task.group(1))
+        elif not any(heading.match(line) for line in lines):
+            return "has no heading %s." % anchor
+        return None
+    if Path(name).name == DISCOVERY_FILE:
+        if not hash_mark or not anchor:
+            return "names discovery.md with no question id after # (write it as discovery.md#A1)"
+        for line in sources.text(found).splitlines():
+            if line.lstrip().startswith("|"):
+                cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+                if cells and cells[0] == anchor:
+                    return None
+        return "has no table row for %s" % anchor
+    if hash_mark and anchor not in sources.anchors(found):
+        return "has no heading whose anchor is #%s" % anchor
+    return None
+
+
+def _check_sources(record, provenance, values, sources, report):
+    """Open every source of each answered entry; an open entry's field must be empty."""
+    by_path = {path: value for pairs in values.values() for path, value in pairs}
+    for path, entry in provenance.items():
+        if not isinstance(entry, dict):
+            continue
+        status = entry.get("status")
+        if status == "open" and path in by_path and not _is_unset(by_path[path]):
+            report.error(record, path, "is open but holds the value %r; an open field is empty" % (by_path[path],),
+                         OPEN_VALUE_FIX)
+        if status not in OPENED_STATUSES:
+            continue
+        for one in split_sources(entry.get("source")):
+            problem = _source_problem(record, path, one, sources)
+            if problem:
+                report.error(record, path, "source %s does not open: it %s" % (one, problem), SOURCE_FIX)
+
+
 def _check_record(data, record, catalogue, report):
     """Check one record. Return (required_paths, provenance, values_by_catalogue_path)."""
     provenance = _check_envelope(data, record, catalogue, report)
@@ -364,10 +527,12 @@ def validate(persona_dir, catalogue=None):
     rules = catalogue["provenance"]
     required = []
     values_by_record = {}
+    sources = _Sources(persona, profile_path.parent)
     for record, data in (("profile", profile), ("card", card)):
         if data is None:
             continue
         paths, provenance, values = _check_record(data, record, catalogue, report)
+        _check_sources(record, provenance, values, sources, report)
         values_by_record[record] = values
         for path in paths:
             prov = provenance.get(path)

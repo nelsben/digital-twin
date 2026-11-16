@@ -21,6 +21,7 @@ The consultant plugin for the persona-card workflow. Design of record: [partner-
 | Path | What it is |
 |---|---|
 | [templates/customer-profile.json](templates/customer-profile.json) | Blank customer profile: one per customer, at `engagements/<customer>/customer-profile.json` |
+| [templates/discovery.md](templates/discovery.md) | Blank discovery answers: one table per section A to G, one row per question id, at `engagements/<customer>/discovery.md` |
 | [templates/card.json](templates/card.json) | Blank persona card: one per role, at `engagements/<customer>/personas/<persona-id>/card.json` |
 | [templates/interview-guide.md](templates/interview-guide.md) | Plain-language role interview: questions P1 to P6 and F1 to F9, each with the card fields it fills |
 | [templates/interview-notes.md](templates/interview-notes.md) | Notes template with one slot per question, saved under the persona's `interviews/` folder |
@@ -41,6 +42,14 @@ python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py validate --j
 ```
 
 Each error prints as `<record>:<path>: <message>. Next: <fix>`, then a completeness line: the share of required fields whose provenance status is `answered` or `default`. Exit code 0 means no errors, 1 means validation failed, 2 means a usage error or a missing folder.
+
+Sources. A provenance `source` is one source, or several separated by `; `. Each is `<file>` or `<file>#<anchor>`, looked up in the record's folder and then in the customer folder, never outside it (no `..`). For an `answered` entry, `validate` opens every source; `default`, `assumed` and `open` entries are not opened.
+
+- `interviews/<file>.md#F2`: the file needs a heading `## F2.` to `###### F2.`; for a `tasks.<id>.*` field it must sit in that task's block (from its `Task id:` line to the next `Task id:` line or level-2 heading).
+- `discovery.md#A1`: the file needs a table row whose first cell is `A1`.
+- Any other file must exist; an anchor must be the GitHub slug of one of its headings.
+
+A source that does not open is an error, with `Next: Point the source at the notes or discovery line that holds the answer, or set the status to assumed with an owner`. An `open` field is empty (null, `""` or `[]`; `false` is a value); an open field that holds a value is an error, with `Next: Empty the value, or set the status to assumed with an owner if the value is your working guess`. Design of record: [design.md section 4.3](../../docs/design.md#43-provenance-and-completeness).
 
 ## Level
 

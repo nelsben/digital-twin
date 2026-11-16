@@ -119,7 +119,7 @@ def valid_profile():
                        "spend_owner": "IT", "spend_limits": "per user", "action_log_required": True},
         "owners": {"sponsor": "Sponsor", "technical_owner": "Tech", "business_owner": "Biz",
                    "backup_owner": "Backup", "compliance": "Compliance"},
-        "provenance": answered(PROFILE_REQUIRED, "discovery#A1"),
+        "provenance": answered(PROFILE_REQUIRED, "discovery.md#A1"),
     }
 
 
@@ -158,6 +158,10 @@ def valid_card():
     }
 
 
+DISCOVERY_NOTES = "# Discovery\n\n| # | Answer | Status | Owner | Due |\n|---|---|---|---|---|\n| A1 | Answered. | answered | | |\n"
+INTERVIEW_NOTES = "# Interview notes\n\n## Task block\n\nTask id: T1    Task name: Prepare a brief\n\n#### F1. Frequency\n\n#### F2. Inputs\n"
+
+
 class PersonaFolder:
     """A temporary engagements/<customer>/personas/<persona> folder."""
 
@@ -170,6 +174,10 @@ class PersonaFolder:
             profile_text if profile_text is not None else json.dumps(profile), encoding="utf-8")
         (self.persona_dir / "card.json").write_text(
             card_text if card_text is not None else json.dumps(card), encoding="utf-8")
+        # The files the answered sources name: validate opens them (design 4.3).
+        (base / "discovery.md").write_text(DISCOVERY_NOTES, encoding="utf-8")
+        (self.persona_dir / "interviews").mkdir()
+        (self.persona_dir / "interviews" / "2026-11-14-analyst.md").write_text(INTERVIEW_NOTES, encoding="utf-8")
 
     def __enter__(self):
         return self.persona_dir
@@ -330,7 +338,7 @@ class ValidCardTests(unittest.TestCase):
 def with_second_write(write):
     card = valid_card()
     card["tasks"][0]["writes"].append(write)
-    card["provenance"]["tasks.T1.writes[1].action"] = {"status": "answered", "source": "interviews/x.md#F2"}
+    card["provenance"]["tasks.T1.writes[1].action"] = {"status": "answered", "source": "interviews/2026-11-14-analyst.md#F2"}
     return card
 
 
@@ -353,7 +361,7 @@ class PositionalListTests(unittest.TestCase):
     def test_exact_duplicate_input_warns(self):
         card = valid_card()
         card["tasks"][0]["inputs"].append(copy.deepcopy(card["tasks"][0]["inputs"][0]))
-        card["provenance"]["tasks.T1.inputs[1].access"] = {"status": "answered", "source": "interviews/x.md#F2"}
+        card["provenance"]["tasks.T1.inputs[1].access"] = {"status": "answered", "source": "interviews/2026-11-14-analyst.md#F2"}
         result = run_validate(card=card)
         self.assertEqual(result["errors"], [])
         self.assertIn("tasks.T1.inputs[1]", [w["path"] for w in result["warnings"]])
@@ -361,7 +369,7 @@ class PositionalListTests(unittest.TestCase):
     def test_second_entry_is_validated(self):
         card = valid_card()
         card["tasks"][0]["inputs"].append({"system": "crm", "objects": "contact", "access": "peek"})
-        card["provenance"]["tasks.T1.inputs[1].access"] = {"status": "answered", "source": "interviews/x.md#F2"}
+        card["provenance"]["tasks.T1.inputs[1].access"] = {"status": "answered", "source": "interviews/2026-11-14-analyst.md#F2"}
         result = run_validate(card=card)
         self.assertIn("tasks.T1.inputs[1].access", [e["path"] for e in result["errors"]])
 

@@ -3,8 +3,8 @@
   "customer": "example-capital-partners",
   "persona": "deal-team-associate",
   "source": {
-    "card_sha256": "d8a71ec821ba8eb07e153bd18cfad08e6c95e6a7c5cc8d34f6e1ba70ab1915af",
-    "profile_sha256": "71b85dab7c908141bf4d0aacd28cf2330d93fd3b5cf2bf12ce7ff69f3f1e8881",
+    "card_sha256": "08016d0633d84f785445a706b67e7a3bfc34a364bd74c8ab780a0a0cb873d6ec",
+    "profile_sha256": "115e399ea7f2e169ad9a819716a1ba45ec2bf6745e4cd657d0ec9ae6ebf7a2df",
     "rules_version": 1,
     "pack": "private-equity"
   },
@@ -12,7 +12,7 @@
     "plugin_name": {
       "value": "twin-pe-deal-team",
       "rule": null,
-      "cite": "engagements/sample-pe/design.md#the-marketplace",
+      "cite": "engagements/sample-pe/personas/deal-team-associate/design.md#the-marketplace",
       "reason": "The card names the role plugin twin-pe-deal-team in role.plugin_name.",
       "unverified": false,
       "basis": "our-recommendation",

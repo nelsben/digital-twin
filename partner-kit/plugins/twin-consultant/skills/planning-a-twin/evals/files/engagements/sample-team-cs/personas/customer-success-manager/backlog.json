@@ -3,8 +3,8 @@
   "customer": "example-software-co",
   "persona": "customer-success-manager",
   "source": {
-    "card_sha256": "d1ea72cd65ac0607dae9edffdc75db1ee499860a3991b46e1083c560ca7abf12",
-    "levelled_sha256": "acc1a9464c437584c70b8d4a8caafa8526fcb7a2c4063f483643eebe39944b7d",
+    "card_sha256": "bc45a8a407819b6522572843113e504c6904289dca7840b86b0ddf543e1b4a8b",
+    "levelled_sha256": "8a222444ed1258e8be5ff1254d67545288f1668963c2231a04976fb829023725",
     "library_version": 1
   },
   "unnamed_roles": [
@@ -606,9 +606,13 @@
               {
                 "id": "S-C4.write-skill",
                 "template": "write-skill",
-                "title": "Write the skill from the kit template until the evals pass",
+                "title": "Write the skill from draft-response until the evals pass",
                 "part": "A2",
                 "how": [
+                  {
+                    "text": "Start from draft-response (knowledge-work-plugins: customer-support): Adapt, for C3 and C4.",
+                    "link": "docs/compendium/18-customer-success.md#whats-in-customer-support"
+                  },
                   {
                     "text": "Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime.",
                     "link": "starter-kit/templates/skill/README.md#copy-it"
@@ -1845,9 +1849,13 @@
               {
                 "id": "S-C3.write-skill",
                 "template": "write-skill",
-                "title": "Write the skill from the kit template until the evals pass",
+                "title": "Write the skill from draft-response until the evals pass",
                 "part": "A2",
                 "how": [
+                  {
+                    "text": "Start from draft-response (knowledge-work-plugins: customer-support): Adapt, for C3 and C4.",
+                    "link": "docs/compendium/18-customer-success.md#whats-in-customer-support"
+                  },
                   {
                     "text": "Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime.",
                     "link": "starter-kit/templates/skill/README.md#copy-it"
@@ -2201,9 +2209,13 @@
               {
                 "id": "S-C5.write-skill",
                 "template": "write-skill",
-                "title": "Write the skill from the kit template until the evals pass",
+                "title": "Write the skill from customer-escalation until the evals pass",
                 "part": "A2",
                 "how": [
+                  {
+                    "text": "Start from customer-escalation (knowledge-work-plugins: customer-support): Adapt, for C5.",
+                    "link": "docs/compendium/18-customer-success.md#whats-in-customer-support"
+                  },
                   {
                     "text": "Copy the kit's skill template into the role plugin's skills folder, the one source of the skill for every runtime.",
                     "link": "starter-kit/templates/skill/README.md#copy-it"
@@ -2869,6 +2881,52 @@
                 "done_when": "Compliance has signed off the data policy for every data class the role holds.",
                 "owner_role": "compliance",
                 "owner_name": "Pieter Achterberg (Finance and legal lead)",
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-guardrails-and-settings.retention-and-feedback-settings",
+                "template": "retention-and-feedback-settings",
+                "title": "Set the org's retention period and its feedback and training-data settings to the data policy",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Read the retention the data policy sets for chat, Claude Code and the governance log.",
+                    "link": "docs/compendium/15-governance-and-performance.md#retention-decided"
+                  },
+                  {
+                    "text": "Settle with compliance whether /feedback transcripts may be kept 5 years and local sessions 6 years; if not, turn feedback off with DISABLE_FEEDBACK_COMMAND=1 in managed settings and set a custom retention period.",
+                    "link": "docs/compendium/10-sensitive-data.md#questions-to-settle-with-compliance-and-legal"
+                  },
+                  {
+                    "text": "Set the retention period (custom retention is Enterprise only, at least 30 days) and the feedback and training-data settings in the org, and record each value in the customer's engagement folder.",
+                    "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
+                  }
+                ],
+                "done_when": "The org's retention period and its feedback and training-data settings match the data policy, and each value is recorded in the customer's engagement folder.",
+                "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-guardrails-and-settings.spend-limits",
+                "template": "spend-limits",
+                "title": "Set the org's spend limits and name who watches them",
+                "part": "A9",
+                "how": [
+                  {
+                    "text": "Set the org's spend limit, and on Enterprise a per-user limit for the role's users.",
+                    "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
+                  },
+                  {
+                    "text": "Name who watches spend and the usage alerts, and record the limits and that person in the customer's engagement folder.",
+                    "link": "docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often"
+                  }
+                ],
+                "done_when": "The org's spend limit, and on Enterprise the per-user limits, are set and recorded, and a named person watches them.",
+                "owner_role": "technical-owner",
+                "owner_name": "IT and operations lead",
                 "acting_owner": null,
                 "status": "todo"
               }

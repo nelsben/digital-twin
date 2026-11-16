@@ -106,6 +106,17 @@ class ShippedPackTests(unittest.TestCase):
                 self.assertEqual(pack["id"], path.stem)
                 self.assertEqual(packs.load_pack(path.stem), pack)
 
+    def test_every_typical_task_starts_from_a_start_from_or_reuse_entry(self):
+        general = packs.load_pack("general")
+        for path in pack_files():
+            pack = packs.load_pack(path.stem)
+            for task in pack["typical_tasks"]:
+                for name in task.get("starts_from", []):
+                    with self.subTest(pack=path.stem, task=task["id"], name=name):
+                        entry = packs.find_starting_point(name, pack, general)
+                        self.assertIsNotNone(entry)
+                        self.assertIn(entry["use"], ("start-from", "reuse"))
+
     def test_sources_exist(self):
         for path in pack_files():
             pack = json.loads(path.read_text(encoding="utf-8"))

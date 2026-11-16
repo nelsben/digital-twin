@@ -41,6 +41,32 @@ Build a story only when every check is met; `backlog.md` says
 check is a task of its own (`collect-examples`, `compliance-sign-off`) or a
 change to the card through `planning-a-twin`.
 
+## Writing the skill
+
+A task story's `write-skill` task is where the twin's instructions are
+written, for a client skill and for a hosted or scheduled agent alike.
+When the card task names Anthropic skills to build on (`starts_from`),
+the task's title names them and its first steps read
+`Start from <name> (<where>): <what the pack says about it>`, each linked
+to the compendium page the pack cites. A step marked `⚠ Unverified` means
+the pack is not sure of that fact: read the page before building on it.
+Without those steps the skill starts from the kit's template.
+
+## Foundation stories
+
+`S-connectors-and-identity` may carry `data_providers`: the data providers
+the industry pack knows, shown in `backlog.md` as a table headed
+`Data providers the pack knows (none is on by default)`. Listing one does
+not allow it. The `data-providers-decide` task has compliance decide each
+provider (allowed, not allowed or later, with who approved it and why),
+and the decision is written in the customer's engagement folder.
+
+`S-guardrails-and-settings` has `retention-and-feedback-settings` (set the
+org's retention and feedback settings to the data policy and record them)
+and, on Team and Enterprise, `spend-limits` (set the org and per-user
+spend limits and name who watches them; its owner is the profile's spend
+owner when one is named). Both are admin work: hand the steps over.
+
 ## Gates and spikes
 
 `gated_by` lists what holds the story: a `blocker`, an `open-question`

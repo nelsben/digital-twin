@@ -159,6 +159,9 @@
       "inputs": [
         "crm"
       ],
+      "starts_from": [
+        "draft-response"
+      ],
       "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
       "unverified": false
     },
@@ -171,6 +174,9 @@
       "inputs": [
         "documents"
       ],
+      "starts_from": [
+        "draft-response"
+      ],
       "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
       "unverified": false
     },
@@ -182,6 +188,9 @@
       "data_class": "confidential",
       "inputs": [
         "ticketing"
+      ],
+      "starts_from": [
+        "customer-escalation"
       ],
       "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
       "unverified": true

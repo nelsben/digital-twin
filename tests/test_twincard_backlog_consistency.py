@@ -450,7 +450,11 @@ class OwnerTests(unittest.TestCase):
                     with self.subTest(scenario=name, task=item["id"]):
                         self.assertIn("owner_name", item)
                         self.assertIn("acting_owner", item)
-                        if role in PROFILE_ROLES and owners.get(PROFILE_ROLES[role]):
+                        spend_owner = (profile.get("governance") or {}).get("spend_owner")
+                        if item["id"].endswith(".spend-limits") and spend_owner:
+                            # OPS-57: the spend-limits task names the profile's spend owner.
+                            self.assertEqual(item["owner_name"], spend_owner)
+                        elif role in PROFILE_ROLES and owners.get(PROFILE_ROLES[role]):
                             self.assertEqual(item["owner_name"], owners[PROFILE_ROLES[role]])
                         elif role == "skill-owner" and tid in skill_owners and skill_owners[tid]:
                             self.assertEqual(item["owner_name"], skill_owners[tid])

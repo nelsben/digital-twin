@@ -14,6 +14,7 @@ question ids whose answers may fill it. Design of record:
 - When the notes differ
 - Rules, wished changes and wished surfaces
 - Pack defaults
+- Starting skills and pilot fields
 - Worked examples
 
 ## Where a value may come from
@@ -145,6 +146,26 @@ for a card task that is the same task (match on what the task is, not on
 its id). Use it only when the notes are silent on that field. The entry is
 `{"status": "default", "source": "data/industry-packs/<id>.json"}`. A pack
 gives no default for any other card field.
+
+## Starting skills and pilot fields
+
+`tasks[].starts_from` is a list of names, `[]` by default. A name must be
+an entry in the pack's `anthropic_starting_points` (or the general pack's)
+whose `use` is `start-from` or `reuse`. A `reference` entry is read, not
+built from, so validate refuses it, and so it refuses a name in neither
+pack: `Next: use a name from the pack's starting points, or remove it.`
+
+A typical task's `starts_from` is a suggestion. For a matching card task,
+quote it to the consultant with the page the pack cites (for example
+`ic-memo` for an IC memo task, from compendium 17). Write it only when the
+consultant agrees. It needs no provenance entry, changes no levelling
+decision and does not count toward completeness.
+
+For a task in the pilot, `skill_owner`, `examples.good` and
+`examples.bad` count as required. Each needs a provenance entry: `answered`
+from the notes (question F3), or `open` and empty with an
+owner and a due date until someone says. `0` from the notes is an answered
+value. A task not in the pilot has no such rule.
 
 ## Worked examples
 

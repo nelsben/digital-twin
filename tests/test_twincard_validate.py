@@ -87,6 +87,8 @@ CARD_REQUIRED = [
     "tasks.T1.writes[0].action", "tasks.T1.data_class", "tasks.T1.cost_of_mistake.level",
     "tasks.T1.reversible", "tasks.T1.touches_money", "tasks.T1.reads_untrusted_input",
     "tasks.T1.in_pilot", "memory.personal_memory_wanted",
+    # Required because T1 is in the pilot (required_when {"in_pilot": true}, OPS-57).
+    "tasks.T1.examples.good", "tasks.T1.examples.bad", "tasks.T1.skill_owner",
 ]
 
 
@@ -206,10 +208,11 @@ class CatalogueTests(unittest.TestCase):
 
     def test_entries_have_the_catalogue_shape(self):
         keys = {"path", "record", "type", "values", "required", "key", "asked_by", "default", "feeds", "part"}
+        optional = {"required_when"}
         paths = set()
         for entry in self.entries:
             with self.subTest(path=entry.get("path")):
-                self.assertEqual(set(entry), keys)
+                self.assertEqual(set(entry) - optional, keys)
                 self.assertIn(entry["record"], ("profile", "card"))
                 self.assertIn(entry["part"], PARTS)
                 self.assertIsInstance(entry["required"], bool)

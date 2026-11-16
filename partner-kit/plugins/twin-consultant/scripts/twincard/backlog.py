@@ -15,7 +15,11 @@ write_backlog(persona_dir) does the same and writes <persona_dir>/backlog.json a
 The epic is the role twin; one feature per card feature, then F-twin-foundation; one story per
 card task, then the seven foundation stories; tasks come from the library's templates, whose
 'when' conditions use the levelling engine's condition language (level.matches). Statuses are
-kept across runs. Every value written to backlog.md goes through one helper (_md) so card and library
+kept across runs. A task with starts_from gets one 'Start from <name> (<where>): ...' step per
+starting point at the top of its write-skill task, linked to the pack entry's cite, and a title that
+names them. When the customer's pack lists data_providers, S-connectors-and-identity carries them as
+data_providers, and the data-providers-decide task gets one step per distinct cite (at most three).
+Every value written to backlog.md goes through one helper (_md) so card and library
 text cannot change the page's structure; backlog.json and the --plan-out tree keep the raw values.
 Design of record: partner-kit/docs/design.md, section 8.
 """
@@ -27,6 +31,7 @@ from pathlib import Path
 
 from . import fields as _fields
 from . import level as _level
+from . import packs as _packs
 from . import validate as _validate
 
 PLUGIN_DIR = _level.PLUGIN_DIR
@@ -84,7 +89,7 @@ FOUNDATION_ACCEPTANCE = {
 
 PERSONA_FACTS = ("plan.tier", "role.device", "distribution", "settings_baseline", "governance.log",
                  "compliance.walls", "memory.personal_memory_wanted", "systems.kinds", "systems.products",
-                 "writes.kinds", "writes.products", "codes")
+                 "writes.kinds", "writes.products", "codes", "pack.data_providers")
 TASK_FACTS = ("task.trigger", "task.data_class", "task.output.audience", "task.reversible", "task.touches_money",
               "task.cost_of_mistake.level", "task.reads_untrusted_input", "task.in_pilot", "task.write_actions",
               "delivery.form", "writes.crm_opens", "tools.write_permissions", "tools.send_permissions")
@@ -104,6 +109,24 @@ WRITE_SKILL = "write-skill"
 CONSTRAINTS_STEP = "Make the skill keep these rules from the interviews, in the interviewee's words: %s."
 WANTED_CHANGE_LABEL = "Asked for, not planned: "
 CONSTRAINTS_LINK = "partner-kit/docs/design.md#42-persona-card-cardjson"
+# A card task's starts_from (design section 8): the skill task starts from Anthropic's own material.
+START_FROM_STEP = "Start from %s (%s): %s"
+START_FROM_UNVERIFIED = ("\u26a0 Unverified: the pack marks this starting point unverified, so check the cited page "
+                         "before you build on it.")
+START_FROM_TITLE = "Write the skill from %s until the evals pass"
+START_FROM_TITLE_MORE = "Write the skill from %s and %d more until the evals pass"
+_FIRST_SENTENCE = re.compile(r"^(.+?[.!?])(?=\s|$)", re.S)
+# The pack's data providers (design section 8): listed on the connectors story, decided by compliance.
+PROVIDERS_STORY = "S-connectors-and-identity"
+PROVIDERS_TEMPLATE = "data-providers-decide"
+PROVIDER_KEYS = ("name", "kind", "access", "note", "cite", "unverified")
+PROVIDERS_HEADING = "Data providers the pack knows (none is on by default)"
+PROVIDERS_MAX_STEPS = 3
+PROVIDER_STEP = "Decide for %s: allowed, not allowed or later, with the approver and the reason."
+PROVIDER_RECORD_STEP = ("Record each provider's decision, its approver and its reason in the customer's engagement "
+                        "folder.")
+# The spend-limits task is owned by the profile's spend owner when one is named.
+SPEND_TEMPLATE = "spend-limits"
 
 # --- The story template (design section 8; docs/playbook/04-stories.md) ------------------------------
 
@@ -418,6 +441,24 @@ def _codes(levelled, about):
     return out
 
 
+def pack_pair(levelled):
+    """(customer's pack, general pack) for the pack levelled.json names; general is None when they are one."""
+    pack_id = (levelled.get("source") or {}).get("pack") or _packs.GENERAL
+    try:
+        pack = _packs.load_pack(pack_id)
+    except _packs.PackError:
+        pack = None
+    if pack is None or pack_id == _packs.GENERAL:
+        try:
+            return (pack or _packs.load_pack(_packs.GENERAL)), None
+        except _packs.PackError:
+            return {}, None
+    try:
+        return pack, _packs.load_pack(_packs.GENERAL)
+    except _packs.PackError:
+        return pack, None
+
+
 def persona_facts(card, profile, levelled, systems):
     plan = levelled.get("persona_plan") or {}
     codes = _codes(levelled, "persona")
@@ -437,6 +478,7 @@ def persona_facts(card, profile, levelled, systems):
         "systems.kinds": kinds, "systems.products": products,
         "writes.kinds": wkinds, "writes.products": wproducts,
         "codes": codes,
+        "pack.data_providers": bool(pack_pair(levelled)[0].get("data_providers")),
     }
     for name in TASK_FACTS + DECISION_FACTS + ALL_ITEM_FACTS:
         facts[name] = None
@@ -911,10 +953,10 @@ def _task_story(task, role, base, card, profile, levelled, systems, questions, p
     blockers = persona_blockers + [b for b in levelled.get("blockers", []) if b["about"] == tid]
     statement, source = _statement(task, role)
     part = "A2" if facts["runtime"] == "client-skill" else "A4"
-    tasks = _with_engine_steps(
+    tasks = _with_starting_points(_with_engine_steps(
         _with_constraints(_tasks_for(story_id, facts, library, False, tid, decisions, levelled, systems),
                           _constraints(task)),
-        task, facts, decisions, writes, systems)
+        task, facts, decisions, writes, systems), task, levelled)
     for item in tasks:
         if item["template"] == OWNER_HANDOVER:
             item["part"] = part
@@ -969,6 +1011,77 @@ def _with_constraints(tasks, constraints):
     return tasks
 
 
+def _first_sentence(text):
+    text = " ".join(str(text).split())
+    match = _FIRST_SENTENCE.match(text)
+    return match.group(1) if match else text
+
+
+def starting_points_of(task, levelled):
+    """The pack entries a card task's starts_from names, in its order: the customer's pack, then general.
+
+    A name that is in neither pack or is a reference is left out; validate refuses both.
+    """
+    names = task.get("starts_from")
+    if not isinstance(names, list) or not names:
+        return []
+    pack, general = pack_pair(levelled)
+    out = []
+    for name in names:
+        point = _packs.find_starting_point(name, pack, general) if isinstance(name, str) else None
+        if point is not None and point.get("use") in _packs.STARTS_FROM_USES:
+            out.append(point)
+    return out
+
+
+def start_from_step(point):
+    """The write-skill step for one starting point: its name, where it lives and its note's first sentence."""
+    text = START_FROM_STEP % (point["name"], point["where"], _first_sentence(point["note"]))
+    if point.get("unverified"):
+        text += " " + START_FROM_UNVERIFIED
+    return {"text": text, "link": point["cite"]}
+
+
+def _with_starting_points(tasks, task, levelled):
+    """The write-skill task of a card task with starts_from: one step per starting point before its own,
+    and a title naming the first. Its id is unchanged."""
+    points = starting_points_of(task, levelled)
+    if points:
+        for item in tasks:
+            if item["template"] == WRITE_SKILL:
+                item["how"][0:0] = [start_from_step(point) for point in points]
+                item["title"] = (START_FROM_TITLE % points[0]["name"] if len(points) == 1
+                                 else START_FROM_TITLE_MORE % (points[0]["name"], len(points) - 1))
+    return tasks
+
+
+def data_providers_of(levelled):
+    """The customer's pack's data providers, as the connectors story lists them."""
+    pack, _ = pack_pair(levelled)
+    return [dict((key, entry.get(key)) for key in PROVIDER_KEYS) for entry in pack.get("data_providers") or []
+            if isinstance(entry, dict)]
+
+
+def provider_steps(providers):
+    """One decision step per distinct cite, in pack order, at most three; the third holds every later cite.
+    With one cite, a second step records the decisions. Every step links a provider's cite."""
+    groups = []
+    for entry in providers:
+        for group in groups:
+            if group[0] == entry["cite"]:
+                group[1].append(entry["name"])
+                break
+        else:
+            groups.append((entry["cite"], [entry["name"]]))
+    if len(groups) > PROVIDERS_MAX_STEPS:
+        rest = [name for _, names in groups[PROVIDERS_MAX_STEPS - 1:] for name in names]
+        groups = groups[:PROVIDERS_MAX_STEPS - 1] + [(groups[PROVIDERS_MAX_STEPS - 1][0], rest)]
+    steps = [{"text": PROVIDER_STEP % _join(names), "link": cite} for cite, names in groups]
+    if len(steps) == 1:
+        steps.append({"text": PROVIDER_RECORD_STEP, "link": groups[0][0]})
+    return steps
+
+
 def _foundation_stories(role, base, levelled, persona_blockers, library):
     plan = levelled.get("persona_plan") or {}
     fields = {
@@ -979,9 +1092,10 @@ def _foundation_stories(role, base, levelled, persona_blockers, library):
         "settings_baseline": _show(base["settings_baseline"]),
         "governance_log": _show(base["governance.log"]),
     }
+    providers = data_providers_of(levelled)
     out = []
     for story_id, title, part in FOUNDATION:
-        out.append({
+        story = {
             "id": story_id, "title": title,
             "statement": "As a %s, I want my twin's %s in place so that every task story runs safely." % (
                 role, title.lower()),
@@ -989,8 +1103,15 @@ def _foundation_stories(role, base, levelled, persona_blockers, library):
             "fields": dict(fields),
             "acceptance": list(FOUNDATION_ACCEPTANCE[story_id]),
             "gated_by": _gates(persona_blockers, []),
-            "tasks": _tasks_for(story_id, base, library, True),
-        })
+        }
+        tasks = _tasks_for(story_id, base, library, True)
+        if story_id == PROVIDERS_STORY and providers:
+            story["data_providers"] = providers
+            for item in tasks:
+                if item["template"] == PROVIDERS_TEMPLATE:
+                    item["how"] = provider_steps(providers)
+        story["tasks"] = tasks
+        out.append(story)
     return out
 
 
@@ -1092,6 +1213,7 @@ def _name_owners(features, card, profile, library):
     """
     owners = profile.get("owners") or {}
     technical = _text(owners.get("technical_owner")) or None
+    spend_owner = _text((profile.get("governance") or {}).get("spend_owner")) or None
     skill_owners = dict((t.get("id"), _text(t.get("skill_owner"))) for t in card.get("tasks") or [])
     counts_by_role = {}
     for feature in features:
@@ -1105,6 +1227,8 @@ def _name_owners(features, card, profile, library):
                     name = skill_owners.get(tid) or None
                 else:
                     name = None
+                if item["template"] == SPEND_TEMPLATE and spend_owner:
+                    name = spend_owner
                 item["owner_name"] = name
                 item["acting_owner"] = technical if name is None and role not in PARTNER_ROLES else None
                 if name is None and role not in PARTNER_ROLES:
@@ -1234,6 +1358,14 @@ def _md_story(story):
     lines += ["- %s %s: %s%s" % (_md(g["kind"], lead=True), _md(g["id"]), _md(g["text"]),
                                  " (spike %s)" % _md(g["spike"]) if g.get("spike") else "")
               for g in story["gated_by"]] or ["- Nothing."]
+    if story.get("data_providers"):
+        lines += ["", "**%s:**" % PROVIDERS_HEADING, "", "| Provider | Kind | Access | Note | Source |",
+                  "|---|---|---|---|---|"]
+        for entry in story["data_providers"]:
+            lines.append("| %s | %s | %s | %s | [%s](%s%s)%s |" % (
+                _cell(entry["name"]), _cell(entry["kind"]), _cell(entry["access"]), _cell(entry["note"]),
+                _cell(entry["cite"]), MD_LINK_PREFIX, _cell(entry["cite"]),
+                " \u26a0 Unverified" if entry.get("unverified") else ""))
     lines += ["", "**Tasks:**", ""]
     for item in story["tasks"]:
         lines.append("- %s **%s** %s (owner: %s, part %s)" % (

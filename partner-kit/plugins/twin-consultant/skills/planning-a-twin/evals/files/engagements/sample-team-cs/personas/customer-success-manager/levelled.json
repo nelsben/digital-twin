@@ -3,7 +3,7 @@
   "customer": "example-software-co",
   "persona": "customer-success-manager",
   "source": {
-    "card_sha256": "d1ea72cd65ac0607dae9edffdc75db1ee499860a3991b46e1083c560ca7abf12",
+    "card_sha256": "bc45a8a407819b6522572843113e504c6904289dca7840b86b0ddf543e1b4a8b",
     "profile_sha256": "08e869baf79b64fbaf463247a9ee26a118fac87ce17313b37ed5c073abb1a3ce",
     "rules_version": 1,
     "pack": "b2b-software"

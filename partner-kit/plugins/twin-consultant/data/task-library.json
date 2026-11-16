@@ -2371,6 +2371,28 @@
       "owner_role": "security"
     },
     {
+      "id": "data-providers-decide",
+      "title": "Decide for each data provider the pack knows: allowed, not allowed or later",
+      "part": "A3",
+      "applies_to": "S-connectors-and-identity",
+      "per": null,
+      "when": {
+        "pack.data_providers": true
+      },
+      "how": [
+        {
+          "text": "For each data provider the story lists, decide allowed, not allowed or later, with the approver and the reason, from what its cited page says.",
+          "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+        },
+        {
+          "text": "Record each provider's decision, its approver and its reason in the customer's engagement folder.",
+          "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+        }
+      ],
+      "done_when": "Every data provider the story lists has a recorded decision (allowed, not allowed or later), with its approver and reason, in the customer's engagement folder.",
+      "owner_role": "compliance"
+    },
+    {
       "id": "settings-deploy",
       "title": "Deploy the managed-settings baseline levelled.json names to the role's devices",
       "part": "A7",
@@ -2459,6 +2481,55 @@
       ],
       "done_when": "Compliance has signed off the data policy for every data class the role holds.",
       "owner_role": "compliance"
+    },
+    {
+      "id": "retention-and-feedback-settings",
+      "title": "Set the org's retention period and its feedback and training-data settings to the data policy",
+      "part": "A7",
+      "applies_to": "S-guardrails-and-settings",
+      "per": null,
+      "when": {},
+      "how": [
+        {
+          "text": "Read the retention the data policy sets for chat, Claude Code and the governance log.",
+          "link": "docs/compendium/15-governance-and-performance.md#retention-decided"
+        },
+        {
+          "text": "Settle with compliance whether /feedback transcripts may be kept 5 years and local sessions 6 years; if not, turn feedback off with DISABLE_FEEDBACK_COMMAND=1 in managed settings and set a custom retention period.",
+          "link": "docs/compendium/10-sensitive-data.md#questions-to-settle-with-compliance-and-legal"
+        },
+        {
+          "text": "Set the retention period (custom retention is Enterprise only, at least 30 days) and the feedback and training-data settings in the org, and record each value in the customer's engagement folder.",
+          "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
+        }
+      ],
+      "done_when": "The org's retention period and its feedback and training-data settings match the data policy, and each value is recorded in the customer's engagement folder.",
+      "owner_role": "technical-owner"
+    },
+    {
+      "id": "spend-limits",
+      "title": "Set the org's spend limits and name who watches them",
+      "part": "A9",
+      "applies_to": "S-guardrails-and-settings",
+      "per": null,
+      "when": {
+        "plan.tier": [
+          "team",
+          "enterprise"
+        ]
+      },
+      "how": [
+        {
+          "text": "Set the org's spend limit, and on Enterprise a per-user limit for the role's users.",
+          "link": "docs/compendium/09-plans-and-it-controls.md#feature-matrix"
+        },
+        {
+          "text": "Name who watches spend and the usage alerts, and record the limits and that person in the customer's engagement folder.",
+          "link": "docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often"
+        }
+      ],
+      "done_when": "The org's spend limit, and on Enterprise the per-user limits, are set and recorded, and a named person watches them.",
+      "owner_role": "technical-owner"
     },
     {
       "id": "role-plugin-build",

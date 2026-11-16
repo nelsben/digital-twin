@@ -97,8 +97,7 @@ if neither gives them, ask. Never make them up.
   both answers with their file names. Two tones add to each other: combine
   them, citing both files with `; `. A task two people put under different
   features keeps the first file's, plus an open question (field rules).
-- **Several sources.** An answer from more than one person cites each, with
-  `; `: `"interviews/a.md#P2; interviews/b.md#P2"`.
+- **Several sources.** Cite each person, with `; `: `"interviews/a.md#P2; interviews/b.md#P2"`.
 - **Said in conversation.** An answer the consultant gives in the chat is
   written first, to its row in `discovery.md` (questions A1 to G4) or to a
   dated notes file `interviews/<yyyy-mm-dd>-<who>.md` under the question's
@@ -112,8 +111,9 @@ if neither gives them, ask. Never make them up.
 - **Only what was said.** No figure, name or system that is not in the
   notes, the profile, the discovery answers or the consultant's message. A
   field the notes do not touch stays empty; if it is required it is `open`.
-- **The interviewee's own pick wins.** "Low to medium. Say medium." gives
-  `medium`.
+- **The interviewee's own pick wins.** "Low to medium. Say medium." gives `medium`.
+- **Pilot tasks and starting points.** A pilot task needs `skill_owner` and
+  both example counts (or `open`); `starts_from` needs the consultant's yes.
 
 ## Output format
 

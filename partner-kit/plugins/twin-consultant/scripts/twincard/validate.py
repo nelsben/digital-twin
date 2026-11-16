@@ -20,7 +20,9 @@ neither record has is an error naming the closest known key; record versions
 are the exact integer; numbers are finite and not negative; and each override
 names a value from design 7.2's vocabulary (override_values in fields.json,
 read here and by level's guard), with a reason and an approver, once per task
-and decision.
+and decision. A field with required_when {"in_pilot": true} counts as required
+for each task in the pilot; and each name in a task's starts_from is a
+start-from or reuse entry of the customer's industry pack or the general pack.
 """
 
 import datetime
@@ -39,6 +41,8 @@ RECORD_FILES = {"card": CARD_FILE, "profile": PROFILE_FILE}
 
 _MISSING = object()
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+# The task an instance path such as tasks.T1.skill_owner or tasks[0].skill_owner belongs to.
+_TASK_PATH = re.compile(r"^tasks(?:\.([^.\[]+)|\[(\d+)\])\.")
 
 
 def _is_unset(value):
@@ -430,6 +434,31 @@ def _check_number(record, path, entry, value, catalogue, report):
                      "Set it to a number of at least %s" % low)
 
 
+def _task_of(data, path):
+    """The card task an instance path belongs to, or None."""
+    match = _TASK_PATH.match(path)
+    tasks = data.get("tasks") if isinstance(data, dict) else None
+    if not match or not isinstance(tasks, list):
+        return None
+    if match.group(2) is not None:
+        index = int(match.group(2))
+        return tasks[index] if index < len(tasks) and isinstance(tasks[index], dict) else None
+    return next((t for t in tasks if isinstance(t, dict) and t.get("id") == match.group(1)), None)
+
+
+def is_required(entry, data, path):
+    """True when the field at this instance path counts as required: required, or required_when holds.
+
+    The one condition is {"in_pilot": true}: the field is required for a task whose in_pilot is true.
+    """
+    if entry["required"]:
+        return True
+    if entry.get("required_when") != {"in_pilot": True}:
+        return False
+    task = _task_of(data, path)
+    return isinstance(task, dict) and task.get("in_pilot") is True
+
+
 def _check_record(data, record, catalogue, report):
     """Check one record. Return (required_paths, provenance, values_by_catalogue_path)."""
     provenance = _check_envelope(data, record, catalogue, report)
@@ -467,13 +496,14 @@ def _check_record(data, record, catalogue, report):
                 continue
             prov = provenance.get(path)
             prov_status = prov.get("status") if isinstance(prov, dict) else None
-            if entry["required"]:
+            needed = is_required(entry, data, path)
+            if needed:
                 required.append(path)
                 if prov is None:
                     report.error(record, path, "has no provenance entry",
                                  "Add provenance.%s with a status (answered, default, assumed or open) and a source" % path)
             if _is_unset(value):
-                if entry["required"] and prov_status not in rules["may_be_empty"]:
+                if needed and prov_status not in rules["may_be_empty"]:
                     report.error(record, path, "is required and has no value",
                                  "Fill it in from %s, or mark it open with an owner and a due date"
                                  % (", ".join(entry["asked_by"]) or "its default"))
@@ -554,6 +584,36 @@ def _check_industry(profile, report):
 
 
 # --- Override values (design 7.2), read by validate and by level's guard -----------------------------
+
+def _check_starts_from(card, profile, report):
+    """Each name in a task's starts_from is a start-from or reuse entry of the customer's pack or general."""
+    tasks = card.get("tasks") if isinstance(card, dict) else None
+    if not isinstance(tasks, list):
+        return
+    industry = profile.get("industry") if isinstance(profile, dict) else None
+    # A pack that does not load is reported once, by the industry check; starts_from is not checked then.
+    try:
+        general = _packs.load_pack(_packs.GENERAL)
+        pack = None
+        if isinstance(industry, str) and industry != _packs.GENERAL and industry in _packs.list_packs():
+            pack = _packs.load_pack(industry)
+    except _packs.PackError:
+        return
+    if pack is None:
+        pack, general = general, None
+    for position, task in enumerate(tasks):
+        if not isinstance(task, dict) or not isinstance(task.get("starts_from"), list):
+            continue
+        tid = task.get("id")
+        label = tid if isinstance(tid, str) and tid else "[%d]" % position
+        path = ("tasks.%s" % label if not label.startswith("[") else "tasks" + label) + ".starts_from"
+        for name in task["starts_from"]:
+            if not isinstance(name, str):
+                continue
+            problem = _packs.starts_from_problem(name, pack, general)
+            if problem:
+                report.error("card", path, "task %s starts from %s" % (label, problem), _packs.STARTS_FROM_FIX)
+
 
 def _closed_values(spec, catalogue):
     """The allowed strings of one vocabulary entry: its values, or the values of the field it names."""
@@ -725,6 +785,7 @@ def validate(persona_dir, catalogue=None):
         _check_references(catalogue, values_by_record, report)
     _check_cross_record(card, profile, profile_path, report)
     _check_industry(profile, report)
+    _check_starts_from(card, profile, report)
 
     satisfied = sum(1 for _, _, done in required if done)
     total = len(required)

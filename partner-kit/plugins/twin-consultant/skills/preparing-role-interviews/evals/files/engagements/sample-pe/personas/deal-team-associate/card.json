@@ -261,6 +261,9 @@
         "where": ""
       },
       "skill_owner": "Beatriz Halloran",
+      "starts_from": [
+        "deal-screening"
+      ],
       "priority": 3,
       "in_pilot": false
     },
@@ -306,6 +309,9 @@
         "where": ""
       },
       "skill_owner": "Callum Nwosu",
+      "starts_from": [
+        "dd-meeting-prep"
+      ],
       "priority": 4,
       "in_pilot": false
     },
@@ -349,6 +355,9 @@
         "where": ""
       },
       "skill_owner": "Ravindra Sorensen",
+      "starts_from": [
+        "ic-memo"
+      ],
       "priority": 5,
       "in_pilot": false
     }

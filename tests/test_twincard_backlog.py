@@ -212,8 +212,13 @@ inject_unknown_target.patch = True
 
 
 def profile_value(key, value):
+    """Set a top-level profile value. A new industry also clears each task's starts_from, which names
+    starting points of the old pack (OPS-57: validate rejects a name the new pack does not have)."""
     def change(profile, card):
         profile[key] = value
+        if key == "industry":
+            for task in card["tasks"]:
+                task.pop("starts_from", None)
     return change
 
 

@@ -97,8 +97,8 @@ Commands, from `${CLAUDE_PLUGIN_ROOT}/scripts/twincard/cli.py`: `backlog
   When a person sends or files the draft, the write tool stays Blocked
   while you build, and the story's `deliver-draft` task says who does it.
   Build the twin to end in that draft; never open the write yourself.
-- **Reading a story.** What `ready`, `target`, a `drafted` statement and the
-  backlog's `spikes` mean is in
+- **Reading a story.** What `ready`, `target`, a `drafted` statement, the
+  `Start from` steps, `data_providers` and the backlog's `spikes` mean is in
   [references/reading-a-story.md](references/reading-a-story.md). Build only
   when every check is met; a drafted statement goes back to the interviewee.
 - **Who it waits on.** Name the task's `owner_role` and its `owner_name`.

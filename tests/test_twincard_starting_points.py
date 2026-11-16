@@ -338,7 +338,7 @@ class FoundationTest(unittest.TestCase):
             self.assertEqual((got["owner_role"], got["part"]), ("technical-owner", "A9"))
             self.assertEqual(got["owner_name"], profile["governance"]["spend_owner"])
             self.assertIsNone(got["acting_owner"])
-            self.assertIn("docs/compendium/09-plans-and-it-controls.md#feature-matrix", [s["link"] for s in got["how"]])
+            self.assertIn("docs/compendium/09-plans-and-it-controls.md#spend-and-usage-limits", [s["link"] for s in got["how"]])
 
     def test_spend_limits_without_a_spend_owner(self):
         def change(profile, card):

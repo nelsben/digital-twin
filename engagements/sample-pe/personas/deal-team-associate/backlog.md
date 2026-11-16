@@ -128,7 +128,7 @@ Ready to build: no
 - [ ] **S-T1.evidence-level-2** Gather the evidence to move the task up to level 2, act with approval (owner: business-owner, RevOps manager, part A8)
   1. Show the evals pass reliably at the current level. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
   2. Bring a month of scorecard results, with the edit rate, to the business owner. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
-  - Done when: The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.
+  - Done when: The business owner has approved the move to level 2 on scorecard evidence, and every write or send tool the task uses at level 2 is at Needs approval; a task whose output a routine posts itself changes no tool setting.
 - [ ] **S-T1.evidence-level-3** Gather the evidence to move the task up to level 3, act within an allowlist (owner: business-owner, RevOps manager, part A8)
   1. Confirm every allowlisted action can be undone or stays internal. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
   2. Show a stable eval pass rate, a low edit rate and few rejections at level 2. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
@@ -264,7 +264,7 @@ Ready to build: no
 - [ ] **S-T5.evidence-level-2** Gather the evidence to move the task up to level 2, act with approval (owner: business-owner, RevOps manager, part A8)
   1. Show the evals pass reliably at the current level. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
   2. Bring a month of scorecard results, with the edit rate, to the business owner. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
-  - Done when: The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.
+  - Done when: The business owner has approved the move to level 2 on scorecard evidence, and every write or send tool the task uses at level 2 is at Needs approval; a task whose output a routine posts itself changes no tool setting.
 - [ ] **S-T5.evidence-level-3** Gather the evidence to move the task up to level 3, act within an allowlist (owner: business-owner, RevOps manager, part A8)
   1. Confirm every allowlisted action can be undone or stays internal. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
   2. Show a stable eval pass rate, a low edit rate and few rejections at level 2. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
@@ -423,7 +423,7 @@ Ready to build: no
 - [ ] **S-T2.evidence-level-2** Gather the evidence to move the task up to level 2, act with approval (owner: business-owner, RevOps manager, part A8)
   1. Show the evals pass reliably at the current level. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
   2. Bring a month of scorecard results, with the edit rate, to the business owner. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
-  - Done when: The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.
+  - Done when: The business owner has approved the move to level 2 on scorecard evidence, and every write or send tool the task uses at level 2 is at Needs approval; a task whose output a routine posts itself changes no tool setting.
 - [ ] **S-T2.evidence-level-3** Gather the evidence to move the task up to level 3, act within an allowlist (owner: business-owner, RevOps manager, part A8)
   1. Confirm every allowlisted action can be undone or stays internal. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
   2. Show a stable eval pass rate, a low edit rate and few rejections at level 2. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
@@ -603,7 +603,7 @@ Ready to build: no
 - [ ] **S-T3.evidence-level-2** Gather the evidence to move the task up to level 2, act with approval (owner: business-owner, RevOps manager, part A8)
   1. Show the evals pass reliably at the current level. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
   2. Bring a month of scorecard results, with the edit rate, to the business owner. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
-  - Done when: The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.
+  - Done when: The business owner has approved the move to level 2 on scorecard evidence, and every write or send tool the task uses at level 2 is at Needs approval; a task whose output a routine posts itself changes no tool setting.
 - [ ] **S-T3.evidence-level-3** Gather the evidence to move the task up to level 3, act within an allowlist (owner: business-owner, RevOps manager, part A8)
   1. Confirm every allowlisted action can be undone or stays internal. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
   2. Show a stable eval pass rate, a low edit rate and few rejections at level 2. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
@@ -752,7 +752,7 @@ Ready to build: no
 - [ ] **S-T4.evidence-level-2** Gather the evidence to move the task up to level 2, act with approval (owner: business-owner, RevOps manager, part A8)
   1. Show the evals pass reliably at the current level. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
   2. Bring a month of scorecard results, with the edit rate, to the business owner. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
-  - Done when: The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.
+  - Done when: The business owner has approved the move to level 2 on scorecard evidence, and every write or send tool the task uses at level 2 is at Needs approval; a task whose output a routine posts itself changes no tool setting.
 - [ ] **S-T4.evidence-level-3** Gather the evidence to move the task up to level 3, act within an allowlist (owner: business-owner, RevOps manager, part A8)
   1. Confirm every allowlisted action can be undone or stays internal. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
   2. Show a stable eval pass rate, a low edit rate and few rejections at level 2. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
@@ -893,7 +893,7 @@ Ready to build: no
 - [ ] **S-T6.evidence-level-2** Gather the evidence to move the task up to level 2, act with approval (owner: business-owner, RevOps manager, part A8)
   1. Show the evals pass reliably at the current level. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
   2. Bring a month of scorecard results, with the edit rate, to the business owner. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
-  - Done when: The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.
+  - Done when: The business owner has approved the move to level 2 on scorecard evidence, and every write or send tool the task uses at level 2 is at Needs approval; a task whose output a routine posts itself changes no tool setting.
 - [ ] **S-T6.evidence-level-3** Gather the evidence to move the task up to level 3, act within an allowlist (owner: business-owner, RevOps manager, part A8)
   1. Confirm every allowlisted action can be undone or stays internal. See [docs/compendium/06-autonomy.md#rules-for-moving-up-a-level](../../../../docs/compendium/06-autonomy.md#rules-for-moving-up-a-level).
   2. Show a stable eval pass rate, a low edit rate and few rejections at level 2. See [docs/compendium/15-governance-and-performance.md#measuring-performance](../../../../docs/compendium/15-governance-and-performance.md#measuring-performance).
@@ -1067,11 +1067,11 @@ Part A7. In pilot: yes. Priority: none. Status: todo.
   - Done when: Compliance has signed off the data policy for every data class the role holds.
 - [ ] **S-guardrails-and-settings.retention-and-feedback-settings** Set the org's retention period and its feedback and training-data settings to the data policy (owner: technical-owner, Director of IT, part A7)
   1. Read the retention the data policy sets for chat, Claude Code and the governance log. See [docs/compendium/15-governance-and-performance.md#retention-decided](../../../../docs/compendium/15-governance-and-performance.md#retention-decided).
-  2. Settle with compliance whether /feedback transcripts may be kept 5 years and local sessions 6 years; if not, turn feedback off with DISABLE_FEEDBACK_COMMAND=1 in managed settings and set a custom retention period. See [docs/compendium/10-sensitive-data.md#questions-to-settle-with-compliance-and-legal](../../../../docs/compendium/10-sensitive-data.md#questions-to-settle-with-compliance-and-legal).
+  2. Settle with compliance whether /feedback transcripts may be kept 5 years and, with the Compliance API on, local Claude Code and Cowork sessions 6 years; if not, turn feedback off with DISABLE_FEEDBACK_COMMAND=1 in managed settings and set a custom retention period. See [docs/compendium/10-sensitive-data.md#questions-to-settle-with-compliance-and-legal](../../../../docs/compendium/10-sensitive-data.md#questions-to-settle-with-compliance-and-legal).
   3. Set the retention period (custom retention is Enterprise only, at least 30 days) and the feedback and training-data settings in the org, and record each value in the customer's engagement folder. See [docs/compendium/09-plans-and-it-controls.md#feature-matrix](../../../../docs/compendium/09-plans-and-it-controls.md#feature-matrix).
   - Done when: The org's retention period and its feedback and training-data settings match the data policy, and each value is recorded in the customer's engagement folder.
 - [ ] **S-guardrails-and-settings.spend-limits** Set the org's spend limits and name who watches them (owner: technical-owner, IT, part A9)
-  1. Set the org's spend limit, and on Enterprise a per-user limit for the role's users. See [docs/compendium/09-plans-and-it-controls.md#feature-matrix](../../../../docs/compendium/09-plans-and-it-controls.md#feature-matrix).
+  1. Set the org's spend limit, and on Enterprise a per-user limit for the role's users. See [docs/compendium/09-plans-and-it-controls.md#spend-and-usage-limits](../../../../docs/compendium/09-plans-and-it-controls.md#spend-and-usage-limits).
   2. Name who watches spend and the usage alerts, and record the limits and that person in the customer's engagement folder. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   - Done when: The org's spend limit, and on Enterprise the per-user limits, are set and recorded, and a named person watches them.
 

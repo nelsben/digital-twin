@@ -10,7 +10,8 @@
     "works_in": [
       "claude-code"
     ],
-    "device": "managed"
+    "device": "managed",
+    "plugin_name": "twin-pe-deal-team"
   },
   "outcome": {
     "sponsor_goal": "In 6 months the deal team spends visibly less time on first-pass company briefs and CRM upkeep, with a low edit rate on what the twin drafts.",
@@ -926,6 +927,10 @@
       "source": "interviews/2026-11-10-partner.md#F3",
       "owner": "Skill owners",
       "due": "2026-12-04"
+    },
+    "role.plugin_name": {
+      "status": "answered",
+      "source": "../../design.md#the-marketplace"
     }
   }
 }

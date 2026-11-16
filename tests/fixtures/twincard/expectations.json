@@ -19,7 +19,7 @@
         "plugin_name": {
           "expected": "twin-pe-deal-team",
           "cite": "engagements/sample-pe/design.md#the-marketplace",
-          "reason": "The sample's design names the deal-team role plugin twin-pe-deal-team.",
+          "reason": "The card names the kit's existing deal-team role plugin, twin-pe-deal-team, in role.plugin_name.",
           "unverified": false
         },
         "distribution": {
@@ -174,15 +174,15 @@
         },
         "T3": {
           "runtime": {
-            "expected": "managed-agents",
+            "expected": "managed-agents-self-hosted",
             "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
-            "reason": "A scheduled team job that needs ZDR runs on fully self-hosted Managed Agents, and the Agent SDK's ZDR cover is Unverified.",
-            "unverified": true
+            "reason": "A scheduled job wired into systems that needs ZDR cannot use hosted Managed Agents, which is not ZDR-eligible, so it runs on a fully self-hosted Managed Agents deployment, the page's ZDR route.",
+            "unverified": false
           },
           "identity": {
             "expected": "api-key-vault",
             "cite": "docs/compendium/05-decision-matrix.md#decision-flow-our-recommendation",
-            "reason": "A hosted agent runs with nobody present, so it holds its credentials in a vault instead of a user's sign-in.",
+            "reason": "The self-hosted Managed Agents deployment runs with nobody present, so it holds its credentials in a vault instead of a user's sign-in.",
             "unverified": false
           },
           "autonomy.start": {
@@ -205,7 +205,7 @@
               "retention": "zdr"
             },
             "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-            "reason": "A hosted runtime has no client surface or settings file, and deal data keeps ZDR and web tools off.",
+            "reason": "The self-hosted Managed Agents deployment has no client surface or settings file, and deal data keeps ZDR and web tools off.",
             "unverified": false
           },
           "memory": {
@@ -217,8 +217,8 @@
           "plan_fit": {
             "expected": "ok-with-limits",
             "cite": "docs/compendium/14-private-equity.md#the-private-equity-twin-at-a-glance-our-recommendation",
-            "reason": "Hosted agents need org 3, a Platform org with ZDR, besides the people's Enterprise org.",
-            "unverified": true
+            "reason": "The self-hosted Managed Agents deployment needs org 3, a Platform org with ZDR, besides the people's Enterprise org.",
+            "unverified": false
           },
           "connectors": {
             "expected": [
@@ -519,8 +519,6 @@
           "unverified": [
             "T1.connectors",
             "T2.connectors",
-            "T3.runtime",
-            "T3.plan_fit",
             "T3.connectors",
             "T4.connectors",
             "T5.connectors",
@@ -550,7 +548,7 @@
         "plugin_name": {
           "expected": "twin-customer-success-manager",
           "cite": "starter-kit/templates/role-plugin/README.md#steps",
-          "reason": "A role plugin is named twin-<role>, here the persona id, because a twin is a role template and not a person.",
+          "reason": "The card leaves role.plugin_name empty, so the role plugin is named twin-<persona id>.",
           "unverified": false
         },
         "distribution": {
@@ -843,7 +841,7 @@
           "runtime": {
             "expected": "client-skill",
             "cite": "docs/compendium/18-customer-success.md#typical-customer-success-tasks-our-recommendation",
-            "reason": "Nothing confirmed starts the task on an escalation, so the manager starts it in a conversation until that is confirmed.",
+            "reason": "What would start the task on an escalation is Unverified, so the manager starts it in a conversation until that is confirmed.",
             "unverified": true
           },
           "identity": {

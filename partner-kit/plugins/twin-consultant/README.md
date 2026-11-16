@@ -30,6 +30,7 @@ The consultant plugin for the persona-card workflow. Design of record: [partner-
 | [data/plan-fit.json](data/plan-fit.json) | What each capability the twin relies on is on Team, Enterprise and individual plans, and what Team loses, with its compendium cite |
 | [data/industry-packs/](data/industry-packs/) | One JSON file per industry; the format is in [design section 7.1](../../docs/design.md) |
 | [data/task-library.json](data/task-library.json) | The backlog's task templates: each has an anatomy part, the story it applies to, a `when` condition in the rules language, numbered `how` steps that link the kit template, runbook or compendium page to use, `done_when` and an owner role; the format is in [design section 8](../../docs/design.md#8-backlog-backlogpy-datatask-libraryjson) |
+| [skills/](skills/) | The two interview skills: `preparing-role-interviews` and `filling-persona-cards` |
 | [scripts/twincard/backlog.py](scripts/twincard/backlog.py) | Builds `backlog.json` and `backlog.md` from `card.json`, `levelled.json` and the task library, keeping each task's status across runs |
 
 ## Validate
@@ -48,7 +49,7 @@ python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py level <perso
 python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py level --json <persona-dir>
 ```
 
-`level` validates first and levels nothing when there are errors. Otherwise it applies `data/rules.json` and `data/plan-fit.json` to the card, its profile and the profile's industry pack, writes `<persona-dir>/levelled.json` and prints each blocker and warning as `<kind>: <task or persona> <code>: <message> Next: <fix>`. Every decision in `levelled.json` carries its value, the rule that made it, the compendium cite, the reason, whether it rests on an Unverified fact, and whether a card override replaced it. A decision the compendium does not settle is `null`, with a `decision-undecided` warning. Exit code 0 means levelled with no blocker, 1 means validation failed (nothing written) or there is a blocker (the file is still written), 2 means a usage error or a missing folder. The same card and profile always give the same bytes, so a committed `levelled.json` shows in a diff exactly what a change moved.
+`level` validates first and levels nothing when there are errors. Otherwise it applies `data/rules.json` and `data/plan-fit.json` to the card, its profile and the profile's industry pack, writes `<persona-dir>/levelled.json`, prints one line per task, then each blocker and warning as `<kind>: <task or persona> <code>: <message> Next: <fix>`. The task line is the task id and its seven decisions, for example `T1: runtime client-skill; identity user; autonomy 1 to 3; settings baseline pe-zdr; memory off; plan fit ok; connectors salesforce read, sharepoint read` (`undecided` for a null autonomy start or ceiling, `none` for no settings baseline). Every decision in `levelled.json` carries its value, the rule that made it, the compendium cite, the reason, whether it rests on an Unverified fact, and whether a card override replaced it. A decision the compendium does not settle is `null`, with a `decision-undecided` warning. Exit code 0 means levelled with no blocker, 1 means validation failed (nothing written) or there is a blocker (the file is still written), 2 means a usage error or a missing folder. The same card and profile always give the same bytes, so a committed `levelled.json` shows in a diff exactly what a change moved.
 
 ```python
 from twincard import level
@@ -97,6 +98,20 @@ dashboard.write_dashboard(persona_dir, "2026-11-15")  # {"ok", "validation", "er
 
 `render` raises `DashboardError` (validation errors, or an input missing or out of date) and `UsageError` (a bad date).
 
+## All
+
+```
+python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py all <persona-dir> [--date 2026-11-15]
+```
+
+`all` runs `validate`, `level`, `backlog` and `dashboard` in that order, by the same functions the single commands call, so a persona folder gets `levelled.json`, `backlog.json`, `backlog.md` and `dashboard.html` from one command. It prints one line per step (the step name, `ok`, `blocked` or `failed`, and the file written) and the per-task lines from `level` once.
+
+- **Stop rule.** It stops only when validation fails: then nothing is written, it prints the validator's `<record>:<path>: <message>. Next: <fix>` lines, names the steps it skipped (level, backlog, dashboard) and exits 1. A levelling blocker does not stop it: all four files are written, so the dashboard shows the blocker, and it exits 1.
+- **Exit codes.** 0 only when validation passes and there is no blocker; 1 when validation fails or levelling reports a blocker; 2 for a usage error, a missing folder, a folder with no `card.json`, an unknown status in `backlog.json` or a `--date` that is not a real calendar date.
+- **`--date`** goes to the dashboard step only and defaults to today. Run twice with the same date and the same card, it changes no file, and a task's `status` in `backlog.json` is kept.
+
+The two worked examples under [engagements/](../../../engagements/README.md) are checked end to end by `tests/test_twincard_end_to_end.py`: `all --date 2026-11-15` on a copy of each gives the committed files byte for byte.
+
 ## Industry packs
 
 A customer profile's `industry` is `general` or the id of a pack; `validate` reports anything else. Every entry in a pack cites a compendium page, and carries `unverified: true` where that page marks the fact Unverified or Not confirmed.
@@ -118,4 +133,4 @@ packs.pack_problems(pack)   # [{"path", "message", "fix"}], empty when the pack 
 
 ## Not built yet
 
-Skills (interview to card), and the `all` command.
+The `planning-a-twin` and `building-twin-stories` skills.

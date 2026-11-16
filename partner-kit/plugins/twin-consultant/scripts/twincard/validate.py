@@ -571,6 +571,29 @@ def _check_cross_record(card, profile, profile_path, report):
                            "Plan the move to Team or Enterprise before the twin is built")
 
 
+def _check_retention_cover(profile, report):
+    """compliance.retention 'zdr' against compliance.zdr_cover (design 4.1); silent unless both hold catalogue values."""
+    compliance = profile.get("compliance") if isinstance(profile, dict) else None
+    if not isinstance(compliance, dict):
+        return  # a missing or malformed section is the required-field check's to report
+    retention, cover = compliance.get("retention"), compliance.get("zdr_cover")
+    if retention != "zdr" or not isinstance(cover, str):
+        return
+    if cover == "none":
+        report.error("profile", "compliance.retention",
+                     "is 'zdr' but compliance.zdr_cover is 'none': the customer has no zero-data-retention agreement"
+                     " and plans none, so the twin cannot be set up with ZDR",
+                     "Set compliance.retention to the retention the org really has (standard or custom-30-day), or"
+                     " correct compliance.zdr_cover to planned or in-place if the customer does have or plan an"
+                     " agreement")
+    elif cover == "planned":
+        report.warning("profile", "compliance.retention",
+                       "is 'zdr' but compliance.zdr_cover is 'planned': ZDR is not in force until the agreement"
+                       " is signed",
+                       "Keep zdr only if the twin will not start before the agreement is signed; otherwise record"
+                       " the retention in force today (standard or custom-30-day)")
+
+
 def _check_industry(profile, report):
     """The profile's industry must be general or the id of an industry pack."""
     industry = profile.get("industry") if isinstance(profile, dict) else None
@@ -784,6 +807,7 @@ def validate(persona_dir, catalogue=None):
     if card is not None:
         _check_references(catalogue, values_by_record, report)
     _check_cross_record(card, profile, profile_path, report)
+    _check_retention_cover(profile, report)
     _check_industry(profile, report)
     _check_starts_from(card, profile, report)
 

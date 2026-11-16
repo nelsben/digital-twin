@@ -505,10 +505,18 @@ def _decision(value, rule, cite, reason, unverified, basis):
 
 
 def _source_cite(persona_dir, source):
-    """A card provenance source (relative to the persona folder) as a repo-relative path."""
+    """A card provenance source as a repo-relative path to the file validate opens for it.
+
+    The file is looked up as validate does: the persona folder first, then the customer folder. When
+    neither holds it, the source is joined onto the persona folder (validate reports the missing file).
+    """
     persona = Path(persona_dir).resolve()
-    base = "engagements/%s/personas/%s" % (persona.parent.parent.name, persona.name)
+    customer = persona.parent.parent
+    base = "engagements/%s/personas/%s" % (customer.name, persona.name)
     path, _, anchor = source.partition("#")
+    found, _ = _validate._Sources(persona, customer).find("card", path)
+    if found is not None and not (persona / path).is_file():
+        base = "engagements/%s" % customer.name
     joined = posixpath.normpath(posixpath.join(base, path))
     return joined + ("#" + anchor if anchor else "")
 

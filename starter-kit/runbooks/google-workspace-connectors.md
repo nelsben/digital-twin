@@ -2,7 +2,7 @@
 
 ## What this is
 
-A role's twin finds and reads files in Google Drive, searches email in Gmail and reads Google Calendar through three Claude connectors. Google builds and runs the Drive connector ([A]). This runbook takes the Google Workspace admin, the Claude org Owner and our integration engineer through admin approval, enablement and a tested read and a tested permission setting for each of the three. It is generic: replace every `<placeholder>` with the customer's value. For what the compendium already states, see the [Drive, Gmail and Calendar rows on page 11](../../docs/compendium/11-connectors.md#what-exists-for-our-systems) and the [customer-success review on page 18](../../docs/compendium/18-customer-success.md).
+A role's twin finds and reads files in Google Drive, searches email in Gmail and reads Google Calendar through three Claude connectors. Google builds and runs the Drive connector ([A]). **⚠ Unverified:** who builds the Gmail and Calendar connectors; [B] and [C] do not say. This runbook takes the Google Workspace admin, the Claude org Owner and our integration engineer through admin approval, enablement and a tested read and a tested permission setting for each of the three. It is generic: replace every `<placeholder>` with the customer's value. For what the compendium already states, see the [Drive, Gmail and Calendar rows on page 11](../../docs/compendium/11-connectors.md#what-exists-for-our-systems) and the [customer-success review on page 18](../../docs/compendium/18-customer-success.md).
 
 Plainly: the Gmail and Google Calendar connectors cannot send mail or create events. Gmail: "Claude can't create, send, or modify emails" ([B]). Calendar: "Claude can't create, modify, or delete calendar events" and "can't send calendar invitations" ([C]). So a task that needs an email or a meeting ends in a draft in the conversation, or a proposed time, and the person sends or books it. The Drive connector can create new files ([A]).
 
@@ -13,7 +13,7 @@ Roles use the names in [03-stakeholders](../../docs/playbook/03-stakeholders.md)
 | Name used here | Role in 03-stakeholders |
 |---|---|
 | **Google Workspace admin** | Source-system admin (M365 or Google admin) |
-| **Claude org Owner** | Technical owner (Director of IT), or the Backup Owner. Gmail and Calendar need an Owner or Primary Owner. |
+| **Claude org Owner** | Technical owner (Director of IT), or the Backup Owner. Gmail and Calendar need an Owner or Primary Owner to enable them. ([B], [C]) |
 | **Business owner** | Business owner (RevOps manager, or the role's own leader) |
 | **Security** | Security (CISO or security engineer) |
 | **Partner integration engineer** | Integration engineer (partner role) |
@@ -41,29 +41,31 @@ Pages used:
 These are decisions the engagement has already made. The steps consume them; do not make them during setup. They live in the customer's folder under `engagements/`.
 
 - The role and the Claude group that gets each connector. Drive, Gmail and Calendar are separate decisions: a role may get one, two or all three.
-- For each task: which Drive files it reads (and whether it creates any), which mail it searches, and which calendars it reads. Mail and calendar are read-only, so no task writes there.
+- For each task: which Drive files it reads (and whether it creates any), which mail it searches, and which calendars it reads. Mail and calendar are read-only, so no task writes there. ([B], [C])
 - For each tool, its permission (**Always allow**, **Needs approval** or **Blocked**) and the autonomy level behind it ([06-autonomy](../../docs/compendium/06-autonomy.md)). File creation in Drive is the only write: level 1 (Draft) keeps it **Blocked**; level 2 sets it to **Needs approval**.
 - The data class of the tasks that use each connector ([10-sensitive-data](../../docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above)). Customer contracts are Confidential in that matrix.
 - Whose identity the connectors act under: each pilot user's own Google account ([A], [B], [C]).
-- The surfaces the role works in: claude.ai, the desktop app, mobile, or Claude Code ([D]).
+- The surfaces the role works in: claude.ai, the desktop app, mobile, or Claude Code ([D]). This runbook covers the claude.ai surfaces. In Claude Code the connection comes from the role plugin's `.mcp.json`, not from these steps: for Gmail and Calendar the `customer-support` plugin's entries have an empty URL, so the user connects Claude's own connectors, and it ships no Drive ([page 18](../../docs/compendium/18-customer-success.md)). [D] adds that connectors added in claude.ai are also available in Claude Code when the user signs in with their Claude account.
 - Whether the customer's Google Workspace restricts third-party apps (step 1).
+- The test record for the Drive write test: the file name `connector write test` and the folder it lands in, so it can be found and trashed afterwards.
+- Where the files live. **⚠ Unverified:** whether the Drive connector reaches shared drives; the [Drive row on page 11](../../docs/compendium/11-connectors.md#what-exists-for-our-systems) marks shared-drive support unconfirmed, and [A] does not mention shared drives. Test one shared-drive file at setup before promising it.
 
 ## Before you start
 
 | # | Check | Who | Source |
 |---|---|---|---|
 | 1 | Plans: Gmail and Calendar are available on Pro, Max, Ultra, Team and Enterprise plans. On Team and Enterprise an Owner or Primary Owner enables them first. | Claude org Owner | [B], [C] |
-| 2 | Drive: on Team and Enterprise it does not appear in a member's connector list until an Owner adds it for the organization. | Claude org Owner | [A] |
+| 2 | Drive: on Team and Enterprise it does not appear in a member's connector list until an Owner adds it for the organization. **⚠ Unverified:** which Claude plans include Drive; [A] and the page 11 row state none. | Claude org Owner | [A] |
 | 3 | The Google Workspace admin holds the Service Settings administrator privilege, which the API controls page requires. | Google Workspace admin | [F] |
 | 4 | Pilot users sign in with the Google account the data lives in. Gmail and Calendar reach only that account. | Business owner | [B], [C] |
 | 5 | Decide which of the three connectors the role gets. Each is connected and tested on its own. | Business owner | [A], [B], [C] |
 
 ## Steps
 
-1. Google Workspace admin: decide whether the apps are allowed. Open the Google Admin console, then **Menu** > **Security** > **Access and data control** > **API controls**. Under **Manage Google Services**, services are set to **Unrestricted** or **Restricted**; under **Manage App Access**, an app is set to **Trusted**, **Limited**, **Specific Google data** or **Blocked**. ([F]) **⚠ Unverified:** the app name the Claude connectors appear under and which services they need; connect one test user (step 4) and look in **Manage App Access**, then record the name.
-2. Google Workspace admin: scope it to the pilot. A setting applies to the top-level organizational unit by default; to target specific units click **Select org units** then **Include organizations**. The page describes organizational units, not groups. ([F])
-3. Claude org Owner: add each connector for the organization. Go to **Organization settings > Connectors**, click **Browse connectors**, select the connector, click **Add to your team**. Adding it grants no access by itself. ([E]) On Enterprise, **Organization settings > Roles** > the role's **Connectors** tab sets each connector to **Always allow**, **Needs approval**, **Blocked** or **Custom**; a new role defaults to **Needs approval**. ([H]) **⚠ Unverified:** whether a Team plan can show a connector to one Claude group; no page says so, so the Google-side scope in step 2 is the control.
-4. Pilot user: connect each connector. Go to **Customize > Connectors**, find the connector, select **Connect**, sign in to Google and grant the requested permissions; the button then reads **Disconnect**. ([A], [B], [C]) The connector then shows under **Your connectors** with the status **Connected**. ([D])
+1. Google Workspace admin: decide whether the apps are allowed. Do steps 3 and 4 for one test user first, then return here, because the app's name can only be read in **Manage App Access** after a user has connected. Open the Google Admin console, then **Menu** > **Security** > **Access and data control** > **API controls**. Under **Manage Google Services**, services are set to **Unrestricted** or **Restricted**; under **Manage App Access**, an app is set to **Trusted**, **Limited**, **Specific Google data** or **Blocked**. **Trusted** gives an app all Google Workspace services, including restricted ones; **Limited** only unrestricted ones; **Specific Google data** only the scopes you specify (include the Google Sign-in scopes); **Blocked** none. The page recommends no setting for third-party apps, so the Google Workspace admin and Security choose, and the choice and the reason go in the Hand over record. ([F]) **⚠ Unverified:** the app name the Claude connectors appear under and which services they need; look in **Manage App Access** after the test user connects, then record the name.
+2. Google Workspace admin: scope it to the pilot. A setting applies to the top-level organizational unit by default; to target specific units click **Select org units** then **Include organizations**. The page describes organizational units, not groups, so for this to reach only the pilot the pilot users must sit in their own organizational unit; moving them there is a Google Workspace admin task to agree first. If neither side can scope it, the connector is visible to the whole organization: record that with Security as a risk before the pilot starts. ([F])
+3. Claude org Owner: add each connector for the organization. Go to **Organization settings > Connectors**, click **Browse connectors**, select the connector, click **Add to your team**. Adding it grants no access by itself. ([E]) On Enterprise, **Organization settings > Roles** > the role's **Connectors** tab sets each connector to **Always allow**, **Needs approval**, **Blocked** or **Custom**; a new role defaults to **Needs approval**. ([H]) **Custom** sets each tool on the connector individually, instead of one setting for the whole connector. The org-wide **Tool permissions** setting in step 6 is a ceiling: a role's setting can narrow it and cannot widen it, and where the two disagree the stricter one applies. ([H]) Because the step 6 setting applies to every role that uses the connector, on a Team plan, which has no role setting, it must be the strictest any of those roles' tasks needs ([06-autonomy](../../docs/compendium/06-autonomy.md)); on Enterprise, set it to the loosest any role needs and narrow the other roles here. **⚠ Unverified:** whether a Team plan can show a connector to one Claude group; no page says so, so the Google-side scope in step 2 is the only candidate control, and it works only if the pilot users have their own organizational unit.
+4. Pilot user: connect each connector. Go to **Customize > Connectors**, find the connector, select **Connect**, sign in to Google and grant the requested permissions; the button then reads **Disconnect**. ([A], [B], [C]) The connector then shows under **Your connectors** with the status **Connected**. **⚠ Unverified:** which Google permissions each consent screen lists; [A], [B] and [C] say only "grant the requested permissions". Copy each screen's list into the Hand over record. ([D])
 5. Pilot user: turn each one on in the chat. Select **+** at the lower left of the message box, select **Connectors**, and turn on the connector. ([A], [B], [C])
 6. Claude org Owner, with the Business owner: set the tools. Go to **Customize > Connectors**, select the connector and, under **Tool permissions**, choose **Always allow**, **Needs approval** or **Blocked** for each group of tools or single tool. The Owner's setting applies org-wide and users cannot override it. ([E]) **⚠ Unverified:** the tool names. The three Claude pages name no tools; read them on the connector's own **Tool permissions** page and record them.
 
@@ -96,7 +98,7 @@ Run the tests in a pilot user's own Claude session, with the Partner integration
 
 **Read test, Calendar.** Ask "What meetings do I have tomorrow?" Expected: the user's own events, with links to them. ([C])
 
-**Write test, Drive.** Ask Claude to create a file named `connector write test`. Expected, by the setting from step 6: **Needs approval** shows an approval prompt, with **Allow once** to continue; declining creates nothing. **Blocked**: nothing is created. ([D]) Check Drive afterwards. Never answer **Always allow**. **⚠ Unverified:** the message Claude shows for a blocked tool; record what you see.
+**Write test, Drive.** Ask Claude to create a file named `connector write test`. Expected, by the setting from step 6: **Needs approval** shows an approval prompt, with **Allow once** to continue; declining creates nothing. **Blocked**: nothing is created. ([D]) Check Drive afterwards. Never answer **Always allow**. **⚠ Unverified:** the message Claude shows for a blocked tool; record what you see. Afterwards trash the test file in Drive and name it in the Inputs record.
 
 **Write test, Gmail and Calendar.** Ask Claude to send a short email to the test user, then to book a meeting. Expected: it cannot; it offers a draft or a time in the conversation, and nothing is sent or booked. ([B], [C]) A mail or event that does appear is a fail: stop and investigate.
 
@@ -106,6 +108,7 @@ Run the tests in a pilot user's own Claude session, with the Partner integration
 
 - The API controls decision: the app name found, its access level and the organizational units (steps 1 and 2).
 - Which of the three connectors each role got, each tool's setting, and the autonomy level behind it (step 6).
+- The permissions each consent screen listed (step 4).
 - The read and write test results for each connector, with the date and users.
 - The unverified items still open.
 

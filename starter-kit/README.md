@@ -21,7 +21,7 @@ The starter kit is the set of parts we copy into a customer's repo to build a ro
 | [templates/pilot/pilot-training.md](templates/pilot/pilot-training.md) | The pilot users' training session and where they report a failure |
 | [runbooks/identity-devices-publishing.md](runbooks/identity-devices-publishing.md) | SCIM groups, the managed-settings rollout, and publishing the marketplace to the right groups |
 | [runbooks/salesforce-hosted-mcp.md](runbooks/salesforce-hosted-mcp.md) | Connect Salesforce through its hosted MCP server with per-user OAuth |
-| [runbooks/microsoft-365-connector.md](runbooks/microsoft-365-connector.md) | Connect Microsoft 365: tenant consent and a SharePoint access check |
+| [runbooks/microsoft-365-connector.md](runbooks/microsoft-365-connector.md) | Connect Microsoft 365: tenant consent, a SharePoint access check, and Outlook mail and calendar |
 | [runbooks/hubspot-connector.md](runbooks/hubspot-connector.md) | Connect HubSpot to a role's twin |
 | [runbooks/google-workspace-connectors.md](runbooks/google-workspace-connectors.md) | Connect Google Drive, Gmail and Google Calendar to a role's twin |
 | [runbooks/slack-connector.md](runbooks/slack-connector.md) | Connect Slack to a role's twin, for reading and searching Slack |

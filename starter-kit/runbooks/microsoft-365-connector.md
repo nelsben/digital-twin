@@ -2,7 +2,7 @@
 
 ## What this is
 
-Deal-team skills read documents in SharePoint (and OneDrive and Teams) through Claude's Microsoft 365 connector. This runbook takes the Microsoft 365 admin, the Claude org Owner and our integration engineer through tenant admin consent, then proves the deal-team libraries are not readable by investor relations or any other walled group, before any twin reads a deal folder. It is generic: replace every `<placeholder>` with the customer's value.
+Deal-team skills read documents in SharePoint (and OneDrive and Teams) through Claude's Microsoft 365 connector. This runbook takes the Microsoft 365 admin, the Claude org Owner and our integration engineer through tenant admin consent, then proves the deal-team libraries are not readable by investor relations or any other walled group, before any twin reads a deal folder. It is generic: replace every `<placeholder>` with the customer's value. It also covers Outlook mail and calendar: what the connector reads and writes, how its write tools are set, and a check ([section 6a](#6a-outlook-mail-and-calendar)).
 
 Roles use the names in [03-stakeholders](../../docs/playbook/03-stakeholders.md):
 
@@ -114,6 +114,26 @@ Claude's own article describes restriction through Entra app assignment, not thr
 - Enterprise plans can enable write tools for a subset of users through custom roles (beta). That is a level 2 decision made on scorecard evidence, not in this runbook. ([A], [B])
 - Whether the Claude-side restriction is enough, or the write scopes should also be revoked in Entra (step 3), is a Security call. Revoking removes the capability at the source. ([B])
 
+## 6a. Outlook mail and calendar
+
+Written 2026-11-16 by the author from the pages listed; not yet checked by a second reader. Sources: [A], [B], [C]. Compendium [page 11](../../docs/compendium/11-connectors.md) has the Outlook row.
+
+- **Read tools** ([C]): `outlook_email_search` (needs `Mail.Read`), `outlook_calendar_search` (`Calendars.Read`), `find_meeting_availability` (`Calendars.Read`) and `read_resource` (reads a file, email or chat by URI). Reading calendar events does not need a write scope. Email search covers the primary mailbox including its Archive folder, and shared mailboxes the user can reach; it does not cover the Online Archive mailbox. ([B], [C])
+- **Write tools** ([C]): send, forward and send-draft (`outlook_send_mail`, `outlook_forward_mail`, `outlook_send_draft`, `Mail.Send`); drafts, trash and labels (`outlook_create_draft`, `outlook_create_reply_draft`, `outlook_create_reply_all_draft`, `outlook_update_draft`, `outlook_delete_draft`, `outlook_trash_thread`, `outlook_batch_delete_messages`, label tools, `Mail.ReadWrite`); events (`outlook_create_event`, `outlook_update_event`, `outlook_delete_event`, `outlook_respond_to_event`, `Calendars.ReadWrite`); automatic replies, labels and filters (`outlook_set_vacation`, `outlook_create_filter`, `MailboxSettings.ReadWrite`). Claude cannot attach files to drafts. ([A], [B])
+- **Read scopes** ([B], [C]): `Mail.Read`, `Mail.ReadBasic`, `Mail.Read.Shared`, `MailboxFolder.Read`, `MailboxItem.Read`, `MailboxSettings.Read`, `Calendars.Read`, `Calendars.Read.Shared`. Shared mailbox access stays read-only. ([C])
+- **Delegated per user.** Claude reads or changes only what the signed-in user's account can already reach, and needs the tenant consent from step 3. ([A], [C])
+- **Write tools are off until an administrator turns them on.** Permissions are read-only by default, and Claude can send, create or update only if write tools are enabled. ([B]) The write column of the Outlook row applies "only when your administrators have turned on write actions". ([A]) Page 11's open question is answered at the connector level. **⚠ Unverified:** the starting setting of each write tool for an organization that added the connector after 9 November 2026; [B] and [C] say only that organizations that used the connector earlier have some write tools blocked by default.
+- **Consent for added write scopes.** **⚠ Conflict:** [A] says a Global Administrator or Application Administrator approves added permissions; [B] says a Global Administrator. Use a Global Administrator, as in step 3.
+- **Tool settings.** Every tool above that sends mail or creates, updates or deletes an event is set to **Blocked** or **Needs approval**, never **Always allow**: in **Organization settings > Connectors**, open **Microsoft 365**, then **Tool permission restrictions**, as in step 6. ([A], [B]) In chat and Cowork, Claude asks the user to confirm before it sends or forwards an email, or creates, changes, deletes or responds to an event; on Team and Enterprise users cannot choose **Always allow** for these tools unless an administrator has set that tool to **Always allow**. ([C]) Set the draft tools to **Needs approval** and the send tools to **Blocked**. Record the list and each setting with the date. **⚠ Unverified:** whether the names in [C] match the names shown in the settings list; compare at setup.
+- **(Our recommendation):** an email task ends in a draft the person sends, and a meeting task in a proposed time the person books, because [page 18](../../docs/compendium/18-customer-success.md) plans these tasks that way and a person approving each send is the level this runbook is written for. When Claude creates or updates an event, Microsoft 365 sends attendees an invitation or update notice ([B]), so an event tool is a level 2 decision.
+
+**Check it worked.** One test user, connected as in step 5, in their own Claude session, with the Partner integration engineer watching. Prepare a harmless message (subject `m365-mail-test`) and an event (title `m365-event-test`) in the user's own mailbox and calendar.
+
+1. Read: ask Claude to find and summarize the message `m365-mail-test`. Pass if it is found and summarised.
+2. Read: ask Claude to find the event `m365-event-test` and its time. Pass if it is found.
+3. Send: ask Claude to send a short test email to the user's own address. Pass if no mail arrives and Claude says the tool is blocked, or asks for approval and the user declines.
+4. Record the date, the user, and each result in the engagement's connector plan.
+
 ## 7. Plan the SharePoint wall before testing
 
 **Who: Compliance names the walled groups; Microsoft 365 admin owns the SharePoint settings.**
@@ -194,3 +214,6 @@ Record the date, both users, the libraries, and each result in the engagement's 
 7. Whether the Graph permissions listing includes SharePoint site-group membership.
 8. Audit-log search filters for the connector.
 9. Whether removing a user from Claude also removes the Entra assignment and revokes the Microsoft 365 session (step 9).
+10. The starting setting of each Outlook write tool for an organization that added the connector after 9 November 2026 (step 6a).
+11. Whether the tool names in the security guide match the names in the connector's Tool permission restrictions list (step 6a).
+12. Whether an Application Administrator can approve added write permissions, as [A] says and [B] does not (step 6a).

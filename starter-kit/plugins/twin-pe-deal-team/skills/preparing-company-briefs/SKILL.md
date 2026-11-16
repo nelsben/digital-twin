@@ -17,9 +17,11 @@ It builds on Anthropic's `private-equity` and `financial-analysis` plugins in id
 
 | Source | What it gives | Data class | Access |
 |---|---|---|---|
-| Salesforce connector (Hosted MCP), read tools | Opportunity: stage, status, stage date, closed reason, contacts, activity history, open diligence tasks | Highly sensitive (MNPI) | read |
+| Salesforce Hosted MCP: `dispatch_readonly` for reads (`discover` and `describe` find the call) | Opportunity: stage, status, stage date, closed reason, contacts, activity history, open diligence tasks | Highly sensitive (MNPI) | read |
 | Microsoft 365 connector, SharePoint read tools | Deal folder listing, prior memos, data-room files | Highly sensitive (MNPI) | read |
 | Files the user attaches | The same records, when the connectors are not live | Highly sensitive (MNPI) | read |
+
+The tool names are those in step 5 of the [Salesforce Hosted MCP runbook](../../../../runbooks/salesforce-hosted-mcp.md#5-plan-the-tool-permissions-autonomy-level-1). Each tool sits under a server prefix, which is the name the Owner gave the connector in the Claude org (runbook step 6). The skill uses no write tool. **⚠ Unverified:** that `dispatch_readonly` cannot create or update; the runbook keeps the same mark until it is confirmed at setup.
 
 Required from the user: the deal or company name. If it is missing or matches more than one deal, ask which one.
 
@@ -44,6 +46,7 @@ Source link means a Salesforce record ID (for example `00TEX0000001AA3`) or a Sh
 ## Guardrails
 
 - **Draft only; no writes.** The skill makes no Salesforce create, update or delete call and writes no file in SharePoint, OneDrive or on disk. If the user asks you to save the brief or change a record (for example "save it to the deal folder" or "move the stage to Negotiation"), still give the brief with the stage as it stands in the record, say you cannot do that at this autonomy level (draft only), and offer the text for the user to copy and enter themselves. Never say a brief was saved or a record changed. Because nothing is written, there is no twin marker to add.
+- **Code names stay as given.** Never expand or guess a deal code name; write it exactly as the source gives it, because a wrong expansion can leak the deal or name the wrong company.
 - **No web tools.** Do not use web search or web fetch, and do not quote anything from the web. A query can reveal deal intent, and the deal is MNPI. If the user asks for something the files do not hold (headcount, what the company's website says), list it under Not found, say web sources are not used for deal work, and suggest the user add it from a source they have approved.
 - **Ask, do not guess.** Missing, empty or contradictory input is named, not filled. Every fact links to its source; a fact without one is left out or listed as Unverified.
 - **No access means no content.** The no-access reply contains no stage, amount, name, activity or file content.

@@ -4,14 +4,14 @@ These are the eval files for the house-style skill in `twin-shared` (#36), writt
 
 ## Fixtures are synthetic
 
-Everything under `files/` is invented: companies, people, figures and an email address on a reserved `.example` domain. Each file says so on its first line. Code names reuse the kit's Larch, Birch and Cedar. The customer's skill owner replaces them with redacted real examples of text they would want rewritten, and changes the expectations to match their own rules in `references/house-style.md`.
+Everything under `files/` is invented: companies, people, figures and an email address on a reserved `.example` domain. Each file says so on its first line. Project names reuse the kit's Larch, Birch and Cedar. The customer's skill owner replaces them with redacted real examples of text they would want rewritten, and changes the expectations to match their own rules in `references/house-style.md`.
 
 ## Case map
 
 | Case | What it tests | Fixture |
 |---|---|---|
 | 1 | Rewrite a chatty draft email: ask first, ISO dates, figure labelled, no hype or emoji, says what changed | `larch-update-draft.md` |
-| 2 | Draft a note from raw call notes: no invented surname, currency, year or company name | `birch-call-notes.md` |
+| 2 | Draft a note from raw call notes: no invented surname, currency, year or company name; project name as given | `birch-call-notes.md` |
 | 3 | Short summary of a document: figures with unit, currency and period; estimate and calculated figures labelled | `cedar-management-extract.md` |
 | 4 | Missing input: asks for the text, writes no draft | none |
 | 5 | A role skill's required layout is kept | `brief-template.md`, `birch-facts.md` |
@@ -28,6 +28,8 @@ Cases 5 and 6 are the should-not-take-over cases. Case 4 is the missing-data cas
 ## Results
 
 Run on 2026-11-15 with Sonnet (all subagents). Plugin version 0.2.0. Raw responses, grader prompts and grades are kept outside the repo.
+
+In version 0.3.0 the deal code-name rule moved to `twin-pe-deal-team` and the skill keeps a neutral names rule (names exactly as the source gives them). One expectation in each of cases 1, 2, 3, 5 and 7 was reworded to match. The results below are from 0.2.0 and were not re-run.
 
 | Arm | Expectations passed | Cases fully passed |
 |---|---|---|

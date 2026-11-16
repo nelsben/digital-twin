@@ -37,8 +37,8 @@ The edited or drafted text first, then, when you edited existing text, the short
 
 - **Facts stay as given.** Rewriting changes the words, not the claims. Do not make a figure more precise, turn "around a third" into 33%, or turn a guess into a statement of fact.
 - **Ask, do not guess.** An ambiguous date (03/11/2026), a missing currency or period, a first name with no surname, or a vague time ("mid year") is flagged or put to the user. It is never settled by a plausible guess.
-- **Code names stay exactly as given.** Never expand a deal code name into a company name or guess one.
-- **No new sources.** Do not use web search or web fetch to fill gaps when the material may concern a deal. If a fact is missing, say so and ask the user to supply it.
+- **Names stay exactly as given.** Write each name (a person, a company, a project) exactly as the source gives it. Do not expand it, complete it or correct it from memory.
+- **Missing facts are asked for, not looked up.** If a fact is missing, say so and ask the user to supply it. Do not fill it from web search or web fetch.
 - **Format of a role skill wins.** See Purpose.
 - Writing here is draft only. Nothing is written to a system, so there is no twin marker to add.
 

@@ -1,6 +1,8 @@
-"""Checks for the deal-team twin persona: one source, two forms, no drift.
+"""Checks for every role plugin's persona: one source, two forms, no drift.
 
-persona.md is the single source. The output style (Claude Code) and the system
+Every folder under starter-kit/plugins that holds persona/persona.md is a role
+plugin. For each, persona.md is the single source. The output style (Claude
+Code; the single .md file in the plugin's output-styles/ folder) and the system
 prompt (claude.ai Projects, hosted agents) are built from it and must carry
 each section in the same words. The shape follows
 starter-kit/templates/persona/README.md.
@@ -18,13 +20,9 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-PLUGIN_DIR = ROOT / "starter-kit" / "plugins" / "twin-pe-deal-team"
-PERSONA = PLUGIN_DIR / "persona" / "persona.md"
-SYSTEM_PROMPT = PLUGIN_DIR / "persona" / "system-prompt.md"
-OUTPUT_STYLE = PLUGIN_DIR / "output-styles" / "pe-deal-team-twin.md"
+PLUGINS_DIR = ROOT / "starter-kit" / "plugins"
+PE_PLUGIN = "twin-pe-deal-team"
 STAKEHOLDERS = ROOT / "engagements" / "sample-pe" / "stakeholders.md"
-
-FORMS = (PERSONA, SYSTEM_PROMPT, OUTPUT_STYLE)
 
 # From the Output styles frontmatter reference.
 OUTPUT_STYLE_KEYS = frozenset({"name", "description", "keep-coding-instructions", "force-for-plugin"})
@@ -144,40 +142,99 @@ def drift(persona_text, style_text, prompt_text):
     return problems
 
 
+class RolePlugin:
+    """The three persona files of one role plugin folder."""
+
+    def __init__(self, folder):
+        self.folder = folder
+        self.name = folder.name
+        self.persona = folder / "persona" / "persona.md"
+        self.system_prompt = folder / "persona" / "system-prompt.md"
+        styles = sorted((folder / "output-styles").glob("*.md"))
+        # The single .md file in output-styles/; None when there is not exactly one.
+        self.output_style = styles[0] if len(styles) == 1 else None
+        self.style_files = styles
+
+    def forms(self):
+        return [self.persona, self.system_prompt, self.output_style]
+
+
+def role_plugins():
+    """Every plugin folder that holds persona/persona.md, in name order."""
+    if not PLUGINS_DIR.is_dir():
+        return []
+    return [
+        RolePlugin(folder)
+        for folder in sorted(PLUGINS_DIR.iterdir())
+        if (folder / "persona" / "persona.md").is_file()
+    ]
+
+
 def read(test, path):
-    if not path.is_file():
-        test.fail(f"{path.relative_to(ROOT)} is missing")
+    if path is None or not path.is_file():
+        test.fail(f"{path.relative_to(ROOT) if path else 'the output style'} is missing")
     return path.read_text(encoding="utf-8")
 
 
+def plugins_or_fail(test):
+    """Return every role plugin, failing the test when there is none."""
+    plugins = role_plugins()
+    test.assertTrue(
+        plugins,
+        f"no role plugin found: no folder under {PLUGINS_DIR.relative_to(ROOT)} holds persona/persona.md",
+    )
+    return plugins
+
+
 class PersonaFilesTest(unittest.TestCase):
+    def test_there_is_at_least_one_role_plugin(self):
+        self.assertTrue(role_plugins(), "no folder under starter-kit/plugins holds persona/persona.md")
+        self.assertIn(PE_PLUGIN, [p.name for p in role_plugins()])
+
     def test_the_three_files_exist(self):
-        for path in FORMS:
-            self.assertTrue(path.is_file(), f"{path.relative_to(ROOT)} is missing")
+        for plugin in plugins_or_fail(self):
+            with self.subTest(plugin=plugin.name):
+                self.assertEqual(
+                    len(plugin.style_files),
+                    1,
+                    f"{plugin.name}/output-styles/ must hold exactly one .md file, found {len(plugin.style_files)}",
+                )
+                for path in plugin.forms():
+                    self.assertTrue(path is not None and path.is_file(), f"{plugin.name}: a persona file is missing")
 
     def test_no_template_markers_left(self):
-        for path in FORMS:
-            text = read(self, path)
-            rel = path.relative_to(ROOT)
-            self.assertNotIn("FILL IN", text, f"{rel} still has a FILL IN marker")
-            self.assertNotIn("<!--", text, f"{rel} still has a template comment")
+        for plugin in plugins_or_fail(self):
+            with self.subTest(plugin=plugin.name):
+                for path in plugin.forms():
+                    text = read(self, path)
+                    rel = path.relative_to(ROOT)
+                    self.assertNotIn("FILL IN", text, f"{rel} still has a FILL IN marker")
+                    self.assertNotIn("<!--", text, f"{rel} still has a template comment")
 
     def test_placeholders_removed(self):
-        for folder in ("output-styles", "skills"):
-            gitkeep = PLUGIN_DIR / folder / ".gitkeep"
-            self.assertFalse(gitkeep.exists(), f"{gitkeep.relative_to(ROOT)} should be removed")
+        for plugin in plugins_or_fail(self):
+            with self.subTest(plugin=plugin.name):
+                for folder in ("output-styles", "skills"):
+                    gitkeep = plugin.folder / folder / ".gitkeep"
+                    self.assertFalse(gitkeep.exists(), f"{gitkeep.relative_to(ROOT)} should be removed")
 
 
 class PersonaSectionsTest(unittest.TestCase):
     def test_persona_has_the_ten_template_sections(self):
-        numbers, found = persona_sections(read(self, PERSONA))
-        self.assertEqual(numbers, list(range(1, len(SECTION_TAGS) + 1)))
-        for heading, body in found:
-            self.assertTrue(body, f"persona.md section {heading!r} is empty")
+        for plugin in plugins_or_fail(self):
+            with self.subTest(plugin=plugin.name):
+                numbers, found = persona_sections(read(self, plugin.persona))
+                self.assertEqual(numbers, list(range(1, len(SECTION_TAGS) + 1)))
+                for heading, body in found:
+                    self.assertTrue(body, f"persona.md section {heading!r} is empty")
 
     def test_both_forms_match_persona(self):
-        problems = drift(read(self, PERSONA), read(self, OUTPUT_STYLE), read(self, SYSTEM_PROMPT))
-        self.assertEqual(problems, [], "\n".join(problems))
+        for plugin in plugins_or_fail(self):
+            with self.subTest(plugin=plugin.name):
+                problems = drift(
+                    read(self, plugin.persona), read(self, plugin.output_style), read(self, plugin.system_prompt)
+                )
+                self.assertEqual(problems, [], "\n".join(problems))
 
     def test_drift_is_caught(self):
         persona = "# P\n\n## 1. Role\n\nYou are   the twin.\n"
@@ -188,20 +245,37 @@ class PersonaSectionsTest(unittest.TestCase):
         self.assertTrue(drift(persona, style, prompt.replace("the twin", "a twin")))
 
 
+class PrivateEquityRulesTest(unittest.TestCase):
+    """The deal rules live in the PE plugin's persona, not in twin-shared."""
+
+    def test_pe_persona_states_the_code_name_and_web_rules(self):
+        plugin = RolePlugin(PLUGINS_DIR / PE_PLUGIN)
+        for path in plugin.forms():
+            text = normalise(read(self, path)).lower()
+            rel = path.relative_to(ROOT)
+            self.assertIn("code name", text, f"{rel} has no rule on deal code names")
+            self.assertRegex(text, r"never (expand|guess)", f"{rel} does not say never to expand or guess a code name")
+            self.assertIn("web search or web fetch", text, f"{rel} has no rule against web search or web fetch")
+
+
 class OutputStyleTest(unittest.TestCase):
     def test_frontmatter_keys(self):
-        fm, _ = split_frontmatter(read(self, OUTPUT_STYLE))
-        self.assertIsNotNone(fm, "the output style must open with a frontmatter block")
-        extra = sorted(set(fm) - OUTPUT_STYLE_KEYS)
-        self.assertEqual(extra, [], f"keys not in the output style reference: {extra}")
-        self.assertTrue(fm.get("name"), "the output style needs a name")
-        self.assertTrue(fm.get("description"), "the output style needs a description")
-        self.assertEqual(fm.get("keep-coding-instructions"), "false")
+        for plugin in plugins_or_fail(self):
+            with self.subTest(plugin=plugin.name):
+                fm, _ = split_frontmatter(read(self, plugin.output_style))
+                self.assertIsNotNone(fm, "the output style must open with a frontmatter block")
+                extra = sorted(set(fm) - OUTPUT_STYLE_KEYS)
+                self.assertEqual(extra, [], f"keys not in the output style reference: {extra}")
+                self.assertTrue(fm.get("name"), "the output style needs a name")
+                self.assertTrue(fm.get("description"), "the output style needs a description")
+                self.assertEqual(fm.get("keep-coding-instructions"), "false")
 
     def test_body_word_limit(self):
-        _, body = split_frontmatter(read(self, OUTPUT_STYLE))
-        words = len(body.split())
-        self.assertLessEqual(words, OUTPUT_STYLE_MAX_WORDS, f"output style body is {words} words")
+        for plugin in plugins_or_fail(self):
+            with self.subTest(plugin=plugin.name):
+                _, body = split_frontmatter(read(self, plugin.output_style))
+                words = len(body.split())
+                self.assertLessEqual(words, OUTPUT_STYLE_MAX_WORDS, f"output style body is {words} words")
 
 
 class NoCustomerNamesTest(unittest.TestCase):
@@ -211,9 +285,12 @@ class NoCustomerNamesTest(unittest.TestCase):
         self.assertGreaterEqual(len(names), 10)
 
     def test_no_sample_customer_or_people(self):
+        # The sample-pe names are checked against the PE plugin only: that
+        # is the plugin built from the sample engagement's role.
         names = stakeholder_names(read(self, STAKEHOLDERS))
         parts = {p for name in names for p in name.split() if len(p) >= 4}
-        for path in FORMS:
+        plugin = RolePlugin(PLUGINS_DIR / PE_PLUGIN)
+        for path in plugin.forms():
             text = read(self, path)
             rel = path.relative_to(ROOT)
             self.assertNotIn("Example Capital", text, f"{rel} names the sample customer")

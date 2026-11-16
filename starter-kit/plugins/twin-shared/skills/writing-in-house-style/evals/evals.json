@@ -16,7 +16,7 @@
         "The rewrite contains no emoji and none of the words 'amazing', 'exciting', 'game-changer', 'leverage' or 'touch base'",
         "Sam Example and Jo Sample appear by full name on first mention",
         "The EBITDA remark is not stated as a fact: it is dropped, or labelled as Pat's impression, and no EBITDA figure is added",
-        "The words 'Project Larch' or 'Larch' are used as given; the code name is not expanded into a company name",
+        "The project name is written exactly as the source gives it ('Project Larch' or 'Larch'); it is not expanded into, or replaced by, a company name",
         "The response says in a few lines what was changed (for example: moved the ask to the top, replaced the relative dates, labelled the revenue figure, cut the hype)"
       ]
     },
@@ -30,7 +30,7 @@
       "expectations": [
         "The note leads with the decision or ask: whether to ask for exclusivity, and that Pat wants Lena Placeholder's view first",
         "The call date is written as 2026-11-12",
-        "The deal is called 'Project Birch' or 'Birch' as given; the code name is not expanded into a company name",
+        "The project name is written exactly as the source gives it ('Project Birch' or 'Birch'); it is not expanded into, or replaced by, a company name",
         "Sam is not given a surname the notes do not contain, and the response or note says the surname is not in the notes",
         "The revenue and EBITDA figures (about 18 and about 3 million) are not given a currency or a year that the notes do not state; the note or the response says currency and year were not given",
         "The debt schedule due date 'by next fri' is resolved to 2026-11-20 or left as stated with a flag; it is not turned into any other date",
@@ -55,7 +55,7 @@
         "The summary names its source (the management presentation, slide 6 or 7, or its file name)",
         "The customer concentration claim ('around a third') is attributed to management and not made more precise",
         "Net revenue retention 'above 100%' is not restated as a specific number, and no cash flow, debt or headcount is mentioned as known",
-        "The code name is used as 'Project Cedar' or 'Cedar'; no company name is added, and there is no emoji"
+        "The project name is written exactly as the source gives it ('Project Cedar' or 'Cedar'); no company name is added, and there is no emoji"
       ]
     },
     {
@@ -84,7 +84,7 @@
         "Open items is a numbered list",
         "Not found lists headcount and the plant opening date",
         "Stage and dates are in ISO 8601 form (Diligence, 2026-11-05)",
-        "The brief contains no fact that is absent from birch-facts.md, and the code name is not expanded into a company name",
+        "The brief contains no fact that is absent from birch-facts.md, and names are written exactly as birch-facts.md gives them (the project name is not expanded into a company name)",
         "The brief has no emoji"
       ]
     },
@@ -115,7 +115,7 @@
         "The price guide change ('about 10%') is kept as the note gives it and is attributed to the sell-side, and is not made more precise",
         "The apologies and filler ('quite a mess', 'apologies in advance', exclamation marks) are removed",
         "The response says what was changed in a few lines",
-        "The rewrite uses 'Cedar' or 'Project Cedar' as given and has no emoji"
+        "Names are written exactly as the note gives them ('Cedar' or 'Project Cedar' is not expanded into a company name), and the rewrite has no emoji"
       ]
     },
     {

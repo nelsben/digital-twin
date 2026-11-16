@@ -15,9 +15,11 @@ It does not write emails, minutes, call preparation or pipeline summaries, and i
 
 | Source | What it gives | Data class | Access |
 |---|---|---|---|
-| Salesforce Hosted MCP: the read tool for one opportunity (⚠ confirm the tool names at setup) | Opportunity name, account, stage, owner, latest activity log entry, current next step | Highly sensitive (MNPI) | read |
+| Salesforce Hosted MCP: `dispatch_readonly` for the read of one opportunity (`discover` and `describe` find the call) | Opportunity name, account, stage, owner, latest activity log entry, current next step | Highly sensitive (MNPI) | read |
 | Microsoft 365 connector, or a file the user attaches | Meeting notes (OneDrive or SharePoint) or the Teams transcript | Highly sensitive (MNPI) | read |
-| Salesforce Hosted MCP: the update tool | Writes the two fields | Highly sensitive (MNPI) | write, level 2 only. See [references/level-2-writes.md](references/level-2-writes.md) |
+| Salesforce Hosted MCP: the one tool that writes | Writes the two fields | Highly sensitive (MNPI) | write, level 2 only. See [references/level-2-writes.md](references/level-2-writes.md) |
+
+The tool names are those in step 5 of the [Salesforce Hosted MCP runbook](../../../../runbooks/salesforce-hosted-mcp.md#5-plan-the-tool-permissions-autonomy-level-1). Each tool sits under a server prefix, which is the name the Owner gave the connector in the Claude org (runbook step 6). **⚠ Unverified:** that `dispatch_readonly` cannot create or update; the runbook keeps the same mark until it is confirmed at setup.
 
 Required from the user: which company or opportunity, and the notes or transcript. If either is missing, follow "Guardrails".
 
@@ -58,6 +60,7 @@ Not written to Salesforce. Paste each into its field.
 - **Draft only at level 1.** At level 1 make no Salesforce create, update or delete call. Never claim anything was saved. Offer the text to paste.
 - **Twin marker on every write.** At level 2, every update call sets `Last_Updated_By_Twin__c` in the same call as the field changes. Never set it on a read, and never write an update without it. Rules: [references/level-2-writes.md](references/level-2-writes.md). At level 1 there are no writes and so no marker.
 - **Never write a record the user cannot already edit.** Read access is not enough for a write. If edit access cannot be confirmed, do not write; fall back to level 1 and show the draft.
+- **Code names stay as given.** Never expand or guess a deal code name; write it exactly as the source gives it, because a wrong expansion can leak the deal or name the wrong company.
 - **No web tools.** Notes from a deal meeting are highly sensitive (MNPI) and a search query can reveal deal intent. Do not use web search or web fetch for any part of this task. If the user asks for outside facts (who another bidder is, what they pay), say web sources are not used for deal work and that the sources name no such party. The user can supply facts themselves.
 - **Ask, do not guess.** If an input is missing, empty or contradictory, say exactly what is missing and ask. Do not fill gaps with plausible values.
 - **Stay in the two fields.** Do not draft changes to stage, amount, owner or close date. If the notes suggest one, mention it in a line to the user and leave it out of the draft.

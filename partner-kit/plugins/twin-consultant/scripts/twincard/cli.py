@@ -6,14 +6,17 @@
     python3 .../cli.py level --json <persona-dir>
     python3 .../cli.py backlog <persona-dir>        # writes backlog.json and backlog.md
     python3 .../cli.py backlog --json <persona-dir> [--plan-out FILE]
+    python3 .../cli.py dashboard <persona-dir> [--date YYYY-MM-DD]   # writes dashboard.html
 
 Runs from any working directory. Exit codes: 0 on success; 1 when validation
-fails (level and backlog then write nothing), when levelled.json is missing or
-out of date (backlog writes nothing), or when levelling reports a blocker (level
-still writes levelled.json, backlog still writes both files); 2 on a usage error,
-a missing persona folder (for level and backlog, a folder with no card.json) or
-an unknown status in backlog.json.
-The dashboard and all commands are planned (partner-kit/docs/design.md, section 3).
+fails (level, backlog and dashboard then write nothing), when levelled.json is
+missing or out of date (backlog and dashboard write nothing), when backlog.json is
+missing or out of date (dashboard writes nothing), or when levelling reports a
+blocker (level still writes levelled.json, backlog still writes both files,
+dashboard still writes dashboard.html); 2 on a usage error, a missing persona
+folder (for level, backlog and dashboard, a folder with no card.json), an unknown
+status in backlog.json or a --date that is not a real YYYY-MM-DD date.
+The all command is planned (partner-kit/docs/design.md, section 3).
 """
 
 import argparse
@@ -26,6 +29,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from twincard import backlog as backlog_mod  # noqa: E402
+from twincard import dashboard as dashboard_mod  # noqa: E402
 from twincard.level import LEVELLED_FILE, write_levelled  # noqa: E402
 from twincard.validate import qualified, validate  # noqa: E402
 
@@ -52,6 +56,10 @@ def build_parser():
     backlog.add_argument("persona_dir", help="the persona folder that holds card.json and levelled.json")
     backlog.add_argument("--json", action="store_true", help="print backlog.json (or the validation errors) as JSON")
     backlog.add_argument("--plan-out", metavar="FILE", help="also write the backlog as a tree_import plan to FILE")
+    board = commands.add_parser(
+        "dashboard", help="render dashboard.html from card.json, the profile, levelled.json and backlog.json")
+    board.add_argument("persona_dir", help="the persona folder that holds card.json, levelled.json and backlog.json")
+    board.add_argument("--date", metavar="YYYY-MM-DD", help="the generated date shown on the page (default: today)")
     return parser
 
 
@@ -143,19 +151,40 @@ def run_backlog(args, persona_dir):
     return EXIT_OK
 
 
+def run_dashboard(args, persona_dir):
+    try:
+        result = dashboard_mod.write_dashboard(str(persona_dir), args.date)
+    except dashboard_mod.UsageError as exc:
+        sys.stderr.write("cli.py dashboard: %s\n" % exc)
+        return EXIT_USAGE
+    if not result["ok"]:
+        if result["validation"] and result["validation"]["errors"]:
+            print(format_text(result["validation"]))
+        print(result["error"])
+        return EXIT_INVALID
+    s = result["summary"]
+    print("Wrote %s." % result["path"])
+    print("Completeness: %d%% (%d of %d required fields). Blockers: %d. Warnings: %d. Backlog: %d of %d tasks done."
+          % (s["percent"], s["satisfied"], s["required"], s["blockers"], s["warnings"], s["tasks_done"],
+             s["tasks_total"]))
+    return EXIT_INVALID if s["blockers"] else EXIT_OK
+
+
 def main(argv=None):
     args = build_parser().parse_args(argv)
     persona_dir = Path(args.persona_dir)
     if not persona_dir.is_dir():
         sys.stderr.write("cli.py %s: no such persona folder: %s\n" % (args.command, persona_dir))
         return EXIT_USAGE
-    if args.command in ("level", "backlog"):
+    if args.command in ("level", "backlog", "dashboard"):
         if not (persona_dir / "card.json").is_file():
             sys.stderr.write("cli.py %s: %s holds no card.json, so it is not a persona folder\n"
                              % (args.command, persona_dir))
             return EXIT_USAGE
         if args.command == "backlog":
             return run_backlog(args, persona_dir)
+        if args.command == "dashboard":
+            return run_dashboard(args, persona_dir)
         return run_level(args, persona_dir)
     result = validate(str(persona_dir))
     if args.json:

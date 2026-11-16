@@ -76,15 +76,15 @@ PROFILE_REQUIRED = [
     "compliance.data_classes", "compliance.phi", "compliance.baa", "compliance.mnpi",
     "compliance.retention", "compliance.walls",
     "systems.crm.kind", "systems.crm.product", "systems.crm.edition", "systems.crm.private_network",
-    "network.can_allowlist_anthropic_ips",
+    "network.can_allowlist_anthropic_ips", "governance.action_log_required",
 ]
 
 CARD_REQUIRED = [
     "role.name", "role.team", "role.works_in", "role.device", "outcome.sponsor_goal",
     "voice.serves", "voice.jobs", "voice.tone", "voice.norms", "voice.never",
     "voice.ask_before", "voice.escalate_to",
-    "tasks.T1.trigger", "tasks.T1.inputs.crm.access", "tasks.T1.output.audience",
-    "tasks.T1.writes.crm.action", "tasks.T1.data_class", "tasks.T1.cost_of_mistake.level",
+    "tasks.T1.trigger", "tasks.T1.inputs[0].access", "tasks.T1.output.audience",
+    "tasks.T1.writes[0].action", "tasks.T1.data_class", "tasks.T1.cost_of_mistake.level",
     "tasks.T1.reversible", "tasks.T1.touches_money", "tasks.T1.reads_untrusted_input",
     "tasks.T1.in_pilot", "memory.personal_memory_wanted",
 ]
@@ -114,8 +114,9 @@ def valid_profile():
              "access_model": "roles and sharing rules", "private_network": False},
         ],
         "network": {"can_allowlist_anthropic_ips": True},
+        "runtime_preferences": {"self_hosting_required": False},
         "governance": {"log_destination": "SIEM", "existing_source_audit": "none",
-                       "spend_owner": "IT", "spend_limits": "per user"},
+                       "spend_owner": "IT", "spend_limits": "per user", "action_log_required": True},
         "owners": {"sponsor": "Sponsor", "technical_owner": "Tech", "business_owner": "Biz",
                    "backup_owner": "Backup", "compliance": "Compliance"},
         "provenance": answered(PROFILE_REQUIRED, "discovery#A1"),
@@ -196,7 +197,7 @@ class CatalogueTests(unittest.TestCase):
         self.assertEqual(tc_fields.load_catalogue()["fields"], self.entries)
 
     def test_entries_have_the_catalogue_shape(self):
-        keys = {"path", "record", "type", "values", "required", "asked_by", "default", "feeds", "part"}
+        keys = {"path", "record", "type", "values", "required", "key", "asked_by", "default", "feeds", "part"}
         paths = set()
         for entry in self.entries:
             with self.subTest(path=entry.get("path")):
@@ -204,6 +205,9 @@ class CatalogueTests(unittest.TestCase):
                 self.assertIn(entry["record"], ("profile", "card"))
                 self.assertIn(entry["part"], PARTS)
                 self.assertIsInstance(entry["required"], bool)
+                self.assertIsInstance(entry["key"], bool)
+                if entry["key"]:
+                    self.assertFalse(entry["required"], "a key field carries no provenance")
                 if entry["type"] in ("enum", "enum-list"):
                     self.assertTrue(entry["values"], "an enumeration lists its values")
                 key = (entry["record"], entry["path"])
@@ -268,6 +272,30 @@ class CatalogueTests(unittest.TestCase):
             for leaf in leaves(data):
                 self.assertIn(leaf, ("", None, []))
 
+    def test_list_keys_and_references_are_key_fields(self):
+        key_paths = set()
+        for record, lists in self.catalogue["keys"].items():
+            for list_path, key in lists.items():
+                if key:
+                    key_paths.add((record, list_path + "[]." + key))
+        for record, refs in self.catalogue["references"].items():
+            for ref in refs:
+                key_paths.add((record, ref["path"]))
+                target = ref["must_be"]
+                target_record, target_path = target.split(":", 1) if ":" in target else (record, target)
+                key_paths.add((target_record, target_path))
+        key_paths |= {("card", "id"), ("card", "customer"), ("profile", "customer")}
+        by_path = {(e["record"], e["path"]): e for e in self.entries}
+        for record_path in sorted(key_paths):
+            with self.subTest(field=record_path):
+                self.assertIn(record_path, by_path)
+                self.assertTrue(by_path[record_path]["key"])
+
+    def test_inputs_and_writes_are_positional(self):
+        keys = self.catalogue["keys"]["card"]
+        self.assertIsNone(keys["tasks[].inputs"])
+        self.assertIsNone(keys["tasks[].writes"])
+
     def test_writes_have_system_objects_action(self):
         writes = {e["path"] for e in self.entries if e["path"].startswith("tasks[].writes[].")}
         self.assertEqual(writes, {"tasks[].writes[].system", "tasks[].writes[].objects",
@@ -293,6 +321,45 @@ class ValidCardTests(unittest.TestCase):
         result = run_validate(profile=profile)
         self.assertEqual(result["errors"], [])
         self.assertIn("plan.tier", [w["path"] for w in result["warnings"]])
+
+
+def with_second_write(write):
+    card = valid_card()
+    card["tasks"][0]["writes"].append(write)
+    card["provenance"]["tasks.T1.writes[1].action"] = {"status": "answered", "source": "interviews/x.md#F2"}
+    return card
+
+
+class PositionalListTests(unittest.TestCase):
+    def test_two_writes_to_one_system_pass(self):
+        card = with_second_write({"system": "crm", "objects": "opportunity", "action": "update"})
+        result = run_validate(card=card)
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["warnings"], [])
+        self.assertEqual(result["completeness"]["percent"], 100)
+        self.assertEqual(result["completeness"]["required"],
+                         len(PROFILE_REQUIRED) + len(CARD_REQUIRED) + 1)
+
+    def test_exact_duplicate_write_warns(self):
+        card = with_second_write(copy.deepcopy(valid_card()["tasks"][0]["writes"][0]))
+        result = run_validate(card=card)
+        self.assertEqual(result["errors"], [])
+        self.assertIn("tasks.T1.writes[1]", [w["path"] for w in result["warnings"]])
+
+    def test_exact_duplicate_input_warns(self):
+        card = valid_card()
+        card["tasks"][0]["inputs"].append(copy.deepcopy(card["tasks"][0]["inputs"][0]))
+        card["provenance"]["tasks.T1.inputs[1].access"] = {"status": "answered", "source": "interviews/x.md#F2"}
+        result = run_validate(card=card)
+        self.assertEqual(result["errors"], [])
+        self.assertIn("tasks.T1.inputs[1]", [w["path"] for w in result["warnings"]])
+
+    def test_second_entry_is_validated(self):
+        card = valid_card()
+        card["tasks"][0]["inputs"].append({"system": "crm", "objects": "contact", "access": "peek"})
+        card["provenance"]["tasks.T1.inputs[1].access"] = {"status": "answered", "source": "interviews/x.md#F2"}
+        result = run_validate(card=card)
+        self.assertIn("tasks.T1.inputs[1].access", [e["path"] for e in result["errors"]])
 
 
 class FailingCardTests(unittest.TestCase):
@@ -354,19 +421,42 @@ class FailingCardTests(unittest.TestCase):
     def test_input_system_not_in_profile(self):
         card = valid_card()
         card["tasks"][0]["inputs"][0]["system"] = "erp"
-        card["provenance"]["tasks.T1.inputs.erp.access"] = card["provenance"].pop("tasks.T1.inputs.crm.access")
-        self.assertError(run_validate(card=card), "tasks.T1.inputs.erp.system", "card")
+        self.assertError(run_validate(card=card), "tasks.T1.inputs[0].system", "card")
 
     def test_write_system_not_in_profile(self):
         card = valid_card()
         card["tasks"][0]["writes"][0]["system"] = "erp"
-        card["provenance"]["tasks.T1.writes.erp.action"] = card["provenance"].pop("tasks.T1.writes.crm.action")
-        self.assertError(run_validate(card=card), "tasks.T1.writes.erp.system", "card")
+        self.assertError(run_validate(card=card), "tasks.T1.writes[0].system", "card")
 
     def test_write_action_not_in_enumeration(self):
         card = valid_card()
         card["tasks"][0]["writes"][0]["action"] = "archive"
-        self.assertError(run_validate(card=card), "tasks.T1.writes.crm.action", "card")
+        self.assertError(run_validate(card=card), "tasks.T1.writes[0].action", "card")
+
+    def test_bad_action_in_second_write_is_reported_by_position(self):
+        card = with_second_write({"system": "crm", "objects": "opportunity", "action": "archive"})
+        self.assertError(run_validate(card=card), "tasks.T1.writes[1].action", "card")
+
+    def test_missing_keys_are_errors(self):
+        cases = [
+            ("card", "customer", lambda c, p: c.pop("customer")),
+            ("card", "id", lambda c, p: c.pop("id")),
+            ("card", "tasks.T1.feature", lambda c, p: c["tasks"][0].pop("feature")),
+            ("card", "features[0].id", lambda c, p: c["features"][0].pop("id")),
+            ("card", "outcome.scorecard_targets[0].metric",
+             lambda c, p: c["outcome"]["scorecard_targets"][0].pop("metric")),
+            ("card", "tasks.T1.inputs[0].system", lambda c, p: c["tasks"][0]["inputs"][0].pop("system")),
+            ("card", "tasks.T1.writes[0].system", lambda c, p: c["tasks"][0]["writes"][0].pop("system")),
+            ("card", "overrides[0].task", lambda c, p: c["overrides"][0].pop("task")),
+            ("card", "open_questions[0].id", lambda c, p: c["open_questions"][0].pop("id")),
+            ("profile", "customer", lambda c, p: p.pop("customer")),
+            ("profile", "systems[0].id", lambda c, p: p["systems"][0].pop("id")),
+        ]
+        for record, path, mutate in cases:
+            with self.subTest(path=path):
+                card, profile = valid_card(), valid_profile()
+                mutate(card, profile)
+                self.assertError(run_validate(profile=profile, card=card), path, record)
 
     def test_task_feature_not_a_feature(self):
         card = valid_card()

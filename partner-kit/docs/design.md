@@ -1,6 +1,6 @@
 # Persona-card workflow: design
 
-This is the design of record for the persona-card workflow, decided on 2026-11-15. It fixes the records, the field catalogue, the levelling rules, the backlog and the dashboard, so each part of the workflow can be built and checked against one description. Where a later change differs from this design, the change updates this file in the same pull request.
+This is the design of record for the persona-card workflow, decided on 2026-11-15. It fixes the records, the field catalogue, the levelling rules, the backlog and the dashboard, so each part of the workflow can be built and checked against one description.
 
 ## 1. What we are building
 
@@ -15,6 +15,8 @@ interview notes ──► persona card ──► levelled plan ──► backlog
 - The **interview → card** step is done by Claude with a skill (language work, checked by skill evals).
 - Every later step is a **deterministic Python script** (standard library only, Python 3.9+), checked by unit tests. Same card in, same files out.
 - The card is the single source of truth. Everything after it is a rendering and can be regenerated.
+
+Design changes after 2026-11-15 are made in this file, in the same pull request as the code they describe.
 
 ## 2. Words (these collide with existing terms; use them exactly)
 
@@ -102,8 +104,9 @@ Both are JSON, because the repo's tools are standard-library Python (no YAML par
   "systems": [
     {"id": "salesforce", "kind": "crm", "product": "Salesforce", "edition": "Enterprise", "access_model": "roles and sharing rules", "private_network": false}
   ],
-  "network": {"can_allowlist_anthropic_ips": "open"},
-  "governance": {"log_destination": "open", "existing_source_audit": "", "spend_owner": "", "spend_limits": ""},
+  "network": {"can_allowlist_anthropic_ips": null},
+  "runtime_preferences": {"self_hosting_required": false},
+  "governance": {"log_destination": "open", "existing_source_audit": "", "spend_owner": "", "spend_limits": "", "action_log_required": true},
   "owners": {"sponsor": "", "technical_owner": "", "business_owner": "", "backup_owner": "", "compliance": ""},
   "provenance": {}
 }
@@ -115,6 +118,9 @@ Both are JSON, because the repo's tools are standard-library Python (no YAML par
 - `compliance.walls`: `none`, `soft`, `hard`.
 - `systems[].kind`: `crm`, `documents`, `messaging`, `ticketing`, `email-calendar`, `finance`, `product-data`, `data-provider`, `other`.
 - `fictional: true` is required for anything under `engagements/sample-*`.
+- `network.can_allowlist_anthropic_ips`: `true` or `false`; `null` while its provenance is `open`.
+- `runtime_preferences.self_hosting_required`: `true` when the customer wants event-driven work run on its own infrastructure even without ZDR or HIPAA (the "full control" branch of the compendium 05 decision flow). Not required; the default is `false`.
+- `governance.action_log_required`: `true` when the customer needs an audit log of the twin's actions. Required: it decides whether confidential data can stay on Team ("Team acceptable with a lower audit need", compendium 10) and which data controls apply.
 
 ### 4.2 Persona card (`card.json`)
 
@@ -175,8 +181,10 @@ Enumerations:
 - `role.works_in[]`: `claude-ai`, `desktop`, `claude-code`, `cowork`, `slack`, `teams`.
 - `role.device`: `managed`, `unmanaged`, `mixed`.
 - `tasks[].trigger`: `person`, `schedule-own` (one person's recurring task), `schedule-team` (shared, lives in a channel), `event` (a system event or webhook).
-- `tasks[].inputs[].access` and `writes[].system`: system ids from the customer profile. A system the profile does not list is a validation error.
+- `tasks[].inputs[].system` and `tasks[].writes[].system`: system ids from the customer profile. A system the profile does not list is a validation error.
+- `tasks[].inputs[]`: `{"system": "<profile system id>", "objects": "account", "access": "read"}`; `access` is `read` or `write`.
 - `tasks[].writes[]`: `{"system": "<profile system id>", "objects": "opportunity", "action": "update"}`; `action` is `create`, `update`, `delete` or `send`.
+- `inputs[]` and `writes[]` are positional lists with no key, like `overrides[]`: a task may read or write one system several times (update an opportunity and create a task in the same CRM). Their paths use the position: `tasks.T1.writes[0].action`, `tasks.T1.inputs[1].access`. An exact duplicate entry (the same system, objects and action, or the same system, objects and access) is a warning, not an error.
 - `tasks[].output.audience`: `self`, `internal`, `other-team`, `external` (customers, investors, anyone outside the company).
 - `tasks[].data_class`: `internal`, `confidential`, `highly-sensitive`, `phi`.
 - `tasks[].cost_of_mistake.level`: `low`, `medium`, `high`.
@@ -186,7 +194,7 @@ Enumerations:
 `provenance` maps a field path to `{"status", "source", "owner"?, "due"?}`.
 
 - `status`: `answered` (a person said it; `source` points at the interview file and question id, or a discovery question id), `default` (taken from a named default; `source` is the compendium page or pack that sets it), `assumed` (the consultant's guess; needs an `owner` to confirm), `open` (no answer yet; needs `owner` and `due`; the value may be null).
-- Paths use ids, not array positions: `tasks.T1.minutes_each`, `voice.tone`, `systems.salesforce.edition`.
+- Paths use ids, not array positions: `tasks.T1.minutes_each`, `voice.tone`, `systems.salesforce.edition`. Lists with no key (`inputs[]`, `writes[]`, `overrides[]`) use the position: `tasks.T1.writes[0].action`.
 - A required field with no provenance entry is a validation error. This is what makes "every field traces to a source" checkable.
 - **Completeness** = required fields whose status is `answered` or `default`, over all required fields, as a percentage. `assumed` and `open` count against it.
 - A card is **complete** when: validation passes, completeness is 100%, no open question blocks an in-pilot task, and levelling reports no blocker.
@@ -197,10 +205,13 @@ One entry per field of both records:
 
 ```json
 {"path": "tasks[].trigger", "record": "card", "type": "enum", "values": ["person","schedule-own","schedule-team","event"],
- "required": true, "asked_by": ["F5"], "default": null,
+ "required": true, "key": false, "asked_by": ["F5"], "default": null,
  "feeds": ["rule:runtime", "backlog:story.surface"], "part": "A4"}
 ```
 
+- `required`: true when a levelling decision (section 7) or the persona voice needs the field. A required field needs a provenance entry and counts in completeness.
+- `key`: true for a field that names or links an entry rather than answering a question: the record ids (`id` and `customer` on the card, `customer` on the profile), the list keys (`systems[].id`, `features[].id`, `tasks[].id`, `open_questions[].id`, `outcome.scorecard_targets[].metric`) and the references (`tasks[].feature`, `tasks[].inputs[].system`, `tasks[].writes[].system`, `overrides[].task`, `open_questions[].blocks`). **A key field is always structurally required, carries no provenance and is left out of completeness**, so its `required` flag is false. A missing key is a validation error.
+- `default`: `null`, or `{"value": ..., "source": "<compendium or playbook page>"}`.
 - `asked_by`: discovery question ids (A1 to G4 in `docs/playbook/02-discovery.md`) or interview-guide question ids (section 6). Every field has at least one, or a `default` with a source link.
 - `feeds`: the levelling rules, backlog generators or dashboard panels that read it. **Every field has at least one.** A field nothing reads is deleted.
 - `feeds` vocabulary: `rule:<decision>` with decision one of `runtime`, `identity`, `autonomy`, `data_controls`, `connectors`, `memory`, `plan_fit`; `backlog:<level>` with level one of `epic`, `feature`, `story`, `task`; `dashboard:<section>` with section one of `header`, `anatomy`, `features`, `blockers`, `backlog`, `open_questions`, `provenance`; and `voice` (the persona voice file).

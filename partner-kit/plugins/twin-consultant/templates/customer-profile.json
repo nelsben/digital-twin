@@ -40,11 +40,15 @@
   "network": {
     "can_allowlist_anthropic_ips": null
   },
+  "runtime_preferences": {
+    "self_hosting_required": null
+  },
   "governance": {
     "log_destination": "",
     "existing_source_audit": "",
     "spend_owner": "",
-    "spend_limits": ""
+    "spend_limits": "",
+    "action_log_required": null
   },
   "owners": {
     "sponsor": "",

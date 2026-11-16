@@ -1,4 +1,4 @@
-Written 2026-11-16 by the author from the pages listed; not yet checked by a second reader.
+Checked 2026-11-16 by the author against the pages listed. Every claim was checked again on 2026-11-16 by a second reader; the results are in the [verification log](../../runbooks/verification-log.md).
 
 # Zendesk marker field: Last updated by twin
 
@@ -10,12 +10,12 @@ Each step ends with the pages it came from, as tags like ([A]) that "Pages used"
 
 ## Why this marker
 
-We first meant a ticket tag "twin" added with every change: a tag is in every plan, and "Agents can add or remove tags in tickets" ([F]). Two things moved us to a field.
+We first meant a ticket tag "twin" added with every change: tags are listed for all Suite plans and for Support Team, Professional and Enterprise ([F]), and "Agents can add or remove tags in tickets" ([F]). Two things moved us to a field.
 
 - **A tag is added once.** "Each audit represents a single update to the ticket", and its examples include "Tags were added or removed" ([D]). A second twin change to a ticket that already carries the tag adds no tag, so no event says the twin acted again. **⚠ Unverified:** that re-adding a tag already on the ticket records nothing; no page says either way. Safer reading: assume it records nothing.
 - **An agent can remove a tag.** Agents "can delete tags on one ticket at a time" ([F]), and admins can remove a tag from all open tickets ([F]). A removed tag leaves the report short and the twin's change unmarked. The same holds for any ticket field an agent can edit (below), but a field value is rewritten by the next twin write.
 
-A text field holding the time changes on every write, and "The value of a ticket field was changed" is an audit example ([D]), so each twin write leaves a Change event. Each audit has "author_id" ("The user who created the audit") and "created_at" ([D]). This is the reason the Salesforce field is a DateTime. Text fields can be used as a view condition, with "Present" ([G]).
+A text field holding the time changes on every write, and "The value of a ticket field was changed" is an audit example ([D]), so each twin write leaves a Change event. Each audit has "author_id" ("The user who created the audit") and "created_at" ([D]). This is the reason the Salesforce field is a DateTime. Text fields can be used as a view condition with "Contains the following string" ([G]); "Present" is a trigger condition for a text field ([G]).
 
 ## Create it (the Zendesk admin does this)
 
@@ -57,7 +57,7 @@ Keep the results, the date and the two users in the engagement folder, not here.
 
 ## Report on it
 
-- **A view, any plan.** A view with the condition "Present" on the field lists every ticket the twin has changed ([G]). Views can be shared by admins ([F]). Add the ticket id, requester, assignee and the field as columns.
+- **A view, on the plans [G] lists** (all Suite plans; Support Team, Professional and Enterprise). A view with the condition "Contains the following string" on the field, set to a string every marker value contains (for example `Z`), should list every ticket the twin has changed ([G]). **⚠ Unverified:** that the string match works as expected on the stored value; confirm at setup. Views can be shared by admins ([F]). Add the ticket id, requester, assignee and the field as columns.
 - **Explore.** "On Suite Professional and above, you can report on custom ticket fields in Explore." ([C]) Report on the field's presence by week. **⚠ Unverified:** whether Explore shows the field's value history or only its latest value; if only the latest, the audit events above are the history.
 - The marker records that the twin wrote, not that a person approved it. Approval is the autonomy level and the confirmation step.
 

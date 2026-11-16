@@ -2,7 +2,7 @@
 
 starter-kit/connectors/hubspot/README.md and starter-kit/connectors/zendesk/README.md
 must each exist, carry the nine level-2 headings in order, stay 50 to 160 lines,
-open with the 'not yet checked by a second reader' line, carry the recommendation
+open with the 'checked again by a second reader' line, carry the recommendation
 label, link the Salesforce marker README (once) and authoring-skills.md, resolve
 every relative link, define every source on an accepted https host, and keep the
 warning sign inside the two bold labels. starter-kit/README.md must link both,
@@ -47,7 +47,7 @@ HOSTS = {
     "claude.com",
 }
 MIN_LINES, MAX_LINES = 50, 160
-SECOND_READER = "Written 2026-11-16 by the author from the pages listed; not yet checked by a second reader."
+SECOND_READER = "Checked 2026-11-16 by the author against the pages listed."
 LABELS = ("**⚠ Conflict:**", "**⚠ Unverified:**")
 
 FENCE = re.compile(r"^\s*(```|~~~)")
@@ -111,6 +111,7 @@ class TwinMarkerReadmes(unittest.TestCase):
         for name, path, text in self.each():
             first = next((ln for ln in text.splitlines() if ln.strip()), "")
             self.assertIn(SECOND_READER, first)
+            self.assertIn("was checked again on 2026-11-16 by a second reader", first)
             self.assertIn("(Our recommendation):", text)
 
     def test_links_salesforce_pattern_once_and_authoring_skills(self):

@@ -6,6 +6,7 @@
 - **Runbooks:** [identity-devices-publishing.md](identity-devices-publishing.md), [salesforce-hosted-mcp.md](salesforce-hosted-mcp.md), [microsoft-365-connector.md](microsoft-365-connector.md)
 - **Updated 2026-11-16 (OPS-59):** sections for the four runtime runbooks were added by a second reader, Claude Opus 5.5 (`claude-opus-5-5`); their rows are in the summary table below.
 - **Updated 2026-11-16 (OPS-60):** sections for the four connector runbooks were added by a second reader, Claude Opus 5.5 (`claude-opus-5-5`); their rows are in the summary table below.
+- **Updated 2026-11-16 (OPS-70):** sections for section 6a of the Microsoft 365 runbook, the Google Docs, Sheets and Slides runbook, the Claude Code for a role runbook and the HubSpot and Zendesk marker READMEs were added by a second reader, Claude Sonnet 5.5 (`claude-sonnet-5-5`); their rows are in the summary table below.
 
 | Runbook | Confirmed | Corrected | Unverified | Total |
 |---|---|---|---|---|
@@ -20,6 +21,11 @@
 | slack-connector.md | 35 | 16 | 6 | 57 |
 | google-workspace-connectors.md | 48 | 25 | 13 | 86 |
 | zendesk-connector.md | 43 | 14 | 13 | 70 |
+| microsoft-365-connector.md section 6a | 14 | 6 | 2 | 22 |
+| google-docs-sheets-slides-connectors.md | 22 | 1 | 6 | 29 |
+| claude-code-for-a-role.md | 18 | 4 | 4 | 26 |
+| starter-kit/connectors/hubspot/README.md | 15 | 1 | 6 | 22 |
+| starter-kit/connectors/zendesk/README.md | 15 | 4 | 6 | 25 |
 
 ## How the check was done
 
@@ -760,6 +766,155 @@
 | What can go wrong 6 | Packaging and pricing might change at general availability | Confirmed | https://support.zendesk.com/hc/en-us/articles/11400026079130-Connecting-external-AI-agents-to-Zendesk-EAP |  |
 | What can go wrong 7 | "Always allow" skips Claude's prompt for that tool | Confirmed | https://claude.com/docs/connectors/getting-started.md | "Always allow to skip the prompt for that tool from now on" |
 
+## microsoft-365-connector.md section 6a (OPS-70)
+
+| Line or step | Claim | State | Source URL | Old wording → new wording (corrections) |
+|---|---|---|---|---|
+| Read tools | Read tools and scopes: `outlook_email_search` (`Mail.Read`), `outlook_calendar_search` (`Calendars.Read`), `find_meeting_availability` (`Calendars.Read`), `read_resource` | Confirmed | https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide |  |
+| Read tools | Reading calendar events needs no write scope | Confirmed | https://support.claude.com/en/articles/12542951-set-up-the-microsoft-365-connector | [B] lists `Calendars.Read` as "Read calendar events" |
+| Read tools | Meeting-time search is a read tool | Corrected | https://claude.com/docs/connectors/microsoft/365.md | "Reading calendar events does not need a write scope. Email search" → "Reading calendar events does not need a write scope. **⚠ Conflict:** [A] lists "find meeting times" in the Outlook write column, and [C] lists `find_meeting_availability` as a read tool needing `Calendars.Read`; take the safer reading, that meeting-time search may need write actions, and test it with the write tools blocked. Email search"; [A]: "create, update, and delete calendar events and find meeting times" under Write |
+| Read tools | Email search covers the primary mailbox including its Archive folder, and shared mailboxes the user can reach, not the Online Archive mailbox | Confirmed | https://support.claude.com/en/articles/12542951-set-up-the-microsoft-365-connector | [C] says the same |
+| Write tools | Send, forward and send-draft tools and `Mail.Send` | Confirmed | https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide | `outlook_send_mail`, `outlook_forward_mail`, `outlook_send_draft` each listed with `Mail.Send` |
+| Write tools | Draft, trash and label tools with `Mail.ReadWrite` | Confirmed | https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide | Includes `outlook_trash_thread`, `outlook_batch_delete_messages` and `outlook_modify_labels`; label-list tools use `MailboxSettings.ReadWrite` |
+| Write tools | Event tools with `Calendars.ReadWrite`; `outlook_set_vacation` and `outlook_create_filter` with `MailboxSettings.ReadWrite` | Confirmed | https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide |  |
+| Write tools | Claude cannot attach files to drafts | Confirmed | https://support.claude.com/en/articles/12542951-set-up-the-microsoft-365-connector | "Attachments aren't supported in write tools, so sending, forwarding, and drafting all reject messages with attachments." |
+| Read scopes | Read scopes list, and shared mailbox access stays read-only | Confirmed | https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide | [B] lists the scopes; [C]: "Shared mailbox access remains read-only, via the Mail.Read.Shared permission." |
+| Delegated per user | Claude reads or changes only what the signed-in user's account can already reach | Confirmed | https://claude.com/docs/connectors/microsoft/365.md |  |
+| Write tools off | Write column applies only when administrators have turned on write actions; permissions are read-only by default | Confirmed | https://claude.com/docs/connectors/microsoft/365.md | [B]: "Permissions are read-only by default. Claude can only send, create, or update content if you enable write tools." |
+| Write tools off | Starting setting of a write tool for an organization that added the connector after the write-tools date (old wording said only "after 9 November 2026" and that earlier organizations have some blocked by default) | Corrected | https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide | "added the connector after 9 November 2026; [B] and [C] say only that organizations that used the connector earlier have some write tools blocked by default." → "added the connector for the first time after November 9, 2026; [B] and [C] say only that organizations that used the connector before write tools launched have some write tools blocked by default, and that in a new organization an admin can set each tool to **Always allow**, **Needs approval** or **Blocked**."; [C]: "Organizations that used the connector before write tools or the Teams write tools launched have some write tools blocked by default." |
+| Write tools off | Starting setting of each write tool in a new organization | Unverified |  | Marker kept; neither [B] nor [C] gives it. Confirm in the customer's **Tool permission restrictions** at setup |
+| Consent for added scopes | [A] says a Global Administrator or Application Administrator approves added permissions; [B] says a Global Administrator (Conflict stays, Global Administrator taken) | Confirmed | https://claude.com/docs/connectors/microsoft/365.md | [A]: "a Microsoft Entra Global Administrator or Application Administrator approves the added permissions once for the tenant"; [B]: "a Microsoft Entra Global Administrator needs to review and approve" |
+| Tool settings | Path: **Organization settings > Connectors**, open the Microsoft 365 connector, **Tool permission restrictions** | Confirmed | https://claude.com/docs/connectors/microsoft/365.md | [A] gives the path for the Teams messaging tools; [B]: choose a setting for each tool under **Organization settings > Connectors** |
+| Tool settings | In chat and Cowork, Claude asks the user to confirm before it sends or forwards an email or creates, changes, deletes or responds to an event | Confirmed | https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide | "Confirmation required." |
+| Tool settings | Always allow limit on Team and Enterprise carries the date condition: users cannot choose **Always allow** for these tools unless an admin set that tool to **Always allow** on or after November 9, 2026 | Corrected | https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide | "on Team and Enterprise users cannot choose **Always allow** for these tools unless an administrator has set that tool to **Always allow**." → "on Team and Enterprise plans users cannot choose **Always allow** for these tools, unless an admin has set that tool to **Always allow** on or after November 9, 2026; otherwise the user confirms each use."; [C]: "users can't choose Always allow for the following tools, unless an admin has set that tool to Always allow on or after November 9, 2026" |
+| Tool settings | The limit does not apply to organisations that added the Microsoft 365 connector for the first time after November 9, 2026; there an admin can set each tool to **Always allow**, **Needs approval** or **Blocked** | Corrected | https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide | (sentence absent) → "This limit does not apply to organisations that added the Microsoft 365 connector for the first time after November 9, 2026: there an admin can set each of these tools to **Always allow**, **Needs approval** or **Blocked**."; [C]: "This limit doesn't apply to organizations that added the Microsoft 365 connector for the first time after November 9, 2026." |
+| Tool settings | Removing and re-adding the connector usually keeps the original install date, so it usually does not change which case applies | Corrected | https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide | (sentence absent) → "Removing the connector and adding it again usually keeps the organisation's original install date, so it usually does not change which case applies."; [C]: "Removing the connector and adding it again usually keeps the organization's original install date" |
+| Tool settings | Tools an admin has not set by December 9, 2026 change to **Needs approval**, unless the whole connector is **Blocked** | Corrected | https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide | (sentence absent) → "Any of these tools an admin has not set by December 9, 2026 changes to **Needs approval**, unless the whole connector is **Blocked**."; [C]: "Any of these tools an admin hasn't set by then will change to Needs approval, unless the whole connector is set to Blocked." |
+| Tool settings | The tool names in [C] match the names shown in the settings list | Unverified |  | Marker kept; compare at setup |
+| Our recommendation | Creating or updating an event makes Microsoft 365 send attendees an invitation or update notice | Confirmed | https://support.claude.com/en/articles/12542951-set-up-the-microsoft-365-connector | "When Claude creates or updates a calendar event, Microsoft 365 automatically sends attendees an invitation or update notice." |
+
+## google-docs-sheets-slides-connectors.md (OPS-70)
+
+| Line or step | Claim | State | Source URL | Old wording → new wording (corrections) |
+|---|---|---|---|---|
+| What this is | Docs, Sheets and Slides are separate connectors from Google Drive, which still handles searching, uploading and sharing | Confirmed | https://support.claude.com/en/articles/10166901-use-google-workspace-connectors | "These are separate connectors from Google Drive. Google Drive still handles searching, uploading, and sharing files." |
+| What this is | Claude edits the open file live in a pane, creates new files, and reads and works with comments and suggestions in Docs | Confirmed | https://support.claude.com/en/articles/10166901-use-google-workspace-connectors |  |
+| Not this product | "Claude for Google Workspace" is a Marketplace sidebar, in beta, "different from the Google Workspace connectors in Claude" | Confirmed | https://support.claude.com/en/articles/16951679-use-claude-in-google-docs-sheets-and-slides |  |
+| Inputs | Claude "can only open and change files your Google account has access to" | Confirmed | https://support.claude.com/en/articles/10166901-use-google-workspace-connectors |  |
+| Inputs | Live editing works on Claude on the web in Chrome and on Claude Desktop with the built-in browser on; otherwise "Open in Google" | Confirmed | https://support.claude.com/en/articles/10166901-use-google-workspace-connectors |  |
+| Before you start 1 | On Team and Enterprise an Owner or Primary Owner must enable the connectors before users authenticate | Confirmed | https://support.claude.com/en/articles/10166901-use-google-workspace-connectors |  |
+| Before you start 2 | Live editing uses the same Claude for Google Drive app, approved once, no separate approval per file type | Confirmed | https://support.claude.com/en/articles/10166901-use-google-workspace-connectors |  |
+| Step 1 | The scopes Claude's connectors ask for | Unverified |  | Marker kept. [D] lists scopes for Google's own preview servers only; the directory pages that could name Claude's scopes return 404 (see the unreadable list) |
+| Step 2 | Path **Organization settings > Connectors**, **Browse connectors**, select the connector, **Add to your team**; each person then authenticates | Confirmed | https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities |  |
+| Step 2 | Docs, Sheets and Slides appear as three entries in the connector list | Unverified |  | Marker kept. The directory index we downloaded ([F], claude.com/connectors) names Drive, Gmail and Calendar but no Docs, Sheets or Slides entry; retried, the six candidate pages return 404 |
+| Step 3 | On Enterprise, a role's connector access is set on the role's **Connectors** tab, and the org-wide tool policy is a ceiling the role can only narrow | Corrected | https://support.claude.com/en/articles/13930458-set-up-role-based-permissions-on-enterprise-plans | "([B])" → "([B], [H])", and [H] added to Pages used; [B] does not mention roles; [H]: "role grants narrow within it and can't widen past it" |
+| Step 4 | Plus sign, hover over "Connectors", toggle on; Claude prompts to connect if the connector is off | Confirmed | https://support.claude.com/en/articles/10166901-use-google-workspace-connectors |  |
+| Step 4 | The connector shows under **Your connectors** with the status **Connected** | Confirmed | https://claude.com/docs/connectors/getting-started.md |  |
+| Step 5 | Naming Google gets a Google file; a generic "doc" or "deck" makes a local file; the pane needs a Google session with the account connected to Claude | Confirmed | https://support.claude.com/en/articles/10166901-use-google-workspace-connectors |  |
+| Step 6 | **Customize > Connectors**, select the connector, **Tool permissions**: **Always allow**, **Needs approval** or **Blocked** per category or tool; applies org-wide, users cannot override | Confirmed | https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities | "individual users can't override it" |
+| Step 6 | Each of the three connectors has its own **Tool permissions** page and what its tools are called | Unverified |  | Marker kept; no Claude page names the tools |
+| Step 7 | [A] says Gmail, Google Calendar and Google Drive connectors are available for all users, naming three and not Docs | Confirmed | https://support.claude.com/en/articles/10166901-use-google-workspace-connectors |  |
+| Step 7 | Who builds the Docs connector, and its plans | Unverified |  | Marker kept; neither [A] nor the directory gives it |
+| Steps 7, 11, 15 | Google's preview servers for Docs, Sheets and Slides are at `docsmcp.googleapis.com`, `sheetsmcp.googleapis.com` and `slidesmcp.googleapis.com` (`/mcp/v1`), in developer preview | Confirmed | https://developers.google.com/workspace/guides/configure-mcp-servers |  |
+| Step 8 | The pane's Google account must match the connected one, or "Claude tells you and offers to switch" | Confirmed | https://support.claude.com/en/articles/10166901-use-google-workspace-connectors |  |
+| Steps 9, 13, 17 | Google's preview servers list `read_doc`, `get_spreadsheet`, `get_values` and `read_presentation`; Docs shows comments and suggestions but no images | Confirmed | https://developers.google.com/workspace/guides/configure-mcp-servers | The images sentence is from [A]: "Claude can see comments and suggestions in Google Docs, but it can't see images." |
+| Steps 10, 14, 18 | Google's preview servers list `update_doc`, `update_spreadsheet`, `update_values`, `update_formulas`, `insert_dimension` and `update_presentation` | Confirmed | https://developers.google.com/workspace/guides/configure-mcp-servers |  |
+| Steps 10, 14, 18 | The names of the write tools on Claude's connectors, and whether pane edits ask for approval | Unverified |  | Marker kept; record at setup |
+| Step 18 | "Claude can't add charts to Google Slides, and Slides edits may not appear live in the pane." | Confirmed | https://support.claude.com/en/articles/10166901-use-google-workspace-connectors |  |
+| Write test | **Needs approval** shows a prompt with **Allow once**; **Always allow** skips it | Confirmed | https://claude.com/docs/connectors/getting-started.md | "Select Allow once to continue, or Always allow to skip the prompt for that tool from now on." |
+| Write test | The message Claude shows for a blocked tool, and whether a blocked tool stops pane edits | Unverified |  | Marker kept; record what you see |
+| Offboarding | **Disconnect**, or the three-dot menu and **Remove**; an Owner removes a connector for the organization under **Organization settings > Connectors** | Confirmed | https://claude.com/docs/connectors/getting-started.md |  |
+| Pages that do not exist | Directory and docs pages for Google Docs, Sheets and Slides return 404; the docs index lists Google pages for Drive, Gmail and Calendar only | Confirmed | https://claude.com/docs/llms.txt | Retried 2026-11-16: all six URLs returned 404 (see the unreadable list) |
+| What can go wrong | "Access blocked" message: **Manage third-party app access**, **Add app**, "Claude", **Trusted**, wait about 15 minutes | Confirmed | https://support.claude.com/en/articles/10166901-use-google-workspace-connectors | [A]: "Wait approximately 15 minutes" |
+
+## claude-code-for-a-role.md (OPS-70)
+
+| Line or step | Claim | State | Source URL | Old wording → new wording (corrections) |
+|---|---|---|---|---|
+| Step 1 | Team: Claude Code is in every seat; new and self-serve Enterprise: the single seat; older Enterprise: Chat + Claude Code or Premium seat bought under **Organization settings > Organization** | Confirmed | https://support.claude.com/en/articles/11845131 |  |
+| Before you start | The free claude.ai plan does not include Claude Code | Confirmed | https://code.claude.com/docs/en/setup.md |  |
+| Before you start | `forceLoginOrgUUID` is deployed through device management; a person receives server-managed settings "only after authenticating into your organization" | Confirmed | https://code.claude.com/docs/en/authentication.md |  |
+| Before you start | Requirements: macOS 13.0+, Windows 10 1809+ or Windows Server 2019+, 4 GB+ RAM, internet | Confirmed | https://code.claude.com/docs/en/setup.md |  |
+| Before you start | On a HIPAA-ready plan Claude Code is "available but not covered under your BAA" without the HIPAA configuration or ZDR | Confirmed | https://support.claude.com/en/articles/11845131 |  |
+| Step 2 | Install commands for macOS and Windows (script, Homebrew, WinGet); no Administrator needed | Confirmed | https://code.claude.com/docs/en/setup.md |  |
+| Step 2 | Homebrew and WinGet installs do not auto-update; the native installer updates itself | Confirmed | https://code.claude.com/docs/en/setup.md | [B]: "Homebrew installations do not auto-update", "WinGet installations do not auto-update" |
+| Step 3 | `claude --version`, `claude doctor`; "not found" means the install directory is not on the PATH | Confirmed | https://code.claude.com/docs/en/troubleshoot-install.md | [B] gives the commands |
+| Step 4 | Sign-in: `claude`, **Claude account with subscription**, pick the plan, **Authorize**, `Login successful`; `/login` to switch | Confirmed | https://support.claude.com/en/articles/11845131 | `Login successful` is on [C] |
+| Step 5 | `/status` shows "version, model, account, and connectivity"; the **Login method** row and the claude.ai login error under `forceLoginOrgUUID` | Confirmed | https://code.claude.com/docs/en/commands.md | [C] gives the error and the Login method |
+| Step 5 | Which rows `/status` shows for a claude.ai subscription login | Unverified |  | Marker kept; no page lists them. Retried [C], [G], [D] |
+| Step 5 | `claude auth status --text` prints sign-in status; whether it names the organization | Unverified |  | Command is on [H]; whether it names the organization stays unverified after a retry of [H] and [C] |
+| Step 6 | `Setting sources` line lists `Enterprise managed settings` with `(plist)`, `(HKLM)`, `(file)` or `(remote)` | Confirmed | https://code.claude.com/docs/en/managed-settings.md |  |
+| Step 6 | Meaning of a missing `Setting sources` line | Corrected | https://code.claude.com/docs/en/managed-settings.md | "If the line is missing, no managed source reached the device." → "If the line is missing, Claude Code found no managed source that delivers a policy key: check that the file sits at the path for the OS and that it holds a policy key, not only control keys ([D])."; [D]: "The line is missing: Claude Code found no managed source that delivers a policy key." |
+| Step 6 | For server-managed settings, `claude doctor` shows the `Managed settings (remote)` line | Confirmed | https://code.claude.com/docs/en/server-managed-settings.md |  |
+| Step 7 | `/plugin marketplace add <org>/<repo>` in a session | Confirmed | https://code.claude.com/docs/en/discover-plugins.md |  |
+| Step 7 | `/plugin install <plugin>@<marketplace>` in a session | Corrected | https://code.claude.com/docs/en/discover-plugins.md | "then `/plugin install <role-plugin>@digital-twin-kit`. ([F])" → "then `/plugin install <role-plugin>@digital-twin-kit`, which opens the plugin's details so you can choose a scope before it installs. ([F])"; [F]: "In a session, this command doesn't install right away: it opens the /plugin panel on that plugin's details so you can review it and choose a scope first." |
+| Step 7 | `/plugin` lists the installed plugins | Corrected | https://code.claude.com/docs/en/discover-plugins.md | "run `/plugin` and read the list." → "run `/plugin` and read the **Installed** tab."; [F]: "The Installed tab in /plugin lists your plugins" |
+| Step 8 | A plugin skill is invoked as `/plugin-name:skill-name` | Confirmed | https://code.claude.com/docs/en/skills.md |  |
+| Unmanaged devices | The sign-in lock and the managed settings file are deployed through device management | Corrected | https://code.claude.com/docs/en/authentication.md | "the sign-in lock and the managed settings file cannot be enforced" → "there is no device-management route to deploy the sign-in lock or the managed settings file"; [C]: "Deploy forceLoginMethod and forceLoginOrgUUID through your device management tooling" |
+| Unmanaged devices | On unmanaged devices a user can bypass server-managed settings | Confirmed | https://code.claude.com/docs/en/server-managed-settings.md | "Server-managed settings ... operate as a client-side control, not a security boundary. On unmanaged devices, a user doesn't need admin or sudo access to bypass them." |
+| What can go wrong | Under `forceLoginOrgUUID`, `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `apiKeyHelper` are blocked at startup | Confirmed | https://code.claude.com/docs/en/authentication.md |  |
+| What can go wrong | A non-default `ANTHROPIC_BASE_URL` makes Claude Code skip the server-managed settings fetch | Confirmed | https://code.claude.com/docs/en/server-managed-settings.md |  |
+| What can go wrong | [A] says Claude Desktop with its Code tab is "Recommended" and [B] marks the native install "(Recommended)" | Confirmed | https://support.claude.com/en/articles/11845131 | Conflict stays as written; terminal taken |
+| What can go wrong | An MDM package or script for installing Claude Code | Unverified |  | Marker kept; no page gives one |
+| What can go wrong | Whether the Desktop Code tab reads the managed settings file | Unverified |  | Marker kept |
+
+## starter-kit/connectors/hubspot/README.md (OPS-70)
+
+| Line or step | Claim | State | Source URL | Old wording → new wording (corrections) |
+|---|---|---|---|---|
+| Why this marker | "Date and time picker" "stores a date and time value" | Confirmed | https://knowledge.hubspot.com/properties/property-field-types-in-hubspot |  |
+| Why this marker | A record's property history gives "Changed to", "Date" and "Source" for each change | Confirmed | https://knowledge.hubspot.com/records/view-record-property-history |  |
+| Why this marker | Every change to a date-and-time property is kept in history | Unverified |  | Marker kept; no page says it is or is not left out |
+| Deals first | The connector lists Contacts, Leads, Companies, Deals, Tickets and custom objects as updatable | Confirmed | https://knowledge.hubspot.com/integrations/set-up-and-use-the-hubspot-connector-for-claude | Update column ticked for each |
+| Create it 1 | Menu path to create a property | Corrected | https://knowledge.hubspot.com/properties/create-and-edit-properties | "click the settings icon, then in Data Management go to **Properties**" → "click the settings icon, then in the left sidebar menu go to **Properties**"; [E]: "In the left sidebar menu, navigate to Properties." |
+| Create it 1 | "Edit property settings permissions are required to create properties." | Confirmed | https://knowledge.hubspot.com/properties/create-and-edit-properties |  |
+| Create it 2 | Field type **Date and time picker** | Confirmed | https://knowledge.hubspot.com/properties/property-field-types-in-hubspot |  |
+| Create it 3 | HubSpot shows a date-and-time value in the viewer's time zone | Confirmed | https://knowledge.hubspot.com/properties/property-field-types-in-hubspot | "a user's current time zone is used" |
+| Limit who can set it | Property access options and their Hub Enterprise subscriptions; Super Admin permissions required to restrict | Confirmed | https://knowledge.hubspot.com/properties/restrict-view-edit-access-for-properties |  |
+| Limit who can set it | "Allow everyone to view": all users can view but not edit; only Super Admins can edit | Confirmed | https://knowledge.hubspot.com/properties/restrict-view-edit-access-for-properties |  |
+| Limit who can set it | Anyone can set restricted properties via the API or when creating a record; do not use restrictions as a security measure | Confirmed | https://knowledge.hubspot.com/properties/restrict-view-edit-access-for-properties |  |
+| Limit who can set it | A connector write is treated as an API write or as the signed-in user's edit | Unverified |  | Marker kept; the write test settles it |
+| Limit who can set it | The connector acts with the user's own permissions | Confirmed | https://knowledge.hubspot.com/integrations/set-up-and-use-the-hubspot-connector-for-claude | "Users can access only the data allowed by their existing HubSpot user permissions." |
+| Make the skill set it | The connector's write tool is probably `manage_crm_objects`; the listing names `manage_custom_properties` | Confirmed | https://claude.com/connectors/hubspot |  |
+| Make the skill set it | That `manage_crm_objects` can set a custom property value, and the time format it accepts | Unverified |  | Marker kept; the write test settles it |
+| Check 2 | Property history Source: "CRM UI" lists a profile name and email address; "Integration" is "a connected app" | Confirmed | https://knowledge.hubspot.com/properties/hubspots-change-sources |  |
+| Check 2 | Whether a connector write names the person in property history | Unverified |  | Marker kept |
+| Check 3 | Audit Log attribution is recorded "to both the user and the Claude connector" | Confirmed | https://knowledge.hubspot.com/integrations/set-up-and-use-the-hubspot-connector-for-claude |  |
+| Report on it | Segments "group records based on property values", on "All products and plans" | Confirmed | https://knowledge.hubspot.com/lists/create-active-or-static-lists |  |
+| Report on it | The filter wording for a date-and-time property | Unverified |  | Marker kept |
+| Report on it | Custom reports are available with Professional and Enterprise subscriptions of the hubs | Confirmed | https://knowledge.hubspot.com/reports/create-custom-reports |  |
+| Report on it | How long property history is kept | Unverified |  | Marker kept |
+
+## starter-kit/connectors/zendesk/README.md (OPS-70)
+
+| Line or step | Claim | State | Source URL | Old wording → new wording (corrections) |
+|---|---|---|---|---|
+| Why this marker | "Agents can add or remove tags in tickets" | Confirmed | https://support.zendesk.com/hc/en-us/articles/4408835059482-Working-with-ticket-tags |  |
+| Why this marker | Tags are available in every plan | Corrected | https://support.zendesk.com/hc/en-us/articles/4408835059482-Working-with-ticket-tags | "a tag is in every plan, and" → "tags are listed for all Suite plans and for Support Team, Professional and Enterprise ([F]), and"; [F]: "All Suites Team, Growth, Professional, Enterprise, or Enterprise Plus; Support Team, Professional, or Enterprise" |
+| Why this marker | "Each audit represents a single update to the ticket"; "Tags were added or removed" is an example | Confirmed | https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/ |  |
+| Why this marker | Re-adding a tag already on the ticket records nothing | Unverified |  | Marker kept; no page says either way |
+| Why this marker | Agents can delete tags on one ticket at a time; admins can remove a tag from all open tickets | Confirmed | https://support.zendesk.com/hc/en-us/articles/4408835059482-Working-with-ticket-tags |  |
+| Why this marker | "The value of a ticket field was changed" is an audit example; each audit has `author_id` and `created_at` | Confirmed | https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/ |  |
+| Why this marker | Text fields can be used as a view condition with "Present" | Corrected | https://support.zendesk.com/hc/en-us/articles/4408887162394-Using-custom-ticket-fields-in-business-rules-and-views | "Text fields can be used as a view condition, with "Present" ([G])." → "Text fields can be used as a view condition with "Contains the following string" ([G]); "Present" is a trigger condition for a text field ([G])."; [G] table, Text row: trigger conditions "Present, Not present"; view conditions "Contains the following string", "Does not contain the following string", "Contains at least one of the following words", "Contains none of the following words" |
+| Create it 1 | **Objects and rules**, **Tickets > Fields**, **Add field**; "You must be an administrator to create custom ticket fields." | Confirmed | https://support.zendesk.com/hc/en-us/articles/4408883152794-Adding-custom-ticket-fields-to-your-tickets-and-forms |  |
+| Create it 2 | Type **Text**; "You can't alter a field type after the custom ticket field is created." | Confirmed | https://support.zendesk.com/hc/en-us/articles/4408883152794-Adding-custom-ticket-fields-to-your-tickets-and-forms |  |
+| Create it 3 | Permissions **Agents can edit** (customers never see it); description visible to admins only | Confirmed | https://support.zendesk.com/hc/en-us/articles/4408883152794-Adding-custom-ticket-fields-to-your-tickets-and-forms | "Agents can edit: Only agents can view and edit the field." |
+| Create it 4 | Add the field to each ticket form the twin writes to | Confirmed | https://support.zendesk.com/hc/en-us/articles/4408883152794-Adding-custom-ticket-fields-to-your-tickets-and-forms |  |
+| Limit who can set it | Field permissions are "Agents can edit", "Customers can edit" and "Customers can view" | Confirmed | https://support.zendesk.com/hc/en-us/articles/4408883152794-Adding-custom-ticket-fields-to-your-tickets-and-forms |  |
+| Limit who can set it | "external AI agents enforce the acting user's role, group access, and permissions" | Confirmed | https://support.zendesk.com/hc/en-us/articles/11398710406554 |  |
+| Limit who can set it | Transaction logs record which external AI agent performed each action and on whose behalf | Confirmed | https://support.zendesk.com/hc/en-us/articles/11398710406554 |  |
+| Limit who can set it | A tool call can be blocked by "the acting user's Zendesk permissions" | Confirmed | https://support.zendesk.com/hc/en-us/articles/11458059060250 |  |
+| Make the skill set it | The connection can do "creating and updating tickets" | Confirmed | https://support.zendesk.com/hc/en-us/articles/11398710406554 |  |
+| Make the skill set it | An update-ticket tool can set a custom ticket field value | Unverified |  | Marker kept; the write test settles it |
+| Make the skill set it | The API's default tag behavior "overwrites and replaces existing tags" | Confirmed | https://developer.zendesk.com/api-reference/ticketing/tickets/tickets/ |  |
+| Make the skill set it | The connector's tool replaces tags the same way | Unverified |  | Marker kept; test on a ticket with two tags |
+| Check 2 | The audit author is the signed-in person; the agent "uses its own identity through OAuth 2.1" | Unverified |  | Marker kept; the OAuth 2.1 sentence is on [A] |
+| Report on it | A view with the condition "Present" on the Text field lists every changed ticket | Corrected | https://support.zendesk.com/hc/en-us/articles/4408887162394-Using-custom-ticket-fields-in-business-rules-and-views | "A view with the condition "Present" on the field lists every ticket the twin has changed ([G])." → "A view with the condition "Contains the following string" on the field, set to a string every marker value contains (for example `Z`), should list every ticket the twin has changed ([G]). **⚠ Unverified:** that the string match works as expected on the stored value; confirm at setup." |
+| Report on it | The string match works as expected on the stored value | Unverified |  | Marker added; confirm at setup |
+| Report on it | The view is available on any plan | Corrected | https://support.zendesk.com/hc/en-us/articles/4408887162394-Using-custom-ticket-fields-in-business-rules-and-views | "**A view, any plan.**" → "**A view, on the plans [G] lists** (all Suite plans; Support Team, Professional and Enterprise)."; [G]: "All Suites Team, Growth, Professional, Enterprise, or Enterprise Plus; Support Team, Professional, or Enterprise" |
+| Report on it | "On Suite Professional and above, you can report on custom ticket fields in Explore." | Confirmed | https://support.zendesk.com/hc/en-us/articles/4408883152794-Adding-custom-ticket-fields-to-your-tickets-and-forms |  |
+| Report on it | Whether Explore shows the field's value history or only its latest value | Unverified |  | Marker kept |
+
 ## Sources that could not be read
 
 | URL | How it failed (2026-11-15) |
@@ -775,3 +930,9 @@
 | Jamf and Kandji (Iru) documentation | Not read: neither vendor is on the accepted domain list |
 | https://support.microsoft.com/en-us/office/edit-permissions-for-a-list-library-or-individual-item-02d770f3-59eb-4910-a608-5f84cc297782 | Read, but support.microsoft.com is not on the accepted Microsoft domain list, so it does not confirm |
 | https://claude.com/connectors/zendesk | HTTP 404 on both tries, 2026-11-16 (OPS-60); zendesk-connector.md keeps the directory status unverified |
+| https://claude.com/connectors/google-docs | HTTP 404, 2026-11-16 (OPS-70); the Google Docs, Sheets and Slides runbook cites no page for it |
+| https://claude.com/connectors/google-sheets | HTTP 404, 2026-11-16 (OPS-70); the Google Docs, Sheets and Slides runbook cites no page for it |
+| https://claude.com/connectors/google-slides | HTTP 404, 2026-11-16 (OPS-70); the Google Docs, Sheets and Slides runbook cites no page for it |
+| https://claude.com/docs/connectors/google/docs.md | HTTP 404, 2026-11-16 (OPS-70); the Google Docs, Sheets and Slides runbook cites no page for it |
+| https://claude.com/docs/connectors/google/sheets.md | HTTP 404, 2026-11-16 (OPS-70); the Google Docs, Sheets and Slides runbook cites no page for it |
+| https://claude.com/docs/connectors/google/slides.md | HTTP 404, 2026-11-16 (OPS-70); the Google Docs, Sheets and Slides runbook cites no page for it |

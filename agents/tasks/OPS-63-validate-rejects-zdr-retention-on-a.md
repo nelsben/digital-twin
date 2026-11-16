@@ -1,0 +1,37 @@
+---
+id: OPS-63
+title: validate rejects ZDR retention on a profile that says the customer has no ZDR agreement
+domain: ops
+tier: standard
+tier_reason: One cross-field check in one function, one design paragraph and one test file; every decision is made in the card
+status: merged
+issue: 224
+parent: 158
+fixes: []
+scope: [partner-kit/plugins/twin-consultant/scripts/twincard/validate.py, partner-kit/docs/design.md, tests/test_twincard_retention_cover.py, tests/test_twincard_rule_audit.py, tests/test_twincard_validate.py]
+forbid: [docs/compendium/**, engagements/**, partner-kit/plugins/twin-consultant/data/**, partner-kit/plugins/twin-consultant/skills/**, CLAUDE.md]
+red_test: python3 -m unittest tests.test_twincard_retention_cover
+gate: test
+budget: 2-attempts
+spend: 10
+---
+## Why
+
+OPS-53 added the profile field compliance.zdr_cover (in-place, planned, none) beside compliance.retention (standard, custom-30-day, zdr). The two are filled in separately and nothing compares them, so a profile can say the twin is set up with ZDR retention while the customer has no ZDR agreement and plans none, and it still validates and levels. Issue #224.
+
+## Done when
+
+- READ FIRST. partner-kit/docs/design.md section 4.1 (the paragraph that defines compliance.zdr_cover and says compliance.retention is the retention the twin is set up with) and section 4.3, and in partner-kit/plugins/twin-consultant/scripts/twincard/validate.py the report class (error and warning take record, path, message, fix) and _check_cross_record. Follow the message and fix style of the checks already there.
+- THE RULE (my decisions, do not re-decide). All three apply to the customer profile, whatever the provenance status of either field (answered or assumed). (1) compliance.retention is 'zdr' and compliance.zdr_cover is 'none': a validation ERROR on record 'profile', path 'compliance.retention'. The message names compliance.zdr_cover and says the customer has no zero-data-retention agreement and plans none, so the twin cannot be set up with ZDR. The fix gives both ways out: set compliance.retention to the retention the org really has (standard or custom-30-day), or correct compliance.zdr_cover to planned or in-place if the customer does have or plan an agreement. (2) compliance.retention is 'zdr' and compliance.zdr_cover is 'planned': a validation WARNING on record 'profile', path 'compliance.retention'. The message says ZDR is not in force until the agreement is signed; the fix says to keep the value only if the twin will not start before the agreement is signed, and otherwise to record the retention in force today. (3) Every other pair is not flagged by this check. In particular zdr_cover 'in-place' with retention 'standard' or 'custom-30-day' is valid and gets no warning: the agreement may cover a separate org for the highly sensitive work while the twin's main org keeps another retention (the PE worked example is planned that way).
+- WHEN THE CHECK STAYS SILENT. If either field is missing, empty, open with no value, or not one of its catalogue values, this check reports nothing; the existing required-field and enum checks report that. The check never raises an exception on a malformed compliance section (not an object, a list, null).
+- EFFECTS. The error makes validate exit as any other validation error does and makes level, backlog, dashboard and all refuse as they do for any other validation error; you add no new exit code and no new refusal path. The warning is printed where the other validation warnings are printed and changes no exit code and no completeness figure. Where in validate.py the check lives (inside _check_cross_record or a new function called beside it) is your choice; say which in the hand-back.
+- DESIGN. partner-kit/docs/design.md states the rule in the same commit as the code: section 4.1's zdr_cover paragraph (or the sentence directly after it) says which pair is a validation error, which is a warning, and that in-place with another retention is valid and why. If section 4.3 or another section lists validate's checks, add the rule there in one line. Change no other sentence of the design.
+- TEST FIRST. tests/test_twincard_retention_cover.py is committed first, alone, failing. It builds profiles in memory from the Team sample (engagements/sample-team-cs) and never writes under engagements/. It checks: zdr with none gives exactly one error at profile compliance.retention whose message contains 'compliance.zdr_cover' and whose fix names both ways out; the same pair with either field's provenance status set to assumed still gives the error; zdr with planned gives no error and exactly one warning at that path; zdr with in-place gives neither; standard and custom-30-day with each of the three cover values give neither; an open (no value) zdr_cover or retention gives no error or warning from this check; a compliance section that is null or a list raises no exception; level on the zdr with none profile refuses the way it refuses any validation error; the three committed profiles (engagements/sample-pe, engagements/sample-team-cs and the broker fixture under tests/fixtures/twincard/) produce no error and no warning from this check; and design.md names both field names in the paragraph that states the rule. Use plain test methods, not thousands of subtests.
+- EXISTING TESTS. tests/test_twincard_rule_audit.py has at least one variant that sets the Team profile's retention to zdr while its zdr_cover is none (near line 184); the new error makes that profile invalid. Keep the variant valid by also setting compliance.zdr_cover to 'in-place' in memory, and leave what the test asserts unchanged. Do the same for any other variant in tests/test_twincard_rule_audit.py or tests/test_twincard_validate.py that the new error breaks. List every changed line old -> new. If a test file outside your scope fails because of the new error, stop and tell the brain; do not weaken the rule to keep it passing.
+- SAMPLES. No file under engagements/ or tests/fixtures/ changes. Run validate on both worked examples before and after and give the printed completeness line of each, before -> after; they must be identical. If either differs, stop and say why.
+- GATE AND EVIDENCE. Run tests only through the lease: node /Users/bennelsen/WorkflowBridge/bin/wb lease gate-mac --wait 1800 -- python3 -m unittest <args>, from your worktree. Save the red run's unittest output, and nothing else, to .delegation/<this card's id>/red-1.txt in your worktree. No note file in place of red evidence, no test run on a scratch copy outside the lease. The full gate python3 -m unittest discover -s tests passes. No rebase, no push, no PR.
+- HAND-BACK. Where the check lives; the exact error and warning texts; each changed existing test line old -> new; both samples' completeness lines before -> after; every choice you made; and in the [[report]] line, files= lists every file changed on the branch since origin/main.
+
+## Review
+
+Verdict consistent, accepted with no reviewer agent (standard tier). Brain read the whole diff of validate.py (_check_retention_cover), the design.md 4.1 sentence and the new list line, and the one changed rule_audit test, which now sets zdr_cover in-place so its zdr profile is valid. The red run was 5 failures in a test-only first commit. Gate: 798 tests OK. Completeness is unchanged: PE 88% (101/114), Team 100% (111/111). No sample profile trips the check.

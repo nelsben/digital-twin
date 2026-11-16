@@ -44,7 +44,7 @@ Task id: T2    Task name: Update the CRM after a meeting
 
 #### F1. Your tasks
 
-"About ten a week for each of us, and all 18 of us on the deal team do it, 15 minutes each. With the company brief, it's what I'd want first in the pilot."
+"About ten a week for each of us, and all 18 of us on the deal team do it, 15 minutes each. With the company brief, it's what I'd want first in the pilot. I want it to draft the activity log and next-step fields on the Salesforce opportunity for me to approve, so Salesforce is up to date after every meeting."
 
 #### F2. What goes in, what comes out
 
@@ -84,7 +84,7 @@ Task id: T3    Task name: Weekly pipeline summary for the Monday deal meeting
 
 #### F1. Your tasks
 
-"Once a week, about an hour, before the Monday deal meeting. Not for the pilot. The whole deal team uses it, all 18 of us."
+"Once a week, about an hour, before the Monday deal meeting. Not for the pilot. The whole deal team uses it, all 18 of us. I want it to write the Monday pipeline summary from the Salesforce pipeline report, so the pipeline view is right without anyone spending an hour on it."
 
 #### F2. What goes in, what comes out
 

@@ -106,9 +106,9 @@ question ids whose answers may fill it. Design of record:
   disagreement. `voice.tone` combines them, and its source names both files
   with `; `. Do not keep only one of them.
 
-## Rules, wished changes and wished surfaces
+## Rules, wished changes, story wants and wished surfaces
 
-Three card fields hold only what an interviewee said, in their words.
+Five card fields hold only what an interviewee said, in their words.
 Nothing is inferred: not from a process, a regulation you know of, a pack
 or another task. None is required; with nothing said, the value stays empty
 (`[]` or `""`) and has no `provenance` entry.
@@ -124,6 +124,16 @@ or another task. None is required; with nothing said, the value stays empty
   task is done today, from questions F3 and F5, quoted. The wish half of an
   F5 trigger answer ("the escalation itself, ideally") goes here as well;
   the open question about the trigger stays.
+- `tasks[].story_want` and `tasks[].story_benefit`: the two halves of the
+  task story's statement, "I want <want>, so that <benefit>." Write them
+  from the interviewee's own words under question F1 (and F3 for the
+  benefit), in the first person of the role: `story_want` is what the twin
+  does ("draft the renewal quote email from the HubSpot deal"),
+  `story_benefit` what that gives back ("I only check the figures and send
+  it"). Leave both empty when the notes do not say why the task should be
+  handed over; never invent a benefit. The backlog then drafts the
+  statement from the output and the minutes, marked for the consultant to
+  confirm with the interviewee.
 - `role.wanted_surfaces`: where the interviewees say they would rather
   work, from question P1, as `role.works_in` values. Where they work today
   is `role.works_in`, not this. It is a wish: levelling does not read it.

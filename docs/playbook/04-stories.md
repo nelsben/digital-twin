@@ -15,7 +15,7 @@ These match the `type:` labels in this repo (`type:epic`, `type:feature`, `type:
 
 ## From the persona card
 
-The backlog the [persona-card workflow](05-persona-card-workflow.md) generates uses the same levels. It adds one feature, **Twin foundation**, for work that no single task owns. Its stories are always the same seven: persona voice, connectors and identity, guardrails and settings, distribution, governance log, memory policy, and pilot rollout and scorecard. Each generated story carries the fields of the template below, taken from the levelled plan. The rules are in [section 8 of the design](../../partner-kit/docs/design.md#8-backlog-backlogpy-datatask-libraryjson).
+The backlog the [persona-card workflow](05-persona-card-workflow.md) generates uses the same levels. It adds one feature, **Twin foundation**, for work that no single task owns. Its stories are always the same seven: persona voice, connectors and identity, guardrails and settings, distribution, governance log, memory policy, and pilot rollout and scorecard. Each generated story carries the fields of the template below, taken from the levelled plan. Its statement uses the interviewee's own words where the card has them and is marked as drafted where it does not, its target comes from the sponsor's scorecard targets, and it says which [definition of ready](#definition-of-ready-before-building) checks are met; each open question becomes a spike. The rules are in [section 8 of the design](../../partner-kit/docs/design.md#8-backlog-backlogpy-datatask-libraryjson).
 
 ## Story template
 

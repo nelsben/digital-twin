@@ -19,6 +19,35 @@
   ],
   "templates": [
     {
+      "id": "compliance-sign-off",
+      "title": "Get compliance's sign-off on the story before it is built",
+      "part": "A7",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "task.data_class": [
+          "highly-sensitive",
+          "phi"
+        ]
+      },
+      "how": [
+        {
+          "text": "Check the story meets the definition of ready before compliance reads it.",
+          "link": "docs/playbook/04-stories.md#definition-of-ready-before-building"
+        },
+        {
+          "text": "Compliance reads the story's fields, the levelled decisions for the task and its data controls.",
+          "link": "partner-kit/docs/design.md#73-rules-plan-fit-and-levelledjson"
+        },
+        {
+          "text": "Record the sign-off, with the signer's name and the date, in the customer's engagement folder.",
+          "link": "engagements/README.md"
+        }
+      ],
+      "done_when": "The sign-off is recorded in the customer's engagement folder with a name and a date.",
+      "owner_role": "compliance"
+    },
+    {
       "id": "collect-examples",
       "title": "Collect 3 examples of the task from real work, each with the result a person expects",
       "part": "A8",
@@ -243,6 +272,41 @@
         }
       ],
       "done_when": "A pilot user in the role sees the skill after the plugin updates, and its description names the role.",
+      "owner_role": "skill-engineer"
+    },
+    {
+      "id": "owner-handover",
+      "title": "Hand the skill over to its owner",
+      "part": "A2",
+      "applies_to": "task-story",
+      "per": null,
+      "when": {
+        "not": {
+          "runtime": [
+            "none",
+            null
+          ]
+        }
+      },
+      "how": [
+        {
+          "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+          "link": "starter-kit/templates/skill/README.md#copy-it"
+        },
+        {
+          "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+          "link": "starter-kit/templates/skill/README.md#fill-it-in"
+        },
+        {
+          "text": "Name who reviews a change before it is published: someone other than its author.",
+          "link": "docs/playbook/04-stories.md#definition-of-done"
+        },
+        {
+          "text": "Have the skill owner make one change while the engineer watches.",
+          "link": "docs/playbook/04-stories.md#definition-of-done"
+        }
+      ],
+      "done_when": "The skill owner has made one change to the skill with the engineer watching.",
       "owner_role": "skill-engineer"
     },
     {

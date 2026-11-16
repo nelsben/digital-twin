@@ -44,7 +44,7 @@ Task id: T1    Task name: Prepare a one-page company brief
 
 #### F1. Your tasks
 
-"About four a week, around 90 minutes each. About three of us on the team do it. It's the biggest single chunk of my week. It's the first thing I'd want in the pilot."
+"About four a week, around 90 minutes each. About three of us on the team do it. It's the biggest single chunk of my week. It's the first thing I'd want in the pilot. I want it to draft the one-page company brief from Salesforce and SharePoint, so I spend my time on the model and the diligence calls instead."
 
 #### F2. What goes in, what comes out
 
@@ -84,7 +84,7 @@ Task id: T4    Task name: Screen an inbound CIM or teaser
 
 #### F1. Your tasks
 
-"About five a week, 40 minutes each. Not for the pilot; after briefs and CRM."
+"About five a week, 40 minutes each. Not for the pilot; after briefs and CRM. I want it to screen the CIM or teaser and suggest pursue or pass, so the screening notes are done by Wednesday."
 
 #### F2. What goes in, what comes out
 
@@ -124,7 +124,7 @@ Task id: T5    Task name: Prepare for a management or expert call
 
 #### F1. Your tasks
 
-"About eight a month, 45 minutes each. Not for the pilot."
+"About eight a month, 45 minutes each. Not for the pilot. I want it to pull together a briefing note for whoever is on the call, so the caller walks in knowing what we already know."
 
 #### F2. What goes in, what comes out
 

@@ -3,10 +3,22 @@
   "customer": "example-software-co",
   "persona": "customer-success-manager",
   "source": {
-    "card_sha256": "ed6b2c0d5ae57095d3a004a56c5be31d2d0b9cff6a7d84d13523eeaef7041141",
-    "levelled_sha256": "18daa425221439764f97c67a2ad8f68e974f28e947799209dd3e0d59f810abee",
+    "card_sha256": "d0dbd2c679d4ab2cfcdcf34e348f3cc418bbb292e0471ee1ff3a71692c7c810a",
+    "levelled_sha256": "7895b5435debc9daad0fb5006e24e039c6c6966fb3d560edacdb1f34e571b584",
     "library_version": 1
   },
+  "unnamed_roles": [
+    {
+      "role": "security",
+      "tasks": 1,
+      "acting_owner": "Teodor Amsel (IT and operations lead)"
+    },
+    {
+      "role": "source-system-admin",
+      "tasks": 3,
+      "acting_owner": "Teodor Amsel (IT and operations lead)"
+    }
+  ],
   "epic": {
     "id": "E",
     "title": "Customer success manager twin for Example Software Co",
@@ -21,7 +33,8 @@
           {
             "id": "S-C1",
             "title": "Account brief before a customer call",
-            "statement": "As a Customer success manager, I want my twin to account brief before a customer call so that I get the one-page account brief.",
+            "statement": "As a customer success manager, I want my twin to brief me on the account before each call so that I walk into the call already knowing the account.",
+            "statement_source": "card",
             "part": "A2",
             "in_pilot": true,
             "priority": 1,
@@ -34,13 +47,36 @@
               "wall_impact": "none",
               "inputs": "hubspot (company, contacts, deals, open tickets, notes); google-drive (account plan, last QBR deck, contract)",
               "output_and_audience": "One-page account brief, internal; to none (the conversation)",
+              "delivery": "The output stays in the conversation or a local file.",
               "skill_owner": "Marisol Quenby",
               "baseline": "6 per week x 30 minutes each x 8 users"
             },
             "acceptance": [
               "Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
-              "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake."
+              "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.",
+              "Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses."
+            ],
+            "target": {
+              "text": "Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 6 per week, 30 minutes each, 8 users.",
+              "set": true
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": true,
+                "note": "3 counted examples (2 good, 1 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: hubspot and google-drive."
+              }
             ],
             "gated_by": [],
             "tasks": [
@@ -65,6 +101,8 @@
                 ],
                 "done_when": "Three real examples, each with its inputs and its expected result, are stored where the evals can read them.",
                 "owner_role": "skill-owner",
+                "owner_name": "Marisol Quenby",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -88,6 +126,8 @@
                 ],
                 "done_when": "Every acceptance criterion has at least one eval, and the evals run and fail without the skill.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -135,6 +175,8 @@
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -158,6 +200,8 @@
                 ],
                 "done_when": "The skill starts on every should-trigger prompt and on none of the should-not prompts.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -177,12 +221,14 @@
                 ],
                 "done_when": "A reviewer who did not write the skill has approved the pull request and the evals pass.",
                 "owner_role": "skill-owner",
+                "owner_name": "Marisol Quenby",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
-                "id": "S-C1.publish-in-role-plugin",
-                "template": "publish-in-role-plugin",
-                "title": "Publish the skill in the role plugin",
+                "id": "S-C1.publish-in-role-plugin-team",
+                "template": "publish-in-role-plugin-team",
+                "title": "Publish the skill in the role plugin, which every member of the Team org gets",
                 "part": "A9",
                 "how": [
                   {
@@ -190,58 +236,105 @@
                     "link": "starter-kit/templates/role-plugin/README.md#steps"
                   },
                   {
-                    "text": "Publish the marketplace so the role's users get the new version.",
-                    "link": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups"
+                    "text": "Add the role plugin to the one organisation-wide configuration, so every member gets the new version.",
+                    "link": "starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member"
+                  },
+                  {
+                    "text": "Write the skill's description so it says which role it is for, because there is no group target on Team.",
+                    "link": "starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member"
                   }
                 ],
-                "done_when": "A pilot user in the role sees the skill after the plugin updates.",
+                "done_when": "A pilot user in the role sees the skill after the plugin updates, and its description names the role.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
-                "id": "S-C1.connect-no-runbook.hubspot",
-                "template": "connect-no-runbook",
-                "title": "Connect it without a kit runbook: the kit has no runbook for this connector yet (hubspot)",
-                "part": "A3",
+                "id": "S-C1.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A2",
                 "how": [
                   {
-                    "text": "Check how the system connects today: a directory connector, a vendor server or none.",
-                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
                   },
                   {
-                    "text": "If the directory has no connector for it, choose to buy, build or host one.",
-                    "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
                   },
                   {
-                    "text": "Review the connector before it is enabled, and write down the steps you followed.",
-                    "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
                   }
                 ],
-                "done_when": "The connector works for a pilot user with the planned identity, and the steps are written down for a runbook.",
-                "owner_role": "integration-engineer",
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
-                "id": "S-C1.connect-no-runbook.google-drive",
-                "template": "connect-no-runbook",
-                "title": "Connect it without a kit runbook: the kit has no runbook for this connector yet (google-drive)",
+                "id": "S-C1.connect-kit-runbook.hubspot",
+                "template": "connect-kit-runbook",
+                "title": "Connect it by following the kit's runbook for this connector (hubspot)",
                 "part": "A3",
                 "how": [
                   {
-                    "text": "Check how the system connects today: a directory connector, a vendor server or none.",
-                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+                    "text": "Check the runbook's prerequisites, including who must approve the connector.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#before-you-start"
                   },
                   {
-                    "text": "If the directory has no connector for it, choose to buy, build or host one.",
-                    "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
+                    "text": "Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#steps"
                   },
                   {
-                    "text": "Review the connector before it is enabled, and write down the steps you followed.",
-                    "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+                    "text": "Run the runbook's checks with a pilot user before the task is built.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#check-it-worked"
+                  },
+                  {
+                    "text": "Record the hand-over the runbook asks for in the customer's folder.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#hand-over"
                   }
                 ],
-                "done_when": "The connector works for a pilot user with the planned identity, and the steps are written down for a runbook.",
+                "done_when": "A pilot user has connected with the planned identity, each tool is set as the story's tool tasks say, and the runbook's checks pass.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C1.connect-kit-runbook.google-drive",
+                "template": "connect-kit-runbook",
+                "title": "Connect it by following the kit's runbook for this connector (google-drive)",
+                "part": "A3",
+                "how": [
+                  {
+                    "text": "Check the runbook's prerequisites, including who must approve the connector.",
+                    "link": "starter-kit/runbooks/google-workspace-connectors.md#before-you-start"
+                  },
+                  {
+                    "text": "Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say.",
+                    "link": "starter-kit/runbooks/google-workspace-connectors.md#steps"
+                  },
+                  {
+                    "text": "Run the runbook's checks with a pilot user before the task is built.",
+                    "link": "starter-kit/runbooks/google-workspace-connectors.md#check-it-worked"
+                  },
+                  {
+                    "text": "Record the hand-over the runbook asks for in the customer's folder.",
+                    "link": "starter-kit/runbooks/google-workspace-connectors.md#hand-over"
+                  }
+                ],
+                "done_when": "A pilot user has connected with the planned identity, each tool is set as the story's tool tasks say, and the runbook's checks pass.",
+                "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -261,6 +354,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -280,6 +375,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -299,6 +396,8 @@
                 ],
                 "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
                 "owner_role": "business-owner",
+                "owner_name": "Marisol Quenby (Customer success team lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -322,13 +421,15 @@
                 ],
                 "done_when": "The business owner has approved the allowlist on scorecard evidence, and only those tools are Always allow.",
                 "owner_role": "business-owner",
+                "owner_name": "Marisol Quenby (Customer success team lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
                 "id": "S-C1.confirm-unverified-decision.connectors.google-drive",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.google-drive)",
-                "part": "A9",
+                "part": "A3",
                 "how": [
                   {
                     "text": "Find the Unverified mark on the page the decision cites in levelled.json.",
@@ -345,6 +446,8 @@
                 ],
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -359,7 +462,7 @@
                   },
                   {
                     "text": "Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it.",
-                    "link": "docs/compendium/02-persona.md#memory"
+                    "link": "starter-kit/templates/pilot/memory-policy.md#tasks-that-read-input-written-by-outsiders"
                   },
                   {
                     "text": "If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide.",
@@ -368,6 +471,8 @@
                 ],
                 "done_when": "The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -387,6 +492,8 @@
                 ],
                 "done_when": "Custom retention is set, or the customer's acceptance of standard retention is recorded.",
                 "owner_role": "compliance",
+                "owner_name": "Pieter Achterberg (Finance and legal lead)",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -394,7 +501,8 @@
           {
             "id": "S-C4",
             "title": "Follow-up email after a customer call, and a call note in HubSpot",
-            "statement": "As a Customer success manager, I want my twin to follow-up email after a customer call, and a call note in HubSpot so that I get the draft follow-up email, which the manager sends, and a call note on the HubSpot record.",
+            "statement": "As a customer success manager, I want my twin to draft the follow-up email and the call note for HubSpot so that the follow-up is out the same afternoon.",
+            "statement_source": "card",
             "part": "A2",
             "in_pilot": true,
             "priority": 2,
@@ -403,10 +511,11 @@
               "data_class": "confidential",
               "surface": "client-skill; surfaces: claude-ai",
               "autonomy": "1 to 2",
-              "connectors_and_identity": "google-drive: user identity, read, always-allow; hubspot: user identity, write, blocked",
+              "connectors_and_identity": "google-drive: user identity, read, always-allow; hubspot: user identity, write, blocked; gmail: user identity, write, blocked",
               "wall_impact": "none",
               "inputs": "google-drive (call notes or transcript)",
               "output_and_audience": "Draft follow-up email, which the manager sends, and a call note on the HubSpot record, external; to a draft in the conversation; the HubSpot company record",
+              "delivery": "A person sends or files it: the twin produces a draft, hubspot-create and gmail-send are Blocked at the starting level, and they open at level 2.",
               "skill_owner": "Marisol Quenby",
               "baseline": "6 per week x 25 minutes each x 8 users",
               "constraints": [
@@ -418,9 +527,37 @@
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.",
               "Keeps: I want to approve the note before it's created.",
-              "Plus: every write carries the twin marker."
+              "Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.",
+              "Plus: the twin writes nothing to the CRM at the starting level; a person files the result."
             ],
-            "gated_by": [],
+            "target": {
+              "text": "Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 6 per week, 25 minutes each, 8 users.",
+              "set": true
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": true,
+                "note": "3 counted examples (2 good, 1 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": false,
+                "note": "gmail is named by blocker connector-cannot-write."
+              }
+            ],
+            "gated_by": [
+              {
+                "kind": "blocker",
+                "id": "connector-cannot-write",
+                "text": "The task writes to Gmail or Google Calendar, whose directory connectors read only: they cannot create, send or change mail or events."
+              }
+            ],
             "tasks": [
               {
                 "id": "S-C4.collect-examples",
@@ -443,6 +580,8 @@
                 ],
                 "done_when": "Three real examples, each with its inputs and its expected result, are stored where the evals can read them.",
                 "owner_role": "skill-owner",
+                "owner_name": "Marisol Quenby",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -466,6 +605,8 @@
                 ],
                 "done_when": "Every acceptance criterion has at least one eval, and the evals run and fail without the skill.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -512,11 +653,13 @@
                   },
                   {
                     "text": "Make the skill keep these rules from the interviews, in the interviewee's words: I want to approve the note before it's created..",
-                    "link": null
+                    "link": "partner-kit/docs/design.md#42-persona-card-cardjson"
                   }
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -540,6 +683,8 @@
                 ],
                 "done_when": "The skill starts on every should-trigger prompt and on none of the should-not prompts.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -559,12 +704,14 @@
                 ],
                 "done_when": "A reviewer who did not write the skill has approved the pull request and the evals pass.",
                 "owner_role": "skill-owner",
+                "owner_name": "Marisol Quenby",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
-                "id": "S-C4.publish-in-role-plugin",
-                "template": "publish-in-role-plugin",
-                "title": "Publish the skill in the role plugin",
+                "id": "S-C4.publish-in-role-plugin-team",
+                "template": "publish-in-role-plugin-team",
+                "title": "Publish the skill in the role plugin, which every member of the Team org gets",
                 "part": "A9",
                 "how": [
                   {
@@ -572,58 +719,134 @@
                     "link": "starter-kit/templates/role-plugin/README.md#steps"
                   },
                   {
-                    "text": "Publish the marketplace so the role's users get the new version.",
-                    "link": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups"
+                    "text": "Add the role plugin to the one organisation-wide configuration, so every member gets the new version.",
+                    "link": "starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member"
+                  },
+                  {
+                    "text": "Write the skill's description so it says which role it is for, because there is no group target on Team.",
+                    "link": "starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member"
                   }
                 ],
-                "done_when": "A pilot user in the role sees the skill after the plugin updates.",
+                "done_when": "A pilot user in the role sees the skill after the plugin updates, and its description names the role.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
-                "id": "S-C4.connect-no-runbook.google-drive",
-                "template": "connect-no-runbook",
-                "title": "Connect it without a kit runbook: the kit has no runbook for this connector yet (google-drive)",
-                "part": "A3",
+                "id": "S-C4.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A2",
                 "how": [
                   {
-                    "text": "Check how the system connects today: a directory connector, a vendor server or none.",
-                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
                   },
                   {
-                    "text": "If the directory has no connector for it, choose to buy, build or host one.",
-                    "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
                   },
                   {
-                    "text": "Review the connector before it is enabled, and write down the steps you followed.",
-                    "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
                   }
                 ],
-                "done_when": "The connector works for a pilot user with the planned identity, and the steps are written down for a runbook.",
-                "owner_role": "integration-engineer",
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
-                "id": "S-C4.connect-no-runbook.hubspot",
-                "template": "connect-no-runbook",
-                "title": "Connect it without a kit runbook: the kit has no runbook for this connector yet (hubspot)",
+                "id": "S-C4.connect-kit-runbook.google-drive",
+                "template": "connect-kit-runbook",
+                "title": "Connect it by following the kit's runbook for this connector (google-drive)",
                 "part": "A3",
                 "how": [
                   {
-                    "text": "Check how the system connects today: a directory connector, a vendor server or none.",
-                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+                    "text": "Check the runbook's prerequisites, including who must approve the connector.",
+                    "link": "starter-kit/runbooks/google-workspace-connectors.md#before-you-start"
                   },
                   {
-                    "text": "If the directory has no connector for it, choose to buy, build or host one.",
-                    "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
+                    "text": "Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say.",
+                    "link": "starter-kit/runbooks/google-workspace-connectors.md#steps"
                   },
                   {
-                    "text": "Review the connector before it is enabled, and write down the steps you followed.",
-                    "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+                    "text": "Run the runbook's checks with a pilot user before the task is built.",
+                    "link": "starter-kit/runbooks/google-workspace-connectors.md#check-it-worked"
+                  },
+                  {
+                    "text": "Record the hand-over the runbook asks for in the customer's folder.",
+                    "link": "starter-kit/runbooks/google-workspace-connectors.md#hand-over"
                   }
                 ],
-                "done_when": "The connector works for a pilot user with the planned identity, and the steps are written down for a runbook.",
+                "done_when": "A pilot user has connected with the planned identity, each tool is set as the story's tool tasks say, and the runbook's checks pass.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C4.connect-kit-runbook.hubspot",
+                "template": "connect-kit-runbook",
+                "title": "Connect it by following the kit's runbook for this connector (hubspot)",
+                "part": "A3",
+                "how": [
+                  {
+                    "text": "Check the runbook's prerequisites, including who must approve the connector.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#before-you-start"
+                  },
+                  {
+                    "text": "Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#steps"
+                  },
+                  {
+                    "text": "Run the runbook's checks with a pilot user before the task is built.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#check-it-worked"
+                  },
+                  {
+                    "text": "Record the hand-over the runbook asks for in the customer's folder.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#hand-over"
+                  }
+                ],
+                "done_when": "A pilot user has connected with the planned identity, each tool is set as the story's tool tasks say, and the runbook's checks pass.",
+                "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C4.connect-kit-runbook.gmail",
+                "template": "connect-kit-runbook",
+                "title": "Connect it by following the kit's runbook for this connector (gmail)",
+                "part": "A3",
+                "how": [
+                  {
+                    "text": "Check the runbook's prerequisites, including who must approve the connector.",
+                    "link": "starter-kit/runbooks/google-workspace-connectors.md#before-you-start"
+                  },
+                  {
+                    "text": "Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say.",
+                    "link": "starter-kit/runbooks/google-workspace-connectors.md#steps"
+                  },
+                  {
+                    "text": "Run the runbook's checks with a pilot user before the task is built.",
+                    "link": "starter-kit/runbooks/google-workspace-connectors.md#check-it-worked"
+                  },
+                  {
+                    "text": "Record the hand-over the runbook asks for in the customer's folder.",
+                    "link": "starter-kit/runbooks/google-workspace-connectors.md#hand-over"
+                  }
+                ],
+                "done_when": "A pilot user has connected with the planned identity, each tool is set as the story's tool tasks say, and the runbook's checks pass.",
+                "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -643,6 +866,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -662,6 +887,54 @@
                 ],
                 "done_when": "The tool is Blocked in the Claude org, as levelled.json says, and the twin cannot call it.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C4.tool-blocked.gmail-send",
+                "template": "tool-blocked",
+                "title": "Set the connector tool to Blocked, as the levelled tools list says (gmail-send)",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Open the connector's page in the Claude org and find the tool.",
+                    "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
+                  },
+                  {
+                    "text": "Set the tool to Blocked, or leave it out of the role plugin, and record the change.",
+                    "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+                  }
+                ],
+                "done_when": "The tool is Blocked in the Claude org, as levelled.json says, and the twin cannot call it.",
+                "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C4.deliver-draft",
+                "template": "deliver-draft",
+                "title": "Agree where the twin's draft lands and who sends or files it while the twin cannot write it",
+                "part": "A4",
+                "how": [
+                  {
+                    "text": "Agree with the pilot users that the twin ends in a draft, and that a person sends or files it while the twin cannot write it itself.",
+                    "link": "docs/compendium/06-autonomy.md#the-ladder-our-recommendation"
+                  },
+                  {
+                    "text": "Where the story's delivery says the write opens, agree the evidence that moves the task up to the level where the twin writes it itself.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+                  },
+                  {
+                    "text": "Name who puts the draft in its destination (a draft in the conversation; the HubSpot company record) and write down how, from the connector's runbook.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md"
+                  }
+                ],
+                "done_when": "The business owner has agreed where each draft lands and who sends or files it, and the pilot users know.",
+                "owner_role": "business-owner",
+                "owner_name": "Marisol Quenby (Customer success team lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -681,6 +954,8 @@
                 ],
                 "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
                 "owner_role": "business-owner",
+                "owner_name": "Marisol Quenby (Customer success team lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -690,16 +965,22 @@
                 "part": "A3",
                 "how": [
                   {
+                    "text": "The CRM write tool hubspot-create is Blocked at the starting level and opens at level 2; set the marker up before it opens.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+                  },
+                  {
                     "text": "Choose a marker the CRM can hold on every record the twin writes, such as a field or a note prefix.",
                     "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
                   },
                   {
-                    "text": "Create it in the CRM and limit who can set it to the role's users.",
-                    "link": null
+                    "text": "Create it in the CRM and limit who can set it to the role's users, as the kit's Salesforce marker does.",
+                    "link": "starter-kit/connectors/salesforce/README.md#who-can-edit-the-field"
                   }
                 ],
                 "done_when": "Every record type the twin writes in this CRM can carry the twin marker.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Teodor Amsel (IT and operations lead)",
                 "status": "todo"
               },
               {
@@ -708,6 +989,10 @@
                 "title": "Make the skill set the twin marker on every CRM write",
                 "part": "A2",
                 "how": [
+                  {
+                    "text": "The CRM write tool hubspot-create is Blocked at the starting level and opens at level 2; set the marker up before it opens.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+                  },
                   {
                     "text": "Add a step to the skill that sets the twin marker with every write.",
                     "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
@@ -719,6 +1004,8 @@
                 ],
                 "done_when": "The evals show every CRM write the twin makes carries the twin marker.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -727,6 +1014,10 @@
                 "title": "Report on the twin marker in the CRM's own history",
                 "part": "A8",
                 "how": [
+                  {
+                    "text": "The CRM write tool hubspot-create is Blocked at the starting level and opens at level 2; set the marker up before it opens.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+                  },
                   {
                     "text": "Build a CRM report of the records the twin marker shows the twin changed.",
                     "link": "docs/compendium/15-governance-and-performance.md#what-each-source-records"
@@ -738,13 +1029,15 @@
                 ],
                 "done_when": "The business owner can see in the CRM which changes the twin made.",
                 "owner_role": "business-owner",
+                "owner_name": "Marisol Quenby (Customer success team lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
                 "id": "S-C4.confirm-unverified-decision.connectors.google-drive",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.google-drive)",
-                "part": "A9",
+                "part": "A3",
                 "how": [
                   {
                     "text": "Find the Unverified mark on the page the decision cites in levelled.json.",
@@ -761,6 +1054,29 @@
                 ],
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C4.blocker-connector-cannot-write",
+                "template": "blocker-connector-cannot-write",
+                "title": "Resolve blocker connector-cannot-write: end the task in a draft a person sends",
+                "part": "A3",
+                "how": [
+                  {
+                    "text": "Check which action the connector cannot do.",
+                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+                  },
+                  {
+                    "text": "Change the task so it ends in a draft a person sends, and remove the write from the card.",
+                    "link": "docs/playbook/04-stories.md#story-template"
+                  }
+                ],
+                "done_when": "The card no longer asks the connector for that action and levelling no longer raises the blocker.",
+                "owner_role": "skill-owner",
+                "owner_name": "Marisol Quenby",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -774,12 +1090,64 @@
                     "link": "docs/compendium/13-devices.md#policy-by-data-class-and-device-our-recommendation"
                   },
                   {
-                    "text": "Set the task's write tools to Blocked for people on unmanaged devices so the connectors are read-only, or get the customer's written acceptance of the write.",
+                    "text": "Leave the task's write tools Blocked at the starting level, as their tool tasks set them, so the connectors are read-only.",
                     "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
+                  },
+                  {
+                    "text": "When the task moves up a level, keep the write tools Blocked for people on unmanaged devices, or get the customer's written acceptance of the write and set them to Needs approval, never Always allow.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
                   }
                 ],
-                "done_when": "The write tools are Blocked for people on unmanaged devices, or the customer's written acceptance is recorded.",
+                "done_when": "The write tools are Blocked at the starting level, and the customer's written acceptance is recorded before any of them opens for people on unmanaged devices.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C4.warning-mail-read-only",
+                "template": "warning-mail-read-only",
+                "title": "Resolve warning mail-read-only: end the email in a draft the person sends",
+                "part": "A2",
+                "how": [
+                  {
+                    "text": "Note that the Gmail and Google Calendar connectors read only.",
+                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+                  },
+                  {
+                    "text": "Write the skill so it ends with a draft in the conversation that the person copies and sends.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  }
+                ],
+                "done_when": "The evals show the task ends in a draft and never tries to send.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C4.warning-untrusted-input-with-send",
+                "template": "warning-untrusted-input-with-send",
+                "title": "Resolve warning untrusted-input-with-send: keep the send tool Blocked now, and approved by a person once it opens",
+                "part": "A7",
+                "how": [
+                  {
+                    "text": "Note that the task reads untrusted content and can send it out.",
+                    "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+                  },
+                  {
+                    "text": "Leave the send tool Blocked at the starting level, as its tool task sets it.",
+                    "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
+                  },
+                  {
+                    "text": "When the task moves up a level, set the send tool to Needs approval, never Always allow, and keep the task at level 2 or below; on a Claude Tag routine this applies only if the routine route is not used.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
+                  }
+                ],
+                "done_when": "The send tool is Blocked at the starting level, never Always allow, and the task's ceiling is level 2 or below.",
+                "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -794,7 +1162,7 @@
                   },
                   {
                     "text": "Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it.",
-                    "link": "docs/compendium/02-persona.md#memory"
+                    "link": "starter-kit/templates/pilot/memory-policy.md#tasks-that-read-input-written-by-outsiders"
                   },
                   {
                     "text": "If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide.",
@@ -803,6 +1171,8 @@
                 ],
                 "done_when": "The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -822,6 +1192,8 @@
                 ],
                 "done_when": "Custom retention is set, or the customer's acceptance of standard retention is recorded.",
                 "owner_role": "compliance",
+                "owner_name": "Pieter Achterberg (Finance and legal lead)",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -837,7 +1209,8 @@
           {
             "id": "S-C2",
             "title": "Weekly renewal-risk digest",
-            "statement": "As a Customer success manager, I want my twin to weekly renewal-risk digest so that I get the renewal-risk digest.",
+            "statement": "As a customer success manager, I want my twin to flag the accounts whose renewal is at risk each week so that no renewal is missed for lack of warning.",
+            "statement_source": "card",
             "part": "A4",
             "in_pilot": false,
             "priority": 3,
@@ -850,6 +1223,7 @@
               "wall_impact": "none",
               "inputs": "hubspot (renewal dates, deal stage, contacts); usage-db (usage trend per account)",
               "output_and_audience": "Renewal-risk digest, internal; to The team's Slack channel",
+              "delivery": "The Claude Tag routine posts it in its own Slack channel itself, and the connector's send tool slack-send is not used.",
               "skill_owner": "Marisol Quenby",
               "baseline": "1 per week x 90 minutes each x 8 users"
             },
@@ -857,6 +1231,27 @@
               "Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake."
+            ],
+            "target": {
+              "text": "Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 1 per week, 90 minutes each, 8 users.",
+              "set": true
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": true,
+                "note": "3 counted examples (2 good, 1 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: hubspot, usage-db and slack."
+              }
             ],
             "gated_by": [],
             "tasks": [
@@ -881,6 +1276,8 @@
                 ],
                 "done_when": "Three real examples, each with its inputs and its expected result, are stored where the evals can read them.",
                 "owner_role": "skill-owner",
+                "owner_name": "Marisol Quenby",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -904,6 +1301,8 @@
                 ],
                 "done_when": "Every acceptance criterion has at least one eval, and the evals run and fail without the skill.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -951,6 +1350,8 @@
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -974,6 +1375,8 @@
                 ],
                 "done_when": "The skill starts on every should-trigger prompt and on none of the should-not prompts.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -993,6 +1396,37 @@
                 ],
                 "done_when": "A reviewer who did not write the skill has approved the pull request and the evals pass.",
                 "owner_role": "skill-owner",
+                "owner_name": "Marisol Quenby",
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C2.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A4",
+                "how": [
+                  {
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  }
+                ],
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1002,20 +1436,30 @@
                 "part": "A4",
                 "how": [
                   {
-                    "text": "Create the routine in the Slack channel the card names, with the skill as its instructions.",
-                    "link": "docs/compendium/05-decision-matrix.md#the-options"
+                    "text": "Check the runbook's prerequisites: the plan, the Routines toggle, the Owner and Slack admin, and the channel.",
+                    "link": "starter-kit/runbooks/claude-tag-routine.md#before-you-start"
                   },
                   {
-                    "text": "Set the routine's schedule and run it once by hand.",
-                    "link": "docs/compendium/05-decision-matrix.md#decision-criteria"
+                    "text": "Create the routine in the Slack channel the card names, with the skill as its instructions, and set its schedule.",
+                    "link": "starter-kit/runbooks/claude-tag-routine.md#steps"
                   },
                   {
                     "text": "Check who can read the channel against the task's data class.",
                     "link": "docs/compendium/10-sensitive-data.md#decision-matrix-by-data-class-our-recommendation-built-from-the-sources-above"
+                  },
+                  {
+                    "text": "Run it once by hand and check that it posted in the channel.",
+                    "link": "starter-kit/runbooks/claude-tag-routine.md#check-it-worked"
+                  },
+                  {
+                    "text": "Hand the routine over to the person who answers for it in the channel.",
+                    "link": "starter-kit/runbooks/claude-tag-routine.md#hand-over"
                   }
                 ],
                 "done_when": "The routine has posted once on its schedule in a channel whose members fit the data class.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1039,6 +1483,8 @@
                 ],
                 "done_when": "The service account exists, holds only the task's access, and has a named owner and review date.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1058,6 +1504,8 @@
                 ],
                 "done_when": "A run that ends without its result is reported as failed, not as succeeded.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1081,75 +1529,91 @@
                 ],
                 "done_when": "A missed run is found and handled within one cycle, by a named person.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
-                "id": "S-C2.connect-no-runbook.hubspot",
-                "template": "connect-no-runbook",
-                "title": "Connect it without a kit runbook: the kit has no runbook for this connector yet (hubspot)",
+                "id": "S-C2.connect-kit-runbook.hubspot",
+                "template": "connect-kit-runbook",
+                "title": "Connect it by following the kit's runbook for this connector (hubspot)",
                 "part": "A3",
                 "how": [
                   {
-                    "text": "Check how the system connects today: a directory connector, a vendor server or none.",
-                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+                    "text": "Check the runbook's prerequisites, including who must approve the connector.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#before-you-start"
                   },
                   {
-                    "text": "If the directory has no connector for it, choose to buy, build or host one.",
-                    "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
+                    "text": "Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#steps"
                   },
                   {
-                    "text": "Review the connector before it is enabled, and write down the steps you followed.",
-                    "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+                    "text": "Run the runbook's checks with a pilot user before the task is built.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#check-it-worked"
+                  },
+                  {
+                    "text": "Record the hand-over the runbook asks for in the customer's folder.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#hand-over"
                   }
                 ],
-                "done_when": "The connector works for a pilot user with the planned identity, and the steps are written down for a runbook.",
+                "done_when": "A pilot user has connected with the planned identity, each tool is set as the story's tool tasks say, and the runbook's checks pass.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
-                "id": "S-C2.connect-no-runbook.usage-db",
-                "template": "connect-no-runbook",
-                "title": "Connect it without a kit runbook: the kit has no runbook for this connector yet (usage-db)",
+                "id": "S-C2.connect-kit-runbook.slack",
+                "template": "connect-kit-runbook",
+                "title": "Connect it by following the kit's runbook for this connector (slack)",
                 "part": "A3",
                 "how": [
                   {
-                    "text": "Check how the system connects today: a directory connector, a vendor server or none.",
-                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+                    "text": "Check the runbook's prerequisites, including who must approve the connector.",
+                    "link": "starter-kit/runbooks/slack-connector.md#before-you-start"
                   },
                   {
-                    "text": "If the directory has no connector for it, choose to buy, build or host one.",
-                    "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
+                    "text": "Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say.",
+                    "link": "starter-kit/runbooks/slack-connector.md#steps"
                   },
                   {
-                    "text": "Review the connector before it is enabled, and write down the steps you followed.",
-                    "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+                    "text": "Run the runbook's checks with a pilot user before the task is built.",
+                    "link": "starter-kit/runbooks/slack-connector.md#check-it-worked"
+                  },
+                  {
+                    "text": "Record the hand-over the runbook asks for in the customer's folder.",
+                    "link": "starter-kit/runbooks/slack-connector.md#hand-over"
                   }
                 ],
-                "done_when": "The connector works for a pilot user with the planned identity, and the steps are written down for a runbook.",
+                "done_when": "A pilot user has connected with the planned identity, each tool is set as the story's tool tasks say, and the runbook's checks pass.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
-                "id": "S-C2.connect-no-runbook.slack",
-                "template": "connect-no-runbook",
-                "title": "Connect it without a kit runbook: the kit has no runbook for this connector yet (slack)",
+                "id": "S-C2.connect-own-mcp-server.usage-db",
+                "template": "connect-own-mcp-server",
+                "title": "Connect it through our own MCP server: the directory has no connector for this system (usage-db)",
                 "part": "A3",
                 "how": [
                   {
-                    "text": "Check how the system connects today: a directory connector, a vendor server or none.",
-                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+                    "text": "Build our own MCP server for the system, with read-only tools that return only what the task needs.",
+                    "link": "docs/compendium/11-connectors.md#building-our-own-mcp-server"
                   },
                   {
-                    "text": "If the directory has no connector for it, choose to buy, build or host one.",
+                    "text": "Make it reachable from Claude: allowlist Anthropic's IP range at the edge, or run the agent inside the network.",
                     "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
                   },
                   {
-                    "text": "Review the connector before it is enabled, and write down the steps you followed.",
+                    "text": "Review the server before it is enabled, as for a bought connector, and write down the steps you followed.",
                     "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
                   }
                 ],
-                "done_when": "The connector works for a pilot user with the planned identity, and the steps are written down for a runbook.",
+                "done_when": "Our server answers the task's reads for a pilot user with the planned identity, and it has been reviewed.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1169,6 +1633,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1188,6 +1654,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1207,6 +1675,8 @@
                 ],
                 "done_when": "The tool is Blocked in the Claude org, as levelled.json says, and the twin cannot call it.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1226,13 +1696,15 @@
                 ],
                 "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
                 "owner_role": "business-owner",
+                "owner_name": "Marisol Quenby (Customer success team lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
                 "id": "S-C2.confirm-unverified-decision.connectors.slack",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.slack)",
-                "part": "A9",
+                "part": "A3",
                 "how": [
                   {
                     "text": "Find the Unverified mark on the page the decision cites in levelled.json.",
@@ -1249,6 +1721,8 @@
                 ],
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1263,11 +1737,13 @@
                   },
                   {
                     "text": "Test the connection from Claude before the task is built.",
-                    "link": "starter-kit/runbooks/salesforce-hosted-mcp.md#8-ip-allowlist-discovery-e6"
+                    "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
                   }
                 ],
                 "done_when": "The private system answers a connector call from Claude.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1287,12 +1763,14 @@
                 ],
                 "done_when": "The routine posts only in a private channel whose members are the team.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
                 "id": "S-C2.warning-slack-directory-send-unverified",
                 "template": "warning-slack-directory-send-unverified",
-                "title": "Resolve warning slack-directory-send-unverified: post through Claude Tag or the Slack MCP server",
+                "title": "Resolve warning slack-directory-send-unverified: post through the Claude Tag routine, or the Slack MCP server only if the routine route is not used",
                 "part": "A3",
                 "how": [
                   {
@@ -1300,18 +1778,20 @@
                     "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
                   },
                   {
-                    "text": "Post through Claude Tag or the Slack MCP server instead.",
-                    "link": "docs/compendium/05-decision-matrix.md#the-options"
+                    "text": "Post through the Claude Tag routine's own post where the task runs as a routine; use the Slack MCP server only if the routine route is not used.",
+                    "link": "starter-kit/runbooks/claude-tag-routine.md#steps"
                   }
                 ],
-                "done_when": "The task posts by a confirmed route.",
+                "done_when": "The task posts by one confirmed route: the routine's own post, or the Slack MCP server only if the routine route is not used.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
                 "id": "S-C2.warning-untrusted-input-with-send",
                 "template": "warning-untrusted-input-with-send",
-                "title": "Resolve warning untrusted-input-with-send: make a person approve each send",
+                "title": "Resolve warning untrusted-input-with-send: keep the send tool Blocked now, and approved by a person once it opens",
                 "part": "A7",
                 "how": [
                   {
@@ -1319,12 +1799,18 @@
                     "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
                   },
                   {
-                    "text": "Set the send tool to Needs approval and keep the task at level 2 or below.",
+                    "text": "Leave the send tool Blocked at the starting level, as its tool task sets it.",
                     "link": "docs/compendium/06-autonomy.md#how-a-level-is-enforced"
+                  },
+                  {
+                    "text": "When the task moves up a level, set the send tool to Needs approval, never Always allow, and keep the task at level 2 or below; on a Claude Tag routine this applies only if the routine route is not used.",
+                    "link": "docs/compendium/06-autonomy.md#rules-for-moving-up-a-level"
                   }
                 ],
-                "done_when": "The send tool is Needs approval and the task's ceiling is level 2 or below.",
+                "done_when": "The send tool is Blocked at the starting level, never Always allow, and the task's ceiling is level 2 or below.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1339,7 +1825,7 @@
                   },
                   {
                     "text": "Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it.",
-                    "link": "docs/compendium/02-persona.md#memory"
+                    "link": "starter-kit/templates/pilot/memory-policy.md#tasks-that-read-input-written-by-outsiders"
                   },
                   {
                     "text": "If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide.",
@@ -1348,6 +1834,8 @@
                 ],
                 "done_when": "The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1367,6 +1855,8 @@
                 ],
                 "done_when": "Custom retention is set, or the customer's acceptance of standard retention is recorded.",
                 "owner_role": "compliance",
+                "owner_name": "Pieter Achterberg (Finance and legal lead)",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -1374,7 +1864,8 @@
           {
             "id": "S-C3",
             "title": "Renewal quote email to the customer",
-            "statement": "As a Customer success manager, I want my twin to renewal quote email to the customer so that I get the draft renewal quote email, which the manager checks and sends from Gmail.",
+            "statement": "As a customer success manager, I want my twin to draft the renewal quote email from the HubSpot deal so that I only check the figures and send it.",
+            "statement_source": "card",
             "part": "A2",
             "in_pilot": false,
             "priority": 4,
@@ -1387,6 +1878,7 @@
               "wall_impact": "none",
               "inputs": "hubspot (renewal deal, line items, products, quote)",
               "output_and_audience": "Draft renewal quote email, which the manager checks and sends from Gmail, external; to none (a draft in the conversation)",
+              "delivery": "The output stays in the conversation or a local file.",
               "skill_owner": "Marisol Quenby",
               "baseline": "2 per week x 40 minutes each x 8 users",
               "constraints": [
@@ -1397,7 +1889,29 @@
               "Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.",
-              "Keeps: I check the figures before I send."
+              "Keeps: I check the figures before I send.",
+              "Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses."
+            ],
+            "target": {
+              "text": "Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 2 per week, 40 minutes each, 8 users.",
+              "set": true
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": true,
+                "note": "3 counted examples (2 good, 1 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: hubspot."
+              }
             ],
             "gated_by": [],
             "tasks": [
@@ -1422,6 +1936,8 @@
                 ],
                 "done_when": "Three real examples, each with its inputs and its expected result, are stored where the evals can read them.",
                 "owner_role": "skill-owner",
+                "owner_name": "Marisol Quenby",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1445,6 +1961,8 @@
                 ],
                 "done_when": "Every acceptance criterion has at least one eval, and the evals run and fail without the skill.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1491,11 +2009,13 @@
                   },
                   {
                     "text": "Make the skill keep these rules from the interviews, in the interviewee's words: I check the figures before I send..",
-                    "link": null
+                    "link": "partner-kit/docs/design.md#42-persona-card-cardjson"
                   }
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1519,6 +2039,8 @@
                 ],
                 "done_when": "The skill starts on every should-trigger prompt and on none of the should-not prompts.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1538,12 +2060,14 @@
                 ],
                 "done_when": "A reviewer who did not write the skill has approved the pull request and the evals pass.",
                 "owner_role": "skill-owner",
+                "owner_name": "Marisol Quenby",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
-                "id": "S-C3.publish-in-role-plugin",
-                "template": "publish-in-role-plugin",
-                "title": "Publish the skill in the role plugin",
+                "id": "S-C3.publish-in-role-plugin-team",
+                "template": "publish-in-role-plugin-team",
+                "title": "Publish the skill in the role plugin, which every member of the Team org gets",
                 "part": "A9",
                 "how": [
                   {
@@ -1551,35 +2075,76 @@
                     "link": "starter-kit/templates/role-plugin/README.md#steps"
                   },
                   {
-                    "text": "Publish the marketplace so the role's users get the new version.",
-                    "link": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups"
+                    "text": "Add the role plugin to the one organisation-wide configuration, so every member gets the new version.",
+                    "link": "starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member"
+                  },
+                  {
+                    "text": "Write the skill's description so it says which role it is for, because there is no group target on Team.",
+                    "link": "starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member"
                   }
                 ],
-                "done_when": "A pilot user in the role sees the skill after the plugin updates.",
+                "done_when": "A pilot user in the role sees the skill after the plugin updates, and its description names the role.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
-                "id": "S-C3.connect-no-runbook.hubspot",
-                "template": "connect-no-runbook",
-                "title": "Connect it without a kit runbook: the kit has no runbook for this connector yet (hubspot)",
+                "id": "S-C3.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A2",
+                "how": [
+                  {
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  }
+                ],
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C3.connect-kit-runbook.hubspot",
+                "template": "connect-kit-runbook",
+                "title": "Connect it by following the kit's runbook for this connector (hubspot)",
                 "part": "A3",
                 "how": [
                   {
-                    "text": "Check how the system connects today: a directory connector, a vendor server or none.",
-                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+                    "text": "Check the runbook's prerequisites, including who must approve the connector.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#before-you-start"
                   },
                   {
-                    "text": "If the directory has no connector for it, choose to buy, build or host one.",
-                    "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
+                    "text": "Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#steps"
                   },
                   {
-                    "text": "Review the connector before it is enabled, and write down the steps you followed.",
-                    "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+                    "text": "Run the runbook's checks with a pilot user before the task is built.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#check-it-worked"
+                  },
+                  {
+                    "text": "Record the hand-over the runbook asks for in the customer's folder.",
+                    "link": "starter-kit/runbooks/hubspot-connector.md#hand-over"
                   }
                 ],
-                "done_when": "The connector works for a pilot user with the planned identity, and the steps are written down for a runbook.",
+                "done_when": "A pilot user has connected with the planned identity, each tool is set as the story's tool tasks say, and the runbook's checks pass.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1599,6 +2164,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1618,6 +2185,8 @@
                 ],
                 "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
                 "owner_role": "business-owner",
+                "owner_name": "Marisol Quenby (Customer success team lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1637,6 +2206,8 @@
                 ],
                 "done_when": "Custom retention is set, or the customer's acceptance of standard retention is recorded.",
                 "owner_role": "compliance",
+                "owner_name": "Pieter Achterberg (Finance and legal lead)",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -1652,7 +2223,8 @@
           {
             "id": "S-C5",
             "title": "Open-ticket summary when a ticket is escalated",
-            "statement": "As a Customer success manager, I want my twin to open-ticket summary when a ticket is escalated so that I get the summary of the customer's open tickets.",
+            "statement": "As a customer success manager, I want my twin to pull the customer's open tickets into one summary so that I see the whole ticket picture in one place.",
+            "statement_source": "card",
             "part": "A2",
             "in_pilot": false,
             "priority": 5,
@@ -1665,6 +2237,7 @@
               "wall_impact": "none",
               "inputs": "zendesk (the customer's open tickets)",
               "output_and_audience": "Summary of the customer's open tickets, internal; to none (the conversation)",
+              "delivery": "The output stays in the conversation or a local file.",
               "skill_owner": "Marisol Quenby",
               "baseline": "2 per week x 30 minutes each x 8 users",
               "wanted_change": "Asked for, not planned: Something happening: the escalation itself, ideally. Today I start it when I'm told."
@@ -1672,7 +2245,29 @@
             "acceptance": [
               "Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
               "Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.",
-              "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake."
+              "Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.",
+              "Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses."
+            ],
+            "target": {
+              "text": "Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 2 per week, 30 minutes each, 8 users.",
+              "set": true
+            },
+            "ready": [
+              {
+                "check": "fields",
+                "met": true,
+                "note": "Data class, surface, autonomy and identity are decided."
+              },
+              {
+                "check": "examples",
+                "met": true,
+                "note": "3 counted examples (2 good, 1 bad); at least 3 needed."
+              },
+              {
+                "check": "connectors",
+                "met": true,
+                "note": "Every system the task uses has a decided connector: zendesk."
+              }
             ],
             "gated_by": [],
             "tasks": [
@@ -1697,6 +2292,8 @@
                 ],
                 "done_when": "Three real examples, each with its inputs and its expected result, are stored where the evals can read them.",
                 "owner_role": "skill-owner",
+                "owner_name": "Marisol Quenby",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1720,6 +2317,8 @@
                 ],
                 "done_when": "Every acceptance criterion has at least one eval, and the evals run and fail without the skill.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1767,6 +2366,8 @@
                 ],
                 "done_when": "The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1790,6 +2391,8 @@
                 ],
                 "done_when": "The skill starts on every should-trigger prompt and on none of the should-not prompts.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1809,12 +2412,14 @@
                 ],
                 "done_when": "A reviewer who did not write the skill has approved the pull request and the evals pass.",
                 "owner_role": "skill-owner",
+                "owner_name": "Marisol Quenby",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
-                "id": "S-C5.publish-in-role-plugin",
-                "template": "publish-in-role-plugin",
-                "title": "Publish the skill in the role plugin",
+                "id": "S-C5.publish-in-role-plugin-team",
+                "template": "publish-in-role-plugin-team",
+                "title": "Publish the skill in the role plugin, which every member of the Team org gets",
                 "part": "A9",
                 "how": [
                   {
@@ -1822,35 +2427,76 @@
                     "link": "starter-kit/templates/role-plugin/README.md#steps"
                   },
                   {
-                    "text": "Publish the marketplace so the role's users get the new version.",
-                    "link": "starter-kit/runbooks/identity-devices-publishing.md#6-publish-the-marketplace-and-its-plugins-to-the-right-groups"
+                    "text": "Add the role plugin to the one organisation-wide configuration, so every member gets the new version.",
+                    "link": "starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member"
+                  },
+                  {
+                    "text": "Write the skill's description so it says which role it is for, because there is no group target on Team.",
+                    "link": "starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member"
                   }
                 ],
-                "done_when": "A pilot user in the role sees the skill after the plugin updates.",
+                "done_when": "A pilot user in the role sees the skill after the plugin updates, and its description names the role.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
-                "id": "S-C5.connect-no-runbook.zendesk",
-                "template": "connect-no-runbook",
-                "title": "Connect it without a kit runbook: the kit has no runbook for this connector yet (zendesk)",
+                "id": "S-C5.owner-handover",
+                "template": "owner-handover",
+                "title": "Hand the skill over to its owner",
+                "part": "A2",
+                "how": [
+                  {
+                    "text": "Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime.",
+                    "link": "starter-kit/templates/skill/README.md#copy-it"
+                  },
+                  {
+                    "text": "Show them how to change an instruction in the skill and add an eval case for the change.",
+                    "link": "starter-kit/templates/skill/README.md#fill-it-in"
+                  },
+                  {
+                    "text": "Name who reviews a change before it is published: someone other than its author.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  },
+                  {
+                    "text": "Have the skill owner make one change while the engineer watches.",
+                    "link": "docs/playbook/04-stories.md#definition-of-done"
+                  }
+                ],
+                "done_when": "The skill owner has made one change to the skill with the engineer watching.",
+                "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
+                "status": "todo"
+              },
+              {
+                "id": "S-C5.connect-kit-runbook.zendesk",
+                "template": "connect-kit-runbook",
+                "title": "Connect it by following the kit's runbook for this connector (zendesk)",
                 "part": "A3",
                 "how": [
                   {
-                    "text": "Check how the system connects today: a directory connector, a vendor server or none.",
-                    "link": "docs/compendium/11-connectors.md#what-exists-for-our-systems"
+                    "text": "Check the runbook's prerequisites, including who must approve the connector.",
+                    "link": "starter-kit/runbooks/zendesk-connector.md#before-you-start"
                   },
                   {
-                    "text": "If the directory has no connector for it, choose to buy, build or host one.",
-                    "link": "docs/compendium/11-connectors.md#adding-a-connector-that-isnt-in-the-directory"
+                    "text": "Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say.",
+                    "link": "starter-kit/runbooks/zendesk-connector.md#steps"
                   },
                   {
-                    "text": "Review the connector before it is enabled, and write down the steps you followed.",
-                    "link": "docs/compendium/11-connectors.md#buying-a-connector-and-reviewing-it"
+                    "text": "Run the runbook's checks with a pilot user before the task is built.",
+                    "link": "starter-kit/runbooks/zendesk-connector.md#check-it-worked"
+                  },
+                  {
+                    "text": "Record the hand-over the runbook asks for in the customer's folder.",
+                    "link": "starter-kit/runbooks/zendesk-connector.md#hand-over"
                   }
                 ],
-                "done_when": "The connector works for a pilot user with the planned identity, and the steps are written down for a runbook.",
+                "done_when": "A pilot user has connected with the planned identity, each tool is set as the story's tool tasks say, and the runbook's checks pass.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1870,6 +2516,8 @@
                 ],
                 "done_when": "The tool is set to Always allow in the Claude org, as levelled.json says.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1889,6 +2537,8 @@
                 ],
                 "done_when": "The business owner has approved the move to level 2 on scorecard evidence, and the tool settings are changed.",
                 "owner_role": "business-owner",
+                "owner_name": "Marisol Quenby (Customer success team lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1912,6 +2562,8 @@
                 ],
                 "done_when": "The business owner has approved the allowlist on scorecard evidence, and only those tools are Always allow.",
                 "owner_role": "business-owner",
+                "owner_name": "Marisol Quenby (Customer success team lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1935,13 +2587,15 @@
                 ],
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
                 "id": "S-C5.confirm-unverified-decision.connectors.zendesk",
                 "template": "confirm-unverified-decision",
                 "title": "Confirm the unverified fact behind this decision with Anthropic or the vendor before build (connectors.zendesk)",
-                "part": "A9",
+                "part": "A3",
                 "how": [
                   {
                     "text": "Find the Unverified mark on the page the decision cites in levelled.json.",
@@ -1958,6 +2612,8 @@
                 ],
                 "done_when": "The fact is confirmed in writing with a source, or the decision is changed so it no longer rests on it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -1972,7 +2628,7 @@
                   },
                   {
                     "text": "Keep role knowledge in reviewed skills and build the task so it never writes memory; only controlled steps write it.",
-                    "link": "docs/compendium/02-persona.md#memory"
+                    "link": "starter-kit/templates/pilot/memory-policy.md#tasks-that-read-input-written-by-outsiders"
                   },
                   {
                     "text": "If the org cannot keep memory writes to controlled steps, ask the Owner to switch memory off org-wide.",
@@ -1981,6 +2637,8 @@
                 ],
                 "done_when": "The evals show the task writes nothing to memory, its role knowledge lives in reviewed skills, and the org's memory setting is agreed.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2000,6 +2658,8 @@
                 ],
                 "done_when": "The vendor's answer is recorded with its source.",
                 "owner_role": "integration-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2019,6 +2679,8 @@
                 ],
                 "done_when": "Custom retention is set, or the customer's acceptance of standard retention is recorded.",
                 "owner_role": "compliance",
+                "owner_name": "Pieter Achterberg (Finance and legal lead)",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -2071,6 +2733,8 @@
                 ],
                 "done_when": "persona.md is filled in with no FILL IN marker left.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2090,6 +2754,8 @@
                 ],
                 "done_when": "Both forms match persona.md and sit where each surface reads them.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2109,6 +2775,8 @@
                 ],
                 "done_when": "The business owner has approved the persona voice.",
                 "owner_role": "business-owner",
+                "owner_name": "Marisol Quenby (Customer success team lead)",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -2152,6 +2820,8 @@
                 ],
                 "done_when": "A HubSpot Super Admin, or a user with App Marketplace access, has approved the connector.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Teodor Amsel (IT and operations lead)",
                 "status": "todo"
               },
               {
@@ -2171,6 +2841,8 @@
                 ],
                 "done_when": "Every user of the role is in the organisation with the right role, and the list is recorded.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2190,6 +2862,8 @@
                 ],
                 "done_when": "Every connector the role uses is listed with its identity and approver.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2209,6 +2883,8 @@
                 ],
                 "done_when": "A security reviewer has checked every connector before it is enabled.",
                 "owner_role": "security",
+                "owner_name": null,
+                "acting_owner": "Teodor Amsel (IT and operations lead)",
                 "status": "todo"
               }
             ]
@@ -2252,6 +2928,8 @@
                 ],
                 "done_when": "Each guardrail is enforced by a tool permission or a skill, or listed as not lockable and accepted.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2271,6 +2949,8 @@
                 ],
                 "done_when": "The compliance owner has confirmed in writing that confidential data on Team is acceptable.",
                 "owner_role": "compliance",
+                "owner_name": "Pieter Achterberg (Finance and legal lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2290,6 +2970,8 @@
                 ],
                 "done_when": "The design lists what replaces the baseline and the customer has accepted it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2309,6 +2991,8 @@
                 ],
                 "done_when": "Compliance has signed off the data policy for every data class the role holds.",
                 "owner_role": "compliance",
+                "owner_name": "Pieter Achterberg (Finance and legal lead)",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -2351,6 +3035,8 @@
                 ],
                 "done_when": "The role plugin holds nothing another role must not see, or the customer has chosen Enterprise.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2370,6 +3056,8 @@
                 ],
                 "done_when": "The role plugin is in the marketplace and its tests pass.",
                 "owner_role": "skill-engineer",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2389,6 +3077,8 @@
                 ],
                 "done_when": "Every member can install the role plugin and the role's users have it.",
                 "owner_role": "technical-owner",
+                "owner_name": "Teodor Amsel (IT and operations lead)",
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -2431,6 +3121,8 @@
                 ],
                 "done_when": "The design says what is recorded instead of the governance log, and the customer has accepted it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2450,6 +3142,8 @@
                 ],
                 "done_when": "Compliance has accepted the source systems' audit in place of Claude's audit log.",
                 "owner_role": "compliance",
+                "owner_name": "Pieter Achterberg (Finance and legal lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2469,6 +3163,8 @@
                 ],
                 "done_when": "The design says what is logged for the twin and the customer has accepted it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2488,6 +3184,8 @@
                 ],
                 "done_when": "Every system the twin writes keeps an audit of its changes.",
                 "owner_role": "source-system-admin",
+                "owner_name": null,
+                "acting_owner": "Teodor Amsel (IT and operations lead)",
                 "status": "todo"
               }
             ]
@@ -2520,8 +3218,12 @@
                 "part": "A6",
                 "how": [
                   {
-                    "text": "Decide what the twin may remember for the role and what it must not.",
-                    "link": "docs/compendium/02-persona.md#memory"
+                    "text": "Copy the kit's memory-policy template and decide what the twin may remember for the role and what it must not.",
+                    "link": "starter-kit/templates/pilot/memory-policy.md#what-the-twin-may-remember-and-what-it-must-not"
+                  },
+                  {
+                    "text": "Name who can switch memory on or off for the org.",
+                    "link": "starter-kit/templates/pilot/memory-policy.md#who-can-switch-memory-on-or-off-for-the-org"
                   },
                   {
                     "text": "Write the policy into the design and the persona.",
@@ -2530,6 +3232,8 @@
                 ],
                 "done_when": "The memory policy is written down and the business owner has approved it.",
                 "owner_role": "solution-architect",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2544,11 +3248,13 @@
                   },
                   {
                     "text": "Show the pilot users how to see and clear what it keeps.",
-                    "link": null
+                    "link": "starter-kit/templates/pilot/memory-policy.md#what-pilot-users-are-told"
                   }
                 ],
                 "done_when": "Every pilot user knows what memory keeps and how to clear it.",
                 "owner_role": "change-and-enablement-lead",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -2591,6 +3297,8 @@
                 ],
                 "done_when": "The pilot users and dates are agreed and recorded.",
                 "owner_role": "business-owner",
+                "owner_name": "Marisol Quenby (Customer success team lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2610,6 +3318,8 @@
                 ],
                 "done_when": "Every pilot task has a baseline agreed with its users.",
                 "owner_role": "consultant",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2619,16 +3329,22 @@
                 "part": "A8",
                 "how": [
                   {
-                    "text": "Choose the adoption, quality, value and safety measures for the scorecard.",
+                    "text": "Copy the kit's scorecard template and choose the adoption, quality, value and safety measures for each task.",
+                    "link": "starter-kit/templates/pilot/scorecard.md#per-task"
+                  },
+                  {
+                    "text": "Take each measure as the compendium describes.",
                     "link": "docs/compendium/15-governance-and-performance.md#measuring-performance"
                   },
                   {
-                    "text": "Book the monthly review with the business owner.",
-                    "link": "docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often"
+                    "text": "Book the monthly review with the business owner, and record its decision on the scorecard.",
+                    "link": "starter-kit/templates/pilot/scorecard.md#decision-this-month"
                   }
                 ],
                 "done_when": "The first monthly scorecard has been reviewed with the business owner.",
                 "owner_role": "business-owner",
+                "owner_name": "Marisol Quenby (Customer success team lead)",
+                "acting_owner": null,
                 "status": "todo"
               },
               {
@@ -2638,16 +3354,18 @@
                 "part": "A8",
                 "how": [
                   {
-                    "text": "Run a short session on what the twin does, at what level, and what it never does.",
-                    "link": "docs/playbook/01-engagement-model.md"
+                    "text": "Run a short session on what the twin does, at what level, and what it never does, from the kit's session outline.",
+                    "link": "starter-kit/templates/pilot/pilot-training.md#part-1-session-outline"
                   },
                   {
-                    "text": "Give the pilot users one place to report a failure or a wrong draft.",
-                    "link": null
+                    "text": "Give the pilot users one place to report a failure or a wrong draft, with the kit's report form.",
+                    "link": "starter-kit/templates/pilot/pilot-training.md#where-reports-go"
                   }
                 ],
                 "done_when": "Every pilot user has been trained and knows where to report a failure.",
                 "owner_role": "change-and-enablement-lead",
+                "owner_name": null,
+                "acting_owner": null,
                 "status": "todo"
               }
             ]
@@ -2656,5 +3374,17 @@
       }
     ]
   },
+  "spikes": [
+    {
+      "id": "SP-OQ-1",
+      "kind": "spike",
+      "title": "What could start C5 on the escalation itself, without a person: a Zendesk trigger calling a hosted agent, or a Slack…",
+      "question": "What could start C5 on the escalation itself, without a person: a Zendesk trigger calling a hosted agent, or a Slack alert? Until then the manager starts it.",
+      "blocks": [],
+      "owner": "Teodor Amsel",
+      "due": "2026-12-11",
+      "status": "todo"
+    }
+  ],
   "retired": []
 }

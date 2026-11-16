@@ -335,12 +335,9 @@ class LinkTests(unittest.TestCase):
                     self.assertTrue(isinstance(step["link"], str) and step["link"].strip(), step["text"])
 
     def test_no_generated_step_has_a_null_link(self):
-        """Only the write-skill constraints step, which quotes the card, has no link."""
         for name, _, _, _, backlog, _ in Runs.get():
             for item in BT.tasks_of(backlog):
                 for step in item["how"]:
-                    if step["text"].startswith(CONSTRAINTS_STEP_START):
-                        continue
                     with self.subTest(scenario=name, task=item["id"], step=step["text"]):
                         self.assertTrue(step["link"])
 

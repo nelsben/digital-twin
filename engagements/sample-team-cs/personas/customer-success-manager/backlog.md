@@ -2,9 +2,11 @@
 
 Generated from card.json and levelled.json by `python3 partner-kit/plugins/twin-consultant/scripts/twincard/cli.py backlog engagements/sample-team-cs/personas/customer-success-manager`; never edit it by hand. To mark a task, change only its status in backlog.json, then run the command again.
 
-Status: todo. 4 features, 12 stories, 106 tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done.
+Status: todo. 4 features, 12 stories, 111 tasks. Task marks: `[ ]` todo, `[~]` in progress, `[x]` done.
 
 Roles with no named person: security, 1 task, acting owner Teodor Amsel (IT and operations lead); source-system-admin, 3 tasks, acting owner Teodor Amsel (IT and operations lead).
+
+Stories ready to build: 5 of 5.
 
 ## F-call-preparation-and-follow-up: Call preparation and follow-up
 
@@ -12,7 +14,7 @@ Kind: capability. Status: todo. 2 stories.
 
 ### S-C1: Account brief before a customer call
 
-As a Customer success manager, I want my twin to account brief before a customer call so that I get the one-page account brief.
+As a customer success manager, I want my twin to brief me on the account before each call so that I walk into the call already knowing the account.
 
 Part A2. In pilot: yes. Priority: 1. Status: todo.
 
@@ -34,6 +36,11 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
 1. Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.
 2. Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.
 3. Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.
+4. Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.
+
+Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 6 per week, 30 minutes each, 8 users.
+
+Ready to build: yes
 
 **Gated by:**
 
@@ -76,6 +83,12 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
   2. Add the role plugin to the one organisation-wide configuration, so every member gets the new version. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   3. Write the skill's description so it says which role it is for, because there is no group target on Team. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   - Done when: A pilot user in the role sees the skill after the plugin updates, and its description names the role.
+- [ ] **S-C1.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
+  1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
+  3. Name who reviews a change before it is published: someone other than its author. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  4. Have the skill owner make one change while the engineer watches. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  - Done when: The skill owner has made one change to the skill with the engineer watching.
 - [ ] **S-C1.connect-kit-runbook.hubspot** Connect it by following the kit's runbook for this connector (hubspot) (owner: integration-engineer, part A3)
   1. Check the runbook's prerequisites, including who must approve the connector. See [starter-kit/runbooks/hubspot-connector.md#before-you-start](../../../../starter-kit/runbooks/hubspot-connector.md#before-you-start).
   2. Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say. See [starter-kit/runbooks/hubspot-connector.md#steps](../../../../starter-kit/runbooks/hubspot-connector.md#steps).
@@ -122,7 +135,7 @@ Part A2. In pilot: yes. Priority: 1. Status: todo.
 
 ### S-C4: Follow-up email after a customer call, and a call note in HubSpot
 
-As a Customer success manager, I want my twin to follow-up email after a customer call, and a call note in HubSpot so that I get the draft follow-up email, which the manager sends, and a call note on the HubSpot record.
+As a customer success manager, I want my twin to draft the follow-up email and the call note for HubSpot so that the follow-up is out the same afternoon.
 
 Part A2. In pilot: yes. Priority: 2. Status: todo.
 
@@ -146,7 +159,12 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
 2. Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.
 3. Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.
 4. Keeps: I want to approve the note before it's created.
-5. Plus: the twin writes nothing to the CRM at the starting level; a person files the result.
+5. Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.
+6. Plus: the twin writes nothing to the CRM at the starting level; a person files the result.
+
+Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 6 per week, 25 minutes each, 8 users.
+
+Ready to build: yes
 
 **Gated by:**
 
@@ -174,7 +192,7 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
   7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
-  10. Make the skill keep these rules from the interviews, in the interviewee's words: I want to approve the note before it's created..
+  10. Make the skill keep these rules from the interviews, in the interviewee's words: I want to approve the note before it's created.. See [partner-kit/docs/design.md#42-persona-card-cardjson](../../../../partner-kit/docs/design.md#42-persona-card-cardjson).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
 - [ ] **S-C4.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
@@ -190,6 +208,12 @@ Part A2. In pilot: yes. Priority: 2. Status: todo.
   2. Add the role plugin to the one organisation-wide configuration, so every member gets the new version. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   3. Write the skill's description so it says which role it is for, because there is no group target on Team. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   - Done when: A pilot user in the role sees the skill after the plugin updates, and its description names the role.
+- [ ] **S-C4.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
+  1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
+  3. Name who reviews a change before it is published: someone other than its author. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  4. Have the skill owner make one change while the engineer watches. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  - Done when: The skill owner has made one change to the skill with the engineer watching.
 - [ ] **S-C4.connect-kit-runbook.google-drive** Connect it by following the kit's runbook for this connector (google-drive) (owner: integration-engineer, part A3)
   1. Check the runbook's prerequisites, including who must approve the connector. See [starter-kit/runbooks/google-workspace-connectors.md#before-you-start](../../../../starter-kit/runbooks/google-workspace-connectors.md#before-you-start).
   2. Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say. See [starter-kit/runbooks/google-workspace-connectors.md#steps](../../../../starter-kit/runbooks/google-workspace-connectors.md#steps).
@@ -260,7 +284,7 @@ Kind: capability. Status: todo. 2 stories.
 
 ### S-C2: Weekly renewal-risk digest
 
-As a Customer success manager, I want my twin to weekly renewal-risk digest so that I get the renewal-risk digest.
+As a customer success manager, I want my twin to flag the accounts whose renewal is at risk each week so that no renewal is missed for lack of warning.
 
 Part A4. In pilot: no. Priority: 3. Status: todo.
 
@@ -282,6 +306,10 @@ Part A4. In pilot: no. Priority: 3. Status: todo.
 1. Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.
 2. Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.
 3. Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.
+
+Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 1 per week, 90 minutes each, 8 users.
+
+Ready to build: yes
 
 **Gated by:**
 
@@ -319,6 +347,12 @@ Part A4. In pilot: no. Priority: 3. Status: todo.
   1. Open a pull request with the skill and its evals. See [docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often](../../../../docs/compendium/15-governance-and-performance.md#who-does-what-and-how-often).
   2. Have someone other than the author review it against the definition of done. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
   - Done when: A reviewer who did not write the skill has approved the pull request and the evals pass.
+- [ ] **S-C2.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A4)
+  1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
+  3. Name who reviews a change before it is published: someone other than its author. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  4. Have the skill owner make one change while the engineer watches. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  - Done when: The skill owner has made one change to the skill with the engineer watching.
 - [ ] **S-C2.setup-tag-routine** Set up the Claude Tag routine in the team's Slack channel (owner: integration-engineer, part A4)
   1. Check the runbook's prerequisites: the plan, the Routines toggle, the Owner and Slack admin, and the channel. See [starter-kit/runbooks/claude-tag-routine.md#before-you-start](../../../../starter-kit/runbooks/claude-tag-routine.md#before-you-start).
   2. Create the routine in the Slack channel the card names, with the skill as its instructions, and set its schedule. See [starter-kit/runbooks/claude-tag-routine.md#steps](../../../../starter-kit/runbooks/claude-tag-routine.md#steps).
@@ -407,7 +441,7 @@ Part A4. In pilot: no. Priority: 3. Status: todo.
 
 ### S-C3: Renewal quote email to the customer
 
-As a Customer success manager, I want my twin to renewal quote email to the customer so that I get the draft renewal quote email, which the manager checks and sends from Gmail.
+As a customer success manager, I want my twin to draft the renewal quote email from the HubSpot deal so that I only check the figures and send it.
 
 Part A2. In pilot: no. Priority: 4. Status: todo.
 
@@ -431,6 +465,11 @@ Part A2. In pilot: no. Priority: 4. Status: todo.
 2. Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.
 3. Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.
 4. Keeps: I check the figures before I send.
+5. Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.
+
+Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 2 per week, 40 minutes each, 8 users.
+
+Ready to build: yes
 
 **Gated by:**
 
@@ -458,7 +497,7 @@ Part A2. In pilot: no. Priority: 4. Status: todo.
   7. On agent-sdk, the skill is files on disk in the runner's container, loaded through settingSources; there is no API to register a skill. See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   8. On claude-code-scheduled-task, put the skill where Claude Code loads skills: the project's .claude/skills folder or a plugin (Unverified: no compendium page says which of these a scheduled task loads). See [docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills](../../../../docs/compendium/04-distribution-governance.md#how-each-surface-gets-skills).
   9. On claude-tag-routine, give the routine the skill as its instructions (Unverified: no compendium page says whether a Claude Tag routine loads org skills). See [docs/compendium/05-decision-matrix.md#the-options](../../../../docs/compendium/05-decision-matrix.md#the-options).
-  10. Make the skill keep these rules from the interviews, in the interviewee's words: I check the figures before I send..
+  10. Make the skill keep these rules from the interviews, in the interviewee's words: I check the figures before I send.. See [partner-kit/docs/design.md#42-persona-card-cardjson](../../../../partner-kit/docs/design.md#42-persona-card-cardjson).
   - Done when: The skill sits in the role plugin, it is where the task's runtime loads it from, and every eval for the story passes.
 - [ ] **S-C3.trigger-evals** Write and run the trigger evals for the skill (owner: skill-engineer, part A8)
   1. Install skill-creator where the evals run. See [starter-kit/docs/authoring-skills.md#install-skill-creator](../../../../starter-kit/docs/authoring-skills.md#install-skill-creator).
@@ -474,6 +513,12 @@ Part A2. In pilot: no. Priority: 4. Status: todo.
   2. Add the role plugin to the one organisation-wide configuration, so every member gets the new version. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   3. Write the skill's description so it says which role it is for, because there is no group target on Team. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   - Done when: A pilot user in the role sees the skill after the plugin updates, and its description names the role.
+- [ ] **S-C3.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
+  1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
+  3. Name who reviews a change before it is published: someone other than its author. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  4. Have the skill owner make one change while the engineer watches. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  - Done when: The skill owner has made one change to the skill with the engineer watching.
 - [ ] **S-C3.connect-kit-runbook.hubspot** Connect it by following the kit's runbook for this connector (hubspot) (owner: integration-engineer, part A3)
   1. Check the runbook's prerequisites, including who must approve the connector. See [starter-kit/runbooks/hubspot-connector.md#before-you-start](../../../../starter-kit/runbooks/hubspot-connector.md#before-you-start).
   2. Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say. See [starter-kit/runbooks/hubspot-connector.md#steps](../../../../starter-kit/runbooks/hubspot-connector.md#steps).
@@ -499,7 +544,7 @@ Kind: capability. Status: todo. 1 stories.
 
 ### S-C5: Open-ticket summary when a ticket is escalated
 
-As a Customer success manager, I want my twin to open-ticket summary when a ticket is escalated so that I get the summary of the customer's open tickets.
+As a customer success manager, I want my twin to pull the customer's open tickets into one summary so that I see the whole ticket picture in one place.
 
 Part A2. In pilot: no. Priority: 5. Status: todo.
 
@@ -522,6 +567,11 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
 1. Eval from good example 1 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.
 2. Eval from good example 2 of 2 (Shared drive 'CS examples' (invented)): the twin's output matches what a person accepted.
 3. Eval from bad example 1 of 1 (Shared drive 'CS examples' (invented)): the twin does not repeat the mistake.
+4. Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the near-misses.
+
+Target: edit_rate_below_pct: 30; minutes_saved_per_task: 15. Today: 2 per week, 30 minutes each, 8 users.
+
+Ready to build: yes
 
 **Gated by:**
 
@@ -564,6 +614,12 @@ Part A2. In pilot: no. Priority: 5. Status: todo.
   2. Add the role plugin to the one organisation-wide configuration, so every member gets the new version. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   3. Write the skill's description so it says which role it is for, because there is no group target on Team. See [starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member](../../../../starter-kit/runbooks/identity-devices-publishing.md#plugins-one-set-for-every-member).
   - Done when: A pilot user in the role sees the skill after the plugin updates, and its description names the role.
+- [ ] **S-C5.owner-handover** Hand the skill over to its owner (owner: skill-engineer, part A2)
+  1. Show the skill owner where the skill lives: its folder in the role plugin, the one source for every runtime. See [starter-kit/templates/skill/README.md#copy-it](../../../../starter-kit/templates/skill/README.md#copy-it).
+  2. Show them how to change an instruction in the skill and add an eval case for the change. See [starter-kit/templates/skill/README.md#fill-it-in](../../../../starter-kit/templates/skill/README.md#fill-it-in).
+  3. Name who reviews a change before it is published: someone other than its author. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  4. Have the skill owner make one change while the engineer watches. See [docs/playbook/04-stories.md#definition-of-done](../../../../docs/playbook/04-stories.md#definition-of-done).
+  - Done when: The skill owner has made one change to the skill with the engineer watching.
 - [ ] **S-C5.connect-kit-runbook.zendesk** Connect it by following the kit's runbook for this connector (zendesk) (owner: integration-engineer, part A3)
   1. Check the runbook's prerequisites, including who must approve the connector. See [starter-kit/runbooks/zendesk-connector.md#before-you-start](../../../../starter-kit/runbooks/zendesk-connector.md#before-you-start).
   2. Follow the runbook's steps to add the connector and set each tool as the story's tool tasks say. See [starter-kit/runbooks/zendesk-connector.md#steps](../../../../starter-kit/runbooks/zendesk-connector.md#steps).
@@ -894,6 +950,12 @@ Part A8. In pilot: yes. Priority: none. Status: todo.
   1. Run a short session on what the twin does, at what level, and what it never does, from the kit's session outline. See [starter-kit/templates/pilot/pilot-training.md#part-1-session-outline](../../../../starter-kit/templates/pilot/pilot-training.md#part-1-session-outline).
   2. Give the pilot users one place to report a failure or a wrong draft, with the kit's report form. See [starter-kit/templates/pilot/pilot-training.md#where-reports-go](../../../../starter-kit/templates/pilot/pilot-training.md#where-reports-go).
   - Done when: Every pilot user has been trained and knows where to report a failure.
+
+## Spikes
+
+Open questions on the card. A spike is time-boxed research that answers one; it holds no build work. Mark a spike by changing its status in backlog.json.
+
+- [ ] **SP-OQ-1** What could start C5 on the escalation itself, without a person: a Zendesk trigger calling a hosted agent, or a Slack alert? Until then the manager starts it. (owner: Teodor Amsel; due: 2026-12-11; blocks: no story)
 
 ## Retired
 

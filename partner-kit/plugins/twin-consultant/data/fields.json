@@ -192,6 +192,8 @@
     {"path": "tasks[].cost_of_mistake.what_happens", "record": "card", "type": "string", "values": [], "required": false, "key": false, "asked_by": ["F4"], "default": null, "feeds": ["backlog:story", "dashboard:features"], "part": "A7"},
     {"path": "tasks[].constraints", "record": "card", "type": "string-list", "values": [], "required": false, "key": false, "asked_by": ["F4", "F7"], "default": null, "feeds": ["backlog:story", "backlog:task", "dashboard:features"], "part": "A2"},
     {"path": "tasks[].wanted_change", "record": "card", "type": "string", "values": [], "required": false, "key": false, "asked_by": ["F3", "F5"], "default": null, "feeds": ["backlog:story", "dashboard:features"], "part": "A2"},
+    {"path": "tasks[].story_want", "record": "card", "type": "string", "values": [], "required": false, "key": false, "asked_by": ["F1"], "default": null, "feeds": ["backlog:story"], "part": "A2"},
+    {"path": "tasks[].story_benefit", "record": "card", "type": "string", "values": [], "required": false, "key": false, "asked_by": ["F1", "F3"], "default": null, "feeds": ["backlog:story"], "part": "A2"},
     {"path": "tasks[].reversible", "record": "card", "type": "boolean", "values": [], "required": true, "key": false, "asked_by": ["F7"], "default": null, "feeds": ["rule:autonomy"], "part": "A7"},
     {"path": "tasks[].touches_money", "record": "card", "type": "boolean", "values": [], "required": true, "key": false, "asked_by": ["F7"], "default": null, "feeds": ["rule:autonomy"], "part": "A7"},
     {"path": "tasks[].reads_untrusted_input", "record": "card", "type": "boolean", "values": [], "required": true, "key": false, "asked_by": ["F8"], "default": null, "feeds": ["rule:memory", "backlog:task"], "part": "A6"},

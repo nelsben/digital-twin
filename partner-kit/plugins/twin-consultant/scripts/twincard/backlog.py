@@ -103,6 +103,24 @@ GOVERNANCE_CAPABILITY = "governance-action-log"
 WRITE_SKILL = "write-skill"
 CONSTRAINTS_STEP = "Make the skill keep these rules from the interviews, in the interviewee's words: %s."
 WANTED_CHANGE_LABEL = "Asked for, not planned: "
+CONSTRAINTS_LINK = "partner-kit/docs/design.md#42-persona-card-cardjson"
+
+# --- The story template (design section 8; docs/playbook/04-stories.md) ------------------------------
+
+STATEMENT = "As a %s, I want my twin to %s so that %s."
+DRAFTED_NOTE = "(Statement drafted by the kit: confirm the wording with the interviewee.)"
+TARGET_NOT_SET = "Target: not set. Agree the scorecard targets with the sponsor before the pilot starts."
+TO_WRITE = "To write: collect at least 3 real examples from %s and write one eval case from each."
+UNNAMED_SKILL_OWNER = "the skill owner (not named yet)"
+ACCEPT_TRIGGER = ("Plus: the skill triggers on the phrases its trigger evals list and stays quiet on the "
+                  "near-misses.")
+EXAMPLES_NEEDED = 3
+# Data classes above confidential: their stories wait for compliance's sign-off before building.
+SIGN_OFF_CLASSES = ("highly-sensitive", "phi")
+SIGN_OFF_TEMPLATE = "compliance-sign-off"
+SIGN_OFF_CHECK = "compliance-sign-off"
+OWNER_HANDOVER = "owner-handover"
+SPIKE_TITLE_MAX = 120
 
 # --- Delivery, owners and parts (design section 8) ---------------------------------------------------
 
@@ -289,7 +307,7 @@ def _unusable(what):
 
 
 def read_statuses(persona_dir):
-    """({task id: (title, status)}, [retired entries]) from an existing backlog.json; UsageError if unusable.
+    """({task or spike id: (title, status)}, [retired entries]) from an existing backlog.json; UsageError if unusable.
 
     A file that is not JSON or not in backlog.json's shape, or a status outside todo, in-progress and done,
     is a usage error naming the file and what to do next.
@@ -326,6 +344,19 @@ def read_statuses(persona_dir):
                                      "to one of them, then run the backlog command again."
                                      % (tid, status, ", ".join(STATUSES)))
                 tasks[tid] = (item.get("title"), status)
+    spikes = data.get("spikes", [])
+    if spikes is None:
+        spikes = []
+    if not isinstance(spikes, list):
+        raise _unusable("has spikes that is not a list")
+    for index, spike in enumerate(spikes):
+        if not isinstance(spike, dict) or not isinstance(spike.get("id"), str):
+            raise _unusable("spikes[%d] is not a spike with an id" % index)
+        if spike.get("status") not in STATUSES:
+            raise UsageError("backlog.json: spike %s has status %r, which is not one of %s. Next: set it to one of "
+                             "them, then run the backlog command again."
+                             % (spike["id"], spike.get("status"), ", ".join(STATUSES)))
+        tasks[spike["id"]] = (spike.get("title"), spike["status"])
     retired = data.get("retired", [])
     if retired is None:
         retired = []
@@ -648,9 +679,10 @@ def _acceptance(task, facts):
             lines += ["Eval from %s example %d of %d%s: %s." % (kind, i, count, where, result)
                       for i in range(1, count + 1)]
     if not lines:
-        lines = ["Eval %d of 3: written from a real example once the skill owner has collected it, with the "
-                 "expected result." % i for i in range(1, 4)]
+        lines = [TO_WRITE % (_text(task.get("skill_owner")) or UNNAMED_SKILL_OWNER)]
     lines += ["Keeps: %s" % item for item in _constraints(task)]
+    if facts["runtime"] == "client-skill":
+        lines.append(ACCEPT_TRIGGER)
     if facts["data_controls.web_tools"] == "off":
         lines.append("Plus: no web tools are used.")
     if facts["writes.crm_opens"] == "now":
@@ -664,8 +696,134 @@ def _acceptance(task, facts):
 
 def _gates(blockers, questions):
     out = [{"kind": "blocker", "id": b["code"], "text": b["message"]} for b in blockers]
-    out += [{"kind": "open-question", "id": q.get("id"), "text": q.get("question")} for q in questions]
+    out += [{"kind": "open-question", "id": q.get("id"), "text": q.get("question"), "spike": _spike_id(q)}
+            for q in questions]
     return out
+
+
+def _clause(value):
+    """A card sentence part as the statement uses it: trimmed, one trailing full stop dropped, case kept."""
+    text = " ".join(_text(value).split())
+    return text[:-1].rstrip() if text.endswith(".") else text
+
+
+def _statement(task, role):
+    """(statement, statement_source): the card's story_want and story_benefit, or the kit's fallbacks."""
+    want, benefit = _clause(task.get("story_want")), _clause(task.get("story_benefit"))
+    source = "card" if want and benefit else "drafted"
+    if not want:
+        what = _clause((task.get("output") or {}).get("what"))
+        want = "produce the %s" % _lower_first(what) if what else 'do the task "%s"' % _clause(task.get("name"))
+    if not benefit:
+        minutes = task.get("minutes_each")
+        if isinstance(minutes, (int, float)) and not isinstance(minutes, bool):
+            benefit = "I get back the %s minutes it takes me each time" % _num(minutes)
+        else:
+            benefit = "I do not have to do it by hand"
+    return STATEMENT % (_lower_first(role), want, benefit), source
+
+
+def _target(task, card):
+    """The story's target line from outcome.scorecard_targets; it invents no number."""
+    targets = [t for t in (card.get("outcome") or {}).get("scorecard_targets") or []
+               if isinstance(t, dict) and _text(t.get("metric")) and isinstance(t.get("value"), (int, float))
+               and not isinstance(t.get("value"), bool)]
+    if not targets:
+        return {"text": TARGET_NOT_SET, "set": False}
+    return {"text": "Target: %s. Today: %s per week, %s minutes each, %s users." % (
+        "; ".join("%s: %s" % (_text(t["metric"]), _num(t["value"])) for t in targets),
+        _num(task.get("frequency_per_week")), _num(task.get("minutes_each")), _num(task.get("users"))),
+        "set": True}
+
+
+def _undecided(value):
+    return value is None or value == _level.UNDECIDED
+
+
+def _count(value):
+    return value if isinstance(value, int) and not isinstance(value, bool) and value > 0 else 0
+
+
+def _ready(task, decisions, blockers, systems):
+    """The definition-of-ready checks the card and the plan can answer; the sign-off check is added later."""
+    autonomy = decisions.get("autonomy") or {}
+    undecided = [name for name, missing in (
+        ("data class", not _text(task.get("data_class"))),
+        ("surface", _undecided(_value(decisions.get("runtime")))),
+        ("autonomy", _undecided(_value(autonomy.get("start"))) or _undecided(_value(autonomy.get("ceiling")))),
+        ("identity", _undecided(_value(decisions.get("identity"))))) if missing]
+    examples = task.get("examples") or {}
+    good, bad = _count(examples.get("good")), _count(examples.get("bad"))
+    used = _system_ids((task.get("inputs") or []) + (task.get("writes") or []))
+    entries = dict((c.get("system"), c) for c in decisions.get("connectors") or [])
+    failing = []
+    for sid in used:
+        entry = entries.get(sid)
+        names = [n.lower() for n in (sid, (systems.get(sid) or {}).get("product")) if n]
+        named_by = [b["code"] for b in blockers
+                    if any(n in ("%s %s" % (b.get("message") or "", b.get("fix") or "")).lower() for n in names)]
+        if entry is None:
+            failing.append("%s has no connector decided" % sid)
+        elif _undecided(entry.get("identity")) or _undecided(entry.get("permission")):
+            failing.append("%s has its identity or permission undecided" % sid)
+        elif named_by:
+            failing.append("%s is named by blocker %s" % (sid, _join(named_by)))
+    return [
+        {"check": "fields", "met": not undecided,
+         "note": "Not decided yet: %s." % _join(undecided) if undecided else
+                 "Data class, surface, autonomy and identity are decided."},
+        {"check": "examples", "met": good + bad >= EXAMPLES_NEEDED,
+         "note": "%d counted example%s (%d good, %d bad); at least %d needed." % (
+             good + bad, "" if good + bad == 1 else "s", good, bad, EXAMPLES_NEEDED)},
+        {"check": "connectors", "met": not failing,
+         "note": "; ".join(failing) + "." if failing else
+                 ("Every system the task uses has a decided connector: %s." % _join(used) if used else
+                  "The task reads and writes no system.")},
+    ]
+
+
+def _sign_offs(features, card):
+    """After statuses are kept: the compliance sign-off check and gate on stories above confidential."""
+    classes = dict((t.get("id"), t.get("data_class")) for t in card.get("tasks") or [])
+    for feature in features:
+        for story in feature["stories"]:
+            if "ready" not in story or classes.get(story["id"][2:]) not in SIGN_OFF_CLASSES:
+                continue
+            tid = "%s.%s" % (story["id"], SIGN_OFF_TEMPLATE)
+            item = next((t for t in story["tasks"] if t["id"] == tid), None)
+            done = item is not None and item["status"] == "done"
+            story["ready"].append({"check": SIGN_OFF_CHECK, "met": done,
+                                   "note": "%s is done." % tid if done else
+                                           "Waiting for %s: compliance signs the story off before it is built."
+                                           % tid})
+            if not done:
+                story["gated_by"].append({"kind": "sign-off", "id": "compliance",
+                                          "text": "Compliance has not signed the story off yet (%s)." % tid})
+
+
+def _spike_id(question):
+    return "SP-%s" % question.get("id")
+
+
+def _spike_title(question):
+    """The question cut at its first sentence end, at most 120 characters."""
+    text = " ".join(str(question or "").split())
+    end = re.search(r"[.?!](?=\s|$)", text)
+    if end:
+        text = text[:end.end()]
+    if len(text) > SPIKE_TITLE_MAX:
+        cut = text[:SPIKE_TITLE_MAX - 1]
+        if " " in cut:
+            cut = cut[:cut.rfind(" ")]
+        text = cut.rstrip(" ,;:") + "\u2026"
+    return text
+
+
+def _spikes(questions):
+    """One spike per open question on the card, in card order."""
+    return [{"id": _spike_id(q), "kind": "spike", "title": _spike_title(q.get("question")),
+             "question": q.get("question"), "blocks": ["S-%s" % t for t in q.get("blocks") or []],
+             "owner": q.get("owner"), "due": q.get("due"), "status": "todo"} for q in questions]
 
 
 def _link(link, item):
@@ -744,30 +902,37 @@ def _result(ok, validation, error=None, backlog=None, retired_now=None):
     return {"ok": ok, "validation": validation, "error": error, "backlog": backlog, "retired_now": retired_now or []}
 
 
-def _task_story(task, role, base, profile, levelled, systems, questions, persona_blockers, library):
+def _task_story(task, role, base, card, profile, levelled, systems, questions, persona_blockers, library):
     tid = task.get("id")
     decisions = (levelled.get("tasks") or {}).get(tid) or {}
     facts = task_facts(base, task, decisions, levelled, systems)
     story_id = "S-" + tid
     writes = _write_tools(levelled, tid)
     blockers = persona_blockers + [b for b in levelled.get("blockers", []) if b["about"] == tid]
+    statement, source = _statement(task, role)
+    part = "A2" if facts["runtime"] == "client-skill" else "A4"
+    tasks = _with_engine_steps(
+        _with_constraints(_tasks_for(story_id, facts, library, False, tid, decisions, levelled, systems),
+                          _constraints(task)),
+        task, facts, decisions, writes, systems)
+    for item in tasks:
+        if item["template"] == OWNER_HANDOVER:
+            item["part"] = part
     return {
         "id": story_id,
         "title": task.get("name"),
-        "statement": "As a %s, I want my twin to %s so that I get the %s." % (
-            role, _lower_first(task.get("name") or ""), _lower_first((task.get("output") or {}).get("what") or
-                                                                      "result")),
-        "part": "A2" if facts["runtime"] == "client-skill" else "A4",
+        "statement": statement,
+        "statement_source": source,
+        "part": part,
         "in_pilot": bool(task.get("in_pilot")),
         "priority": task.get("priority"),
         "status": "todo",
         "fields": _story_fields(task, decisions, profile, _delivery(task, decisions, writes)[1]),
         "acceptance": _acceptance(task, facts),
+        "target": _target(task, card),
+        "ready": _ready(task, decisions, blockers, systems),
         "gated_by": _gates(blockers, [q for q in questions if tid in (q.get("blocks") or [])]),
-        "tasks": _with_engine_steps(
-            _with_constraints(_tasks_for(story_id, facts, library, False, tid, decisions, levelled, systems),
-                              _constraints(task)),
-            task, facts, decisions, writes, systems),
+        "tasks": tasks,
     }
 
 
@@ -800,7 +965,7 @@ def _with_constraints(tasks, constraints):
     if constraints:
         for item in tasks:
             if item["template"] == WRITE_SKILL:
-                item["how"].append({"text": CONSTRAINTS_STEP % "; ".join(constraints), "link": None})
+                item["how"].append({"text": CONSTRAINTS_STEP % "; ".join(constraints), "link": CONSTRAINTS_LINK})
     return tasks
 
 
@@ -829,10 +994,17 @@ def _foundation_stories(role, base, levelled, persona_blockers, library):
     return out
 
 
-def _apply_statuses(features, old_tasks, old_retired):
-    """Keep each task's status from the last run, derive the parents', and retire started items no longer made."""
+def _apply_statuses(features, old_tasks, old_retired, spikes=()):
+    """Keep each task's and spike's status from the last run, derive the parents', and retire started items
+    no longer made."""
     retired_by_id = dict((r["id"], r) for r in old_retired)
     generated = set()
+    for spike in spikes:
+        generated.add(spike["id"])
+        if spike["id"] in old_tasks:
+            spike["status"] = old_tasks[spike["id"]][1]
+        elif spike["id"] in retired_by_id:
+            spike["status"] = retired_by_id[spike["id"]]["status"]
     for feature in features:
         for story in feature["stories"]:
             for item in story["tasks"]:
@@ -881,8 +1053,8 @@ def assemble(persona_dir, validation, card, profile, levelled, library=None):
 
     features = []
     for feature in card.get("features") or []:
-        stories = [_task_story(task, role, base, profile, levelled, systems, questions, persona_blockers, library)
-                   for task in tasks if task.get("feature") == feature.get("id")]
+        stories = [_task_story(task, role, base, card, profile, levelled, systems, questions, persona_blockers,
+                               library) for task in tasks if task.get("feature") == feature.get("id")]
         stories.sort(key=lambda s: (not s["in_pilot"],
                                     s["priority"] if isinstance(s["priority"], (int, float)) else float("inf"),
                                     order.get(s["id"][2:], 0)))
@@ -891,7 +1063,9 @@ def assemble(persona_dir, validation, card, profile, levelled, library=None):
     features.append({"id": FOUNDATION_FEATURE[0], "title": FOUNDATION_FEATURE[1], "kind": "foundation",
                      "status": "todo", "stories": _foundation_stories(role, base, levelled, persona_blockers,
                                                                       library)})
-    retired, retired_now = _apply_statuses(features, old_tasks, old_retired)
+    spikes = _spikes(questions)
+    retired, retired_now = _apply_statuses(features, old_tasks, old_retired, spikes)
+    _sign_offs(features, card)
     unnamed = _name_owners(features, card, profile, library)
 
     display = profile.get("display_name") or card.get("customer")
@@ -904,6 +1078,7 @@ def assemble(persona_dir, validation, card, profile, levelled, library=None):
         "unnamed_roles": unnamed,
         "epic": {"id": "E", "title": "%s twin for %s" % (role, display),
                  "status": derive_status(f["status"] for f in features), "features": features},
+        "spikes": spikes,
         "retired": retired,
     }
     return _result(True, validation, None, backlog, retired_now)
@@ -1015,9 +1190,33 @@ def _unnamed_line(backlog):
         for r in roles)
 
 
+def _is_ready(story):
+    return all(c["met"] for c in story["ready"])
+
+
+def _task_stories(backlog):
+    return [s for f in backlog["epic"]["features"] for s in f["stories"] if "ready" in s]
+
+
+def _md_spikes(spikes):
+    if not spikes:
+        return []
+    lines = ["", "## Spikes", "", "Open questions on the card. A spike is time-boxed research that answers one; "
+             "it holds no build work. Mark a spike by changing its status in backlog.json.", ""]
+    for spike in spikes:
+        lines.append("- %s **%s** %s (owner: %s; due: %s; blocks: %s)" % (
+            MARKS[spike["status"]], _md(spike["id"]), _md(spike["question"]),
+            _md(spike["owner"]) if _text(spike.get("owner")) else "not named yet",
+            _md(spike["due"]) if _text(spike.get("due")) else "not set",
+            _md(", ".join(spike["blocks"])) if spike["blocks"] else "no story"))
+    return lines
+
+
 def _md_story(story):
-    lines = ["", "### %s: %s" % (_md(story["id"]), _md(story["title"])), "", _md(story["statement"], lead=True), "",
-             "Part %s. In pilot: %s. Priority: %s. Status: %s." % (
+    lines = ["", "### %s: %s" % (_md(story["id"]), _md(story["title"])), "", _md(story["statement"], lead=True), ""]
+    if story.get("statement_source") == "drafted":
+        lines += [DRAFTED_NOTE, ""]
+    lines += ["Part %s. In pilot: %s. Priority: %s. Status: %s." % (
                  _md(story["part"]), "yes" if story["in_pilot"] else "no",
                  _md(story["priority"]) if story["priority"] is not None else "none", _md(story["status"])),
              "", "| Field | Value |", "|---|---|"]
@@ -1026,8 +1225,14 @@ def _md_story(story):
         lines.append("| %s | %s |" % (key.replace("_", " ").capitalize(), _cell(value)))
     lines += ["", "**Acceptance criteria:**", ""]
     lines += ["%d. %s" % (i, _md(text, lead=True)) for i, text in enumerate(story["acceptance"], 1)]
+    if "target" in story:
+        lines += ["", _md(story["target"]["text"], lead=True)]
+    if "ready" in story:
+        lines += ["", "Ready to build: %s" % ("yes" if _is_ready(story) else "no")]
+        lines += ["- %s: %s" % (_md(c["check"], lead=True), _md(c["note"])) for c in story["ready"] if not c["met"]]
     lines += ["", "**Gated by:**", ""]
-    lines += ["- %s %s: %s" % (_md(g["kind"], lead=True), _md(g["id"]), _md(g["text"]))
+    lines += ["- %s %s: %s%s" % (_md(g["kind"], lead=True), _md(g["id"]), _md(g["text"]),
+                                 " (spike %s)" % _md(g["spike"]) if g.get("spike") else "")
               for g in story["gated_by"]] or ["- Nothing."]
     lines += ["", "**Tasks:**", ""]
     for item in story["tasks"]:
@@ -1058,12 +1263,18 @@ def render_md(backlog, persona_dir=None):
         "",
         _md(_unnamed_line(backlog), lead=True),
     ]
+    told = _task_stories(backlog)
+    lines += ["", "Stories ready to build: %d of %d." % (sum(1 for s in told if _is_ready(s)), len(told))]
+    no_target = sum(1 for s in told if not s["target"]["set"])
+    if no_target:
+        lines += ["", "Stories with no target: %d. Agree the scorecard targets with the sponsor." % no_target]
     for feature in epic["features"]:
         lines += ["", "## %s: %s" % (_md(feature["id"]), _md(feature["title"])), "",
                   "Kind: %s. Status: %s. %d stories." % (_md(feature["kind"]), _md(feature["status"]),
                                                          len(feature["stories"]))]
         for story in feature["stories"]:
             lines += _md_story(story)
+    lines += _md_spikes(backlog.get("spikes") or [])
     lines += ["", "## Retired", ""]
     if backlog["retired"]:
         lines += ["Items no longer generated from the card that had been started or finished:", ""]

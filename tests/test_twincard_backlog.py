@@ -43,9 +43,12 @@ CLIENT_SKILL_SIX = ["collect-examples", "write-evals", "write-skill", "trigger-e
                     "publish-in-role-plugin"]
 FOUNDATION = ["S-persona-voice", "S-connectors-and-identity", "S-guardrails-and-settings", "S-distribution",
               "S-governance-log", "S-memory-policy", "S-pilot-rollout-and-scorecard"]
-TOP_KEYS = ["backlog_version", "customer", "persona", "source", "unnamed_roles", "epic", "retired"]
+TOP_KEYS = ["backlog_version", "customer", "persona", "source", "unnamed_roles", "epic", "spikes", "retired"]
 STORY_KEYS = ["id", "title", "statement", "part", "in_pilot", "priority", "status", "fields", "acceptance",
               "gated_by", "tasks"]
+# A task story also carries statement_source, target and ready (OPS-56); a foundation story does not.
+TASK_STORY_KEYS = ["id", "title", "statement", "statement_source", "part", "in_pilot", "priority", "status", "fields",
+                   "acceptance", "target", "ready", "gated_by", "tasks"]
 TASK_KEYS = ["id", "template", "title", "part", "how", "done_when", "owner_role", "owner_name", "acting_owner",
              "status"]
 
@@ -520,7 +523,8 @@ class BuildTests(unittest.TestCase):
             self.assertEqual(list(feature), ["id", "title", "kind", "status", "stories"])
             self.assertIn(feature["kind"], ("capability", "foundation"))
             for story in feature["stories"]:
-                self.assertEqual(list(story), STORY_KEYS, story["id"])
+                self.assertEqual(list(story), STORY_KEYS if story["id"] in FOUNDATION else TASK_STORY_KEYS,
+                                 story["id"])
                 self.assertTrue(story["tasks"], "%s has no task" % story["id"])
                 for item in story["tasks"]:
                     self.assertEqual(list(item), TASK_KEYS)
@@ -540,8 +544,8 @@ class BuildTests(unittest.TestCase):
         backlog = B.build(str(PE))["backlog"]
         story = next(s for s in stories_of(backlog) if s["id"] == "S-T4")
         self.assertEqual(story["statement"],
-                         "As a Deal-team associate, I want my twin to screen an inbound CIM or teaser so that I get "
-                         "the screening summary with a pursue-or-pass suggestion.")
+                         "As a deal-team associate, I want my twin to screen the CIM or teaser and suggest pursue or "
+                         "pass so that the screening notes are done by Wednesday.")
         self.assertEqual(story["fields"]["autonomy"], "1 to 3")
         self.assertEqual(story["fields"]["data_class"], "highly-sensitive")
         self.assertIn("Plus: no web tools are used.", story["acceptance"])
@@ -585,7 +589,7 @@ class BuildTests(unittest.TestCase):
         t1 = next(s for s in stories_of(backlog) if s["id"] == "S-T1")
         self.assertIn("E4", [g["id"] for g in t1["gated_by"] if g["kind"] == "open-question"])
         for g in t1["gated_by"]:
-            self.assertEqual(list(g), ["kind", "id", "text"])
+            self.assertEqual(list(g), ["kind", "id", "text"] + (["spike"] if g["kind"] == "open-question" else []))
         with Scenario(TEAM, set_task("C1", data_class="highly-sensitive")) as persona:
             backlog = B.build(str(persona))["backlog"]
         c1 = next(s for s in stories_of(backlog) if s["id"] == "S-C1")

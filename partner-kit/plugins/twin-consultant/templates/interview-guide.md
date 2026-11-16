@@ -107,7 +107,9 @@ Ask F1 to F9 once for each task. Start with F1 for all the tasks, then go task b
 
 **Why we ask:** It chooses the tasks, sets the time baseline and picks what to try first.
 
-**Fills:** `features[].id`, `features[].name`, `features[].why`, `tasks[].id`, `tasks[].feature`, `tasks[].name`, `tasks[].frequency_per_week`, `tasks[].minutes_each`, `tasks[].users`, `tasks[].priority`, `tasks[].in_pilot`
+**Also ask:** "For each task you would hand over, what would you do with the time it gives back, or what gets better?"
+
+**Fills:** `features[].id`, `features[].name`, `features[].why`, `tasks[].id`, `tasks[].feature`, `tasks[].name`, `tasks[].frequency_per_week`, `tasks[].minutes_each`, `tasks[].users`, `tasks[].priority`, `tasks[].in_pilot`, `tasks[].story_want`, `tasks[].story_benefit`
 
 ### F2. What goes in, what comes out
 
@@ -139,7 +141,7 @@ Ask F1 to F9 once for each task. Start with F1 for all the tasks, then go task b
 
 **Also ask:** "Is there anything you would change about how this task is done today?"
 
-**Fills:** `tasks[].examples.good`, `tasks[].examples.bad`, `tasks[].examples.where`, `tasks[].skill_owner`, `tasks[].wanted_change`
+**Fills:** `tasks[].examples.good`, `tasks[].examples.bad`, `tasks[].examples.where`, `tasks[].skill_owner`, `tasks[].wanted_change`, `tasks[].story_benefit`
 
 ### F4. If it goes wrong
 

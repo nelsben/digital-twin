@@ -349,7 +349,7 @@ class B2bPackTests(unittest.TestCase):
         defaults = {d["product"]: d for d in pack["connector_defaults"]}
         self.assertIn("App Marketplace access", defaults["HubSpot"]["how"])
         self.assertNotIn("admin approval", defaults["Slack"]["identity"])
-        self.assertFalse(defaults["Google Calendar"]["unverified"])
+        self.assertTrue(defaults["Google Calendar"]["unverified"])
         sales = next(p for p in pack["anthropic_starting_points"] if p["name"] == "sales")
         self.assertEqual(sales["cite"], "docs/compendium/18-customer-success.md#the-short-answer")
 
@@ -392,12 +392,12 @@ class ReasonTests(unittest.TestCase):
             self.assertIn("Dynamics", reason, rid)
             self.assertIn("connectors[]", reason, rid)
 
-    def test_mail_read_only_fires_only_for_a_mail_or_calendar_write(self):
+    def test_mail_write_unconfirmed_fires_only_for_a_mail_or_calendar_write(self):
         out = level(TEAM)
-        self.assertEqual(ids_of(out, "warnings", "mail-read-only"), [])
+        self.assertEqual(ids_of(out, "warnings", "mail-write-unconfirmed"), [])
         out = level(TEAM, LT.team_c4_gmail_send)
-        self.assertEqual(ids_of(out, "warnings", "mail-read-only"), ["C4"])
-        message = next(w["message"] for w in out["warnings"] if w["code"] == "mail-read-only")
+        self.assertEqual(ids_of(out, "warnings", "mail-write-unconfirmed"), ["C4"])
+        message = next(w["message"] for w in out["warnings"] if w["code"] == "mail-write-unconfirmed")
         self.assertIn("Gmail", message)
         self.assertIn("Google Calendar", message)
 

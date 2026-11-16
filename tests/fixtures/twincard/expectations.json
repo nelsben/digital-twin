@@ -1464,21 +1464,14 @@
       ],
       "expect": {
         "decisions": {},
-        "blockers_added": [
-          {
-            "code": "connector-cannot-write",
-            "about": "C4",
-            "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-            "unverified": false
-          }
-        ],
+        "blockers_added": [],
         "blockers_removed": [],
         "warnings_added": [
           {
-            "code": "mail-read-only",
+            "code": "mail-write-unconfirmed",
             "about": "C4",
             "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-            "unverified": false
+            "unverified": true
           },
           {
             "code": "untrusted-input-with-send",
@@ -1491,7 +1484,7 @@
         "still_valid": true
       },
       "cite": "docs/compendium/11-connectors.md#what-exists-for-our-systems",
-      "reason": "The Gmail connector reads and searches only; it cannot create, send or change mail."
+      "reason": "The sources conflict over whether the Gmail connector can send, so the send gives a warning and no blocker, and the plan does not count on the send tool."
     },
     {
       "id": "team-no-ip-allowlist",

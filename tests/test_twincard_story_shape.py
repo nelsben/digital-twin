@@ -392,10 +392,19 @@ class ReadyTests(unittest.TestCase):
     def test_connectors_unmet_names_the_system(self):
         persona_dir, change = variant("team-c4-gmail-send")
         card, backlog, _ = build_in(persona_dir, change)
-        connectors = self.check(stories(backlog)["S-C4"], "connectors")
-        self.assertFalse(connectors["met"])
-        self.assertIn("gmail", connectors["note"].lower())
+        # The Gmail send raises a warning, not a blocker (OPS-62), so the check is met.
+        self.assertTrue(self.check(stories(backlog)["S-C4"], "connectors")["met"])
         self.assertTrue(self.check(stories(backlog)["S-C1"], "connectors")["met"])
+        # No rule's blocker names a system now, so the check is given an invented one that does.
+        with BT.Scenario(persona_dir, change) as persona:
+            levelled = L.level(str(persona))["levelled"]
+            profile = load(persona.parent.parent / "customer-profile.json")
+        systems = dict((s["id"], s) for s in profile["systems"])
+        blocker = {"code": "invented-blocker", "message": "Gmail cannot do this (invented for the test).", "fix": ""}
+        checks = B._ready(card_task(card, "C4"), levelled["tasks"]["C4"], [blocker], systems)
+        connectors = next(c for c in checks if c["check"] == "connectors")
+        self.assertFalse(connectors["met"])
+        self.assertIn("gmail is named by blocker invented-blocker", connectors["note"].lower())
 
 
 # --- Compliance sign-off and owner handover ---------------------------------------------------------

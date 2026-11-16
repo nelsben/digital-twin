@@ -3,8 +3,8 @@
 The fixture in tests/fixtures/twincard/sample-insurance-broker/ is invented. These tests level it and
 build its backlog in a temporary copy, and check the action-log blocker on non-Claude Code surfaces, the
 private-network fact for writes, Claude Code missing from the role, mixed devices, memory for highly
-sensitive work, the general-pack connector fallback, the no-entry connector wording, and the skill and
-start-wiring tasks on every runtime.
+sensitive work, the general-pack connector fallback (Outlook among it), the no-entry connector
+wording (for an invented product no pack lists), and the skill and start-wiring tasks on every runtime.
 
 Standard library only. Anything the tests write goes to a temporary folder.
 Run with: python3 -m unittest discover -s tests
@@ -112,17 +112,38 @@ class BrokerWalkTests(unittest.TestCase):
             self.assertIsNotNone(default, system)
             self.assertEqual(default["cite"], GENERAL_CITE, system)
             self.assertIn(default["how"], hows, system)
-        self.assertIsNone(systems["outlook"]["default"])
+        outlook_default = next(d for d in general["connector_defaults"] if d["product"] == "Outlook")
+        self.assertEqual(systems["outlook"]["default"], outlook_default)
         products = [d["product"] for d in general.get("connector_defaults") or []]
         self.assertTrue(any("SharePoint" in p for p in products))
         self.assertTrue(any("Teams" in p for p in products))
         self.assertTrue(any("Dynamics" in p for p in products))
-        outlook = self.connector("T1", "outlook")["how"] or ""
-        self.assertIn("compendium has no entry", outlook)
-        self.assertIn("Claude connector directory", outlook)
-        self.assertIn("custom connector", outlook)
-        self.assertNotIn("not in the directory", outlook)
-        self.assertNotIn("isn't in the directory", outlook)
+        outlook = self.connector("T1", "outlook")
+        self.assertEqual(outlook["how"], outlook_default["how"])
+        self.assertEqual(outlook["runbook"], "starter-kit/runbooks/microsoft-365-connector.md")
+        self.assertEqual(outlook["cite"], GENERAL_CITE)
+        self.assertIs(outlook["unverified"], True)
+
+    def test_no_entry_wording_for_a_product_no_pack_lists(self):
+        # An invented mail product, changed in memory, that no pack lists.
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name) / BROKER.name
+        shutil.copytree(BROKER, root)
+        profile_path = root / "customer-profile.json"
+        profile = load(profile_path)
+        next(s for s in profile["systems"] if s["id"] == "outlook")["product"] = "Quillpost Mail"
+        profile_path.write_text(json.dumps(profile, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        self.assertIsNone(L._systems(profile, P.load_pack(profile["industry"]))["outlook"]["default"])
+        result = L.level(str(root / PERSONA))
+        self.assertTrue(result["ok"], result.get("validation"))
+        conn = next(c for c in result["levelled"]["tasks"]["T1"]["connectors"] if c["system"] == "outlook")
+        how = conn["how"] or ""
+        self.assertIn("compendium has no entry for Quillpost Mail", how)
+        self.assertIn("Claude connector directory", how)
+        self.assertIn("custom connector", how)
+        self.assertNotIn("not in the directory", how)
+        self.assertNotIn("isn't in the directory", how)
 
     def test_every_task_story_has_write_skill_and_t1_has_start_wiring(self):
         stories = self.stories()

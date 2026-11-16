@@ -181,12 +181,13 @@ class ShippedPackTests(unittest.TestCase):
         self.assertIn("docs/compendium/11-connectors.md", pack["sources"])
         products = [e["product"] for e in pack["connector_defaults"]]
         self.assertEqual(products, ["Salesforce", "HubSpot", "Microsoft Dynamics / Dataverse", "Google Drive / Sheets",
-                                    "SharePoint / OneDrive", "Teams", "Slack", "Gmail", "Google Calendar", "Zendesk",
-                                    "Intercom"])
+                                    "SharePoint / OneDrive", "Teams", "Outlook", "Slack", "Gmail", "Google Calendar",
+                                    "Zendesk", "Intercom"])
         runbooks = dict((e["product"], e["runbook"]) for e in pack["connector_defaults"])
         self.assertEqual(runbooks.pop("Salesforce"), "starter-kit/runbooks/salesforce-hosted-mcp.md")
         self.assertEqual(runbooks.pop("SharePoint / OneDrive"), "starter-kit/runbooks/microsoft-365-connector.md")
         self.assertEqual(runbooks.pop("Teams"), "starter-kit/runbooks/microsoft-365-connector.md")
+        self.assertEqual(runbooks.pop("Outlook"), "starter-kit/runbooks/microsoft-365-connector.md")
         for product, runbook in sorted(KIT_RUNBOOKS.items()):
             if product in runbooks:
                 self.assertEqual(runbooks.pop(product), runbook, product)

@@ -185,7 +185,9 @@ class TagRoutineTests(unittest.TestCase):
         self.assertIn("our choice", runtime["reason"])
 
     def test_schedule_team_slack_task_under_zdr_is_not_a_tag_routine(self):
-        runtime = task_of(level(TEAM, set_profile("compliance", "retention", "zdr")), "C2")["runtime"]
+        out = level(TEAM, chain(set_profile("compliance", "retention", "zdr"),
+                                set_profile("compliance", "zdr_cover", "in-place")))
+        runtime = task_of(out, "C2")["runtime"]
         self.assertEqual((runtime["value"], runtime["rule"]), ("managed-agents-self-hosted", "runtime-zdr-self-hosted"))
 
     def test_self_hosting_required_is_not_a_tag_routine(self):
